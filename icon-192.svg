@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0d0221"/>
+      <stop offset="100%" style="stop-color:#1a0640"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f5c518"/>
+      <stop offset="100%" style="stop-color:#d4a810"/>
+    </linearGradient>
+  </defs>
+  <rect width="192" height="192" rx="38" fill="url(#bg)"/>
+  <circle cx="96" cy="80" r="40" fill="url(#gold)"/>
+  <text x="96" y="95" text-anchor="middle" font-family="serif" font-size="52" font-weight="bold" fill="#0d0221">π</text>
+  <text x="96" y="148" text-anchor="middle" font-family="sans-serif" font-size="16" font-weight="bold" fill="#f5c518" letter-spacing="2">PI CARD</text>
+  <rect x="30" y="160" width="132" height="2" rx="1" fill="#f5c518" opacity="0.3"/>
+</svg>

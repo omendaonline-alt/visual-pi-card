@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Setup Check - Visual Pi Card</title>
+    <style>
+        *{box-sizing:border-box;margin:0;padding:0}
+        body{font-family:'Segoe UI',system-ui,sans-serif;background:linear-gradient(135deg,#0d0221,#150535,#1a0640);color:#e2daf0;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:40px 20px}
+        h1{font-size:1.8rem;background:linear-gradient(90deg,#f5c518,#ffdf6f);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+        .sub{opacity:.6;font-size:.9rem;margin-bottom:36px}
+        .checks{width:100%;max-width:500px}
+        .check-item{display:flex;align-items:center;gap:14px;padding:16px 20px;margin-bottom:10px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}
+        .check-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+        .check-icon.pass{background:rgba(39,174,96,.15);color:#27ae60}
+        .check-icon.fail{background:rgba(231,76,60,.15);color:#e74c3c}
+        .check-icon.warn{background:rgba(245,197,24,.15);color:#f5c518}
+        .check-icon.load{background:rgba(245,197,24,.15);color:#f5c518;animation:pulse 1s infinite}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+        .check-info{flex:1}
+        .check-name{font-weight:600;font-size:.95rem}
+        .check-desc{font-size:.75rem;opacity:.5;margin-top:2px}
+        .summary{margin-top:30px;padding:20px 24px;border-radius:14px;text-align:center;font-size:.9rem;width:100%;max-width:500px}
+        .summary.good{background:rgba(39,174,96,.1);border:1px solid rgba(39,174,96,.3);color:#27ae60}
+        .summary.bad{background:rgba(231,76,60,.1);border:1px solid rgba(231,76,60,.3);color:#e74c3c}
+        .back-btn{display:inline-block;margin-top:24px;padding:12px 32px;border-radius:30px;background:linear-gradient(135deg,#f5c518,#d4a810);color:#1b0a3c;font-weight:700;text-decoration:none;font-size:.9rem;transition:all .2s}
+        .back-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(245,197,24,.3)}
+        .info-box{margin-top:20px;padding:16px 20px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);font-size:.78rem;line-height:1.7;opacity:.7;width:100%;max-width:500px}
+        .info-box strong{color:#f5c518;opacity:1}
+    </style>
+</head>
+<body>
+    <h1>&#9881; Setup Verification</h1>
+    <p class="sub">pivisualcard.online &mdash; Auto-checking your setup</p>
+
+    <div class="checks" id="checks"></div>
+    <div class="summary" id="summary" style="display:none"></div>
+
+    <div class="info-box" id="serverInfo">
+        <strong>Server Details:</strong><br>
+        Domain: pivisualcard.online<br>
+        IP: 198.54.116.227<br>
+        Host: <span id="currentHost">-</span><br>
+        Protocol: <span id="currentProto">-</span><br>
+        Time: <span id="currentTime">-</span>
+    </div>
+
+    <a href="/" class="back-btn">&#8592; Open Visual Pi Card</a>
+
+    <script>
+        var DOMAIN = 'pivisualcard.online';
+        var SERVER_IP = '198.54.116.227';
+        var checks = [];
+        var container = document.getElementById('checks');
+
+        document.getElementById('currentHost').textContent = location.hostname;
+        document.getElementById('currentProto').textContent = location.protocol;
+        document.getElementById('currentTime').textContent = new Date().toLocaleString();
+
+        function addCheck(name, desc, status) {
+            checks.push({name:name, status:status});
+            var iconChar = status === 'pass' ? '\u2713' : status === 'fail' ? '\u2717' : '\u26A0';
+            var el = document.createElement('div');
+            el.className = 'check-item';
+            el.innerHTML =
+                '<div class="check-icon ' + status + '">' + iconChar + '</div>' +
+                '<div class="check-info"><div class="check-name">' + name + '</div>' +
+                '<div class="check-desc">' + desc + '</div></div>';
+            container.appendChild(el);
+        }
+
+        function runChecks() {
+            // 1. Domain check
+            var onDomain = (location.hostname === DOMAIN);
+            var onIP = (location.hostname === SERVER_IP);
+            var onWWW = (location.hostname === 'www.' + DOMAIN);
+            if (onDomain) {
+                addCheck('Domain Connected', 'Running on ' + DOMAIN, 'pass');
+            } else if (onIP || onWWW) {
+                addCheck('Domain Redirect Needed', 'Running on ' + location.hostname + ' — should redirect to ' + DOMAIN, 'warn');
+            } else {
+                addCheck('Domain (Local/Preview)', 'Running locally at ' + location.hostname + ' — will auto-connect on live server', 'warn');
+            }
+
+            // 2. HTTPS check
+            if (location.protocol === 'https:') {
+                addCheck('SSL/HTTPS Active', 'Secure connection established', 'pass');
+            } else if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+                addCheck('SSL/HTTPS (Local)', 'Not required for localhost', 'warn');
+            } else {
+                addCheck('SSL/HTTPS Missing', 'Site should use HTTPS — check SSL certificate in cPanel', 'fail');
+            }
+
+            // 3. Main page check
+            var xhr = new XMLHttpRequest();
+            xhr.open('HEAD', '/index.html', true);
+            xhr.timeout = 5000;
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    addCheck('index.html Found', 'Main application file is accessible', 'pass');
+                } else {
+                    addCheck('index.html Issue', 'HTTP ' + xhr.status + ' — check file deployment', 'fail');
+                }
+                continueChecks();
+            };
+            xhr.onerror = function() {
+                addCheck('index.html Unreachable', 'Cannot access the main page', 'fail');
+                continueChecks();
+            };
+            xhr.send();
+        }
+
+        function continueChecks() {
+            // 4. Service Worker support
+            if ('serviceWorker' in navigator) {
+                addCheck('Service Worker Support', 'Browser supports offline caching', 'pass');
+            } else {
+                addCheck('No Service Worker', 'Browser doesn\'t support offline mode', 'warn');
+            }
+
+            // 5. LocalStorage check
+            try {
+                localStorage.setItem('pvc_test', '1');
+                localStorage.removeItem('pvc_test');
+                addCheck('Local Storage Active', 'Data persistence is working', 'pass');
+            } catch(e) {
+                addCheck('Local Storage Blocked', 'State won\'t persist between visits', 'fail');
+            }
+
+            // 6. Manifest check
+            var xhr2 = new XMLHttpRequest();
+            xhr2.open('HEAD', '/manifest.json', true);
+            xhr2.timeout = 3000;
+            xhr2.onload = function() {
+                if (xhr2.status === 200) {
+                    addCheck('PWA Manifest Found', 'App can be installed on mobile', 'pass');
+                } else {
+                    addCheck('PWA Manifest Missing', 'Upload manifest.json for mobile install support', 'warn');
+                }
+                showSummary();
+            };
+            xhr2.onerror = function() {
+                addCheck('PWA Manifest Missing', 'Upload manifest.json for mobile install', 'warn');
+                showSummary();
+            };
+            xhr2.send();
+        }
+
+        function showSummary() {
+            var passed = checks.filter(function(c) { return c.status === 'pass'; }).length;
+            var failed = checks.filter(function(c) { return c.status === 'fail'; }).length;
+            var total = checks.length;
+            var el = document.getElementById('summary');
+            el.style.display = 'block';
+
+            if (failed === 0) {
+                el.className = 'summary good';
+                el.innerHTML = '<strong>\u2713 All checks passed! (' + passed + '/' + total + ')</strong><br>Your Visual Pi Card is ready and running.';
+            } else {
+                el.className = 'summary bad';
+                el.innerHTML = '<strong>' + failed + ' issue(s) found (' + passed + '/' + total + ' passed)</strong><br>Fix the issues above, then refresh this page.';
+            }
+        }
+
+        runChecks();
+    </script>
+</body>
+</html>

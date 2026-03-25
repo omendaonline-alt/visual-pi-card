@@ -1,0 +1,15 @@
+{
+  "name": "pi-visual-card",
+  "version": "1.0.0",
+  "description": "Pi Visual Card - pivisualcard.online (198.54.116.227) - Pi Network Payment Card Server",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "cors": "^2.8.5",
+    "uuid": "^10.0.0"
+  }
+}
