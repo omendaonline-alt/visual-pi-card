@@ -13,11 +13,15 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const HOST = process.env.HOST || '0.0.0.0';
 
+// Pi Network API configuration
+const PI_API_URL = 'https://api.minepi.com/v2';
+const PI_API_KEY = process.env.PI_API_KEY || ''; // Set via environment variable
+
 // --------------- Middleware ---------------
 app.use(cors({
     origin: ['https://pivisualcard.online', 'http://pivisualcard.online', 'http://198.54.116.227', 'http://localhost:3000'],
     methods: ['GET', 'POST'],
-    allowedHeaders: ['Content-Type']
+    allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname)));   // serve the HTML directly
@@ -220,6 +224,121 @@ app.post('/api/card-type', (req, res) => {
 
     user.cardType = cardType;
     res.json({ success: true, cardType: user.cardType });
+});
+
+// --------------- Pi Network API Routes ---------------
+
+/** Helper: call Pi Platform API */
+function piApiCall(method, endpoint, body) {
+    const https = require('https');
+    const url = new URL(PI_API_URL + endpoint);
+    return new Promise((resolve, reject) => {
+        const options = {
+            hostname: url.hostname,
+            path: url.pathname,
+            method: method,
+            headers: {
+                'Authorization': 'Key ' + PI_API_KEY,
+                'Content-Type': 'application/json'
+            }
+        };
+        const req = https.request(options, (res) => {
+            let data = '';
+            res.on('data', chunk => data += chunk);
+            res.on('end', () => {
+                try { resolve({ status: res.statusCode, data: JSON.parse(data) }); }
+                catch(e) { resolve({ status: res.statusCode, data: data }); }
+            });
+        });
+        req.on('error', reject);
+        if (body) req.write(JSON.stringify(body));
+        req.end();
+    });
+}
+
+/** Verify Pi user access token */
+app.post('/api/pi/verify', async (req, res) => {
+    const { accessToken } = req.body;
+    if (!accessToken) return res.status(400).json({ error: 'Access token required' });
+
+    try {
+        const https = require('https');
+        const url = new URL(PI_API_URL + '/me');
+        const result = await new Promise((resolve, reject) => {
+            const options = {
+                hostname: url.hostname,
+                path: url.pathname,
+                method: 'GET',
+                headers: { 'Authorization': 'Bearer ' + accessToken }
+            };
+            const request = https.request(options, (response) => {
+                let data = '';
+                response.on('data', chunk => data += chunk);
+                response.on('end', () => {
+                    try { resolve({ status: response.statusCode, data: JSON.parse(data) }); }
+                    catch(e) { resolve({ status: response.statusCode, data: data }); }
+                });
+            });
+            request.on('error', reject);
+            request.end();
+        });
+
+        if (result.status === 200) {
+            res.json({ success: true, user: result.data });
+        } else {
+            res.status(401).json({ error: 'Invalid access token', details: result.data });
+        }
+    } catch(err) {
+        res.status(500).json({ error: 'Verification failed', message: err.message });
+    }
+});
+
+/** Server-side approval of a payment */
+app.post('/api/pi/approve', async (req, res) => {
+    const { paymentId } = req.body;
+    if (!paymentId) return res.status(400).json({ error: 'paymentId required' });
+
+    if (!PI_API_KEY) {
+        console.warn('PI_API_KEY not set — approving in demo mode');
+        return res.json({ success: true, demo: true });
+    }
+
+    try {
+        const result = await piApiCall('POST', '/payments/' + encodeURIComponent(paymentId) + '/approve');
+        if (result.status === 200) {
+            console.log('Payment approved:', paymentId);
+            res.json({ success: true, payment: result.data });
+        } else {
+            console.error('Approve failed:', result.data);
+            res.status(result.status).json({ success: false, error: result.data });
+        }
+    } catch(err) {
+        res.status(500).json({ error: 'Approval failed', message: err.message });
+    }
+});
+
+/** Server-side completion of a payment */
+app.post('/api/pi/complete', async (req, res) => {
+    const { paymentId, txid } = req.body;
+    if (!paymentId) return res.status(400).json({ error: 'paymentId required' });
+
+    if (!PI_API_KEY) {
+        console.warn('PI_API_KEY not set — completing in demo mode');
+        return res.json({ success: true, demo: true });
+    }
+
+    try {
+        const result = await piApiCall('POST', '/payments/' + encodeURIComponent(paymentId) + '/complete', { txid: txid });
+        if (result.status === 200) {
+            console.log('Payment completed:', paymentId, 'txid:', txid);
+            res.json({ success: true, payment: result.data });
+        } else {
+            console.error('Complete failed:', result.data);
+            res.status(result.status).json({ success: false, error: result.data });
+        }
+    } catch(err) {
+        res.status(500).json({ error: 'Completion failed', message: err.message });
+    }
 });
 
 // --------------- Start Server ---------------

@@ -31,6 +31,23 @@
     <link rel="preconnect" href="https://pivisualcard.online">
     <link rel="dns-prefetch" href="https://api.coingecko.com">
     <link rel="preconnect" href="https://api.coingecko.com" crossorigin>
+    <link rel="dns-prefetch" href="https://sdk.minepi.com">
+    <link rel="preconnect" href="https://sdk.minepi.com">
+
+    <!-- Pi Network SDK (must load before Pi.init) -->
+    <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+    <script>
+        // Initialize Pi SDK — works inside Pi Browser; gracefully degrades elsewhere
+        var piSdkReady = false;
+        var piUser = null;
+        var piAccessToken = null;
+        try {
+            Pi.init({ version: "2.0", sandbox: false });
+            piSdkReady = true;
+        } catch(e) {
+            console.warn('Pi SDK not available — running outside Pi Browser');
+        }
+    </script>
 
     <style>
         /* ===== RESET & BASE ===== */
@@ -1705,14 +1722,47 @@
                     showToast('Insufficient balance!');
                     return;
                 }
+
+                // --- Pi Browser: real blockchain payment ---
+                if (isPiBrowser()) {
+                    var memo = currentAction === 'send'
+                        ? 'Send to @' + recipient.replace(/^@/, '')
+                        : 'Pay ' + recipient;
+                    var meta = { action: currentAction, recipient: recipient, cardType: currentCardType };
+                    confirmBtn.disabled = true;
+                    confirmBtn.textContent = 'Processing...';
+                    piCreatePayment(amount, memo, meta,
+                        function onSuccess(paymentId, txid) {
+                            // Payment confirmed on blockchain
+                            balance -= amount;
+                            var txName = currentAction === 'send' ? 'Sent to @' + recipient.replace(/^@/,'') : 'Paid ' + recipient;
+                            var txType = currentAction === 'send' ? 'sent' : 'shop';
+                            var txRegion = 'international';
+                            if (currentCardType === 'mastercard') {
+                                var user = getRegisteredUser();
+                                txRegion = user ? getCountryName(user.country) : 'domestic';
+                                txName += ' (' + txRegion + ')';
+                            }
+                            transactions.unshift({ type: txType, name: txName, amount: -amount, date: new Date().toISOString(), region: txRegion, txid: txid });
+                            updateBalance(); renderTransactions(); saveState();
+                            showToast((currentAction === 'send' ? 'Sent' : 'Paid') + ' ' + amount.toFixed(2) + ' \u03C0 on Pi blockchain!');
+                            closeModal();
+                        },
+                        function onError(err) {
+                            confirmBtn.disabled = false;
+                            confirmBtn.textContent = currentAction === 'send' ? 'Send' : 'Pay Now';
+                            if (err !== 'cancelled') showToast('Payment failed — try again');
+                        }
+                    );
+                    return; // wait for async Pi payment callbacks
+                }
+
+                // --- Fallback: demo/simulation mode ---
                 // Mastercard domestic restriction: block cross-border keywords
                 if (currentCardType === 'mastercard' && (currentAction === 'send' || currentAction === 'pay')) {
                     var user = getRegisteredUser();
                     var userCountry = user ? user.country : '';
-                    // Show warning reminding user this is domestic only
                     var txNameCheck = recipient.toLowerCase();
-                    // If recipient contains country indicators different from user's country
-                    // The card is simply flagged as domestic — all Mastercard transactions are tagged as local
                 }
                 balance -= amount;
                 var txName = currentAction === 'send' ? 'Sent to @' + recipient.replace(/^@/,'') : 'Paid ' + recipient;
@@ -1727,6 +1777,28 @@
                 transactions.unshift({ type: txType, name: txName, amount: -amount, date: new Date().toISOString(), region: txRegion });
                 showToast((currentAction === 'send' ? 'Sent' : 'Paid') + ' ' + amount.toFixed(2) + ' \u03C0' + (currentCardType === 'mastercard' ? ' (domestic)' : '') + ' successfully!');
             } else if (currentAction === 'topup') {
+                // --- Pi Browser: real top-up via blockchain ---
+                if (isPiBrowser()) {
+                    var topUpMeta = { action: 'topup', cardType: currentCardType };
+                    confirmBtn.disabled = true;
+                    confirmBtn.textContent = 'Processing...';
+                    piCreatePayment(amount, 'Top Up Visual Pi Card', topUpMeta,
+                        function onSuccess(paymentId, txid) {
+                            balance += amount;
+                            transactions.unshift({ type: 'recv', name: 'Card Top Up (Pi)', amount: amount, date: new Date().toISOString(), txid: txid });
+                            updateBalance(); renderTransactions(); saveState();
+                            showToast('Topped up ' + amount.toFixed(2) + ' \u03C0 via Pi blockchain!');
+                            closeModal();
+                        },
+                        function onError(err) {
+                            confirmBtn.disabled = false;
+                            confirmBtn.textContent = 'Top Up';
+                            if (err !== 'cancelled') showToast('Top-up failed — try again');
+                        }
+                    );
+                    return;
+                }
+                // --- Fallback: demo mode ---
                 balance += amount;
                 transactions.unshift({ type: 'recv', name: 'Card Top Up', amount: amount, date: new Date().toISOString() });
                 showToast('Topped up ' + amount.toFixed(2) + ' \u03C0 successfully!');
@@ -2137,6 +2209,20 @@
             // Visa registration fee: 5 Pi from wallet balance
             var selectedCard = document.getElementById('regCardType').value;
             if (selectedCard === 'visa') {
+                // --- Pi Browser: charge real 5 Pi registration fee ---
+                if (isPiBrowser()) {
+                    piCreatePayment(5, 'Visual Pi Card — Visa Registration Fee', { action: 'visa_registration' },
+                        function onSuccess(paymentId, txid) {
+                            transactions.unshift({ type: 'shop', name: 'Visa Registration Fee (Pi Blockchain)', amount: -5, date: new Date().toISOString(), txid: txid });
+                            finishRegistration(emailVal);
+                        },
+                        function onError(err) {
+                            if (err !== 'cancelled') showToast('Registration payment failed — try again');
+                        }
+                    );
+                    return false; // wait for async payment
+                }
+                // --- Fallback: demo deduction ---
                 if (balance < 5) {
                     showToast('Insufficient Pi wallet balance! You need 5 \u03C0 to register a Visual Pi Card.');
                     return false;
@@ -2145,12 +2231,17 @@
                 transactions.unshift({ type: 'shop', name: 'Visa Registration Fee (Pi Wallet)', amount: -5, date: new Date().toISOString() });
             }
 
+            finishRegistration(emailVal);
+            return false;
+        }
+
+        function finishRegistration(emailVal) {
             // Collect data
             var user = {
                 firstName: document.getElementById('regFirstName').value.trim(),
                 lastName:  document.getElementById('regLastName').value.trim(),
                 piUser:    document.getElementById('regPiUser').value.trim().replace(/^@/, ''),
-                email:     emailVal,
+                email:     emailVal || document.getElementById('regEmail').value.trim(),
                 phone:     document.getElementById('regPhone').value.trim(),
                 country:   document.getElementById('regCountry').value,
                 cardType:  document.getElementById('regCardType').value,
@@ -2176,8 +2267,104 @@
             showApp();
             initApp();
             showToast('Welcome, ' + user.firstName + '! Your card is ready.');
+        }
 
-            return false;
+        /* ===== PI BROWSER AUTHENTICATION ===== */
+        function piAuthenticate(callback) {
+            if (!piSdkReady) {
+                if (callback) callback(null);
+                return;
+            }
+            var scopes = ['payments', 'username'];
+
+            function onIncompletePaymentFound(payment) {
+                // Handle incomplete payment from a previous session
+                console.log('Incomplete payment found:', payment);
+                // Complete it on server side
+                fetch('/api/pi/complete', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ paymentId: payment.identifier, txid: payment.transaction && payment.transaction.txid })
+                }).catch(function() {});
+            }
+
+            Pi.authenticate(scopes, onIncompletePaymentFound).then(function(auth) {
+                piUser = auth.user;
+                piAccessToken = auth.accessToken;
+                console.log('Pi authenticated:', piUser.username);
+                // Verify token with our server
+                fetch('/api/pi/verify', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ accessToken: piAccessToken })
+                }).then(function(r) { return r.json(); }).catch(function() {});
+                if (callback) callback(auth);
+            }).catch(function(err) {
+                console.warn('Pi auth failed:', err);
+                if (callback) callback(null);
+            });
+        }
+
+        /* ===== PI PAYMENT (User-to-App) ===== */
+        function piCreatePayment(amount, memo, metadata, onSuccess, onError) {
+            if (!piSdkReady) {
+                if (onError) onError('Pi SDK not available');
+                return;
+            }
+            Pi.createPayment({
+                amount: amount,
+                memo: memo,
+                metadata: metadata || {}
+            }, {
+                onReadyForServerApproval: function(paymentId) {
+                    // Send paymentId to our server for approval
+                    fetch('/api/pi/approve', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ paymentId: paymentId })
+                    }).then(function(r) { return r.json(); })
+                    .then(function(data) {
+                        if (!data.success) console.error('Server approval failed', data);
+                    }).catch(function(err) {
+                        console.error('Approval request failed', err);
+                    });
+                },
+                onReadyForServerCompletion: function(paymentId, txid) {
+                    // Send txid to our server for completion
+                    fetch('/api/pi/complete', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ paymentId: paymentId, txid: txid })
+                    }).then(function(r) { return r.json(); })
+                    .then(function(data) {
+                        if (data.success && onSuccess) onSuccess(paymentId, txid);
+                        else if (!data.success && onError) onError('Completion failed');
+                    }).catch(function(err) {
+                        console.error('Completion request failed', err);
+                        if (onError) onError(err);
+                    });
+                },
+                onCancel: function(paymentId) {
+                    showToast('Payment cancelled');
+                    if (onError) onError('cancelled');
+                },
+                onError: function(error, payment) {
+                    console.error('Pi payment error:', error);
+                    showToast('Payment error — please try again');
+                    if (onError) onError(error);
+                }
+            });
+        }
+
+        /* ===== PI BROWSER STATUS ===== */
+        function isPiBrowser() {
+            return piSdkReady;
+        }
+
+        function getPiStatusLabel() {
+            if (piSdkReady && piUser) return '\u03C0 Connected: @' + piUser.username;
+            if (piSdkReady) return '\u03C0 Pi Browser detected';
+            return 'Demo mode (open in Pi Browser for real payments)';
         }
 
         /* ===== STARTUP: check registration ===== */
@@ -2191,6 +2378,21 @@
                 initApp();
             } else {
                 showRegister();
+            }
+
+            // Authenticate with Pi Browser if available
+            if (piSdkReady) {
+                piAuthenticate(function(auth) {
+                    if (auth && auth.user) {
+                        // Auto-fill registration with Pi username
+                        var piUserField = document.getElementById('regPiUser');
+                        if (piUserField && !piUserField.value) {
+                            piUserField.value = '@' + auth.user.username;
+                        }
+                        // Show connected status
+                        showToast('\u03C0 Connected: @' + auth.user.username);
+                    }
+                });
             }
         })();
     </script>

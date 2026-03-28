@@ -15,11 +15,11 @@ RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 # ===== Security Headers =====
 <IfModule mod_headers.c>
     Header set X-Content-Type-Options "nosniff"
-    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-Frame-Options "ALLOW-FROM https://app-cdn.minepi.com"
     Header set X-XSS-Protection "1; mode=block"
     Header set Referrer-Policy "strict-origin-when-cross-origin"
     Header set Permissions-Policy "camera=(), microphone=(), geolocation=()"
-    Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://pivisualcard.online https://api.coingecko.com"
+    Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://sdk.minepi.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://pivisualcard.online https://api.coingecko.com https://api.minepi.com; frame-src https://sdk.minepi.com https://app-cdn.minepi.com"
     Header set Strict-Transport-Security "max-age=31536000; includeSubDomains" env=HTTPS
     Header set X-Powered-By "Visual Pi Card"
 </IfModule>
