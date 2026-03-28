@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Platinum Card &mdash; Visual Pi Card &mdash; pivisualcard.online</title>
+<link rel="canonical" href="https://pivisualcard.online/card-platinum.html">
+<meta name="description" content="Visual Pi Card - Platinum card with scheduled payments, transaction insurance, multi-wallet.">
+<meta property="og:title" content="Platinum Card - Visual Pi Card">
+<meta property="og:url" content="https://pivisualcard.online/card-platinum.html">
+<meta property="og:site_name" content="Visual Pi Card">
+<meta name="theme-color" content="#0d0221">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:linear-gradient(135deg,#1a1a2e,#2d2d4e,#3d3d5c);color:#fff;min-height:100vh;padding:20px}
+.container{max-width:900px;margin:0 auto}
+h1{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient(90deg,#8888a8,#c0c0e0,#e0e0f0,#c0c0e0,#8888a8);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.subtitle{text-align:center;color:rgba(255,255,255,.5);margin-bottom:30px;font-size:.9rem}
+.badge{display:inline-block;background:linear-gradient(135deg,#5a5a7a,#a0a0c0);color:#fff;padding:4px 14px;border-radius:20px;font-weight:700;font-size:.75rem;margin-bottom:20px}
+
+.card-preview{background:linear-gradient(135deg,#3d3d5c 0%,#5a5a7a 40%,#8888a8 100%);border-radius:20px;padding:30px;margin:0 auto 30px;max-width:420px;box-shadow:0 20px 50px rgba(136,136,168,.3),0 0 0 1px rgba(255,255,255,.12);position:relative;overflow:hidden}
+.card-preview::after{content:'';position:absolute;top:-40%;right:-40%;width:80%;height:80%;background:radial-gradient(circle,rgba(255,255,255,.06) 0%,transparent 70%);pointer-events:none}
+.card-number{font-family:'Courier New',monospace;font-size:1.4rem;letter-spacing:3px;margin:20px 0 10px;text-shadow:0 2px 4px rgba(0,0,0,.3)}
+.card-label{font-size:.65rem;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:1px}
+.card-val{font-size:.9rem;margin-bottom:12px}
+.net-badge{font-size:.6rem;color:rgba(255,255,255,.4);letter-spacing:2px;margin-top:15px}
+
+.section{background:rgba(160,160,192,.04);border:1px solid rgba(160,160,192,.08);border-radius:16px;padding:24px;margin-bottom:20px}
+.section h2{font-size:1.1rem;margin-bottom:14px;color:#c0c0e0}
+.section h2 span{margin-right:8px}
+
+.feature-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.feature-card{background:rgba(160,160,192,.04);border:1px solid rgba(160,160,192,.06);border-radius:12px;padding:16px;text-align:center;transition:transform .2s,border-color .2s}
+.feature-card:hover{transform:translateY(-3px);border-color:rgba(160,160,192,.3)}
+.feature-card .icon{font-size:1.8rem;margin-bottom:8px}
+.feature-card h3{font-size:.85rem;margin-bottom:4px}
+.feature-card p{font-size:.72rem;color:rgba(255,255,255,.5);line-height:1.4}
+.tag{display:inline-block;font-size:.6rem;padding:2px 8px;border-radius:8px;margin-top:6px}
+.tag-plat{background:rgba(160,160,192,.15);color:#c0c0e0;border:1px solid rgba(160,160,192,.25)}
+.tag-green{background:rgba(39,174,96,.15);color:#27ae60;border:1px solid rgba(39,174,96,.2)}
+
+/* Scheduled Payments */
+.schedule-box{background:rgba(160,160,192,.06);border:1px solid rgba(160,160,192,.1);border-radius:14px;padding:20px;margin-top:14px}
+.sched-item{display:flex;align-items:center;gap:12px;padding:12px;border-bottom:1px solid rgba(160,160,192,.06);font-size:.82rem}
+.sched-item:last-child{border-bottom:none}
+.sched-icon{font-size:1.2rem;width:36px;text-align:center}
+.sched-status{margin-left:auto;font-size:.7rem;padding:3px 8px;border-radius:6px}
+.sched-active{background:rgba(39,174,96,.15);color:#27ae60}
+.sched-pending{background:rgba(245,197,24,.15);color:#f5c518}
+
+.sched-form{margin-top:16px;display:flex;flex-wrap:wrap;gap:10px}
+.sched-form input,.sched-form select{background:rgba(255,255,255,.06);border:1px solid rgba(160,160,192,.12);color:#fff;padding:10px 14px;border-radius:10px;font-size:.85rem;flex:1;min-width:120px}
+.sched-form input:focus,.sched-form select:focus{outline:none;border-color:#a0a0c0}
+
+/* Insurance Widget */
+.insurance-box{background:rgba(160,160,192,.06);border:1px solid rgba(160,160,192,.1);border-radius:14px;padding:20px;margin-top:14px}
+.ins-plan{display:flex;align-items:center;gap:14px;padding:14px;border:1px solid rgba(160,160,192,.08);border-radius:12px;margin-bottom:10px;cursor:pointer;transition:all .2s}
+.ins-plan:hover,.ins-plan.selected{border-color:rgba(160,160,192,.3);background:rgba(160,160,192,.06)}
+.ins-plan .ins-icon{font-size:1.5rem}
+.ins-plan h4{font-size:.85rem;margin-bottom:2px}
+.ins-plan p{font-size:.72rem;color:rgba(255,255,255,.5)}
+.ins-plan .ins-price{margin-left:auto;font-weight:700;color:#c0c0e0}
+
+/* Multi-Wallet */
+.wallet-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:14px}
+.wallet-card{background:rgba(160,160,192,.04);border:1px solid rgba(160,160,192,.08);border-radius:12px;padding:14px;text-align:center}
+.wallet-card .w-icon{font-size:1.5rem;margin-bottom:6px}
+.wallet-card .w-name{font-size:.75rem;color:rgba(255,255,255,.6);margin-bottom:4px}
+.wallet-card .w-bal{font-size:1rem;font-weight:700;color:#c0c0e0}
+
+.btn{padding:12px 24px;border:none;border-radius:12px;font-size:.85rem;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-plat{background:linear-gradient(135deg,#5a5a7a,#a0a0c0);color:#fff}
+.btn-plat:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(136,136,168,.4)}
+
+.back-link{display:block;text-align:center;margin-top:30px;color:rgba(255,255,255,.4);font-size:.85rem;text-decoration:none}
+.back-link:hover{color:#c0c0e0}
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>💎 Platinum Card</h1>
+    <p class="subtitle">Scheduled Payments • Transaction Insurance • Multi-Wallet • Auto-Pay</p>
+    <div style="text-align:center"><span class="badge">PLATINUM</span></div>
+
+    <!-- Card Preview -->
+    <div class="card-preview">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:.7rem;color:rgba(255,255,255,.5)">Visual Pi Card</span>
+            <span style="font-size:.65rem;background:rgba(255,255,255,.08);padding:3px 10px;border-radius:8px;color:#e0e0f0">PLATINUM</span>
+        </div>
+        <div class="card-number">5514 1592 6535 8979</div>
+        <div style="display:flex;gap:30px">
+            <div><div class="card-label">Card Holder</div><div class="card-val" id="holderName">PI PIONEER</div></div>
+            <div><div class="card-label">Expires</div><div class="card-val">12/30</div></div>
+            <div><div class="card-label">CVV</div><div class="card-val">420</div></div>
+        </div>
+        <div class="net-badge">PI NETWORK • PLATINUM</div>
+    </div>
+
+    <!-- Scheduled Payments -->
+    <div class="section">
+        <h2><span>📅</span> Scheduled Payments</h2>
+        <p style="font-size:.8rem;color:rgba(255,255,255,.4);margin-bottom:14px">Set up recurring auto-pay — exclusive to Platinum</p>
+        <div class="schedule-box">
+            <div id="schedList">
+                <div style="text-align:center;color:rgba(255,255,255,.3);padding:20px;font-size:.85rem">No scheduled payments yet</div>
+            </div>
+            <div class="sched-form">
+                <input type="text" id="schedRecipient" placeholder="@recipient">
+                <input type="number" id="schedAmount" placeholder="Amount (π)" min="0.01" step="0.01">
+                <select id="schedFreq">
+                    <option value="daily">Daily</option>
+                    <option value="weekly" selected>Weekly</option>
+                    <option value="monthly">Monthly</option>
+                </select>
+                <button class="btn btn-plat" onclick="addSchedule()">+ Add Schedule</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Transaction Insurance -->
+    <div class="section">
+        <h2><span>🛡️</span> Transaction Insurance</h2>
+        <p style="font-size:.8rem;color:rgba(255,255,255,.4);margin-bottom:14px">Protect your Pi transactions — Platinum exclusive</p>
+        <div class="insurance-box">
+            <div class="ins-plan" onclick="selectPlan(this,'basic')">
+                <div class="ins-icon">🛡️</div>
+                <div><h4>Basic Protection</h4><p>Covers up to 100 π per transaction against fraud</p></div>
+                <div class="ins-price">0.5 π/mo</div>
+            </div>
+            <div class="ins-plan" onclick="selectPlan(this,'standard')">
+                <div class="ins-icon">🔒</div>
+                <div><h4>Standard Protection</h4><p>Covers up to 1,000 π + dispute resolution</p></div>
+                <div class="ins-price">2 π/mo</div>
+            </div>
+            <div class="ins-plan" onclick="selectPlan(this,'premium')">
+                <div class="ins-icon">🏆</div>
+                <div><h4>Premium Protection</h4><p>Unlimited coverage + 24/7 fraud monitoring + instant refunds</p></div>
+                <div class="ins-price">5 π/mo</div>
+            </div>
+            <div id="planMsg" style="text-align:center;margin-top:10px;font-size:.8rem;color:rgba(255,255,255,.4);display:none"></div>
+        </div>
+    </div>
+
+    <!-- Multi-Wallet -->
+    <div class="section">
+        <h2><span>💼</span> Multi-Wallet Manager</h2>
+        <p style="font-size:.8rem;color:rgba(255,255,255,.4);margin-bottom:14px">Organize your Pi across multiple purpose wallets</p>
+        <div class="wallet-grid">
+            <div class="wallet-card"><div class="w-icon">💳</div><div class="w-name">Main Wallet</div><div class="w-bal" id="walMain">0.00 π</div></div>
+            <div class="wallet-card"><div class="w-icon">🏦</div><div class="w-name">Savings</div><div class="w-bal" id="walSave">0.00 π</div></div>
+            <div class="wallet-card"><div class="w-icon">🛒</div><div class="w-name">Shopping</div><div class="w-bal" id="walShop">0.00 π</div></div>
+            <div class="wallet-card"><div class="w-icon">🎯</div><div class="w-name">Goals</div><div class="w-bal" id="walGoal">0.00 π</div></div>
+        </div>
+        <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
+            <select id="walFrom" style="flex:1;min-width:100px;background:rgba(255,255,255,.06);border:1px solid rgba(160,160,192,.12);color:#fff;padding:10px;border-radius:10px;font-size:.85rem">
+                <option value="main">Main</option><option value="savings">Savings</option><option value="shopping">Shopping</option><option value="goals">Goals</option>
+            </select>
+            <span style="padding:10px;color:rgba(255,255,255,.4)">→</span>
+            <select id="walTo" style="flex:1;min-width:100px;background:rgba(255,255,255,.06);border:1px solid rgba(160,160,192,.12);color:#fff;padding:10px;border-radius:10px;font-size:.85rem">
+                <option value="savings">Savings</option><option value="main">Main</option><option value="shopping">Shopping</option><option value="goals">Goals</option>
+            </select>
+            <input type="number" id="walAmt" placeholder="Amount" min="0.01" step="0.01" style="flex:1;min-width:80px;background:rgba(255,255,255,.06);border:1px solid rgba(160,160,192,.12);color:#fff;padding:10px;border-radius:10px;font-size:.85rem">
+            <button class="btn btn-plat" onclick="transferWallet()">Transfer</button>
+        </div>
+    </div>
+
+    <!-- Card Features -->
+    <div class="section">
+        <h2><span>💳</span> Platinum Features</h2>
+        <div class="feature-grid">
+            <div class="feature-card"><div class="icon">📤</div><h3>Send Pi</h3><p>Worldwide sends with insurance</p><span class="tag tag-green">✓</span></div>
+            <div class="feature-card"><div class="icon">📥</div><h3>Receive Pi</h3><p>Accept from anyone globally</p><span class="tag tag-green">✓</span></div>
+            <div class="feature-card"><div class="icon">📅</div><h3>Auto-Pay</h3><p>Scheduled recurring payments</p><span class="tag tag-plat">Platinum</span></div>
+            <div class="feature-card"><div class="icon">🛡️</div><h3>Insurance</h3><p>Transaction fraud protection</p><span class="tag tag-plat">Platinum</span></div>
+            <div class="feature-card"><div class="icon">💼</div><h3>Multi-Wallet</h3><p>4 purpose-based wallets</p><span class="tag tag-plat">Platinum</span></div>
+            <div class="feature-card"><div class="icon">🌐</div><h3>Cross-Border</h3><p>International transfers enabled</p><span class="tag tag-green">✓</span></div>
+        </div>
+    </div>
+
+    <!-- Fee Structure -->
+    <div class="section">
+        <h2><span>💰</span> Fee Structure</h2>
+        <table style="width:100%;font-size:.85rem;border-collapse:collapse">
+            <tr style="border-bottom:1px solid rgba(160,160,192,.06)"><td style="padding:10px;color:rgba(255,255,255,.5)">Registration</td><td style="padding:10px;font-weight:600;color:#c0c0e0">Premium</td></tr>
+            <tr style="border-bottom:1px solid rgba(160,160,192,.06)"><td style="padding:10px;color:rgba(255,255,255,.5)">Scheduled Payments</td><td style="padding:10px">Free</td></tr>
+            <tr style="border-bottom:1px solid rgba(160,160,192,.06)"><td style="padding:10px;color:rgba(255,255,255,.5)">Insurance</td><td style="padding:10px">0.5 — 5 π/month</td></tr>
+            <tr style="border-bottom:1px solid rgba(160,160,192,.06)"><td style="padding:10px;color:rgba(255,255,255,.5)">Multi-Wallet Transfer</td><td style="padding:10px">Free</td></tr>
+            <tr><td style="padding:10px;color:rgba(255,255,255,.5)">Cross-Border</td><td style="padding:10px">Free</td></tr>
+        </table>
+    </div>
+
+    <a href="index.html" class="back-link">← Back to Visual Pi Card</a>
+</div>
+
+<script>
+var schedules = [];
+var wallets = { main: 0, savings: 0, shopping: 0, goals: 0 };
+
+(function() {
+    try {
+        var u = JSON.parse(localStorage.getItem('pivisualcard_user'));
+        if (u) document.getElementById('holderName').textContent = (u.firstName + ' ' + u.lastName).toUpperCase();
+    } catch(e) {}
+    try {
+        var d = JSON.parse(localStorage.getItem('pivisualcard_data'));
+        if (d && typeof d.balance === 'number') { wallets.main = d.balance; updateWallets(); }
+    } catch(e) {}
+    try {
+        var s = JSON.parse(localStorage.getItem('plat_schedules'));
+        if (Array.isArray(s)) { schedules = s; renderSchedules(); }
+    } catch(e) {}
+    try {
+        var w = JSON.parse(localStorage.getItem('plat_wallets'));
+        if (w) { Object.assign(wallets, w); updateWallets(); }
+    } catch(e) {}
+})();
+
+function addSchedule() {
+    var r = document.getElementById('schedRecipient').value.trim();
+    var a = parseFloat(document.getElementById('schedAmount').value);
+    var f = document.getElementById('schedFreq').value;
+    if (!r || isNaN(a) || a <= 0) return;
+    schedules.push({ recipient: r, amount: a, freq: f, created: new Date().toISOString(), active: true });
+    try { localStorage.setItem('plat_schedules', JSON.stringify(schedules)); } catch(e) {}
+    document.getElementById('schedRecipient').value = '';
+    document.getElementById('schedAmount').value = '';
+    renderSchedules();
+    showToast('Scheduled ' + f + ' payment of ' + a.toFixed(2) + ' π to ' + r);
+}
+
+function renderSchedules() {
+    var el = document.getElementById('schedList');
+    if (schedules.length === 0) {
+        el.innerHTML = '<div style="text-align:center;color:rgba(255,255,255,.3);padding:20px;font-size:.85rem">No scheduled payments yet</div>';
+        return;
+    }
+    el.innerHTML = schedules.map(function(s, i) {
+        return '<div class="sched-item"><div class="sched-icon">📅</div><div><strong>' + escHtml(s.recipient) + '</strong><br><span style="font-size:.7rem;color:rgba(255,255,255,.4)">' + s.amount.toFixed(2) + ' π • ' + s.freq + '</span></div><span class="sched-status ' + (s.active ? 'sched-active' : 'sched-pending') + '">' + (s.active ? '● Active' : '○ Paused') + '</span></div>';
+    }).join('');
+}
+
+function selectPlan(el, plan) {
+    document.querySelectorAll('.ins-plan').forEach(function(p) { p.classList.remove('selected'); });
+    el.classList.add('selected');
+    var msg = document.getElementById('planMsg');
+    msg.style.display = 'block';
+    msg.innerHTML = '✅ <strong>' + plan.charAt(0).toUpperCase() + plan.slice(1) + ' Protection</strong> selected — coverage active on all transactions';
+}
+
+function updateWallets() {
+    document.getElementById('walMain').textContent = wallets.main.toFixed(2) + ' π';
+    document.getElementById('walSave').textContent = wallets.savings.toFixed(2) + ' π';
+    document.getElementById('walShop').textContent = wallets.shopping.toFixed(2) + ' π';
+    document.getElementById('walGoal').textContent = wallets.goals.toFixed(2) + ' π';
+}
+
+function transferWallet() {
+    var from = document.getElementById('walFrom').value;
+    var to = document.getElementById('walTo').value;
+    var amt = parseFloat(document.getElementById('walAmt').value);
+    if (from === to || isNaN(amt) || amt <= 0) return;
+    if (wallets[from] < amt) { showToast('Insufficient balance in ' + from + ' wallet'); return; }
+    wallets[from] -= amt;
+    wallets[to] += amt;
+    try { localStorage.setItem('plat_wallets', JSON.stringify(wallets)); } catch(e) {}
+    updateWallets();
+    showToast('Transferred ' + amt.toFixed(2) + ' π from ' + from + ' to ' + to);
+}
+
+function showToast(msg) {
+    var t = document.createElement('div');
+    t.textContent = msg;
+    t.style.cssText = 'position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:rgba(160,160,192,.95);color:#fff;padding:12px 24px;border-radius:12px;font-size:.85rem;z-index:9999';
+    document.body.appendChild(t);
+    setTimeout(function() { t.remove(); }, 3000);
+}
+
+function escHtml(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+</script>
+</body>
+</html>

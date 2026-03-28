@@ -13,7 +13,7 @@ param(
 )
 
 $DOMAIN = "pivisualcard.online"
-$REPO = "github.com/OMENDA/visual-pi-card"
+$REPO = "github.com/chiefutility/visual-pi-card"
 
 Write-Host ""
 Write-Host "  ========================================" -ForegroundColor Yellow

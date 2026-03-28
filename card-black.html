@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Black Card &mdash; Visual Pi Card &mdash; pivisualcard.online</title>
+<link rel="canonical" href="https://pivisualcard.online/card-black.html">
+<meta name="description" content="Visual Pi Card - Black unlimited card with priority processing, concierge, VIP vault.">
+<meta property="og:title" content="Black Card - Visual Pi Card">
+<meta property="og:url" content="https://pivisualcard.online/card-black.html">
+<meta property="og:site_name" content="Visual Pi Card">
+<meta name="theme-color" content="#0d0221">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:linear-gradient(135deg,#050505,#0a0a0a,#151515);color:#fff;min-height:100vh;padding:20px}
+.container{max-width:900px;margin:0 auto}
+h1{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient(90deg,#888,#fff,#888);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.subtitle{text-align:center;color:rgba(255,255,255,.5);margin-bottom:30px;font-size:.9rem}
+.badge{display:inline-block;background:linear-gradient(135deg,#333,#666);color:#fff;padding:4px 14px;border-radius:20px;font-weight:700;font-size:.75rem;margin-bottom:20px;border:1px solid rgba(255,255,255,.15)}
+
+.card-preview{background:linear-gradient(135deg,#0a0a0a 0%,#1a1a1a 40%,#2c2c2c 100%);border-radius:20px;padding:30px;margin:0 auto 30px;max-width:420px;box-shadow:0 20px 50px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.15);position:relative;overflow:hidden}
+.card-preview::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,transparent 40%,rgba(255,255,255,.03) 50%,transparent 60%);pointer-events:none}
+.card-number{font-family:'Courier New',monospace;font-size:1.4rem;letter-spacing:3px;margin:20px 0 10px;text-shadow:0 2px 4px rgba(0,0,0,.5)}
+.card-label{font-size:.65rem;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1px}
+.card-val{font-size:.9rem;margin-bottom:12px;color:rgba(255,255,255,.8)}
+.net-badge{font-size:.6rem;color:rgba(255,255,255,.3);letter-spacing:2px;margin-top:15px}
+
+.section{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:24px;margin-bottom:20px}
+.section h2{font-size:1.1rem;margin-bottom:14px;color:#ccc}
+.section h2 span{margin-right:8px}
+
+.feature-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.feature-card{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:16px;text-align:center;transition:transform .2s,border-color .2s}
+.feature-card:hover{transform:translateY(-3px);border-color:rgba(255,255,255,.2)}
+.feature-card .icon{font-size:1.8rem;margin-bottom:8px}
+.feature-card h3{font-size:.85rem;margin-bottom:4px}
+.feature-card p{font-size:.72rem;color:rgba(255,255,255,.4);line-height:1.4}
+.tag{display:inline-block;font-size:.6rem;padding:2px 8px;border-radius:8px;margin-top:6px}
+.tag-unlim{background:rgba(255,255,255,.08);color:#ccc;border:1px solid rgba(255,255,255,.15)}
+
+/* Spending Limit Calc */
+.limit-box{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:20px;margin-top:14px}
+.limit-bar{height:8px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden;margin:10px 0}
+.limit-fill{height:100%;background:linear-gradient(90deg,#888,#fff);border-radius:4px;transition:width .5s}
+.limit-label{display:flex;justify-content:space-between;font-size:.75rem;color:rgba(255,255,255,.5)}
+
+/* Concierge */
+.concierge{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:20px;margin-top:14px}
+.concierge-msg{background:rgba(255,255,255,.03);border-radius:10px;padding:12px;margin-bottom:8px;font-size:.82rem;color:rgba(255,255,255,.7);line-height:1.5}
+.concierge-input{display:flex;gap:8px;margin-top:12px}
+.concierge-input input{flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);color:#fff;padding:10px 14px;border-radius:10px;font-size:.85rem}
+.concierge-input input:focus{outline:none;border-color:rgba(255,255,255,.2)}
+
+/* Priority Queue */
+.priority-list{margin-top:14px}
+.priority-item{display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.03);font-size:.82rem}
+.priority-item:last-child{border-bottom:none}
+.priority-num{width:24px;height:24px;background:rgba(255,255,255,.06);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;color:rgba(255,255,255,.5)}
+
+.btn{padding:12px 24px;border:none;border-radius:12px;font-size:.85rem;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-black{background:linear-gradient(135deg,#333,#555);color:#fff;border:1px solid rgba(255,255,255,.1)}
+.btn-black:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.5)}
+.btn-sm{padding:8px 16px;font-size:.78rem}
+
+/* Instant Transfer */
+.transfer-box{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:20px;margin-top:14px}
+.transfer-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.transfer-row input,.transfer-row select{flex:1;min-width:120px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);color:#fff;padding:10px 14px;border-radius:10px;font-size:.85rem}
+.transfer-row input:focus,.transfer-row select:focus{outline:none;border-color:rgba(255,255,255,.25)}
+.transfer-receipt{background:rgba(39,174,96,.08);border:1px solid rgba(39,174,96,.15);border-radius:10px;padding:14px;margin-top:12px;display:none;font-size:.82rem}
+.transfer-receipt .tx-id{font-family:'Courier New',monospace;font-size:.72rem;color:rgba(255,255,255,.4);margin-top:6px}
+
+/* VIP Vault */
+.vault-box{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:20px;margin-top:14px}
+.vault-summary{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+.vault-stat{flex:1;min-width:120px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.05);border-radius:10px;padding:14px;text-align:center}
+.vault-stat .v-label{font-size:.65rem;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1px}
+.vault-stat .v-val{font-size:1.2rem;font-weight:700;color:#ccc;margin-top:4px}
+.vault-entries{margin-top:12px;max-height:200px;overflow-y:auto}
+.vault-entry{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.03);font-size:.82rem}
+.vault-entry:last-child{border-bottom:none}
+.vault-badge{font-size:.6rem;padding:2px 8px;border-radius:6px}
+.vault-locked{background:rgba(245,197,24,.1);color:#f5c518}
+.vault-matured{background:rgba(39,174,96,.1);color:#27ae60}
+
+/* Analytics Dashboard */
+.analytics-box{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:20px;margin-top:14px}
+.chart-row{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+.chart-card{flex:1;min-width:180px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.05);border-radius:10px;padding:14px}
+.chart-card h4{font-size:.78rem;color:rgba(255,255,255,.5);margin-bottom:8px}
+.bar-chart{display:flex;align-items:end;gap:4px;height:80px}
+.bar{background:linear-gradient(180deg,#666,#333);border-radius:3px 3px 0 0;min-width:16px;flex:1;transition:height .4s;position:relative}
+.bar:hover{background:linear-gradient(180deg,#999,#555)}
+.bar-label{position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);font-size:.55rem;color:rgba(255,255,255,.3);white-space:nowrap}
+.donut-wrap{display:flex;align-items:center;justify-content:center;gap:16px}
+.donut{width:80px;height:80px;border-radius:50%;position:relative}
+.donut-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:.8rem;font-weight:700;color:#ccc}
+.donut-legend{font-size:.72rem;color:rgba(255,255,255,.5);line-height:1.8}
+.legend-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
+
+/* Security Center */
+.security-box{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:20px;margin-top:14px}
+.sec-row{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.03);font-size:.82rem}
+.sec-row:last-child{border-bottom:none}
+.sec-icon{font-size:1.3rem;width:36px;text-align:center}
+.sec-toggle{margin-left:auto;width:44px;height:24px;border-radius:12px;background:rgba(255,255,255,.1);position:relative;cursor:pointer;transition:background .2s}
+.sec-toggle.on{background:rgba(39,174,96,.4)}
+.sec-toggle::after{content:'';position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .2s}
+.sec-toggle.on::after{transform:translateX(20px)}
+.freeze-btn{padding:10px 20px;border:2px solid #e74c3c;background:transparent;color:#e74c3c;border-radius:10px;font-size:.82rem;font-weight:600;cursor:pointer;transition:all .2s;margin-top:10px}
+.freeze-btn:hover{background:#e74c3c;color:#fff}
+.freeze-btn.frozen{border-color:#27ae60;color:#27ae60}
+.freeze-btn.frozen:hover{background:#27ae60;color:#fff}
+.alert-log{margin-top:12px;max-height:150px;overflow-y:auto}
+.alert-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;margin-bottom:6px;font-size:.78rem;background:rgba(255,255,255,.02)}
+.alert-item.warning{background:rgba(245,197,24,.06);border:1px solid rgba(245,197,24,.1)}
+.alert-item.danger{background:rgba(231,76,60,.06);border:1px solid rgba(231,76,60,.1)}
+.alert-item.safe{background:rgba(39,174,96,.06);border:1px solid rgba(39,174,96,.1)}
+
+/* Transaction History */
+.tx-history{margin-top:14px;max-height:300px;overflow-y:auto}
+.tx-row{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.03);font-size:.82rem}
+.tx-row:last-child{border-bottom:none}
+.tx-amt.neg{color:#e74c3c}
+.tx-amt.pos{color:#27ae60}
+.tx-tag{font-size:.6rem;padding:2px 6px;border-radius:4px;background:rgba(255,255,255,.06);color:rgba(255,255,255,.4);margin-left:6px}
+.tx-priority{background:rgba(39,174,96,.1);color:#27ae60}
+
+.back-link{display:block;text-align:center;margin-top:30px;color:rgba(255,255,255,.4);font-size:.85rem;text-decoration:none}
+.back-link:hover{color:#fff}
+
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.pulse{animation:pulse 2s infinite}
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>♦ Black Card</h1>
+    <p class="subtitle">Unlimited Service • Priority Processing • Concierge • No Limits</p>
+    <div style="text-align:center"><span class="badge">BLACK UNLIMITED</span></div>
+
+    <!-- Card Preview -->
+    <div class="card-preview">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:.7rem;color:rgba(255,255,255,.4)">Visual Pi Card</span>
+            <span style="font-size:.65rem;background:rgba(255,255,255,.06);padding:3px 10px;border-radius:8px;color:rgba(255,255,255,.5)">UNLIMITED</span>
+        </div>
+        <div class="card-number">6314 1592 6535 8979</div>
+        <div style="display:flex;gap:30px">
+            <div><div class="card-label">Card Holder</div><div class="card-val" id="holderName">PI PIONEER</div></div>
+            <div><div class="card-label">Expires</div><div class="card-val">12/30</div></div>
+            <div><div class="card-label">CVV</div><div class="card-val">007</div></div>
+        </div>
+        <div class="net-badge">PI NETWORK • BLACK UNLIMITED</div>
+    </div>
+
+    <!-- Unlimited Features -->
+    <div class="section">
+        <h2><span>♾️</span> Unlimited Features</h2>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="icon">♾️</div>
+                <h3>No Spending Limit</h3>
+                <p>Unlimited transaction amounts with no daily/monthly caps</p>
+                <span class="tag tag-unlim">UNLIMITED</span>
+            </div>
+            <div class="feature-card">
+                <div class="icon">⚡</div>
+                <h3>Priority Processing</h3>
+                <p>All transactions processed in priority queue, 0 wait time</p>
+                <span class="tag tag-unlim">UNLIMITED</span>
+            </div>
+            <div class="feature-card">
+                <div class="icon">🌍</div>
+                <h3>Global Access</h3>
+                <p>No country restrictions, works everywhere worldwide</p>
+                <span class="tag tag-unlim">UNLIMITED</span>
+            </div>
+            <div class="feature-card">
+                <div class="icon">🛎️</div>
+                <h3>Concierge Service</h3>
+                <p>24/7 personal concierge for payment assistance</p>
+                <span class="tag tag-unlim">UNLIMITED</span>
+            </div>
+            <div class="feature-card">
+                <div class="icon">🔐</div>
+                <h3>Enhanced Security</h3>
+                <p>Multi-layer encryption, instant fraud alerts</p>
+                <span class="tag tag-unlim">UNLIMITED</span>
+            </div>
+            <div class="feature-card">
+                <div class="icon">🏦</div>
+                <h3>Multi-Currency</h3>
+                <p>Hold and transact in Pi + all fiat currencies simultaneously</p>
+                <span class="tag tag-unlim">UNLIMITED</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Spending Tracker -->
+    <div class="section">
+        <h2><span>📊</span> Spending Power</h2>
+        <p style="font-size:.8rem;color:rgba(255,255,255,.4);margin-bottom:14px">No limits — your full balance is always available</p>
+        <div class="limit-box">
+            <div class="limit-label"><span>Balance: <strong id="balanceAmt">0.00</strong> π</span><span>Limit: <strong>∞ UNLIMITED</strong></span></div>
+            <div class="limit-bar"><div class="limit-fill" id="limitFill" style="width:0%"></div></div>
+            <div style="display:flex;justify-content:space-around;margin-top:10px">
+                <div style="text-align:center"><span style="font-size:1.5rem;color:rgba(255,255,255,.6)">∞</span><div style="font-size:.65rem;color:rgba(255,255,255,.3)">No daily limit</div></div>
+                <div style="text-align:center"><span style="font-size:1.5rem;color:rgba(255,255,255,.6)" id="totalSpent">0</span><div style="font-size:.65rem;color:rgba(255,255,255,.3)">Total spent (π)</div></div>
+                <div style="text-align:center"><span style="font-size:1.5rem;color:rgba(255,255,255,.6)" id="totalReceived">0</span><div style="font-size:.65rem;color:rgba(255,255,255,.3)">Total received (π)</div></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Instant Priority Transfer -->
+    <div class="section">
+        <h2><span>⚡</span> Instant Priority Transfer</h2>
+        <p style="font-size:.8rem;color:rgba(255,255,255,.4);margin-bottom:14px">Send or receive Pi instantly — zero wait, zero limits, priority queue</p>
+        <div class="transfer-box">
+            <div class="transfer-row">
+                <select id="txType">
+                    <option value="send">📤 Send Pi</option>
+                    <option value="receive">📥 Receive Pi</option>
+                    <option value="pay">🛒 Pay Merchant</option>
+                </select>
+                <input type="text" id="txRecipient" placeholder="@username or merchant">
+                <input type="number" id="txAmount" placeholder="Amount (π)" min="0.01" step="0.01">
+            </div>
+            <div class="transfer-row">
+                <input type="text" id="txNote" placeholder="Note (optional)" style="flex:2">
+                <button class="btn btn-black" onclick="executeTransfer()" style="flex:1">⚡ Execute</button>
+            </div>
+            <div class="transfer-receipt" id="txReceipt">
+                <div style="color:#27ae60;font-weight:600;margin-bottom:6px">✓ Transaction Complete</div>
+                <div id="txReceiptDetails"></div>
+                <div class="tx-id" id="txReceiptId"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- VIP Vault -->
+    <div class="section">
+        <h2><span>🔐</span> VIP Vault — Earn While You Hold</h2>
+        <p style="font-size:.8rem;color:rgba(255,255,255,.4);margin-bottom:14px">Lock Pi in the vault for guaranteed returns — Black Card exclusive</p>
+        <div class="vault-box">
+            <div class="vault-summary">
+                <div class="vault-stat"><div class="v-label">Locked Pi</div><div class="v-val" id="vaultLocked">0.00</div></div>
+                <div class="vault-stat"><div class="v-label">Earned Interest</div><div class="v-val" id="vaultEarned" style="color:#27ae60">0.00</div></div>
+                <div class="vault-stat"><div class="v-label">Active Locks</div><div class="v-val" id="vaultCount">0</div></div>
+            </div>
+            <div class="transfer-row">
+                <input type="number" id="vaultAmount" placeholder="Amount to lock (π)" min="1" step="0.01">
+                <select id="vaultDuration">
+                    <option value="7">7 days — 2% return</option>
+                    <option value="30">30 days — 5% return</option>
+                    <option value="90">90 days — 12% return</option>
+                    <option value="365">365 days — 30% return</option>
+                </select>
+                <button class="btn btn-black" onclick="lockVault()">🔐 Lock</button>
+            </div>
+            <div class="vault-entries" id="vaultEntries">
+                <div style="text-align:center;color:rgba(255,255,255,.25);padding:20px;font-size:.82rem">No vault entries yet</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Spending Analytics -->
+    <div class="section">
+        <h2><span>📈</span> Spending Analytics</h2>
+        <p style="font-size:.8rem;color:rgba(255,255,255,.4);margin-bottom:14px">Real-time breakdown of your Black Card activity</p>
+        <div class="analytics-box">
+            <div class="chart-row">
+                <div class="chart-card">
+                    <h4>Last 7 Days</h4>
+                    <div class="bar-chart" id="weekChart"></div>
+                </div>
+                <div class="chart-card">
+                    <h4>By Category</h4>
+                    <div class="donut-wrap">
+                        <canvas id="donutCanvas" width="80" height="80"></canvas>
+                        <div class="donut-legend" id="donutLegend"></div>
+                    </div>
+                </div>
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+                <div style="flex:1;min-width:120px;background:rgba(255,255,255,.03);border-radius:10px;padding:12px;text-align:center">
+                    <div style="font-size:.65rem;color:rgba(255,255,255,.4)">AVG TRANSACTION</div>
+                    <div style="font-size:1.1rem;font-weight:700;color:#ccc" id="avgTx">0.00 π</div>
+                </div>
+                <div style="flex:1;min-width:120px;background:rgba(255,255,255,.03);border-radius:10px;padding:12px;text-align:center">
+                    <div style="font-size:.65rem;color:rgba(255,255,255,.4)">LARGEST TX</div>
+                    <div style="font-size:1.1rem;font-weight:700;color:#ccc" id="maxTx">0.00 π</div>
+                </div>
+                <div style="flex:1;min-width:120px;background:rgba(255,255,255,.03);border-radius:10px;padding:12px;text-align:center">
+                    <div style="font-size:.65rem;color:rgba(255,255,255,.4)">TOTAL TXS</div>
+                    <div style="font-size:1.1rem;font-weight:700;color:#ccc" id="totalTxCount">0</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Security Center -->
+    <div class="section">
+        <h2><span>🛡️</span> Security Center</h2>
+        <p style="font-size:.8rem;color:rgba(255,255,255,.4);margin-bottom:14px">Real-time fraud monitoring, card freeze, and security controls</p>
+        <div class="security-box">
+            <div style="text-align:center;margin-bottom:14px">
+                <button class="freeze-btn" id="freezeBtn" onclick="toggleFreeze()">🔒 Freeze Card</button>
+                <div style="font-size:.7rem;color:rgba(255,255,255,.3);margin-top:6px" id="freezeStatus">Card is active</div>
+            </div>
+            <div class="sec-row"><div class="sec-icon">🔔</div><div><strong>Transaction Alerts</strong><br><span style="font-size:.72rem;color:rgba(255,255,255,.4)">Get notified on every transaction</span></div><div class="sec-toggle on" onclick="this.classList.toggle('on')"></div></div>
+            <div class="sec-row"><div class="sec-icon">🌍</div><div><strong>Geo-Lock</strong><br><span style="font-size:.72rem;color:rgba(255,255,255,.4)">Restrict to specific countries</span></div><div class="sec-toggle" onclick="this.classList.toggle('on')"></div></div>
+            <div class="sec-row"><div class="sec-icon">🔢</div><div><strong>2FA on Large Transfers</strong><br><span style="font-size:.72rem;color:rgba(255,255,255,.4)">Require 2FA for transactions &gt; 1000 π</span></div><div class="sec-toggle on" onclick="this.classList.toggle('on')"></div></div>
+            <div class="sec-row"><div class="sec-icon">👤</div><div><strong>Biometric Auth</strong><br><span style="font-size:.72rem;color:rgba(255,255,255,.4)">Fingerprint/Face ID for payments</span></div><div class="sec-toggle on" onclick="this.classList.toggle('on')"></div></div>
+            <h4 style="margin-top:16px;font-size:.85rem;color:rgba(255,255,255,.5)">🔍 Security Alerts</h4>
+            <div class="alert-log" id="alertLog">
+                <div class="alert-item safe"><span>🟢</span><span>System secure — no threats detected</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Concierge Service -->
+    <div class="section">
+        <h2><span>🛎️</span> Black Card Concierge</h2>
+        <p style="font-size:.8rem;color:rgba(255,255,255,.4);margin-bottom:14px">24/7 AI assistant — type commands: <code style="font-size:.7rem;background:rgba(255,255,255,.06);padding:2px 6px;border-radius:4px">send</code> <code style="font-size:.7rem;background:rgba(255,255,255,.06);padding:2px 6px;border-radius:4px">balance</code> <code style="font-size:.7rem;background:rgba(255,255,255,.06);padding:2px 6px;border-radius:4px">vault</code> <code style="font-size:.7rem;background:rgba(255,255,255,.06);padding:2px 6px;border-radius:4px">freeze</code> <code style="font-size:.7rem;background:rgba(255,255,255,.06);padding:2px 6px;border-radius:4px">help</code></p>
+        <div class="concierge" style="max-height:350px;overflow-y:auto">
+            <div id="conciergeChat">
+                <div style="margin-bottom:12px"><div style="color:rgba(255,255,255,.3);font-size:.7rem;margin-bottom:4px">🛎️ Concierge</div><div class="concierge-msg">Welcome to Black Card Concierge. I can execute commands for you:<br>• <strong>send [amount] [user]</strong> — instant priority transfer<br>• <strong>balance</strong> — check your balance<br>• <strong>vault [amount]</strong> — lock Pi in VIP vault<br>• <strong>freeze / unfreeze</strong> — card security<br>• <strong>stats</strong> — spending analytics<br>• Or ask me anything!</div></div>
+            </div>
+            <div class="concierge-input">
+                <input type="text" id="conciergeInput" placeholder="Type a command or ask anything..." onkeydown="if(event.key==='Enter')sendConcierge()">
+                <button class="btn btn-black" onclick="sendConcierge()">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Priority Queue -->
+    <div class="section">
+        <h2><span>⚡</span> Priority Transaction Queue</h2>
+        <p style="font-size:.8rem;color:rgba(255,255,255,.4);margin-bottom:14px">Live queue — your transactions always process first</p>
+        <div class="priority-list" id="priorityList"></div>
+    </div>
+
+    <!-- Transaction History -->
+    <div class="section">
+        <h2><span>📋</span> Transaction History</h2>
+        <p style="font-size:.8rem;color:rgba(255,255,255,.4);margin-bottom:14px">Full log with priority tags</p>
+        <div class="tx-history" id="txHistory">
+            <div style="text-align:center;color:rgba(255,255,255,.25);padding:20px;font-size:.82rem">No transactions yet — use Instant Transfer above</div>
+        </div>
+    </div>
+
+    <!-- All Payment Types -->
+    <div class="section">
+        <h2><span>💳</span> All Payment Types</h2>
+        <div class="feature-grid">
+            <div class="feature-card"><div class="icon">📤</div><h3>Send Pi</h3><p>Unlimited worldwide sends</p><span class="tag tag-unlim">∞</span></div>
+            <div class="feature-card"><div class="icon">📥</div><h3>Receive Pi</h3><p>Unlimited receiving</p><span class="tag tag-unlim">∞</span></div>
+            <div class="feature-card"><div class="icon">🛒</div><h3>Pay Merchant</h3><p>All merchants globally</p><span class="tag tag-unlim">∞</span></div>
+            <div class="feature-card"><div class="icon">📲</div><h3>Top Up</h3><p>Instant top-up, no delay</p><span class="tag tag-unlim">∞</span></div>
+            <div class="feature-card"><div class="icon">🌐</div><h3>Cross-Border</h3><p>Zero restrictions</p><span class="tag tag-unlim">∞</span></div>
+            <div class="feature-card"><div class="icon">🏦</div><h3>Large Transfers</h3><p>No cap, no hold period</p><span class="tag tag-unlim">∞</span></div>
+        </div>
+    </div>
+
+    <!-- Fee Structure -->
+    <div class="section">
+        <h2><span>💰</span> Fee Structure</h2>
+        <table style="width:100%;font-size:.85rem;border-collapse:collapse">
+            <tr style="border-bottom:1px solid rgba(255,255,255,.04)"><td style="padding:10px;color:rgba(255,255,255,.5)">Registration</td><td style="padding:10px;font-weight:600;color:#ccc">Premium</td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.04)"><td style="padding:10px;color:rgba(255,255,255,.5)">Transaction Limit</td><td style="padding:10px;color:#ccc">Unlimited</td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.04)"><td style="padding:10px;color:rgba(255,255,255,.5)">Processing</td><td style="padding:10px;color:#ccc">Priority Queue</td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.04)"><td style="padding:10px;color:rgba(255,255,255,.5)">Concierge</td><td style="padding:10px;color:#ccc">24/7 Included</td></tr>
+            <tr><td style="padding:10px;color:rgba(255,255,255,.5)">Global Access</td><td style="padding:10px;color:#ccc">All Countries</td></tr>
+        </table>
+    </div>
+
+    <a href="index.html" class="back-link">← Back to Visual Pi Card</a>
+</div>
+
+<script>
+/* ===== STORAGE KEYS ===== */
+const MAIN_KEY = 'pivisualcard_data';
+const USER_KEY = 'pivisualcard_user';
+const BLACK_TX = 'black_transactions';
+const BLACK_VAULT = 'black_vault';
+const BLACK_SEC = 'black_security';
+
+/* ===== HELPERS ===== */
+function escHtml(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+function $(id) { return document.getElementById(id); }
+function rnd(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+function genId() { return 'BLK-' + Date.now().toString(36).toUpperCase() + '-' + rnd(1000,9999); }
+function fmtDate(ts) { const d = new Date(ts); return d.toLocaleDateString('en-US',{month:'short',day:'numeric'}) + ' ' + d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'}); }
+function loadJSON(key, fallback) { try { return JSON.parse(localStorage.getItem(key)) || fallback; } catch(e) { return fallback; } }
+function saveJSON(key, data) { localStorage.setItem(key, JSON.stringify(data)); }
+
+/* ===== STATE ===== */
+let balance = 0;
+let transactions = loadJSON(BLACK_TX, []);
+let vaultEntries = loadJSON(BLACK_VAULT, []);
+let security = loadJSON(BLACK_SEC, { frozen: false });
+let cardFrozen = security.frozen || false;
+
+/* ===== INIT ===== */
+(function init() {
+    // Load user name
+    try {
+        const u = loadJSON(USER_KEY, null);
+        if (u) $('holderName').textContent = (u.firstName + ' ' + u.lastName).toUpperCase();
+    } catch(e) {}
+    // Load balance from main data
+    try {
+        const d = loadJSON(MAIN_KEY, null);
+        if (d && typeof d.balance === 'number') balance = d.balance;
+    } catch(e) {}
+
+    refreshDashboard();
+    renderVault();
+    renderTxHistory();
+    renderAnalytics();
+    renderPriorityQueue();
+    restoreSecurity();
+})();
+
+/* ===== DASHBOARD ===== */
+function refreshDashboard() {
+    const spent = transactions.filter(t => t.amount < 0).reduce((s,t) => s + Math.abs(t.amount), 0);
+    const received = transactions.filter(t => t.amount > 0).reduce((s,t) => s + t.amount, 0);
+    $('balanceAmt').textContent = balance.toFixed(2);
+    $('totalSpent').textContent = spent.toFixed(2);
+    $('totalReceived').textContent = received.toFixed(2);
+    // Fill bar to show usage ratio (cosmetic only, unlimited)
+    const ratio = balance > 0 ? Math.min((spent / (balance + spent)) * 100, 95) : 0;
+    $('limitFill').style.width = ratio + '%';
+}
+
+/* ===== INSTANT TRANSFER ===== */
+function executeTransfer() {
+    if (cardFrozen) { addAlert('danger', 'Card is frozen — unfreeze to make transactions'); return; }
+    const type = $('txType').value;
+    const recipient = $('txRecipient').value.trim();
+    const amount = parseFloat($('txAmount').value);
+    const note = $('txNote').value.trim();
+
+    if (!recipient) { alert('Enter a recipient or merchant'); return; }
+    if (!amount || amount <= 0) { alert('Enter a valid amount'); return; }
+    if (type === 'send' || type === 'pay') {
+        if (amount > balance) { alert('Insufficient balance: ' + balance.toFixed(2) + ' π'); return; }
+    }
+
+    const tx = {
+        id: genId(),
+        type: type,
+        recipient: recipient,
+        amount: type === 'receive' ? amount : -amount,
+        note: note || (type === 'pay' ? 'Merchant payment' : type === 'send' ? 'Priority transfer' : 'Received'),
+        category: type === 'pay' ? 'merchant' : type === 'send' ? 'transfer' : 'income',
+        ts: Date.now(),
+        priority: 'BLACK'
+    };
+
+    // Update balance
+    balance += tx.amount;
+    transactions.unshift(tx);
+    saveJSON(BLACK_TX, transactions);
+
+    // Update main data balance
+    try {
+        const d = loadJSON(MAIN_KEY, { balance: 0, transactions: [] });
+        d.balance = balance;
+        d.transactions.unshift({ label: tx.note + ' → ' + recipient, amount: tx.amount, date: new Date().toISOString().slice(0,10) });
+        saveJSON(MAIN_KEY, d);
+    } catch(e) {}
+
+    // Show receipt
+    const receipt = $('txReceipt');
+    const typeLabels = { send: '📤 Sent', receive: '📥 Received', pay: '🛒 Paid' };
+    $('txReceiptDetails').innerHTML = `
+        <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span>${typeLabels[type]}</span><span style="font-weight:700;color:${type==='receive'?'#27ae60':'#e74c3c'}">${type==='receive'?'+':'-'}${amount.toFixed(2)} π</span></div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span>To/From:</span><span>${escHtml(recipient)}</span></div>
+        <div style="display:flex;justify-content:space-between"><span>New Balance:</span><span>${balance.toFixed(2)} π</span></div>
+        ${note ? '<div style="margin-top:4px;color:rgba(255,255,255,.3);font-size:.72rem">Note: '+escHtml(note)+'</div>' : ''}
+    `;
+    $('txReceiptId').textContent = 'TX ID: ' + tx.id;
+    receipt.style.display = 'block';
+    setTimeout(() => receipt.style.display = 'none', 8000);
+
+    // Clear inputs
+    $('txRecipient').value = '';
+    $('txAmount').value = '';
+    $('txNote').value = '';
+
+    addAlert('safe', `${typeLabels[type]} ${amount.toFixed(2)} π — ${recipient}`);
+    refreshDashboard();
+    renderTxHistory();
+    renderAnalytics();
+    renderPriorityQueue();
+}
+
+/* ===== VIP VAULT ===== */
+const VAULT_RATES = { '7': 0.02, '30': 0.05, '90': 0.12, '365': 0.30 };
+
+function lockVault() {
+    if (cardFrozen) { addAlert('danger', 'Card is frozen'); return; }
+    const amount = parseFloat($('vaultAmount').value);
+    const days = $('vaultDuration').value;
+    if (!amount || amount < 1) { alert('Minimum lock: 1 π'); return; }
+    if (amount > balance) { alert('Insufficient balance: ' + balance.toFixed(2) + ' π'); return; }
+
+    const entry = {
+        id: genId(),
+        amount: amount,
+        days: parseInt(days),
+        rate: VAULT_RATES[days],
+        reward: +(amount * VAULT_RATES[days]).toFixed(4),
+        lockedAt: Date.now(),
+        maturesAt: Date.now() + parseInt(days) * 86400000,
+        unlocked: false
+    };
+
+    balance -= amount;
+    vaultEntries.unshift(entry);
+    saveJSON(BLACK_VAULT, vaultEntries);
+
+    // Record as transaction
+    const tx = { id: entry.id, type: 'vault-lock', recipient: 'VIP Vault', amount: -amount, note: `Locked ${days}d @ ${(VAULT_RATES[days]*100)}%`, category: 'vault', ts: Date.now(), priority: 'BLACK' };
+    transactions.unshift(tx);
+    saveJSON(BLACK_TX, transactions);
+
+    // Update main balance
+    try { const d = loadJSON(MAIN_KEY, { balance: 0, transactions: [] }); d.balance = balance; saveJSON(MAIN_KEY, d); } catch(e) {}
+
+    $('vaultAmount').value = '';
+    addAlert('safe', `🔐 Locked ${amount.toFixed(2)} π for ${days} days`);
+    renderVault();
+    refreshDashboard();
+    renderTxHistory();
+}
+
+function unlockVault(id) {
+    const entry = vaultEntries.find(v => v.id === id);
+    if (!entry || entry.unlocked) return;
+
+    const now = Date.now();
+    const matured = now >= entry.maturesAt;
+    const reward = matured ? entry.reward : 0;
+    const returnAmt = entry.amount + reward;
+
+    if (!matured && !confirm(`This vault hasn't matured yet. You'll forfeit the ${entry.reward.toFixed(4)} π reward. Unlock anyway?`)) return;
+
+    entry.unlocked = true;
+    balance += returnAmt;
+    saveJSON(BLACK_VAULT, vaultEntries);
+
+    const tx = { id: genId(), type: 'vault-unlock', recipient: 'From Vault', amount: returnAmt, note: matured ? `Matured +${reward.toFixed(4)} π reward` : 'Early unlock (no reward)', category: 'vault', ts: Date.now(), priority: 'BLACK' };
+    transactions.unshift(tx);
+    saveJSON(BLACK_TX, transactions);
+
+    try { const d = loadJSON(MAIN_KEY, { balance: 0, transactions: [] }); d.balance = balance; saveJSON(MAIN_KEY, d); } catch(e) {}
+
+    addAlert('safe', matured ? `✅ Vault matured! +${returnAmt.toFixed(2)} π returned` : `⚠️ Early unlock: ${entry.amount.toFixed(2)} π returned (no reward)`);
+    renderVault();
+    refreshDashboard();
+    renderTxHistory();
+}
+
+function renderVault() {
+    const active = vaultEntries.filter(v => !v.unlocked);
+    const totalLocked = active.reduce((s,v) => s + v.amount, 0);
+    const totalEarned = vaultEntries.filter(v => v.unlocked).reduce((s,v) => s + (Date.now() >= v.maturesAt ? v.reward : 0), 0);
+    $('vaultLocked').textContent = totalLocked.toFixed(2);
+    $('vaultEarned').textContent = totalEarned.toFixed(4);
+    $('vaultCount').textContent = active.length;
+
+    const el = $('vaultEntries');
+    if (vaultEntries.length === 0) { el.innerHTML = '<div style="text-align:center;color:rgba(255,255,255,.25);padding:20px;font-size:.82rem">No vault entries yet</div>'; return; }
+
+    el.innerHTML = vaultEntries.slice(0, 10).map(v => {
+        const matured = Date.now() >= v.maturesAt;
+        const status = v.unlocked ? '✅ Unlocked' : (matured ? '🟢 Matured' : '🔒 Locked');
+        const badge = v.unlocked ? '' : (matured ? 'vault-matured' : 'vault-locked');
+        const remaining = v.unlocked ? '' : (matured ? 'Ready to claim' : Math.ceil((v.maturesAt - Date.now()) / 86400000) + ' days left');
+        return `<div class="vault-entry">
+            <div>
+                <strong>${v.amount.toFixed(2)} π</strong> <span style="font-size:.72rem;color:rgba(255,255,255,.4)">@ ${(v.rate*100)}% / ${v.days}d</span>
+                ${badge ? '<span class="vault-badge '+badge+'">'+status+'</span>' : '<span style="font-size:.72rem;color:#27ae60">'+status+'</span>'}
+                <div style="font-size:.7rem;color:rgba(255,255,255,.3)">${remaining} ${v.unlocked ? '' : '• Reward: +'+v.reward.toFixed(4)+' π'}</div>
+            </div>
+            ${!v.unlocked ? '<button class="btn btn-sm" onclick="unlockVault(\''+v.id+'\')">🔓 Unlock</button>' : ''}
+        </div>`;
+    }).join('');
+}
+
+/* ===== ANALYTICS ===== */
+function renderAnalytics() {
+    renderBarChart();
+    renderDonutChart();
+    // Stats
+    const amounts = transactions.map(t => Math.abs(t.amount));
+    $('avgTx').textContent = amounts.length ? (amounts.reduce((a,b)=>a+b,0)/amounts.length).toFixed(2)+' π' : '0.00 π';
+    $('maxTx').textContent = amounts.length ? Math.max(...amounts).toFixed(2)+' π' : '0.00 π';
+    $('totalTxCount').textContent = transactions.length;
+}
+
+function renderBarChart() {
+    const now = Date.now();
+    const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    const bars = [];
+    for (let i = 6; i >= 0; i--) {
+        const dayStart = new Date(now - i * 86400000);
+        dayStart.setHours(0,0,0,0);
+        const dayEnd = new Date(dayStart.getTime() + 86400000);
+        const spent = transactions.filter(t => t.amount < 0 && t.ts >= dayStart.getTime() && t.ts < dayEnd.getTime()).reduce((s,t) => s + Math.abs(t.amount), 0);
+        bars.push({ label: days[dayStart.getDay()], value: spent });
+    }
+    const maxVal = Math.max(...bars.map(b=>b.value), 1);
+    $('weekChart').innerHTML = bars.map(b => `<div><div class="bar" style="height:${Math.max((b.value/maxVal)*100, 4)}%"></div><div class="bar-label">${b.label}</div></div>`).join('');
+}
+
+function renderDonutChart() {
+    const canvas = $('donutCanvas');
+    if (!canvas || !canvas.getContext) return;
+    const ctx = canvas.getContext('2d');
+    const cats = {};
+    transactions.filter(t => t.amount < 0).forEach(t => { cats[t.category] = (cats[t.category]||0) + Math.abs(t.amount); });
+    const colors = { transfer: '#3498db', merchant: '#e74c3c', vault: '#f39c12', income: '#27ae60', other: '#9b59b6' };
+    const entries = Object.entries(cats);
+    if (entries.length === 0) {
+        ctx.clearRect(0,0,80,80);
+        ctx.beginPath(); ctx.arc(40,40,35,0,Math.PI*2); ctx.strokeStyle='rgba(255,255,255,.1)'; ctx.lineWidth=8; ctx.stroke();
+        $('donutLegend').innerHTML = '<div style="font-size:.72rem;color:rgba(255,255,255,.3)">No data yet</div>';
+        return;
+    }
+    const total = entries.reduce((s,e) => s+e[1], 0);
+    ctx.clearRect(0,0,80,80);
+    let start = -Math.PI/2;
+    entries.forEach(([cat, val]) => {
+        const sweep = (val/total) * Math.PI * 2;
+        ctx.beginPath(); ctx.arc(40,40,35, start, start+sweep); ctx.strokeStyle=colors[cat]||'#ccc'; ctx.lineWidth=8; ctx.stroke();
+        start += sweep;
+    });
+    $('donutLegend').innerHTML = entries.map(([cat, val]) => `<div style="display:flex;align-items:center;gap:6px;font-size:.72rem"><span class="legend-dot" style="background:${colors[cat]||'#ccc'}"></span><span style="color:rgba(255,255,255,.5)">${cat}</span><span style="color:#ccc">${val.toFixed(2)} π</span></div>`).join('');
+}
+
+/* ===== SECURITY ===== */
+function restoreSecurity() {
+    if (cardFrozen) {
+        $('freezeBtn').classList.add('frozen');
+        $('freezeBtn').textContent = '🔓 Unfreeze Card';
+        $('freezeStatus').textContent = 'Card is FROZEN — all transactions blocked';
+        $('freezeStatus').style.color = '#e74c3c';
+    }
+}
+
+function toggleFreeze() {
+    cardFrozen = !cardFrozen;
+    security.frozen = cardFrozen;
+    saveJSON(BLACK_SEC, security);
+
+    const btn = $('freezeBtn');
+    const status = $('freezeStatus');
+    if (cardFrozen) {
+        btn.classList.add('frozen');
+        btn.textContent = '🔓 Unfreeze Card';
+        status.textContent = 'Card is FROZEN — all transactions blocked';
+        status.style.color = '#e74c3c';
+        addAlert('warning', '🔒 Card frozen by holder');
+    } else {
+        btn.classList.remove('frozen');
+        btn.textContent = '🔒 Freeze Card';
+        status.textContent = 'Card is active';
+        status.style.color = 'rgba(255,255,255,.3)';
+        addAlert('safe', '🔓 Card unfrozen — transactions enabled');
+    }
+}
+
+function addAlert(type, msg) {
+    const icons = { safe: '🟢', warning: '🟡', danger: '🔴' };
+    const log = $('alertLog');
+    const el = document.createElement('div');
+    el.className = 'alert-item ' + type;
+    el.innerHTML = `<span>${icons[type]||'⚪'}</span><span>${escHtml(msg)}</span><span style="font-size:.65rem;color:rgba(255,255,255,.2)">${new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})}</span>`;
+    log.prepend(el);
+    // Keep max 20 alerts
+    while (log.children.length > 20) log.removeChild(log.lastChild);
+}
+
+/* ===== CONCIERGE ===== */
+function sendConcierge() {
+    const input = $('conciergeInput');
+    const msg = input.value.trim();
+    if (!msg) return;
+    const chat = $('conciergeChat');
+
+    // User message
+    chat.innerHTML += `<div style="margin-top:12px;text-align:right"><div style="color:rgba(255,255,255,.3);font-size:.7rem;margin-bottom:4px">You</div><div style="background:rgba(255,255,255,.06);display:inline-block;padding:8px 14px;border-radius:10px;font-size:.82rem">${escHtml(msg)}</div></div>`;
+    input.value = '';
+
+    setTimeout(() => {
+        const low = msg.toLowerCase();
+        let resp = '';
+
+        // Command parsing
+        if (low.match(/^send\s+[\d.]+\s+\S/)) {
+            const parts = msg.split(/\s+/);
+            const amt = parseFloat(parts[1]);
+            const user = parts.slice(2).join(' ');
+            if (amt > 0 && user) {
+                $('txType').value = 'send';
+                $('txRecipient').value = user;
+                $('txAmount').value = amt;
+                executeTransfer();
+                resp = `⚡ Sent ${amt} π to ${escHtml(user)} via Priority Transfer.`;
+            } else { resp = 'Usage: <strong>send [amount] [username]</strong>'; }
+        } else if (low === 'balance' || low === 'bal') {
+            resp = `💰 Your balance: <strong>${balance.toFixed(2)} π</strong> (Unlimited Black Card)`;
+        } else if (low.match(/^vault\s+[\d.]+/)) {
+            const amt = parseFloat(msg.split(/\s+/)[1]);
+            if (amt >= 1) {
+                $('vaultAmount').value = amt;
+                lockVault();
+                resp = `🔐 Locked ${amt} π in VIP Vault for ${$('vaultDuration').value} days.`;
+            } else { resp = 'Minimum vault lock: 1 π'; }
+        } else if (low === 'freeze') {
+            if (!cardFrozen) toggleFreeze();
+            resp = '🔒 Card has been frozen. All transactions are blocked.';
+        } else if (low === 'unfreeze') {
+            if (cardFrozen) toggleFreeze();
+            resp = '🔓 Card has been unfrozen. Transactions enabled.';
+        } else if (low === 'stats' || low === 'analytics') {
+            const spent = transactions.filter(t=>t.amount<0).reduce((s,t)=>s+Math.abs(t.amount),0);
+            const recv = transactions.filter(t=>t.amount>0).reduce((s,t)=>s+t.amount,0);
+            resp = `📊 <strong>Analytics:</strong><br>• Transactions: ${transactions.length}<br>• Total Spent: ${spent.toFixed(2)} π<br>• Total Received: ${recv.toFixed(2)} π<br>• Vault Locks: ${vaultEntries.filter(v=>!v.unlocked).length} active<br>• Card: ${cardFrozen?'🔴 Frozen':'🟢 Active'}`;
+        } else if (low === 'help') {
+            resp = `Available commands:<br>• <strong>send [amount] [user]</strong> — priority transfer<br>• <strong>balance</strong> — check balance<br>• <strong>vault [amount]</strong> — lock Pi<br>• <strong>freeze / unfreeze</strong> — card security<br>• <strong>stats</strong> — analytics summary<br>• Or ask anything else!`;
+        } else {
+            const responses = [
+                "As a Black Card member, you have unlimited access. " + escHtml(msg) + " — I'm processing your request with priority status.",
+                "Noted. Your Black Card concierge is prioritizing this. No limits, no delays.",
+                "Absolutely. With your unlimited Black Card, there are no restrictions. Consider it handled.",
+                "I've escalated this to our priority team. Black Card members receive instant processing.",
+                "Your request is being handled with Black Card priority. Expect resolution immediately."
+            ];
+            resp = responses[rnd(0, responses.length - 1)];
+        }
+
+        chat.innerHTML += `<div style="margin-top:12px"><div style="color:rgba(255,255,255,.3);font-size:.7rem;margin-bottom:4px">🛎️ Concierge</div><div class="concierge-msg">${resp}</div></div>`;
+        chat.parentElement.scrollTop = chat.parentElement.scrollHeight;
+    }, 600);
+}
+
+/* ===== PRIORITY QUEUE ===== */
+function renderPriorityQueue() {
+    const el = $('priorityList');
+    const recentTx = transactions.slice(0, 3);
+    let html = '';
+    recentTx.forEach((tx, i) => {
+        html += `<div class="priority-item"><div class="priority-num">${i+1}</div><div>${escHtml(tx.note)} <span style="color:#27ae60">⚡ Priority</span> <span style="font-size:.7rem;color:rgba(255,255,255,.3)">${fmtDate(tx.ts)}</span></div></div>`;
+    });
+    // Fill remaining slots with simulated standard queue
+    const standards = ['Standard card transaction','Visual Pi Card payment','Gold card transfer','Platinum scheduled payment','Free tier transaction'];
+    for (let i = recentTx.length; i < 8; i++) {
+        const opacity = Math.max(0.1, 0.5 - (i - recentTx.length) * 0.08);
+        html += `<div class="priority-item" style="opacity:${opacity}"><div class="priority-num">${i+1}</div><div>${standards[rnd(0,standards.length-1)]}</div></div>`;
+    }
+    el.innerHTML = html;
+}
+
+/* ===== TX HISTORY ===== */
+function renderTxHistory() {
+    const el = $('txHistory');
+    if (transactions.length === 0) { el.innerHTML = '<div style="text-align:center;color:rgba(255,255,255,.25);padding:20px;font-size:.82rem">No transactions yet — use Instant Transfer above</div>'; return; }
+
+    el.innerHTML = transactions.slice(0, 30).map(tx => {
+        const isNeg = tx.amount < 0;
+        const icons = { send: '📤', receive: '📥', pay: '🛒', 'vault-lock': '🔐', 'vault-unlock': '🔓' };
+        return `<div class="tx-row">
+            <div style="font-size:1.1rem">${icons[tx.type]||'💳'}</div>
+            <div style="flex:1">
+                <div style="font-weight:600;font-size:.82rem">${escHtml(tx.note)}</div>
+                <div style="font-size:.7rem;color:rgba(255,255,255,.3)">${escHtml(tx.recipient)} • ${fmtDate(tx.ts)}</div>
+            </div>
+            <div>
+                <div class="tx-amt ${isNeg?'neg':'pos'}">${isNeg?'':'+'}${tx.amount.toFixed(2)} π</div>
+                <span class="tx-priority">⚡ ${tx.priority}</span>
+            </div>
+        </div>`;
+    }).join('');
+}
+</script>
+</body>
+</html>

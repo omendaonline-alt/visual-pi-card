@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Visual Pi Card &mdash; pivisualcard.online</title>
+<link rel="canonical" href="https://pivisualcard.online/card-visa.html">
+<meta name="description" content="Visual Pi Card - Visa worldwide payments, ATM withdrawal, crypto swap, and live market data.">
+<meta property="og:title" content="Visual Pi Card - Visa">
+<meta property="og:url" content="https://pivisualcard.online/card-visa.html">
+<meta property="og:site_name" content="Visual Pi Card">
+<meta name="theme-color" content="#0d0221">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:linear-gradient(135deg,#0f0c29,#1a1f71,#24243e);color:#fff;min-height:100vh;padding:20px}
+.container{max-width:900px;margin:0 auto}
+h1{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient(90deg,#f5c518,#fff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.subtitle{text-align:center;color:rgba(255,255,255,.6);margin-bottom:30px;font-size:.9rem}
+.badge{display:inline-block;background:#f5c518;color:#1a1f71;padding:4px 14px;border-radius:20px;font-weight:700;font-size:.75rem;margin-bottom:20px}
+.card-preview{background:linear-gradient(135deg,#1a1f71 0%,#2d3494 50%,#4654b8 100%);border-radius:20px;padding:30px;margin:0 auto 30px;max-width:420px;box-shadow:0 20px 50px rgba(26,31,113,.35);position:relative;overflow:hidden}
+.card-preview::after{content:'';position:absolute;top:-50%;right:-50%;width:100%;height:100%;background:radial-gradient(circle,rgba(255,255,255,.05) 0%,transparent 70%);pointer-events:none}
+.card-number{font-family:'Courier New',monospace;font-size:1.4rem;letter-spacing:3px;margin:20px 0 10px;text-shadow:0 2px 4px rgba(0,0,0,.3)}
+.card-label{font-size:.65rem;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:1px}
+.card-val{font-size:.9rem;margin-bottom:12px}
+.net-badge{font-size:.6rem;color:rgba(255,255,255,.4);letter-spacing:2px;margin-top:15px}
+
+.section{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:24px;margin-bottom:20px}
+.section h2{font-size:1.1rem;margin-bottom:14px;color:#f5c518}
+.section h2 span{margin-right:8px}
+
+.feature-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.feature-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:16px;text-align:center;transition:transform .2s,border-color .2s}
+.feature-card:hover{transform:translateY(-3px);border-color:rgba(245,197,24,.3)}
+.feature-card .icon{font-size:1.8rem;margin-bottom:8px}
+.feature-card h3{font-size:.85rem;margin-bottom:4px}
+.feature-card p{font-size:.72rem;color:rgba(255,255,255,.5);line-height:1.4}
+.tag{display:inline-block;font-size:.6rem;padding:2px 8px;border-radius:8px;margin-top:6px}
+.tag-green{background:rgba(39,174,96,.15);color:#27ae60;border:1px solid rgba(39,174,96,.2)}
+.tag-gold{background:rgba(245,197,24,.15);color:#f5c518;border:1px solid rgba(245,197,24,.2)}
+.tag-blue{background:rgba(26,31,113,.3);color:#8b9cf7;border:1px solid rgba(139,156,247,.2)}
+
+/* Price Ticker */
+.ticker{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:20px}
+.ticker-item{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:10px 16px;text-align:center;min-width:120px}
+.ticker-label{font-size:.6rem;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1px}
+.ticker-val{font-size:1.1rem;font-weight:700;margin-top:2px}
+.ticker-val.up{color:#27ae60}
+.ticker-val.down{color:#e74c3c}
+
+/* ATM Simulator */
+.atm-box{background:rgba(26,31,113,.2);border:1px solid rgba(139,156,247,.15);border-radius:14px;padding:20px;margin-top:14px}
+.atm-row{display:flex;gap:10px;align-items:end;flex-wrap:wrap;margin-bottom:12px}
+.atm-row label{font-size:.75rem;color:rgba(255,255,255,.6)}
+.atm-row input,.atm-row select{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#fff;padding:10px 14px;border-radius:10px;font-size:.9rem;width:100%}
+.atm-row input:focus,.atm-row select:focus{outline:none;border-color:#f5c518}
+.atm-result{background:rgba(245,197,24,.08);border:1px solid rgba(245,197,24,.15);border-radius:10px;padding:14px;text-align:center;margin-top:10px;display:none}
+.atm-result .fiat{font-size:1.4rem;font-weight:700;color:#f5c518}
+
+/* Swap */
+.swap-box{background:rgba(75,0,130,.15);border:1px solid rgba(138,43,226,.15);border-radius:14px;padding:20px;margin-top:14px}
+.swap-arrow{text-align:center;font-size:1.4rem;color:#f5c518;margin:8px 0}
+.swap-result{background:rgba(138,43,226,.1);border:1px solid rgba(138,43,226,.2);border-radius:10px;padding:14px;text-align:center;margin-top:10px;display:none}
+.swap-result .out{font-size:1.3rem;font-weight:700;color:#bb86fc}
+
+/* Buttons */
+.btn{padding:12px 24px;border:none;border-radius:12px;font-size:.85rem;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-primary{background:linear-gradient(135deg,#1a1f71,#4654b8);color:#fff}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(26,31,113,.4)}
+.btn-gold{background:linear-gradient(135deg,#f5c518,#daa520);color:#1a1f71}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(245,197,24,.4)}
+
+/* Fee Notice */
+.fee-notice{text-align:center;padding:12px 16px;border-radius:12px;background:rgba(245,197,24,.1);border:1px solid rgba(245,197,24,.2);font-size:.8rem;color:#f5c518;margin-bottom:20px}
+
+.back-link{display:block;text-align:center;margin-top:30px;color:rgba(255,255,255,.5);font-size:.85rem;text-decoration:none}
+.back-link:hover{color:#f5c518}
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>&#127380; Visual Pi Card</h1>
+    <p class="subtitle">Worldwide Payments • ATM Access • Crypto Swap • Live Market</p>
+    <div style="text-align:center"><span class="badge">VISA WORLDWIDE</span></div>
+
+    <div class="fee-notice">&#128176; Registration fee: <strong>5 π</strong> from your Pi wallet balance — unlocks all worldwide features</div>
+
+    <!-- Card Preview -->
+    <div class="card-preview">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:.7rem;color:rgba(255,255,255,.6)">Visual Pi Card</span>
+            <span style="font-size:.65rem;background:rgba(255,255,255,.1);padding:3px 10px;border-radius:8px;color:#f5c518">WORLDWIDE</span>
+        </div>
+        <div class="card-number">4314 1592 6535 8979</div>
+        <div style="display:flex;gap:30px">
+            <div><div class="card-label">Card Holder</div><div class="card-val" id="holderName">PI PIONEER</div></div>
+            <div><div class="card-label">Expires</div><div class="card-val">12/30</div></div>
+            <div><div class="card-label">CVV</div><div class="card-val">314</div></div>
+        </div>
+        <div class="net-badge">PI NETWORK • VISA • WORLDWIDE</div>
+    </div>
+
+    <!-- Live Price Ticker -->
+    <div class="section">
+        <h2><span>📊</span> Live Pi Price</h2>
+        <div class="ticker">
+            <div class="ticker-item">
+                <div class="ticker-label">PI / USD</div>
+                <div class="ticker-val" id="priceUsd">$—</div>
+            </div>
+            <div class="ticker-item">
+                <div class="ticker-label">PI / BTC</div>
+                <div class="ticker-val" id="priceBtc">—</div>
+            </div>
+            <div class="ticker-item">
+                <div class="ticker-label">24h Change</div>
+                <div class="ticker-val" id="priceChange">—</div>
+            </div>
+            <div class="ticker-item">
+                <div class="ticker-label">Volume</div>
+                <div class="ticker-val" id="priceVolume">—</div>
+            </div>
+        </div>
+        <p style="text-align:center;font-size:.7rem;color:rgba(255,255,255,.35)" id="lastUpdate">Auto-refreshes every 60s</p>
+    </div>
+
+    <!-- All Visa Features -->
+    <div class="section">
+        <h2><span>⚡</span> Visa Exclusive Features</h2>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="icon">🌍</div>
+                <h3>Worldwide Payments</h3>
+                <p>Send and receive Pi payments to any country without restrictions</p>
+                <span class="tag tag-green">✓ Enabled</span>
+            </div>
+            <div class="feature-card">
+                <div class="icon">🏧</div>
+                <h3>ATM Withdrawal</h3>
+                <p>Convert Pi to local fiat currency at any supported ATM worldwide</p>
+                <span class="tag tag-green">✓ Enabled</span>
+            </div>
+            <div class="feature-card">
+                <div class="icon">🔄</div>
+                <h3>Crypto Swap</h3>
+                <p>Swap Pi to BTC, ETH, USDT, BNB, SOL and fiat currencies instantly</p>
+                <span class="tag tag-green">✓ Enabled</span>
+            </div>
+            <div class="feature-card">
+                <div class="icon">💱</div>
+                <h3>Pi → Fiat</h3>
+                <p>Direct conversion to USD, EUR, GBP, NGN, KES, INR, PHP, BRL</p>
+                <span class="tag tag-green">✓ Enabled</span>
+            </div>
+            <div class="feature-card">
+                <div class="icon">🌐</div>
+                <h3>Cross-Border</h3>
+                <p>International transfers with no country limits, low fees</p>
+                <span class="tag tag-green">✓ Enabled</span>
+            </div>
+            <div class="feature-card">
+                <div class="icon">📈</div>
+                <h3>Live Market Data</h3>
+                <p>Real-time Pi price from CoinGecko API with auto-refresh</p>
+                <span class="tag tag-green">✓ Enabled</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ATM Withdrawal Simulator -->
+    <div class="section">
+        <h2><span>🏧</span> ATM Withdrawal</h2>
+        <p style="font-size:.8rem;color:rgba(255,255,255,.5);margin-bottom:14px">Convert your Pi to local fiat currency. 1.5% ATM fee applies.</p>
+        <div class="atm-box">
+            <div class="atm-row">
+                <div style="flex:1">
+                    <label>Amount (π)</label>
+                    <input type="number" id="atmAmount" placeholder="0.00" min="0.01" step="0.01">
+                </div>
+                <div style="flex:1">
+                    <label>Currency</label>
+                    <select id="atmCurrency">
+                        <option value="USD">USD — US Dollar</option>
+                        <option value="EUR">EUR — Euro</option>
+                        <option value="GBP">GBP — British Pound</option>
+                        <option value="NGN">NGN — Nigerian Naira</option>
+                        <option value="KES">KES — Kenyan Shilling</option>
+                        <option value="INR">INR — Indian Rupee</option>
+                        <option value="PHP">PHP — Philippine Peso</option>
+                        <option value="BRL">BRL — Brazilian Real</option>
+                    </select>
+                </div>
+            </div>
+            <button class="btn btn-primary" onclick="calcAtm()" style="width:100%">&#127974; Calculate Withdrawal</button>
+            <div class="atm-result" id="atmResult">
+                <div style="font-size:.7rem;color:rgba(255,255,255,.5)">You will receive approximately</div>
+                <div class="fiat" id="atmFiat">$0.00</div>
+                <div style="font-size:.7rem;color:rgba(255,255,255,.4);margin-top:4px" id="atmFee">Fee: 1.5%</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Crypto Swap Simulator -->
+    <div class="section">
+        <h2><span>🔄</span> Crypto Swap</h2>
+        <p style="font-size:.8rem;color:rgba(255,255,255,.5);margin-bottom:14px">Swap between Pi and other cryptocurrencies or fiat at live market rates.</p>
+        <div class="swap-box">
+            <div class="atm-row">
+                <div style="flex:1">
+                    <label>Amount</label>
+                    <input type="number" id="swapAmount" placeholder="0.00" min="0.01" step="0.01">
+                </div>
+                <div style="flex:1">
+                    <label>From</label>
+                    <select id="swapFrom">
+                        <option value="PI">Pi (π)</option>
+                        <option value="BTC">Bitcoin (BTC)</option>
+                        <option value="ETH">Ethereum (ETH)</option>
+                        <option value="USDT">Tether (USDT)</option>
+                        <option value="BNB">BNB</option>
+                        <option value="SOL">Solana (SOL)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="swap-arrow">⇅</div>
+            <div class="atm-row">
+                <div style="flex:1">
+                    <label>To</label>
+                    <select id="swapTo">
+                        <option value="USD">USD</option>
+                        <option value="EUR">EUR</option>
+                        <option value="GBP">GBP</option>
+                        <option value="NGN">NGN</option>
+                        <option value="KES">KES</option>
+                        <option value="INR">INR</option>
+                        <option value="PHP">PHP</option>
+                        <option value="BRL">BRL</option>
+                        <option value="BTC">BTC</option>
+                        <option value="ETH">ETH</option>
+                        <option value="USDT">USDT</option>
+                    </select>
+                </div>
+            </div>
+            <button class="btn btn-gold" onclick="calcSwap()" style="width:100%;margin-top:10px">&#128260; Calculate Swap</button>
+            <div class="swap-result" id="swapResult">
+                <div style="font-size:.7rem;color:rgba(255,255,255,.5)">You will receive approximately</div>
+                <div class="out" id="swapOut">0.00</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Types -->
+    <div class="section">
+        <h2><span>💳</span> Available Payment Types</h2>
+        <div class="feature-grid">
+            <div class="feature-card"><div class="icon">📤</div><h3>Send Pi</h3><p>Transfer Pi to any user worldwide</p><span class="tag tag-green">✓</span></div>
+            <div class="feature-card"><div class="icon">📥</div><h3>Receive Pi</h3><p>Accept Pi from anyone, anywhere</p><span class="tag tag-green">✓</span></div>
+            <div class="feature-card"><div class="icon">🛒</div><h3>Pay Merchant</h3><p>Pay shops and services globally</p><span class="tag tag-green">✓</span></div>
+            <div class="feature-card"><div class="icon">📲</div><h3>Top Up</h3><p>Add funds to your card balance</p><span class="tag tag-green">✓</span></div>
+            <div class="feature-card"><div class="icon">🌐</div><h3>Cross-Border</h3><p>International transfers, no limits</p><span class="tag tag-green">✓</span></div>
+            <div class="feature-card"><div class="icon">🏧</div><h3>ATM Worldwide</h3><p>Cash out at ATMs in 8 currencies</p><span class="tag tag-blue">Visa Only</span></div>
+            <div class="feature-card"><div class="icon">🔄</div><h3>Crypto Swap</h3><p>6 cryptos → 11 targets</p><span class="tag tag-blue">Visa Only</span></div>
+            <div class="feature-card"><div class="icon">💱</div><h3>Pi to Fiat</h3><p>Direct fiat conversion</p><span class="tag tag-blue">Visa Only</span></div>
+        </div>
+    </div>
+
+    <!-- Fee Structure -->
+    <div class="section">
+        <h2><span>💰</span> Fee Structure</h2>
+        <table style="width:100%;font-size:.85rem;border-collapse:collapse">
+            <tr style="border-bottom:1px solid rgba(255,255,255,.06)"><td style="padding:10px;color:rgba(255,255,255,.6)">Registration</td><td style="padding:10px;font-weight:600;color:#f5c518">5 π from Pi wallet</td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.06)"><td style="padding:10px;color:rgba(255,255,255,.6)">Send / Receive</td><td style="padding:10px">Free</td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.06)"><td style="padding:10px;color:rgba(255,255,255,.6)">ATM Withdrawal</td><td style="padding:10px">1.5% fee</td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.06)"><td style="padding:10px;color:rgba(255,255,255,.6)">Crypto Swap</td><td style="padding:10px">Market rate (0% extra)</td></tr>
+            <tr><td style="padding:10px;color:rgba(255,255,255,.6)">Cross-Border</td><td style="padding:10px">Free</td></tr>
+        </table>
+    </div>
+
+    <a href="index.html" class="back-link">← Back to Visual Pi Card</a>
+</div>
+
+<script>
+var piPrice = { usd: 0, btc: 0, change24h: 0, volume: 0 };
+var fiatRates = { EUR: 0.92, GBP: 0.79, NGN: 1550, KES: 153, INR: 83.5, PHP: 56, BRL: 5.0, USD: 1 };
+
+// Load user name
+(function() {
+    try {
+        var u = JSON.parse(localStorage.getItem('pivisualcard_user'));
+        if (u) document.getElementById('holderName').textContent = (u.firstName + ' ' + u.lastName).toUpperCase();
+    } catch(e) {}
+})();
+
+// Fetch Pi price
+function fetchPrice() {
+    fetch('https://api.coingecko.com/api/v3/simple/price?ids=pi-network&vs_currencies=usd,btc&include_24hr_change=true&include_24hr_vol=true')
+        .then(function(r) { return r.json(); })
+        .then(function(d) {
+            var pi = d['pi-network'];
+            if (!pi) return;
+            piPrice.usd = pi.usd || 0;
+            piPrice.btc = pi.btc || 0;
+            piPrice.change24h = pi.usd_24h_change || 0;
+            piPrice.volume = pi.usd_24h_vol || 0;
+            updateTicker();
+        })
+        .catch(function() {
+            fetch('https://api.coingecko.com/api/v3/coins/pi-network')
+                .then(function(r) { return r.json(); })
+                .then(function(d) {
+                    piPrice.usd = d.market_data.current_price.usd || 0;
+                    piPrice.btc = d.market_data.current_price.btc || 0;
+                    piPrice.change24h = d.market_data.price_change_percentage_24h || 0;
+                    piPrice.volume = d.market_data.total_volume.usd || 0;
+                    updateTicker();
+                }).catch(function() {});
+        });
+}
+
+function updateTicker() {
+    document.getElementById('priceUsd').textContent = '$' + piPrice.usd.toFixed(4);
+    document.getElementById('priceBtc').textContent = piPrice.btc.toFixed(8);
+    var ch = document.getElementById('priceChange');
+    ch.textContent = (piPrice.change24h >= 0 ? '+' : '') + piPrice.change24h.toFixed(2) + '%';
+    ch.className = 'ticker-val ' + (piPrice.change24h >= 0 ? 'up' : 'down');
+    var vol = piPrice.volume;
+    document.getElementById('priceVolume').textContent = vol >= 1e6 ? '$' + (vol / 1e6).toFixed(1) + 'M' : '$' + vol.toLocaleString();
+    document.getElementById('lastUpdate').textContent = 'Last updated: ' + new Date().toLocaleTimeString();
+}
+
+function calcAtm() {
+    var amt = parseFloat(document.getElementById('atmAmount').value);
+    var cur = document.getElementById('atmCurrency').value;
+    if (isNaN(amt) || amt <= 0 || piPrice.usd === 0) return;
+    var usd = amt * piPrice.usd;
+    var rate = fiatRates[cur] || 1;
+    var net = (usd * rate) * 0.985;
+    var fee = (usd * rate) * 0.015;
+    document.getElementById('atmFiat').textContent = net.toFixed(2) + ' ' + cur;
+    document.getElementById('atmFee').textContent = 'Fee: ' + fee.toFixed(2) + ' ' + cur + ' (1.5%)';
+    document.getElementById('atmResult').style.display = 'block';
+}
+
+function calcSwap() {
+    var amt = parseFloat(document.getElementById('swapAmount').value);
+    var from = document.getElementById('swapFrom').value;
+    var to = document.getElementById('swapTo').value;
+    if (isNaN(amt) || amt <= 0 || piPrice.usd === 0) return;
+    var cryptoPrices = { PI: piPrice.usd, BTC: 65000, ETH: 3200, USDT: 1, BNB: 580, SOL: 135 };
+    var fromUsd = amt * (cryptoPrices[from] || piPrice.usd);
+    var toRate = cryptoPrices[to] || fiatRates[to] || 1;
+    var out;
+    if (['BTC','ETH','USDT','BNB','SOL','PI'].indexOf(to) >= 0) {
+        out = fromUsd / toRate;
+        document.getElementById('swapOut').textContent = out.toFixed(to === 'BTC' ? 8 : 4) + ' ' + to;
+    } else {
+        out = fromUsd * (fiatRates[to] || 1);
+        document.getElementById('swapOut').textContent = out.toFixed(2) + ' ' + to;
+    }
+    document.getElementById('swapResult').style.display = 'block';
+}
+
+fetchPrice();
+setInterval(fetchPrice, 60000);
+</script>
+</body>
+</html>

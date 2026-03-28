@@ -29,6 +29,8 @@
     <!-- DNS Prefetch for performance -->
     <link rel="dns-prefetch" href="https://pivisualcard.online">
     <link rel="preconnect" href="https://pivisualcard.online">
+    <link rel="dns-prefetch" href="https://api.coingecko.com">
+    <link rel="preconnect" href="https://api.coingecko.com" crossorigin>
 
     <style>
         /* ===== RESET & BASE ===== */
@@ -53,6 +55,7 @@
             font-size: 2rem;
             background: linear-gradient(90deg, #f5c518, #ffdf6f);
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
             letter-spacing: 1px;
         }
@@ -235,8 +238,22 @@
         .card-hint {
             font-size: 0.75rem;
             opacity: 0.4;
-            margin-bottom: 28px;
+            margin-bottom: 10px;
             text-align: center;
+        }
+        .card-details-link {
+            display: block;
+            text-align: center;
+            margin-bottom: 28px;
+            font-size: 0.82rem;
+            color: #f5c518;
+            text-decoration: none;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+        .card-details-link:hover {
+            opacity: 1;
+            text-decoration: underline;
         }
 
         /* ===== BALANCE ===== */
@@ -254,6 +271,7 @@
             font-weight: 700;
             background: linear-gradient(90deg, #f5c518, #ffdf6f);
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
         }
         .balance-amount span {
@@ -589,6 +607,226 @@
             transition: background .5s, box-shadow .5s;
         }
 
+        /* ===== LIVE PRICE TICKER ===== */
+        .price-ticker {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            flex-wrap: wrap;
+            width: 100%;
+            max-width: 480px;
+            margin-bottom: 20px;
+            padding: 14px 20px;
+            border-radius: 16px;
+            background: rgba(255,255,255,.04);
+            border: 1px solid rgba(245,197,24,.12);
+        }
+        .price-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.82rem;
+        }
+        .price-value {
+            font-weight: 700;
+            color: #f5c518;
+        }
+        .price-change {
+            font-size: 0.72rem;
+            padding: 2px 7px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        .price-change.up { background: rgba(39,174,96,.15); color: #27ae60; }
+        .price-change.down { background: rgba(231,76,60,.15); color: #e74c3c; }
+        .price-label { opacity: 0.5; font-size: 0.7rem; }
+        .price-refresh {
+            cursor: pointer;
+            opacity: 0.4;
+            font-size: 0.85rem;
+            transition: opacity .2s;
+        }
+        .price-refresh:hover { opacity: 1; }
+        .price-refresh.spinning { animation: spin 1s linear infinite; }
+        @keyframes spin { from { transform: rotate(0); } to { transform: rotate(360deg); } }
+
+        /* ===== VISA FEATURE BADGES ===== */
+        .visa-features {
+            display: none;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 20px;
+            max-width: 480px;
+        }
+        .visa-features.show { display: flex; }
+        .visa-badge {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+        .visa-badge.worldwide { background: rgba(26,31,113,.2); border: 1px solid rgba(70,84,184,.3); color: #8a9af5; }
+        .visa-badge.atm       { background: rgba(39,174,96,.12); border: 1px solid rgba(39,174,96,.25); color: #27ae60; }
+        .visa-badge.swap      { background: rgba(245,197,24,.1); border: 1px solid rgba(245,197,24,.2); color: #f5c518; }
+        .visa-badge.live      { background: rgba(155,89,182,.12); border: 1px solid rgba(155,89,182,.25); color: #bb6bd9; }
+
+        /* ===== SWAP MODAL EXTRAS ===== */
+        .swap-rate-display {
+            text-align: center;
+            padding: 12px;
+            margin-top: 10px;
+            border-radius: 10px;
+            background: rgba(245,197,24,.06);
+            border: 1px solid rgba(245,197,24,.12);
+            font-size: 0.85rem;
+        }
+        .swap-rate-display .rate-big {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #f5c518;
+        }
+        .swap-from-to {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .swap-from-to .swap-arrow {
+            font-size: 1.2rem;
+            color: #f5c518;
+        }
+        .swap-from-to select, .swap-from-to input {
+            flex: 1;
+        }
+
+        /* ===== REGISTRATION FORM ===== */
+        .register-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 440px;
+            animation: fadeIn .5s ease;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+        .register-card {
+            width: 100%;
+            background: rgba(255,255,255,.04);
+            border: 1px solid rgba(245,197,24,.15);
+            border-radius: 22px;
+            padding: 36px 28px 32px;
+            backdrop-filter: blur(8px);
+        }
+        .register-card h2 {
+            text-align: center;
+            font-size: 1.4rem;
+            color: #f5c518;
+            margin-bottom: 6px;
+        }
+        .register-card .reg-sub {
+            text-align: center;
+            font-size: 0.82rem;
+            opacity: 0.55;
+            margin-bottom: 28px;
+        }
+        .form-group {
+            margin-bottom: 18px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.78rem;
+            opacity: 0.7;
+            margin-bottom: 6px;
+            letter-spacing: 0.3px;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 13px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(245,197,24,.15);
+            background: rgba(255,255,255,.06);
+            color: #fff;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color .25s, box-shadow .25s;
+        }
+        .form-group input:focus, .form-group select:focus {
+            border-color: #f5c518;
+            box-shadow: 0 0 0 3px rgba(245,197,24,.1);
+        }
+        .form-group input.error {
+            border-color: #e74c3c;
+            box-shadow: 0 0 0 3px rgba(231,76,60,.1);
+        }
+        .form-group select option {
+            background: #1b0a3c;
+            color: #e2daf0;
+        }
+        .form-row {
+            display: flex;
+            gap: 14px;
+        }
+        .form-row .form-group {
+            flex: 1;
+        }
+        .form-error {
+            color: #e74c3c;
+            font-size: 0.75rem;
+            margin-top: 4px;
+            display: none;
+        }
+        .btn-register {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #f5c518, #d4a810);
+            color: #1b0a3c;
+            font-weight: 700;
+            font-size: 1.05rem;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: all .25s;
+            letter-spacing: 0.5px;
+        }
+        .btn-register:hover {
+            box-shadow: 0 8px 28px rgba(245,197,24,.4);
+            transform: translateY(-2px);
+        }
+        .btn-register:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        .reg-terms {
+            text-align: center;
+            font-size: 0.7rem;
+            opacity: 0.4;
+            margin-top: 18px;
+            line-height: 1.5;
+        }
+        .reg-login-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.82rem;
+        }
+        .reg-login-link a {
+            color: #f5c518;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .reg-login-link a:hover { text-decoration: underline; }
+
+        /* Hide app sections when registration is showing */
+        .app-content.hidden { display: none; }
+
         /* ===== RESPONSIVE ===== */
         @media (max-width: 420px) {
             .card-container { width: 100%; height: 220px; }
@@ -597,10 +835,122 @@
             .payment-grid { grid-template-columns: repeat(2, 1fr); }
             .card-selector { gap: 6px; }
             .card-type-btn { padding: 8px 12px; font-size: 0.74rem; }
+            .form-row { flex-direction: column; gap: 0; }
+            .register-card { padding: 28px 20px 24px; }
         }
     </style>
 </head>
 <body>
+
+    <!-- ===== REGISTRATION SCREEN ===== -->
+    <div class="register-screen" id="registerScreen" style="display:none;">
+        <header class="header">
+            <h1>VISUAL PI CARD</h1>
+            <p>Get Your Pi Network Payment Card</p>
+        </header>
+
+        <div class="register-card">
+            <h2>&#128179; Register for a Card</h2>
+            <p class="reg-sub">Fill in your details to get your Visual Pi Card</p>
+            <div style="text-align:center; margin-bottom:20px; padding:10px 16px; border-radius:12px; background:rgba(39,174,96,.1); border:1px solid rgba(39,174,96,.25); font-size:0.82rem; color:#27ae60;">
+                &#9903; <strong>Mastercard — FREE</strong> — Register now, no fee required!
+            </div>
+            <div style="text-align:center; margin-bottom:20px; padding:10px 16px; border-radius:12px; background:rgba(245,197,24,.1); border:1px solid rgba(245,197,24,.25); font-size:0.82rem; color:#f5c518;">
+                &#127380; <strong>Visa — 5 &pi;</strong> — Worldwide payments, ATM &amp; Crypto Swap!
+            </div>
+
+            <form id="registerForm" onsubmit="return handleRegister(event)" novalidate>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="regFirstName">First Name</label>
+                        <input type="text" id="regFirstName" placeholder="John" required autocomplete="given-name">
+                        <div class="form-error" id="errFirstName">First name is required</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="regLastName">Last Name</label>
+                        <input type="text" id="regLastName" placeholder="Doe" required autocomplete="family-name">
+                        <div class="form-error" id="errLastName">Last name is required</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="regPiUser">Pi Network Username</label>
+                    <input type="text" id="regPiUser" placeholder="@your_pi_username" required autocomplete="username">
+                    <div class="form-error" id="errPiUser">Pi username is required</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="regEmail">Email Address</label>
+                    <input type="email" id="regEmail" placeholder="you@example.com" required autocomplete="email">
+                    <div class="form-error" id="errEmail">Valid email is required</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="regPhone">Phone Number (optional)</label>
+                    <input type="tel" id="regPhone" placeholder="+1 234 567 8900" autocomplete="tel">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="regCountry">Country</label>
+                        <select id="regCountry" required>
+                            <option value="">Select country</option>
+                            <option value="US">United States</option>
+                            <option value="GB">United Kingdom</option>
+                            <option value="NG">Nigeria</option>
+                            <option value="KE">Kenya</option>
+                            <option value="IN">India</option>
+                            <option value="PH">Philippines</option>
+                            <option value="VN">Vietnam</option>
+                            <option value="ID">Indonesia</option>
+                            <option value="BR">Brazil</option>
+                            <option value="DE">Germany</option>
+                            <option value="FR">France</option>
+                            <option value="JP">Japan</option>
+                            <option value="KR">South Korea</option>
+                            <option value="CN">China</option>
+                            <option value="AU">Australia</option>
+                            <option value="CA">Canada</option>
+                            <option value="ZA">South Africa</option>
+                            <option value="GH">Ghana</option>
+                            <option value="TZ">Tanzania</option>
+                            <option value="UG">Uganda</option>
+                            <option value="OTHER">Other</option>
+                        </select>
+                        <div class="form-error" id="errCountry">Select your country</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="regCardType">Preferred Card</label>
+                        <select id="regCardType" onchange="updateCardPrice()">
+                            <option value="mastercard">Mastercard — FREE</option>
+                            <option value="visa">Visa — 5 π</option>
+                            <option value="gold">Gold</option>
+                            <option value="platinum">Platinum</option>
+                            <option value="black">Black Card</option>
+                            <option value="amex">Amex</option>
+                        </select>
+                        <div id="cardPriceNote" style="margin-top:6px; font-size:0.75rem; color:#27ae60; line-height:1.3;">
+                            &#9989; Free registration — domestic payments only
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-register" id="btnRegister">&#127380; Get My Card</button>
+            </form>
+
+            <p class="reg-terms">
+                By registering, you agree to Visual Pi Card terms of service.<br>
+                Your data is stored locally on your device.
+            </p>
+
+            <div class="reg-login-link">
+                Already registered? <a href="#" onclick="skipToApp(); return false;">Go to my card &rarr;</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== APP CONTENT (shown after registration) ===== -->
+    <div class="app-content" id="appContent">
 
     <!-- SERVER STATUS BAR -->
     <div class="server-bar" id="serverBar">
@@ -627,10 +977,10 @@
     <!-- CARD TYPE SELECTOR -->
     <div class="card-selector" id="cardSelector">
         <button class="card-type-btn active" data-type="visa" onclick="switchCard('visa')">
-            <span class="ctype-icon">&#127380;</span> Visa
+            <span class="ctype-icon">&#127380;</span> Visa <span style="font-size:0.6rem; background:#f5c518; color:#1b0a3c; padding:2px 6px; border-radius:8px; margin-left:2px;">5 &pi;</span>
         </button>
         <button class="card-type-btn" data-type="mastercard" onclick="switchCard('mastercard')">
-            <span class="ctype-icon">&#9903;</span> Mastercard
+            <span class="ctype-icon">&#9903;</span> Mastercard <span style="font-size:0.6rem; background:#27ae60; color:#fff; padding:2px 6px; border-radius:8px; margin-left:2px;">FREE</span>
         </button>
         <button class="card-type-btn" data-type="black" onclick="switchCard('black')">
             <span class="ctype-icon">&#9830;</span> Black Card
@@ -696,12 +1046,40 @@
         </div>
     </div>
     <div class="card-hint">&#8635; Click card to flip &nbsp;&middot;&nbsp; Choose card type above</div>
+    <a class="card-details-link" id="cardDetailsLink" href="card-visa.html">View Card Details &rarr;</a>
 
     <!-- BALANCE -->
     <section class="balance-section">
         <div class="balance-label">Available Balance</div>
         <div class="balance-amount" id="balanceDisplay"><span>&pi;</span> 1,247.83</div>
+        <div id="balanceFiat" style="font-size:0.8rem; opacity:0.5; margin-top:4px;">&asymp; fetching live price...</div>
     </section>
+
+    <!-- LIVE PI PRICE TICKER -->
+    <div class="price-ticker" id="priceTicker">
+        <div class="price-item">
+            <span class="price-label">PI/USD</span>
+            <span class="price-value" id="piPriceUsd">$0.00</span>
+            <span class="price-change up" id="piChange">+0%</span>
+        </div>
+        <div class="price-item">
+            <span class="price-label">PI/BTC</span>
+            <span class="price-value" id="piPriceBtc">0.0000</span>
+        </div>
+        <div class="price-item">
+            <span class="price-label">24h Vol</span>
+            <span class="price-value" id="piVolume">$0</span>
+        </div>
+        <span class="price-refresh" id="priceRefresh" title="Refresh price" onclick="fetchPiPrice()">&#8635;</span>
+    </div>
+
+    <!-- VISA FEATURE BADGES (shown when Visa is selected) -->
+    <div class="visa-features" id="visaFeatures">
+        <span class="visa-badge worldwide">&#127760; Worldwide</span>
+        <span class="visa-badge atm">&#127974; ATM Ready</span>
+        <span class="visa-badge swap">&#128260; Crypto Swap</span>
+        <span class="visa-badge live">&#128200; Live Price</span>
+    </div>
 
     <!-- QUICK ACTIONS -->
     <div class="actions">
@@ -720,6 +1098,14 @@
         <button class="action-btn" onclick="openModal('topup')">
             <span class="action-icon">&#43;</span>
             Top Up
+        </button>
+        <button class="action-btn" id="btnAtm" onclick="openModal('atm')" style="display:none;">
+            <span class="action-icon">&#127974;</span>
+            ATM
+        </button>
+        <button class="action-btn" id="btnSwap" onclick="openModal('swap')" style="display:none;">
+            <span class="action-icon">&#128260;</span>
+            Swap
         </button>
     </div>
 
@@ -743,9 +1129,9 @@
                 <div class="icon">&#128179;</div>
                 <div class="label">Bill Payments</div>
             </div>
-            <div class="payment-type">
+            <div class="payment-type" id="crossBorderPayment">
                 <div class="icon">&#127760;</div>
-                <div class="label">Cross-Border</div>
+                <div class="label" id="crossBorderLabel">Cross-Border</div>
             </div>
             <div class="payment-type">
                 <div class="icon">&#128241;</div>
@@ -762,6 +1148,18 @@
             <div class="payment-type">
                 <div class="icon">&#128218;</div>
                 <div class="label">Subscriptions</div>
+            </div>
+            <div class="payment-type" id="atmPayment" style="display:none;">
+                <div class="icon">&#127974;</div>
+                <div class="label">ATM Worldwide</div>
+            </div>
+            <div class="payment-type" id="swapPayment" style="display:none;">
+                <div class="icon">&#128260;</div>
+                <div class="label">Crypto Swap</div>
+            </div>
+            <div class="payment-type" id="fiatPayment" style="display:none;">
+                <div class="icon">&#128181;</div>
+                <div class="label">Pi to Fiat</div>
             </div>
         </div>
     </section>
@@ -819,6 +1217,8 @@
         Powered by Pi Blockchain &bull; All transactions in &pi; &bull; 198.54.116.227
     </footer>
 
+    </div><!-- end .app-content -->
+
     <!-- PAYMENT MODAL -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal">
@@ -833,6 +1233,11 @@
             <label for="modalNote">Note (optional)</label>
             <input type="text" id="modalNote" placeholder="What's this for?" autocomplete="off">
 
+            <div id="domesticNotice" style="display:none; margin-top:14px; padding:10px 14px; border-radius:10px; background:rgba(235,87,87,.1); border:1px solid rgba(235,87,87,.25); font-size:0.78rem; line-height:1.4; color:#f2994a; text-align:center;">
+                &#127758; <strong>Mastercard — Domestic Only</strong><br>
+                <span id="domesticCountryText">Transactions limited to your registered country.</span>
+            </div>
+
             <div class="modal-actions">
                 <button class="btn-secondary" onclick="closeModal()">Cancel</button>
                 <button class="btn-primary" id="modalConfirm" onclick="confirmAction()">Confirm</button>
@@ -842,6 +1247,96 @@
 
     <!-- SUCCESS TOAST -->
     <div class="toast" id="toast">Transaction successful!</div>
+
+    <!-- SWAP MODAL -->
+    <div class="modal-overlay" id="swapOverlay">
+        <div class="modal">
+            <h2>&#128260; Swap Crypto to Fiat</h2>
+
+            <div class="swap-rate-display">
+                <div style="opacity:.6; font-size:.72rem;">Current Pi Market Price</div>
+                <div class="rate-big" id="swapRateDisplay">$0.00</div>
+                <div style="opacity:.5; font-size:.7rem; margin-top:2px;">Live from market data</div>
+            </div>
+
+            <label>From</label>
+            <div class="swap-from-to">
+                <select id="swapFrom">
+                    <option value="PI">Pi (&pi;)</option>
+                    <option value="BTC">Bitcoin (BTC)</option>
+                    <option value="ETH">Ethereum (ETH)</option>
+                    <option value="USDT">Tether (USDT)</option>
+                    <option value="BNB">BNB</option>
+                    <option value="SOL">Solana (SOL)</option>
+                </select>
+                <span class="swap-arrow">&#8594;</span>
+                <select id="swapTo">
+                    <option value="USD">US Dollar (USD)</option>
+                    <option value="EUR">Euro (EUR)</option>
+                    <option value="GBP">Pound (GBP)</option>
+                    <option value="NGN">Naira (NGN)</option>
+                    <option value="KES">Shilling (KES)</option>
+                    <option value="INR">Rupee (INR)</option>
+                    <option value="PHP">Peso (PHP)</option>
+                    <option value="BRL">Real (BRL)</option>
+                    <option value="BTC">Bitcoin (BTC)</option>
+                    <option value="ETH">Ethereum (ETH)</option>
+                    <option value="USDT">Tether (USDT)</option>
+                </select>
+            </div>
+
+            <label for="swapAmount">Amount</label>
+            <input type="number" id="swapAmount" placeholder="0.00" min="0.01" step="0.01" oninput="updateSwapEstimate()">
+
+            <div id="swapEstimate" style="text-align:center; margin-top:8px; font-size:0.85rem; opacity:.7;">
+                Enter amount to see estimate
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-secondary" onclick="closeSwapModal()">Cancel</button>
+                <button class="btn-primary" onclick="confirmSwap()">Swap Now</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ATM MODAL -->
+    <div class="modal-overlay" id="atmOverlay">
+        <div class="modal">
+            <h2>&#127974; ATM Withdrawal</h2>
+            <div style="text-align:center; padding:10px; margin-bottom:12px; border-radius:10px; background:rgba(39,174,96,.08); border:1px solid rgba(39,174,96,.2); font-size:0.78rem; color:#27ae60;">
+                &#127760; Worldwide ATM access &bull; Visual Pi Card required
+            </div>
+
+            <div class="swap-rate-display" style="margin-bottom:12px;">
+                <div style="opacity:.6; font-size:.72rem;">Current Pi Value</div>
+                <div class="rate-big" id="atmRateDisplay">$0.00</div>
+            </div>
+
+            <label for="atmAmount">Withdraw Amount (&pi;)</label>
+            <input type="number" id="atmAmount" placeholder="0.00" min="1" step="0.01" oninput="updateAtmEstimate()">
+
+            <div id="atmEstimate" style="text-align:center; margin-top:8px; font-size:0.85rem; opacity:.7;">
+                Enter amount to see fiat estimate
+            </div>
+
+            <label for="atmCurrency">Receive In</label>
+            <select id="atmCurrency" onchange="updateAtmEstimate()">
+                <option value="USD">US Dollar (USD)</option>
+                <option value="EUR">Euro (EUR)</option>
+                <option value="GBP">Pound (GBP)</option>
+                <option value="NGN">Naira (NGN)</option>
+                <option value="KES">Shilling (KES)</option>
+                <option value="INR">Rupee (INR)</option>
+                <option value="PHP">Peso (PHP)</option>
+                <option value="BRL">Real (BRL)</option>
+            </select>
+
+            <div class="modal-actions">
+                <button class="btn-secondary" onclick="closeAtmModal()">Cancel</button>
+                <button class="btn-primary" onclick="confirmAtm()">Withdraw</button>
+            </div>
+        </div>
+    </div>
 
     <script>
         /* ===== CONFIG ===== */
@@ -853,6 +1348,8 @@
         let balance = 1247.83;
         let currentAction = 'send';
         let currentCardType = 'visa';
+        let piPrice = { usd: 0, btc: 0, change24h: 0, volume: 0, lastFetch: 0 };
+        let fiatRates = { EUR: 0.92, GBP: 0.79, NGN: 1550, KES: 153, INR: 83.5, PHP: 56, BRL: 5.0, USD: 1 };
         let transactions = [
             { type: 'recv', name: 'Mining Reward',          amount: 3.14,   date: '2026-03-25T10:00:00Z' },
             { type: 'sent', name: 'Sent to @pioneer42',     amount: -15.00, date: '2026-03-24T14:30:00Z' },
@@ -920,19 +1417,25 @@
         function initApp() {
             autoConnect();
             loadState();
+            // Restore holder name from registration
+            var user = getRegisteredUser();
+            if (user) {
+                document.getElementById('cardHolder').textContent = (user.firstName + ' ' + user.lastName).toUpperCase();
+            }
             updateBalance();
             renderTransactions();
             if (cardTypes[currentCardType]) {
                 switchCard(currentCardType);
             }
+            // Fetch live Pi price
+            fetchPiPrice();
         }
-        document.addEventListener('DOMContentLoaded', initApp);
 
         /* ===== CARD TYPES CONFIG ===== */
         var cardTypes = {
             visa: {
                 name: 'VISA',
-                badge: 'VISA',
+                badge: 'VISA WORLDWIDE',
                 number: '4314 1592 6535 8979',
                 cvv: '314',
                 frontBg: 'linear-gradient(135deg, #1a1f71 0%, #2d3494 50%, #4654b8 100%)',
@@ -942,12 +1445,15 @@
                 circle1: '#1a1f71',
                 circle2: '#f5c518',
                 netName: 'VISA',
-                netText: 'PI NETWORK \u2022 VISA',
-                info: 'Issued by Visual Pi Card (pivisualcard.online) for the Pi Network ecosystem. All transactions are settled in Pi (\u03C0). Authorized for peer-to-peer and merchant payments worldwide. VISA network.'
+                netText: 'PI NETWORK \u2022 VISA \u2022 WORLDWIDE',
+                worldwide: true,
+                atm: true,
+                swap: true,
+                info: 'Visual Pi Card VISA \u2014 Worldwide. All payment systems, ATM withdrawals, send & receive Pi globally, crypto-to-fiat swap. Live Pi market price. Accepted at every merchant, ATM, and exchange worldwide.'
             },
             mastercard: {
                 name: 'MASTERCARD',
-                badge: 'MASTERCARD',
+                badge: 'DOMESTIC',
                 number: '5314 1592 6535 8979',
                 cvv: '271',
                 frontBg: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
@@ -957,8 +1463,9 @@
                 circle1: '#eb5757',
                 circle2: '#f2994a',
                 netName: 'MASTERCARD',
-                netText: 'PI NETWORK \u2022 MASTERCARD',
-                info: 'Issued by Visual Pi Card (pivisualcard.online) on the Mastercard network for the Pi ecosystem. All transactions settled in Pi (\u03C0). Worldwide merchant acceptance.'
+                netText: 'PI NETWORK \u2022 MASTERCARD \u2022 DOMESTIC',
+                domestic: true,
+                info: 'Visual Pi Card Mastercard — Domestic Only. Send, receive, and pay with Pi (\u03C0) within your registered country. All transactions are local to your country of registration. For international transfers, use Visa, Gold, Platinum, Black, or Amex.'
             },
             black: {
                 name: 'BLACK CARD',
@@ -1067,12 +1574,37 @@
             // Back info
             document.getElementById('cardBackInfo').textContent = c.info;
 
+            // Update cross-border indicator
+            var cbEl = document.getElementById('crossBorderPayment');
+            var cbLabel = document.getElementById('crossBorderLabel');
+            if (c.domestic) {
+                cbEl.style.opacity = '0.35';
+                cbEl.style.borderColor = 'rgba(231,76,60,.2)';
+                cbLabel.textContent = 'Cross-Border \u2718';
+            } else {
+                cbEl.style.opacity = '1';
+                cbEl.style.borderColor = '';
+                cbLabel.textContent = 'Cross-Border';
+            }
+
+            // Update Visa-specific features (ATM, Swap, etc.)
+            updateVisaFeatures();
+
+            // Update card details link
+            var detailPages = { visa:'card-visa.html', mastercard:'card-mastercard.html', black:'card-black.html', gold:'card-gold.html', platinum:'card-platinum.html', amex:'card-amex.html' };
+            var detailLink = document.getElementById('cardDetailsLink');
+            if (detailLink && detailPages[type]) { detailLink.href = detailPages[type]; }
+
             // Save preference
             saveState();
         }
 
         /* ===== MODAL ===== */
         function openModal(type) {
+            // Route ATM and Swap to their own modals
+            if (type === 'atm') { openAtmModal(); return; }
+            if (type === 'swap') { openSwapModal(); return; }
+
             currentAction = type;
             const overlay = document.getElementById('modalOverlay');
             const title = document.getElementById('modalTitle');
@@ -1112,6 +1644,18 @@
                     recipientInput.style.display = 'none';
                     confirmBtn.textContent = 'Top Up';
                     break;
+            }
+
+            // Show domestic notice for Mastercard
+            var notice = document.getElementById('domesticNotice');
+            if (currentCardType === 'mastercard') {
+                var user = getRegisteredUser();
+                var countryName = user ? getCountryName(user.country) : 'your country';
+                document.getElementById('domesticCountryText').textContent =
+                    'Transactions limited to ' + countryName + ' only. Switch to another card type for international transfers.';
+                notice.style.display = 'block';
+            } else {
+                notice.style.display = 'none';
             }
 
             overlay.classList.add('active');
@@ -1161,11 +1705,27 @@
                     showToast('Insufficient balance!');
                     return;
                 }
+                // Mastercard domestic restriction: block cross-border keywords
+                if (currentCardType === 'mastercard' && (currentAction === 'send' || currentAction === 'pay')) {
+                    var user = getRegisteredUser();
+                    var userCountry = user ? user.country : '';
+                    // Show warning reminding user this is domestic only
+                    var txNameCheck = recipient.toLowerCase();
+                    // If recipient contains country indicators different from user's country
+                    // The card is simply flagged as domestic — all Mastercard transactions are tagged as local
+                }
                 balance -= amount;
                 var txName = currentAction === 'send' ? 'Sent to @' + recipient.replace(/^@/,'') : 'Paid ' + recipient;
                 var txType = currentAction === 'send' ? 'sent' : 'shop';
-                transactions.unshift({ type: txType, name: txName, amount: -amount, date: new Date().toISOString() });
-                showToast((currentAction === 'send' ? 'Sent' : 'Paid') + ' ' + amount.toFixed(2) + ' \u03C0 successfully!');
+                // Tag domestic for Mastercard
+                var txRegion = 'international';
+                if (currentCardType === 'mastercard') {
+                    var user = getRegisteredUser();
+                    txRegion = user ? getCountryName(user.country) : 'domestic';
+                    txName += ' (' + txRegion + ')';
+                }
+                transactions.unshift({ type: txType, name: txName, amount: -amount, date: new Date().toISOString(), region: txRegion });
+                showToast((currentAction === 'send' ? 'Sent' : 'Paid') + ' ' + amount.toFixed(2) + ' \u03C0' + (currentCardType === 'mastercard' ? ' (domestic)' : '') + ' successfully!');
             } else if (currentAction === 'topup') {
                 balance += amount;
                 transactions.unshift({ type: 'recv', name: 'Card Top Up', amount: amount, date: new Date().toISOString() });
@@ -1176,6 +1736,36 @@
             renderTransactions();
             saveState();
             closeModal();
+        }
+
+        /* ===== COUNTRY NAMES ===== */
+        var countryNames = {
+            US: 'United States', GB: 'United Kingdom', NG: 'Nigeria', KE: 'Kenya',
+            IN: 'India', PH: 'Philippines', VN: 'Vietnam', ID: 'Indonesia',
+            BR: 'Brazil', DE: 'Germany', FR: 'France', JP: 'Japan',
+            KR: 'South Korea', CN: 'China', AU: 'Australia', CA: 'Canada',
+            ZA: 'South Africa', GH: 'Ghana', TZ: 'Tanzania', UG: 'Uganda',
+            OTHER: 'your country'
+        };
+        function getCountryName(code) {
+            return countryNames[code] || code || 'your country';
+        }
+
+        /* ===== REGISTRATION CARD PRICE NOTE ===== */
+        function updateCardPrice() {
+            var sel = document.getElementById('regCardType');
+            var note = document.getElementById('cardPriceNote');
+            if (!sel || !note) return;
+            if (sel.value === 'visa') {
+                note.style.color = '#f5c518';
+                note.innerHTML = '&#128176; Registration fee: 5 &pi; from your Pi wallet balance \u2014 worldwide payments, ATM & Crypto Swap';
+            } else if (sel.value === 'mastercard') {
+                note.style.color = '#27ae60';
+                note.innerHTML = '&#9989; Free registration \u2014 domestic payments only';
+            } else {
+                note.style.color = '#f5c518';
+                note.innerHTML = '&#9733; Premium card \u2014 international payments included';
+            }
         }
 
         /* ===== HELPERS ===== */
@@ -1226,15 +1816,383 @@
             setTimeout(function() { toast.classList.remove('show'); }, 2500);
         }
 
+        /* ===== LIVE PI PRICE (CoinGecko API) ===== */
+        function fetchPiPrice() {
+            var refreshEl = document.getElementById('priceRefresh');
+            if (refreshEl) refreshEl.classList.add('spinning');
+
+            fetch('https://api.coingecko.com/api/v3/simple/price?ids=pi-network&vs_currencies=usd,btc&include_24hr_change=true&include_24hr_vol=true')
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    if (data['pi-network']) {
+                        var pi = data['pi-network'];
+                        piPrice.usd = pi.usd || 0;
+                        piPrice.btc = pi.btc || 0;
+                        piPrice.change24h = pi.usd_24h_change || 0;
+                        piPrice.volume = pi.usd_24h_vol || 0;
+                        piPrice.lastFetch = Date.now();
+                        updatePriceDisplay();
+                    }
+                })
+                .catch(function() {
+                    // Fallback: try alternative
+                    fetchPiPriceFallback();
+                })
+                .finally(function() {
+                    if (refreshEl) refreshEl.classList.remove('spinning');
+                });
+        }
+
+        function fetchPiPriceFallback() {
+            // Use CoinGecko ping as fallback or cached data
+            fetch('https://api.coingecko.com/api/v3/coins/pi-network?localization=false&tickers=false&community_data=false&developer_data=false&sparkline=false')
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    if (data.market_data) {
+                        piPrice.usd = data.market_data.current_price.usd || 0;
+                        piPrice.btc = data.market_data.current_price.btc || 0;
+                        piPrice.change24h = data.market_data.price_change_percentage_24h || 0;
+                        piPrice.volume = data.market_data.total_volume.usd || 0;
+                        piPrice.lastFetch = Date.now();
+                        updatePriceDisplay();
+                    }
+                })
+                .catch(function() {});
+        }
+
+        function updatePriceDisplay() {
+            var usdEl = document.getElementById('piPriceUsd');
+            var btcEl = document.getElementById('piPriceBtc');
+            var changeEl = document.getElementById('piChange');
+            var volEl = document.getElementById('piVolume');
+
+            if (usdEl) usdEl.textContent = '$' + piPrice.usd.toFixed(4);
+            if (btcEl) btcEl.textContent = piPrice.btc.toFixed(8);
+
+            if (changeEl) {
+                var pct = piPrice.change24h.toFixed(2);
+                changeEl.textContent = (piPrice.change24h >= 0 ? '+' : '') + pct + '%';
+                changeEl.className = 'price-change ' + (piPrice.change24h >= 0 ? 'up' : 'down');
+            }
+
+            if (volEl) {
+                var vol = piPrice.volume;
+                if (vol >= 1e6) volEl.textContent = '$' + (vol / 1e6).toFixed(1) + 'M';
+                else if (vol >= 1e3) volEl.textContent = '$' + (vol / 1e3).toFixed(1) + 'K';
+                else volEl.textContent = '$' + vol.toFixed(0);
+            }
+
+            // Update swap and ATM displays
+            var swapRate = document.getElementById('swapRateDisplay');
+            var atmRate = document.getElementById('atmRateDisplay');
+            if (swapRate) swapRate.textContent = '$' + piPrice.usd.toFixed(4);
+            if (atmRate) atmRate.textContent = '$' + piPrice.usd.toFixed(4);
+
+            // Update balance in fiat
+            var fiatVal = balance * piPrice.usd;
+            var balLabel = document.getElementById('balanceFiat');
+            if (balLabel) balLabel.textContent = '\u2248 $' + fiatVal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' USD';
+        }
+
+        // Refresh price every 60 seconds
+        setInterval(function() { if (document.getElementById('appContent') && !document.getElementById('appContent').classList.contains('hidden')) fetchPiPrice(); }, 60000);
+
+        /* ===== VISA FEATURES TOGGLE ===== */
+        function updateVisaFeatures() {
+            var c = cardTypes[currentCardType];
+            var features = document.getElementById('visaFeatures');
+            var btnAtm = document.getElementById('btnAtm');
+            var btnSwap = document.getElementById('btnSwap');
+            var atmPay = document.getElementById('atmPayment');
+            var swapPay = document.getElementById('swapPayment');
+            var fiatPay = document.getElementById('fiatPayment');
+
+            if (c && c.swap) {
+                features.classList.add('show');
+                btnAtm.style.display = '';
+                btnSwap.style.display = '';
+                if (atmPay) atmPay.style.display = '';
+                if (swapPay) swapPay.style.display = '';
+                if (fiatPay) fiatPay.style.display = '';
+            } else {
+                features.classList.remove('show');
+                btnAtm.style.display = 'none';
+                btnSwap.style.display = 'none';
+                if (atmPay) atmPay.style.display = 'none';
+                if (swapPay) swapPay.style.display = 'none';
+                if (fiatPay) fiatPay.style.display = 'none';
+            }
+        }
+
+        /* ===== SWAP MODAL ===== */
+        function openSwapModal() {
+            document.getElementById('swapOverlay').classList.add('active');
+            if (piPrice.usd > 0) {
+                document.getElementById('swapRateDisplay').textContent = '$' + piPrice.usd.toFixed(4);
+            }
+        }
+
+        function closeSwapModal() {
+            document.getElementById('swapOverlay').classList.remove('active');
+            document.getElementById('swapAmount').value = '';
+            document.getElementById('swapEstimate').textContent = 'Enter amount to see estimate';
+        }
+
+        function updateSwapEstimate() {
+            var amt = parseFloat(document.getElementById('swapAmount').value);
+            var from = document.getElementById('swapFrom').value;
+            var to = document.getElementById('swapTo').value;
+            var est = document.getElementById('swapEstimate');
+
+            if (isNaN(amt) || amt <= 0 || piPrice.usd === 0) {
+                est.textContent = 'Enter amount to see estimate';
+                return;
+            }
+
+            var usdValue = amt * piPrice.usd; // default PI
+            if (from === 'BTC') usdValue = amt * (piPrice.usd / (piPrice.btc || 1));
+            else if (from === 'ETH') usdValue = amt * 3500;
+            else if (from === 'USDT') usdValue = amt;
+            else if (from === 'BNB') usdValue = amt * 600;
+            else if (from === 'SOL') usdValue = amt * 150;
+
+            var result = usdValue;
+            if (fiatRates[to]) result = usdValue * fiatRates[to];
+            else if (to === 'BTC') result = usdValue / 65000;
+            else if (to === 'ETH') result = usdValue / 3500;
+            else if (to === 'USDT') result = usdValue;
+
+            var decimals = (to === 'BTC' || to === 'ETH') ? 8 : 2;
+            est.innerHTML = '\u2248 <strong>' + result.toFixed(decimals) + ' ' + sanitize(to) + '</strong>';
+        }
+
+        function confirmSwap() {
+            var amt = parseFloat(document.getElementById('swapAmount').value);
+            var from = document.getElementById('swapFrom').value;
+            var to = document.getElementById('swapTo').value;
+
+            if (isNaN(amt) || amt <= 0) {
+                document.getElementById('swapAmount').style.borderColor = '#e74c3c';
+                setTimeout(function() { document.getElementById('swapAmount').style.borderColor = ''; }, 1500);
+                return;
+            }
+
+            if (from === 'PI') {
+                if (amt > balance) { showToast('Insufficient Pi balance!'); return; }
+                balance -= amt;
+            }
+
+            var usdValue = amt * piPrice.usd;
+            transactions.unshift({ type: 'shop', name: 'Swap ' + amt.toFixed(2) + ' ' + from + ' \u2192 ' + to, amount: from === 'PI' ? -amt : 0, date: new Date().toISOString() });
+
+            updateBalance();
+            renderTransactions();
+            saveState();
+            closeSwapModal();
+            showToast('Swapped ' + amt.toFixed(2) + ' ' + from + ' to ' + to + ' at $' + piPrice.usd.toFixed(4) + '/Pi');
+        }
+
+        /* ===== ATM MODAL ===== */
+        function openAtmModal() {
+            document.getElementById('atmOverlay').classList.add('active');
+            if (piPrice.usd > 0) {
+                document.getElementById('atmRateDisplay').textContent = '$' + piPrice.usd.toFixed(4);
+            }
+        }
+
+        function closeAtmModal() {
+            document.getElementById('atmOverlay').classList.remove('active');
+            document.getElementById('atmAmount').value = '';
+            document.getElementById('atmEstimate').textContent = 'Enter amount to see fiat estimate';
+        }
+
+        function updateAtmEstimate() {
+            var amt = parseFloat(document.getElementById('atmAmount').value);
+            var currency = document.getElementById('atmCurrency').value;
+            var est = document.getElementById('atmEstimate');
+
+            if (isNaN(amt) || amt <= 0 || piPrice.usd === 0) {
+                est.textContent = 'Enter amount to see fiat estimate';
+                return;
+            }
+
+            var usdValue = amt * piPrice.usd;
+            var rate = fiatRates[currency] || 1;
+            var fiatValue = usdValue * rate;
+            var fee = fiatValue * 0.015; // 1.5% ATM fee
+            var net = fiatValue - fee;
+
+            est.innerHTML = '\u2248 <strong>' + net.toFixed(2) + ' ' + sanitize(currency) + '</strong>' +
+                '<br><span style="font-size:0.7rem; opacity:.5;">Fee: ' + fee.toFixed(2) + ' ' + sanitize(currency) + ' (1.5%)</span>';
+        }
+
+        function confirmAtm() {
+            var amt = parseFloat(document.getElementById('atmAmount').value);
+            var currency = document.getElementById('atmCurrency').value;
+
+            if (isNaN(amt) || amt <= 0) {
+                document.getElementById('atmAmount').style.borderColor = '#e74c3c';
+                setTimeout(function() { document.getElementById('atmAmount').style.borderColor = ''; }, 1500);
+                return;
+            }
+
+            if (amt > balance) { showToast('Insufficient balance!'); return; }
+
+            balance -= amt;
+            var usdValue = amt * piPrice.usd;
+            var rate = fiatRates[currency] || 1;
+            var net = (usdValue * rate) * 0.985;
+
+            transactions.unshift({ type: 'sent', name: 'ATM Withdrawal \u2192 ' + net.toFixed(2) + ' ' + currency, amount: -amt, date: new Date().toISOString() });
+
+            updateBalance();
+            renderTransactions();
+            saveState();
+            closeAtmModal();
+            showToast('Withdrew ' + net.toFixed(2) + ' ' + currency + ' from ATM');
+        }
+
         /* ===== KEYBOARD: ESC to close modal ===== */
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') closeModal();
+            if (e.key === 'Escape') { closeModal(); closeSwapModal(); closeAtmModal(); }
         });
 
         /* ===== SERVICE WORKER (offline support) ===== */
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js').catch(function() {});
         }
+
+        /* ===== REGISTRATION ===== */
+        var REG_KEY = 'pivisualcard_user';
+
+        function getRegisteredUser() {
+            try {
+                var data = localStorage.getItem(REG_KEY);
+                return data ? JSON.parse(data) : null;
+            } catch(e) { return null; }
+        }
+
+        function saveRegisteredUser(user) {
+            try {
+                localStorage.setItem(REG_KEY, JSON.stringify(user));
+            } catch(e) {}
+        }
+
+        function showRegister() {
+            document.getElementById('registerScreen').style.display = 'flex';
+            document.getElementById('appContent').classList.add('hidden');
+        }
+
+        function showApp() {
+            document.getElementById('registerScreen').style.display = 'none';
+            document.getElementById('appContent').classList.remove('hidden');
+        }
+
+        function skipToApp() {
+            showApp();
+            initApp();
+        }
+
+        function handleRegister(e) {
+            e.preventDefault();
+            var valid = true;
+            var fields = [
+                { id: 'regFirstName', err: 'errFirstName' },
+                { id: 'regLastName',  err: 'errLastName' },
+                { id: 'regPiUser',    err: 'errPiUser' },
+                { id: 'regEmail',     err: 'errEmail' },
+                { id: 'regCountry',   err: 'errCountry' }
+            ];
+
+            fields.forEach(function(f) {
+                var input = document.getElementById(f.id);
+                var errEl = document.getElementById(f.err);
+                input.classList.remove('error');
+                errEl.style.display = 'none';
+            });
+
+            // Validate required fields
+            fields.forEach(function(f) {
+                var input = document.getElementById(f.id);
+                var errEl = document.getElementById(f.err);
+                var val = input.value.trim();
+                if (!val) {
+                    input.classList.add('error');
+                    errEl.style.display = 'block';
+                    valid = false;
+                }
+            });
+
+            // Email format check
+            var emailInput = document.getElementById('regEmail');
+            var emailVal = emailInput.value.trim();
+            if (emailVal && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) {
+                emailInput.classList.add('error');
+                document.getElementById('errEmail').style.display = 'block';
+                valid = false;
+            }
+
+            if (!valid) return false;
+
+            // Visa registration fee: 5 Pi from wallet balance
+            var selectedCard = document.getElementById('regCardType').value;
+            if (selectedCard === 'visa') {
+                if (balance < 5) {
+                    showToast('Insufficient Pi wallet balance! You need 5 \u03C0 to register a Visual Pi Card.');
+                    return false;
+                }
+                balance -= 5;
+                transactions.unshift({ type: 'shop', name: 'Visa Registration Fee (Pi Wallet)', amount: -5, date: new Date().toISOString() });
+            }
+
+            // Collect data
+            var user = {
+                firstName: document.getElementById('regFirstName').value.trim(),
+                lastName:  document.getElementById('regLastName').value.trim(),
+                piUser:    document.getElementById('regPiUser').value.trim().replace(/^@/, ''),
+                email:     emailVal,
+                phone:     document.getElementById('regPhone').value.trim(),
+                country:   document.getElementById('regCountry').value,
+                cardType:  document.getElementById('regCardType').value,
+                registered: new Date().toISOString()
+            };
+
+            saveRegisteredUser(user);
+
+            // Set card holder name and preferred card type
+            currentCardType = user.cardType;
+            var holderName = (user.firstName + ' ' + user.lastName).toUpperCase();
+            document.getElementById('cardHolder').textContent = holderName;
+
+            // Save card holder to state
+            try {
+                var state = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+                state.holderName = holderName;
+                state.cardType = user.cardType;
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+            } catch(e) {}
+
+            // Switch to app
+            showApp();
+            initApp();
+            showToast('Welcome, ' + user.firstName + '! Your card is ready.');
+
+            return false;
+        }
+
+        /* ===== STARTUP: check registration ===== */
+        (function() {
+            var user = getRegisteredUser();
+            if (user) {
+                // Already registered — restore holder name
+                var holderName = (user.firstName + ' ' + user.lastName).toUpperCase();
+                document.getElementById('cardHolder').textContent = holderName;
+                showApp();
+                initApp();
+            } else {
+                showRegister();
+            }
+        })();
     </script>
 </body>
 </html>

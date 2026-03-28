@@ -26,7 +26,14 @@ $DEPLOY_FILES = @(
     ".htaccess",
     "manifest.json",
     "sw.js",
-    "setup.html"
+    "setup.html",
+    "card-visa.html",
+    "card-mastercard.html",
+    "card-gold.html",
+    "card-platinum.html",
+    "card-black.html",
+    "card-amex.html",
+    "icon-192.svg"
 )
 
 # Source directory (this folder)
@@ -116,7 +123,6 @@ foreach ($file in $DEPLOY_FILES) {
         $stream.Close()
 
         $response = $ftpRequest.GetResponse()
-        $status = $response.StatusDescription
         $response.Close()
 
         Write-Host "    UPLOADED  $file" -ForegroundColor Green

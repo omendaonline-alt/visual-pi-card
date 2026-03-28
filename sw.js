@@ -1,11 +1,17 @@
 // Visual Pi Card - Service Worker v1.0
 // pivisualcard.online - Offline support & caching
 
-var CACHE_NAME = 'pivisualcard-v1';
+var CACHE_NAME = 'pivisualcard-v2';
 var URLS_TO_CACHE = [
     '/',
     '/index.html',
-    '/manifest.json'
+    '/manifest.json',
+    '/card-visa.html',
+    '/card-mastercard.html',
+    '/card-gold.html',
+    '/card-platinum.html',
+    '/card-black.html',
+    '/card-amex.html'
 ];
 
 // Install: cache core files
