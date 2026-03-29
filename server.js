@@ -8,6 +8,18 @@ const express = require('express');
 const cors = require('cors');
 const crypto = require('crypto');
 const path = require('path');
+const fs = require('fs');
+
+// Load .env file if present
+try {
+    const envPath = path.join(__dirname, '.env');
+    if (fs.existsSync(envPath)) {
+        fs.readFileSync(envPath, 'utf8').split('\n').forEach(line => {
+            const match = line.match(/^([^#=]+)=(.*)$/);
+            if (match) process.env[match[1].trim()] = match[2].trim();
+        });
+    }
+} catch(e) { /* .env not found — use system env */ }
 
 const app = express();
 const PORT = process.env.PORT || 3000;

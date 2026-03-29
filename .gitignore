@@ -4,6 +4,9 @@
 node_modules/
 npm-debug.log*
 
+# Environment secrets
+.env
+
 # Subfolder with its own repo
 Pi network visual card/
 
