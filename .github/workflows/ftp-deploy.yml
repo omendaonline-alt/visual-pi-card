@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - omendaonline-alt
 
 jobs:
   ftp-deploy:
