@@ -1,6 +1,6 @@
 <#
     Visual Pi Card — GitHub Deploy
-    Domain: pivisualcard.online
+    Domain: omendapipaysglobel.online
     Repo:   github.com/OMENDA/visual-pi-card
 
     USAGE:
@@ -12,7 +12,7 @@ param(
     [string]$Message = ""
 )
 
-$DOMAIN = "pivisualcard.online"
+$DOMAIN = "omendapipaysglobel.online"
 $REPO = "github.com/chiefutility/visual-pi-card"
 
 Write-Host ""

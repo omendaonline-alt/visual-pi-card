@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Omenda Pi Pays – Transaction Records</title>
+<meta name="description" content="Omenda Pi Pays – Full transaction history for your Pi Visual Card.">
+<meta name="robots" content="index, follow">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="icon" type="image/jpeg" href="logo.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:#0a0a1a;color:#fff;min-height:100vh;-webkit-font-smoothing:antialiased;padding-bottom:80px}
+
+/* ── Nav link bar ── */
+.nav-link-bar{display:flex;gap:6px;padding:6px 12px;background:linear-gradient(135deg,#1e1245,#2a1760);overflow-x:auto}
+.nav-link-bar::-webkit-scrollbar{display:none}
+.nav-link-bar{-ms-overflow-style:none;scrollbar-width:none}
+.nav-link-bar a{color:rgba(255,255,255,.85);font-size:.78rem;font-weight:600;padding:7px 14px;white-space:nowrap;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:20px;transition:all .2s;text-decoration:none}
+.nav-link-bar a:hover{color:#fff;background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.3)}
+.nav-link-bar a.nav-active{color:#fff;background:rgba(255,255,255,.22);border-color:rgba(255,255,255,.35)}
+
+/* ── Top Bar ── */
+.top-bar{background:linear-gradient(135deg,#12122e,#1a1a3e);padding:14px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid rgba(255,255,255,.06)}
+.top-bar .back-btn{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.08);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.top-bar h1{font-size:1.05rem;font-weight:800;color:#fff;flex:1}
+.top-bar .export-btn{padding:7px 14px;border-radius:20px;background:linear-gradient(135deg,#f97316,#f59e0b);border:none;color:#fff;font-size:.72rem;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap}
+
+/* ── Summary Cards ── */
+.summary-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:12px 14px}
+.summary-card{background:linear-gradient(135deg,rgba(255,255,255,.06),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:14px 12px;text-align:center}
+.summary-card .sc-label{font-size:.62rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:rgba(255,255,255,.45);margin-bottom:4px}
+.summary-card .sc-value{font-size:1.1rem;font-weight:800}
+.sc-income{color:#4ade80}
+.sc-expense{color:#f87171}
+.sc-net{color:#facc15}
+
+/* ── Filter Bar ── */
+.filter-bar{display:flex;gap:6px;padding:8px 14px;overflow-x:auto;border-bottom:1px solid rgba(255,255,255,.06)}
+.filter-bar::-webkit-scrollbar{display:none}
+.filter-bar{-ms-overflow-style:none;scrollbar-width:none}
+.filter-bar button{padding:6px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);font-size:.72rem;font-weight:600;color:rgba(255,255,255,.6);cursor:pointer;white-space:nowrap;font-family:inherit;transition:all .15s}
+.filter-bar button.active{background:linear-gradient(135deg,#f97316,#f59e0b);color:#fff;border-color:transparent}
+.filter-bar button:hover:not(.active){background:rgba(255,255,255,.08)}
+
+/* ── Search ── */
+.search-bar{padding:8px 14px}
+.search-input{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:24px;padding:4px 6px 4px 14px}
+.search-input input{flex:1;border:none;background:transparent;outline:none;font-size:.82rem;padding:8px 0;font-family:inherit;color:#fff}
+.search-input input::placeholder{color:rgba(255,255,255,.35)}
+.search-input .search-icon{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.08);border:none;color:rgba(255,255,255,.5);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+
+/* ── Date Range ── */
+.date-range{display:flex;gap:8px;padding:0 14px 10px;align-items:center}
+.date-range label{font-size:.68rem;color:rgba(255,255,255,.4);font-weight:600}
+.date-range input[type="date"]{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:6px 10px;font-size:.72rem;color:#fff;font-family:inherit;outline:none}
+.date-range input[type="date"]::-webkit-calendar-picker-indicator{filter:invert(1) brightness(.7)}
+
+/* ── Transaction List ── */
+.tx-section{padding:0 14px}
+.tx-date-group{margin-bottom:16px}
+.tx-date-header{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:rgba(255,255,255,.35);padding:8px 0 6px;border-bottom:1px solid rgba(255,255,255,.05);margin-bottom:6px}
+.tx-card{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:14px 16px;margin-bottom:8px;transition:all .2s;cursor:pointer}
+.tx-card:hover{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.12)}
+.tx-card .tx-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.15rem;flex-shrink:0}
+.tx-icon.sent{background:rgba(231,76,60,.15);color:#e74c3c}
+.tx-icon.recv{background:rgba(39,174,96,.15);color:#27ae60}
+.tx-icon.shop{background:rgba(245,197,24,.15);color:#f5c518}
+.tx-card .tx-info{flex:1;min-width:0}
+.tx-card .tx-name{font-weight:700;font-size:.82rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tx-card .tx-meta{display:flex;align-items:center;gap:8px;margin-top:3px}
+.tx-card .tx-time{font-size:.65rem;color:rgba(255,255,255,.4)}
+.tx-card .tx-type-badge{font-size:.58rem;font-weight:700;padding:2px 7px;border-radius:6px;text-transform:uppercase;letter-spacing:.3px}
+.badge-sent{background:rgba(231,76,60,.12);color:#f87171}
+.badge-recv{background:rgba(39,174,96,.12);color:#4ade80}
+.badge-shop{background:rgba(245,197,24,.12);color:#fbbf24}
+.tx-card .tx-amount{font-weight:800;font-size:.92rem;text-align:right;flex-shrink:0}
+.tx-amount.positive{color:#4ade80}
+.tx-amount.negative{color:#f87171}
+.tx-card .tx-txid{font-size:.58rem;color:rgba(255,255,255,.25);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* ── Detail Modal ── */
+.tx-modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:2000;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);align-items:flex-end;justify-content:center}
+.tx-modal-overlay.open{display:flex}
+.tx-modal{background:linear-gradient(135deg,#1a1a3e,#12122e);border-radius:24px 24px 0 0;padding:20px 18px 30px;width:100%;max-width:440px;max-height:80vh;overflow-y:auto;animation:slideUp .25s ease}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.tx-modal .modal-handle{width:40px;height:4px;border-radius:4px;background:rgba(255,255,255,.2);margin:0 auto 16px}
+.tx-modal .detail-row{display:flex;justify-content:space-between;align-items:flex-start;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.tx-modal .detail-row:last-child{border-bottom:none}
+.tx-modal .detail-label{font-size:.72rem;font-weight:600;color:rgba(255,255,255,.45);flex-shrink:0;min-width:80px}
+.tx-modal .detail-value{font-size:.82rem;font-weight:700;text-align:right;word-break:break-all}
+.tx-modal .detail-amount{font-size:1.4rem;font-weight:800;text-align:center;padding:14px 0}
+.tx-modal .modal-close{width:100%;padding:12px;border-radius:14px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:#fff;font-size:.82rem;font-weight:700;cursor:pointer;font-family:inherit;margin-top:12px}
+.tx-modal .modal-close:hover{background:rgba(255,255,255,.14)}
+
+/* ── Empty State ── */
+.empty-state{text-align:center;padding:60px 20px;color:rgba(255,255,255,.35)}
+.empty-state .empty-icon{font-size:3rem;margin-bottom:12px}
+.empty-state .empty-text{font-size:.85rem;font-weight:600}
+.empty-state .empty-sub{font-size:.72rem;margin-top:4px}
+
+/* ── Card Type Badge ── */
+.card-badge{display:inline-flex;align-items:center;gap:3px;font-size:.58rem;font-weight:700;padding:2px 7px;border-radius:6px;letter-spacing:.3px}
+.card-visa{background:rgba(31,83,165,.2);color:#60a5fa}
+.card-mastercard{background:rgba(235,120,0,.2);color:#fb923c}
+.card-amex{background:rgba(0,111,207,.2);color:#38bdf8}
+.card-gold{background:rgba(245,197,24,.2);color:#fbbf24}
+.card-platinum{background:rgba(168,162,158,.2);color:#d6d3d1}
+.card-black{background:rgba(255,255,255,.08);color:#e5e5e5}
+
+/* ── Bottom Nav ── */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:1000;background:linear-gradient(135deg,#12122e,#1a1a3e);border-top:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:space-around;padding:6px 0 env(safe-area-inset-bottom,4px)}
+.bottom-nav a{display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;font-size:.6rem;font-weight:600;color:rgba(255,255,255,.4);position:relative}
+.bottom-nav a.active{color:#f97316}
+.bottom-nav a svg{width:22px;height:22px}
+</style>
+</head>
+<body>
+
+<!-- ── CROSS-NAV BAR ── -->
+<div class="nav-link-bar">
+  <a href="index.html" style="background:linear-gradient(135deg,rgba(245,197,24,.25),rgba(212,168,16,.12));border-color:rgba(245,197,24,.4);color:#f5c518;font-weight:700;">&#128179; Pi Card</a>
+  <a href="shop.html">&#128722; Marketplace</a>
+  <a href="map.html">&#128205; Map</a>
+  <a href="records.html" class="nav-active">&#128196; Records</a>
+  <a href="card-visa.html">Visa</a>
+  <a href="card-mastercard.html">MC</a>
+  <a href="card-amex.html">Amex</a>
+  <a href="card-gold.html">Gold</a>
+  <a href="card-platinum.html">Plat</a>
+  <a href="card-black.html">Black</a>
+</div>
+
+<!-- ── TOP BAR ── -->
+<div class="top-bar">
+  <button class="back-btn" onclick="history.back()">
+    <svg width="18" height="18" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>
+  </button>
+  <h1>&#128196; Transaction Records</h1>
+  <button class="export-btn" onclick="exportCSV()">&#128229; Export</button>
+</div>
+
+<!-- ── SUMMARY ── -->
+<div class="summary-row">
+  <div class="summary-card">
+    <div class="sc-label">Total Income</div>
+    <div class="sc-value sc-income" id="totalIncome">+0.00 &#960;</div>
+  </div>
+  <div class="summary-card">
+    <div class="sc-label">Total Spent</div>
+    <div class="sc-value sc-expense" id="totalSpent">-0.00 &#960;</div>
+  </div>
+  <div class="summary-card">
+    <div class="sc-label">Net Balance</div>
+    <div class="sc-value sc-net" id="netBalance">0.00 &#960;</div>
+  </div>
+</div>
+
+<!-- ── FILTER BAR ── -->
+<div class="filter-bar" id="filterBar">
+  <button class="active" data-filter="all" onclick="setFilter('all',this)">All</button>
+  <button data-filter="recv" onclick="setFilter('recv',this)">&#11015; Received</button>
+  <button data-filter="sent" onclick="setFilter('sent',this)">&#11014; Sent</button>
+  <button data-filter="shop" onclick="setFilter('shop',this)">&#9733; Purchases</button>
+</div>
+
+<!-- ── SEARCH ── -->
+<div class="search-bar">
+  <div class="search-input">
+    <input type="text" id="searchInput" placeholder="Search by name, txid, amount..." oninput="applyFilters()">
+    <button class="search-icon">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- ── DATE RANGE ── -->
+<div class="date-range">
+  <label>From</label>
+  <input type="date" id="dateFrom" onchange="applyFilters()">
+  <label>To</label>
+  <input type="date" id="dateTo" onchange="applyFilters()">
+</div>
+
+<!-- ── TRANSACTIONS ── -->
+<div class="tx-section" id="txSection"></div>
+
+<!-- ── DETAIL MODAL ── -->
+<div class="tx-modal-overlay" id="txModal" onclick="if(event.target===this)closeTxModal()">
+  <div class="tx-modal">
+    <div class="modal-handle"></div>
+    <div id="txModalContent"></div>
+    <button class="modal-close" onclick="closeTxModal()">Close</button>
+  </div>
+</div>
+
+<!-- ── BOTTOM NAV ── -->
+<nav class="bottom-nav">
+  <a href="index.html">
+    <svg fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg>
+    Pi Card
+  </a>
+  <a href="shop.html">
+    <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"/></svg>
+    Marketplace
+  </a>
+  <a href="records.html" class="active">
+    <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+    Records
+  </a>
+  <a href="map.html">
+    <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
+    Map
+  </a>
+  <a href="index.html">
+    <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
+    Account
+  </a>
+</nav>
+
+<script>
+var STORAGE_KEY = 'pivisualcard_data';
+var USER_KEY = 'pivisualcard_user';
+var allTransactions = [];
+var currentFilter = 'all';
+
+// ── Load transactions from localStorage (same store as index.html) ──
+function loadTransactions() {
+  try {
+    var saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      var data = JSON.parse(saved);
+      if (Array.isArray(data.transactions)) allTransactions = data.transactions;
+    }
+  } catch(e) {}
+
+  // Also load card-specific transactions from card pages
+  var cardKeys = ['black_transactions','gold_transactions','plat_transactions'];
+  cardKeys.forEach(function(key) {
+    try {
+      var raw = localStorage.getItem(key);
+      if (raw) {
+        var arr = JSON.parse(raw);
+        if (Array.isArray(arr)) {
+          arr.forEach(function(tx) {
+            // Tag with source if not already
+            if (!tx._src) tx._src = key.replace('_transactions','');
+            allTransactions.push(tx);
+          });
+        }
+      }
+    } catch(e) {}
+  });
+
+  // Sort all by date descending
+  allTransactions.sort(function(a, b) {
+    return new Date(b.date) - new Date(a.date);
+  });
+}
+
+// ── Get user info ──
+function getUserInfo() {
+  try {
+    var raw = localStorage.getItem(USER_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch(e) {}
+  return null;
+}
+
+// ── Compute summary ──
+function updateSummary(list) {
+  var income = 0, expense = 0;
+  list.forEach(function(tx) {
+    if (tx.amount > 0) income += tx.amount;
+    else expense += Math.abs(tx.amount);
+  });
+  document.getElementById('totalIncome').textContent = '+' + income.toFixed(2) + ' \u03C0';
+  document.getElementById('totalSpent').textContent = '-' + expense.toFixed(2) + ' \u03C0';
+  var net = income - expense;
+  document.getElementById('netBalance').textContent = (net >= 0 ? '+' : '') + net.toFixed(2) + ' \u03C0';
+}
+
+// ── Sanitize ──
+function sanitize(str) {
+  var d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+// ── Filter ──
+function setFilter(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-bar button').forEach(function(b) { b.classList.remove('active'); });
+  btn.classList.add('active');
+  applyFilters();
+}
+
+function applyFilters() {
+  var query = (document.getElementById('searchInput').value || '').toLowerCase().trim();
+  var from = document.getElementById('dateFrom').value;
+  var to = document.getElementById('dateTo').value;
+
+  var filtered = allTransactions.filter(function(tx) {
+    // Type filter
+    if (currentFilter !== 'all' && tx.type !== currentFilter) return false;
+    // Search
+    if (query) {
+      var haystack = ((tx.name || '') + ' ' + (tx.txid || '') + ' ' + tx.amount).toLowerCase();
+      if (haystack.indexOf(query) === -1) return false;
+    }
+    // Date range
+    if (from || to) {
+      var txDate = tx.date ? tx.date.substring(0, 10) : '';
+      if (from && txDate < from) return false;
+      if (to && txDate > to) return false;
+    }
+    return true;
+  });
+
+  updateSummary(filtered);
+  renderTransactions(filtered);
+}
+
+// ── Render grouped by date ──
+function renderTransactions(list) {
+  var section = document.getElementById('txSection');
+
+  if (!list || list.length === 0) {
+    section.innerHTML = '<div class="empty-state"><div class="empty-icon">&#128196;</div><div class="empty-text">No transactions found</div><div class="empty-sub">Your Pi transactions will appear here</div></div>';
+    return;
+  }
+
+  // Group by date
+  var groups = {};
+  list.forEach(function(tx) {
+    var d = tx.date ? new Date(tx.date) : new Date();
+    var key = d.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(tx);
+  });
+
+  var html = '';
+  Object.keys(groups).forEach(function(dateKey) {
+    html += '<div class="tx-date-group">';
+    html += '<div class="tx-date-header">' + dateKey + '</div>';
+
+    groups[dateKey].forEach(function(tx, idx) {
+      var isPositive = tx.amount > 0;
+      var iconClass = tx.type === 'sent' ? 'sent' : tx.type === 'shop' ? 'shop' : 'recv';
+      var iconChar = tx.type === 'sent' ? '\u25B2' : tx.type === 'recv' ? '\u25BC' : '\u2605';
+      var badgeClass = tx.type === 'sent' ? 'badge-sent' : tx.type === 'recv' ? 'badge-recv' : 'badge-shop';
+      var typeLabel = tx.type === 'sent' ? 'Sent' : tx.type === 'recv' ? 'Received' : 'Purchase';
+      var timeStr = tx.date ? new Date(tx.date).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '';
+      var txidStr = tx.txid ? '<div class="tx-txid">TxID: ' + sanitize(tx.txid.substring(0, 20)) + '...</div>' : '';
+      var cardBadge = '';
+      if (tx.cardType || tx._src) {
+        var ct = tx.cardType || tx._src || '';
+        cardBadge = ' <span class="card-badge card-' + sanitize(ct) + '">' + sanitize(ct.toUpperCase()) + '</span>';
+      }
+
+      html += '<div class="tx-card" onclick=\'openTxDetail(' + JSON.stringify(JSON.stringify(tx)) + ')\'>';
+      html += '<div class="tx-icon ' + iconClass + '">' + iconChar + '</div>';
+      html += '<div class="tx-info">';
+      html += '<div class="tx-name">' + sanitize(tx.name || 'Transaction') + '</div>';
+      html += '<div class="tx-meta"><span class="tx-time">' + timeStr + '</span><span class="tx-type-badge ' + badgeClass + '">' + typeLabel + '</span>' + cardBadge + '</div>';
+      html += txidStr;
+      html += '</div>';
+      html += '<div class="tx-amount ' + (isPositive ? 'positive' : 'negative') + '">' + (isPositive ? '+' : '') + tx.amount.toFixed(2) + ' \u03C0</div>';
+      html += '</div>';
+    });
+
+    html += '</div>';
+  });
+
+  section.innerHTML = html;
+}
+
+// ── Detail Modal ──
+function openTxDetail(txJson) {
+  var tx = JSON.parse(txJson);
+  var isPositive = tx.amount > 0;
+  var amountClass = isPositive ? 'positive' : 'negative';
+  var typeLabel = tx.type === 'sent' ? '\u25B2 Sent' : tx.type === 'recv' ? '\u25BC Received' : '\u2605 Purchase';
+  var dateStr = tx.date ? new Date(tx.date).toLocaleString('en-US', {
+    weekday: 'short', year: 'numeric', month: 'short', day: 'numeric',
+    hour: '2-digit', minute: '2-digit', second: '2-digit'
+  }) : 'N/A';
+
+  var html = '<div class="detail-amount ' + amountClass + '">' + (isPositive ? '+' : '') + tx.amount.toFixed(4) + ' \u03C0</div>';
+  html += '<div class="detail-row"><span class="detail-label">Type</span><span class="detail-value">' + typeLabel + '</span></div>';
+  html += '<div class="detail-row"><span class="detail-label">Name</span><span class="detail-value">' + sanitize(tx.name || 'N/A') + '</span></div>';
+  html += '<div class="detail-row"><span class="detail-label">Date</span><span class="detail-value">' + dateStr + '</span></div>';
+  if (tx.txid) {
+    html += '<div class="detail-row"><span class="detail-label">TxID</span><span class="detail-value" style="font-size:.68rem;color:rgba(255,255,255,.6)">' + sanitize(tx.txid) + '</span></div>';
+  }
+  if (tx.cardType || tx._src) {
+    html += '<div class="detail-row"><span class="detail-label">Card</span><span class="detail-value">' + sanitize((tx.cardType || tx._src || '').toUpperCase()) + '</span></div>';
+  }
+  if (tx.status) {
+    html += '<div class="detail-row"><span class="detail-label">Status</span><span class="detail-value" style="color:#4ade80">' + sanitize(tx.status) + '</span></div>';
+  }
+
+  document.getElementById('txModalContent').innerHTML = html;
+  document.getElementById('txModal').classList.add('open');
+}
+
+function closeTxModal() {
+  document.getElementById('txModal').classList.remove('open');
+}
+
+// ── Export CSV ──
+function exportCSV() {
+  if (allTransactions.length === 0) { alert('No transactions to export.'); return; }
+
+  var rows = [['Date','Time','Type','Name','Amount (Pi)','TxID','Card']];
+  allTransactions.forEach(function(tx) {
+    var d = tx.date ? new Date(tx.date) : new Date();
+    rows.push([
+      d.toLocaleDateString('en-CA'),
+      d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+      tx.type || '',
+      '"' + (tx.name || '').replace(/"/g, '""') + '"',
+      tx.amount.toFixed(4),
+      tx.txid || '',
+      tx.cardType || tx._src || ''
+    ]);
+  });
+
+  var csv = rows.map(function(r) { return r.join(','); }).join('\n');
+  var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'pi-transactions-' + new Date().toISOString().substring(0, 10) + '.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ── Keyboard shortcut ──
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeTxModal();
+});
+
+// ── Init ──
+loadTransactions();
+updateSummary(allTransactions);
+renderTransactions(allTransactions);
+</script>
+</body>
+</html>

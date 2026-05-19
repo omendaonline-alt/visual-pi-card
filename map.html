@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Omenda Pi Pays – Business Map</title>
+<meta name="description" content="Omenda Pi Pays - Find shops, sellers, hotels, restaurants and businesses near you that accept Pi cryptocurrency.">
+<meta name="robots" content="index, follow">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="icon" type="image/jpeg" href="logo.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lib/leaflet.min.css">
+<script src="lib/leaflet.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:#f4f4f5;color:#18181b;min-height:100vh;-webkit-font-smoothing:antialiased}
+.hide-scrollbar::-webkit-scrollbar{display:none}
+.hide-scrollbar{-ms-overflow-style:none;scrollbar-width:none}
+
+/* ── Top Bar ── */
+.top-bar{background:#fff;padding:10px 12px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #e4e4e7;position:relative;z-index:1000}
+.top-bar .back-btn{width:36px;height:36px;border-radius:50%;background:#f4f4f5;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.top-bar h1{font-size:1rem;font-weight:800;color:#18181b;flex:1}
+.top-bar .locate-btn{width:36px;height:36px;border-radius:50%;background:#f97316;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0}
+
+/* ── Search ── */
+.map-search{background:#fff;padding:8px 12px;border-bottom:1px solid #e4e4e7;position:relative;z-index:1000}
+.map-search-bar{display:flex;align-items:center;gap:8px;background:#f4f4f5;border:1px solid #e4e4e7;border-radius:24px;padding:4px 6px 4px 14px}
+.map-search-bar input{flex:1;border:none;background:transparent;outline:none;font-size:.85rem;padding:7px 0;font-family:inherit;color:#18181b}
+.map-search-bar input::placeholder{color:#a1a1aa}
+.map-search-bar .search-go{width:32px;height:32px;border-radius:50%;background:#f97316;border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+
+/* ── Category Filter ── */
+.cat-filter{display:flex;overflow-x:auto;gap:6px;background:#fff;padding:8px 12px;border-bottom:1px solid #e4e4e7;position:relative;z-index:1000}
+.cat-filter button{padding:6px 14px;border-radius:20px;border:1px solid #e4e4e7;background:#fff;font-size:.75rem;font-weight:600;color:#71717a;cursor:pointer;white-space:nowrap;font-family:inherit;transition:all .15s;display:flex;align-items:center;gap:4px}
+.cat-filter button.active{background:#f97316;color:#fff;border-color:#f97316}
+.cat-filter button:hover:not(.active){background:#f4f4f5}
+.cat-filter .cat-icon{font-size:.9rem}
+
+/* ── Map ── */
+#map{width:100%;height:calc(100vh - 290px);min-height:300px;z-index:1;background:#e5e7eb}
+#map-error{display:none;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:500;background:#fff;padding:20px 24px;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,.15);text-align:center;font-size:.85rem;color:#ef4444;max-width:80%}
+
+/* ── Stats Bar ── */
+.stats-bar{background:#fff;padding:10px 12px;border-top:1px solid #e4e4e7;display:flex;align-items:center;justify-content:space-between;font-size:.75rem;color:#71717a}
+.stats-bar .count{font-weight:700;color:#18181b}
+.stats-bar .list-toggle{display:flex;align-items:center;gap:4px;background:#f97316;color:#fff;border:none;padding:6px 14px;border-radius:20px;font-size:.75rem;font-weight:700;cursor:pointer;font-family:inherit}
+
+/* ── List View ── */
+.list-panel{display:none;position:fixed;bottom:64px;left:0;right:0;top:0;z-index:900;background:#f4f4f5;overflow-y:auto;padding-top:140px}
+.list-panel.open{display:block}
+.list-panel .list-header{position:sticky;top:140px;background:#fff;padding:12px;border-bottom:1px solid #e4e4e7;display:flex;align-items:center;justify-content:space-between;z-index:10}
+.list-panel .list-header h2{font-size:.92rem;font-weight:800;color:#18181b}
+.list-panel .close-list{background:#f4f4f5;border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.biz-list{padding:8px 12px}
+.biz-card{display:flex;gap:10px;background:#fff;border-radius:12px;padding:10px;margin-bottom:8px;border:1px solid #f4f4f5;cursor:pointer;transition:box-shadow .2s}
+.biz-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.08)}
+.biz-card .biz-img{width:70px;height:70px;border-radius:10px;overflow:hidden;flex-shrink:0;background:#f4f4f5}
+.biz-card .biz-img img{width:100%;height:100%;object-fit:cover}
+.biz-card .biz-info{flex:1;min-width:0}
+.biz-card .biz-name{font-size:.82rem;font-weight:700;color:#18181b;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.biz-card .biz-cat{font-size:.68rem;font-weight:600;color:#f97316;margin-top:1px}
+.biz-card .biz-addr{font-size:.68rem;color:#71717a;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.biz-card .biz-meta{display:flex;align-items:center;gap:8px;margin-top:4px}
+.biz-card .biz-rating{font-size:.68rem;font-weight:700;color:#f59e0b;display:flex;align-items:center;gap:2px}
+.biz-card .biz-price{font-size:.72rem;font-weight:700;color:#dc2626}
+.biz-card .biz-badge{font-size:.6rem;font-weight:700;padding:2px 6px;border-radius:8px;background:#f0fdf4;color:#16a34a}
+
+/* ── Custom Leaflet Popup ── */
+.leaflet-popup-content-wrapper{border-radius:12px !important;padding:0 !important;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.15) !important}
+.leaflet-popup-content{margin:0 !important;min-width:220px}
+.popup-card .popup-img{width:100%;height:100px;object-fit:cover}
+.popup-card .popup-body{padding:10px 12px}
+.popup-card .popup-cat{font-size:.65rem;font-weight:700;color:#f97316;text-transform:uppercase;letter-spacing:.3px}
+.popup-card .popup-name{font-size:.85rem;font-weight:800;color:#18181b;margin-top:2px}
+.popup-card .popup-addr{font-size:.7rem;color:#71717a;margin-top:2px}
+.popup-card .popup-row{display:flex;align-items:center;gap:8px;margin-top:6px}
+.popup-card .popup-rating{font-size:.72rem;font-weight:700;color:#f59e0b;display:flex;align-items:center;gap:2px}
+.popup-card .popup-price{font-size:.78rem;font-weight:700;color:#dc2626}
+.popup-card .popup-badge{font-size:.6rem;font-weight:700;padding:2px 8px;border-radius:8px}
+.popup-card .popup-actions{display:flex;gap:6px;margin-top:8px;padding-top:8px;border-top:1px solid #f4f4f5}
+.popup-card .popup-actions button{flex:1;padding:7px;border-radius:8px;font-size:.72rem;font-weight:700;cursor:pointer;font-family:inherit;border:none;transition:all .15s}
+.popup-card .popup-actions .btn-view{background:#f97316;color:#fff}
+.popup-card .popup-actions .btn-dir{background:#f4f4f5;color:#18181b}
+
+/* ── Bottom Nav ── */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:1000;background:#fff;border-top:1px solid #e4e4e7;display:flex;align-items:center;justify-content:space-around;padding:6px 0 env(safe-area-inset-bottom,4px)}
+.bottom-nav a{display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;font-size:.6rem;font-weight:600;color:#a1a1aa;position:relative}
+.bottom-nav a.active{color:#f97316}
+.bottom-nav a svg{width:22px;height:22px}
+.bottom-nav .sell-btn{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#f97316,#f59e0b);display:flex;align-items:center;justify-content:center;margin-top:-18px;box-shadow:0 4px 16px rgba(249,115,22,.3);transition:transform .2s}
+.bottom-nav .sell-btn:hover{transform:scale(1.05)}
+.bottom-nav .sell-btn svg{width:26px;height:26px;color:#fff}
+.bottom-nav .msg-badge{position:absolute;top:-2px;right:-4px;background:#ef4444;color:#fff;width:16px;height:16px;border-radius:50%;font-size:.55rem;font-weight:800;display:flex;align-items:center;justify-content:center}
+
+/* ── Map Action Buttons (below layer switcher) ── */
+.map-actions{position:fixed;right:14px;top:auto;z-index:999;display:flex;flex-direction:column;gap:8px;align-items:flex-end}
+.map-action-btn{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:24px;border:none;font-size:.75rem;font-weight:700;cursor:pointer;box-shadow:0 3px 12px rgba(0,0,0,.18);transition:transform .2s,box-shadow .2s;white-space:nowrap}
+.map-action-btn:hover{transform:scale(1.05);box-shadow:0 5px 16px rgba(0,0,0,.25)}
+.map-action-btn svg{width:18px;height:18px;flex-shrink:0}
+.map-action-btn .pulse-dot{width:8px;height:8px;background:#4ade80;border-radius:50%;animation:livePulse 1.5s infinite}
+@keyframes livePulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.4)}}
+.btn-my-loc{background:linear-gradient(135deg,#3b82f6,#06b6d4);color:#fff}
+.btn-shops{background:linear-gradient(135deg,#f97316,#f59e0b);color:#fff}
+
+/* ── Nav link bar (connect to Pi Card & Marketplace) ── */
+.nav-link-bar{display:flex;gap:6px;padding:6px 12px;background:linear-gradient(135deg,#1e1245,#2a1760);overflow-x:auto}
+.nav-link-bar::-webkit-scrollbar{display:none}
+.nav-link-bar{-ms-overflow-style:none;scrollbar-width:none}
+.nav-link-bar a{color:rgba(255,255,255,.85);font-size:.78rem;font-weight:600;padding:7px 14px;white-space:nowrap;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:20px;transition:all .2s;text-decoration:none}
+.nav-link-bar a:hover{color:#fff;background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.3)}
+.nav-link-bar a.nav-active{color:#fff;background:rgba(255,255,255,.22);border-color:rgba(255,255,255,.35)}
+</style>
+</head>
+<body>
+
+<!-- ── CROSS-NAV BAR ── -->
+<div class="nav-link-bar hide-scrollbar">
+  <a href="index.html" style="background:linear-gradient(135deg,rgba(245,197,24,.25),rgba(212,168,16,.12));border-color:rgba(245,197,24,.4);color:#f5c518;font-weight:700;">&#128179; Pi Card</a>
+  <a href="shop.html">&#128722; Marketplace</a>
+  <a href="map.html" class="nav-active">&#128205; Map</a>
+</div>
+
+<!-- ── TOP BAR ── -->
+<div class="top-bar">
+  <button class="back-btn" onclick="history.back()" title="Go back">
+    <svg width="18" height="18" fill="none" stroke="#18181b" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>
+  </button>
+  <h1>&#128205; Business Map</h1>
+  <button class="locate-btn" onclick="locateMe()" title="Find my location">
+    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2v2m0 16v2M2 12h2m16 0h2m-5 0a5 5 0 11-10 0 5 5 0 0110 0z"/><circle cx="12" cy="12" r="2" fill="currentColor"/></svg>
+  </button>
+</div>
+
+<!-- ── SEARCH ── -->
+<div class="map-search">
+  <div class="map-search-bar">
+    <input type="text" id="mapSearch" placeholder="Search shops, hotels, sellers...">
+    <button class="search-go" onclick="searchBusiness()">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- ── CATEGORY FILTERS ── -->
+<div class="cat-filter hide-scrollbar" id="catFilter">
+  <button class="active" data-cat="all" onclick="filterCategory('all',this)"><span class="cat-icon">&#128506;&#65039;</span> All</button>
+  <button data-cat="shop" onclick="filterCategory('shop',this)"><span class="cat-icon">&#128717;&#65039;</span> Shops</button>
+  <button data-cat="seller" onclick="filterCategory('seller',this)"><span class="cat-icon">&#128100;</span> Sellers</button>
+  <button data-cat="hotel" onclick="filterCategory('hotel',this)"><span class="cat-icon">&#127976;</span> Hotels</button>
+  <button data-cat="restaurant" onclick="filterCategory('restaurant',this)"><span class="cat-icon">&#127869;&#65039;</span> Restaurants</button>
+  <button data-cat="property" onclick="filterCategory('property',this)"><span class="cat-icon">&#127968;</span> Properties</button>
+  <button data-cat="transport" onclick="filterCategory('transport',this)"><span class="cat-icon">&#128663;</span> Transport</button>
+  <button data-cat="service" onclick="filterCategory('service',this)"><span class="cat-icon">&#128295;</span> Services</button>
+</div>
+
+<!-- ── MAP ── -->
+<div id="map"></div>
+
+<!-- ── STATS BAR ── -->
+<div class="stats-bar">
+  <span>Showing <span class="count" id="bizCount">0</span> businesses nearby</span>
+  <button class="list-toggle" onclick="toggleList()">
+    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+    List View
+  </button>
+</div>
+
+<!-- ── LIST PANEL (overlay) ── -->
+<div class="list-panel" id="listPanel">
+  <div class="list-header">
+    <h2>All Businesses</h2>
+    <button class="close-list" onclick="toggleList()">
+      <svg width="16" height="16" fill="none" stroke="#18181b" stroke-width="2.5" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div class="biz-list" id="bizList"></div>
+</div>
+
+
+
+<!-- ── BOTTOM NAVIGATION ── -->
+<nav class="bottom-nav">
+  <a href="index.html">
+    <svg fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg>
+    Pi Card
+  </a>
+  <a href="shop.html">
+    <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"/></svg>
+    Marketplace
+  </a>
+  <a href="shop.html">
+    <div class="sell-btn">
+      <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 4.5v15m7.5-7.5h-15"/></svg>
+    </div>
+    Sell
+  </a>
+  <a href="map.html" class="active">
+    <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
+    Map
+  </a>
+  <a href="index.html">
+    <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
+    Account
+  </a>
+</nav>
+
+<script>
+// ── Business Data (shops, sellers, hotels, etc.) ──
+var businesses = [
+  // Shops
+  { id:"s1", name:"Pi Electronics Hub", category:"shop", icon:"\ud83d\udecd\ufe0f", lat:-6.7924, lng:39.2083, address:"Kariakoo Market, Dar es Salaam", rating:4.7, price:"\u03C00.001\u20130.05", image:"https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&auto=format&fit=crop", badge:"Top Rated", badgeColor:"#f0fdf4", badgeText:"#16a34a", desc:"Electronics, phones, laptops & accessories. Accepts Pi payments." },
+  { id:"s2", name:"Fashion Pi Store", category:"shop", icon:"\ud83d\udecd\ufe0f", lat:-1.2921, lng:36.8219, address:"Westlands, Nairobi, Kenya", rating:4.5, price:"\u03C00.0001\u20130.005", image:"https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=400&auto=format&fit=crop", badge:"Verified", badgeColor:"#eff6ff", badgeText:"#2563eb", desc:"Trendy fashion, bags, shoes & clothing. Pay with Pi." },
+  { id:"s3", name:"Home Essentials Market", category:"shop", icon:"\ud83d\udecd\ufe0f", lat:-6.8160, lng:39.2803, address:"Mlimani City, Dar es Salaam", rating:4.3, price:"\u03C00.0001\u20130.01", image:"https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?w=400&auto=format&fit=crop", badge:"", desc:"Home, garden & kitchen essentials. All priced in Pi." },
+  { id:"s4", name:"Pi Auto Parts", category:"shop", icon:"\ud83d\udecd\ufe0f", lat:0.3476, lng:32.5825, address:"Kampala Road, Kampala, Uganda", rating:4.1, price:"\u03C00.001\u20130.1", image:"https://images.unsplash.com/photo-1486006920555-c77dcf18193c?w=400&auto=format&fit=crop", badge:"", desc:"Car parts, accessories & maintenance tools." },
+  { id:"s5", name:"Digital World Pi", category:"shop", icon:"\ud83d\udecd\ufe0f", lat:-1.9536, lng:30.0606, address:"KN 3 Ave, Kigali, Rwanda", rating:4.6, price:"\u03C00.0005\u20130.02", image:"https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=400&auto=format&fit=crop", badge:"Top Rated", badgeColor:"#f0fdf4", badgeText:"#16a34a", desc:"Gadgets, smart devices, gaming & tech accessories." },
+  { id:"s6", name:"Pi Grocery Mart", category:"shop", icon:"\ud83d\udecd\ufe0f", lat:-3.3869, lng:36.6830, address:"Arusha Town, Tanzania", rating:4.2, price:"\u03C00.00001\u20130.001", image:"https://images.unsplash.com/photo-1604719312566-8912e9227c6a?w=400&auto=format&fit=crop", badge:"New", badgeColor:"#fff7ed", badgeText:"#ea580c", desc:"Fresh food, groceries & daily essentials at Pi prices." },
+
+  // Sellers (individuals)
+  { id:"se1", name:"John M. \u2013 Phone Dealer", category:"seller", icon:"\ud83d\udc64", lat:-6.7750, lng:39.2400, address:"Mwenge, Dar es Salaam", rating:4.8, price:"\u03C00.002\u20130.008", image:"https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400&auto=format&fit=crop", badge:"Trusted Seller", badgeColor:"#f0fdf4", badgeText:"#16a34a", desc:"Selling brand new & used smartphones. 500+ sales on Pi." },
+  { id:"se2", name:"Grace K. \u2013 Fashion Designer", category:"seller", icon:"\ud83d\udc64", lat:-1.2864, lng:36.8172, address:"Tom Mboya St, Nairobi", rating:4.6, price:"\u03C00.0001\u20130.002", image:"https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=400&auto=format&fit=crop", badge:"Verified", badgeColor:"#eff6ff", badgeText:"#2563eb", desc:"Custom made dresses, African wear & accessories." },
+  { id:"se3", name:"Ahmed R. \u2013 Car Dealer", category:"seller", icon:"\ud83d\udc64", lat:-6.8000, lng:39.2700, address:"Ubungo, Dar es Salaam", rating:4.4, price:"\u03C00.05\u20130.5", image:"https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=400&auto=format&fit=crop", badge:"", desc:"New & used cars \u2013 Toyota, Mercedes, Honda. Pi accepted." },
+  { id:"se4", name:"Amina S. \u2013 Beauty Products", category:"seller", icon:"\ud83d\udc64", lat:0.3163, lng:32.5811, address:"Luwum Street, Kampala", rating:4.3, price:"\u03C00.00005\u20130.001", image:"https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=400&auto=format&fit=crop", badge:"", desc:"Skincare, hair products & beauty supplies." },
+  { id:"se5", name:"David N. \u2013 Electronics", category:"seller", icon:"\ud83d\udc64", lat:-1.9500, lng:30.0600, address:"Kimironko, Kigali", rating:4.5, price:"\u03C00.001\u20130.01", image:"https://images.unsplash.com/photo-1550009158-9ebf69173e03?w=400&auto=format&fit=crop", badge:"Trusted Seller", badgeColor:"#f0fdf4", badgeText:"#16a34a", desc:"Laptops, tablets, headphones & chargers." },
+
+  // Hotels
+  { id:"h1", name:"Serena Hotel", category:"hotel", icon:"\ud83c\udfe8", lat:-6.8160, lng:39.2920, address:"Ohio St, Dar es Salaam, Tanzania", rating:4.8, price:"\u03C00.0006/night", image:"https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&auto=format&fit=crop", badge:"Luxury", badgeColor:"#fdf4ff", badgeText:"#a855f7", desc:"5-star luxury hotel with ocean views, pool & spa." },
+  { id:"h2", name:"Hyatt Regency Nairobi", category:"hotel", icon:"\ud83c\udfe8", lat:-1.2921, lng:36.8219, address:"Westlands, Nairobi, Kenya", rating:4.6, price:"\u03C00.0005/night", image:"https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=400&auto=format&fit=crop", badge:"Luxury", badgeColor:"#fdf4ff", badgeText:"#a855f7", desc:"International standard hotel in the heart of Nairobi." },
+  { id:"h3", name:"Zanzibar Beach Resort", category:"hotel", icon:"\ud83c\udfe8", lat:-6.1630, lng:39.1880, address:"Nungwi Beach, Zanzibar", rating:4.9, price:"\u03C00.001/night", image:"https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=400&auto=format&fit=crop", badge:"Top Rated", badgeColor:"#f0fdf4", badgeText:"#16a34a", desc:"Beachfront paradise with stunning ocean sunset views." },
+  { id:"h4", name:"City Lodge Kampala", category:"hotel", icon:"\ud83c\udfe8", lat:0.3136, lng:32.5811, address:"Kampala Road, Uganda", rating:4.2, price:"\u03C00.0002/night", image:"https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=400&auto=format&fit=crop", badge:"Budget", badgeColor:"#fff7ed", badgeText:"#ea580c", desc:"Comfortable city center hotel at affordable Pi rates." },
+  { id:"h5", name:"Mountain View Inn", category:"hotel", icon:"\ud83c\udfe8", lat:-3.3725, lng:36.6945, address:"Arusha, Tanzania", rating:4.4, price:"\u03C00.0003/night", image:"https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=400&auto=format&fit=crop", badge:"", desc:"Scenic hotel with Mt. Meru views. Safari base camp." },
+  { id:"h6", name:"Kigali Marriott", category:"hotel", icon:"\ud83c\udfe8", lat:-1.9490, lng:30.0588, address:"KN 3 Ave, Kigali, Rwanda", rating:4.7, price:"\u03C00.0007/night", image:"https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=400&auto=format&fit=crop", badge:"Luxury", badgeColor:"#fdf4ff", badgeText:"#a855f7", desc:"Premier business & leisure hotel in Kigali city center." },
+
+  // Restaurants
+  { id:"r1", name:"Pi Caf\u00e9 & Grill", category:"restaurant", icon:"\ud83c\udf7d\ufe0f", lat:-6.7800, lng:39.2600, address:"Masaki, Dar es Salaam", rating:4.5, price:"\u03C00.00005\u20130.0003", image:"https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&auto=format&fit=crop", badge:"Popular", badgeColor:"#fff7ed", badgeText:"#ea580c", desc:"Caf\u00e9, grills & local dishes. Pay your meal with Pi!" },
+  { id:"r2", name:"Safari Bites Nairobi", category:"restaurant", icon:"\ud83c\udf7d\ufe0f", lat:-1.2700, lng:36.8100, address:"Kilimani, Nairobi", rating:4.3, price:"\u03C00.00003\u20130.0002", image:"https://images.unsplash.com/photo-1552566626-52f8b828add9?w=400&auto=format&fit=crop", badge:"", desc:"African fusion cuisine with a modern twist." },
+  { id:"r3", name:"Ocean Breeze Restaurant", category:"restaurant", icon:"\ud83c\udf7d\ufe0f", lat:-6.1570, lng:39.1920, address:"Stone Town, Zanzibar", rating:4.7, price:"\u03C00.00008\u20130.0005", image:"https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&auto=format&fit=crop", badge:"Top Rated", badgeColor:"#f0fdf4", badgeText:"#16a34a", desc:"Fresh seafood with Indian Ocean panoramic views." },
+  { id:"r4", name:"The Rooftop Kigali", category:"restaurant", icon:"\ud83c\udf7d\ufe0f", lat:-1.9520, lng:30.0620, address:"City Center, Kigali", rating:4.4, price:"\u03C00.00004\u20130.0003", image:"https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?w=400&auto=format&fit=crop", badge:"New", badgeColor:"#fff7ed", badgeText:"#ea580c", desc:"Rooftop dining with city views. Accepts Pi." },
+
+  // Properties
+  { id:"p1", name:"Ocean View Villa", category:"property", icon:"\ud83c\udfe0", lat:-6.7700, lng:39.2800, address:"Masaki, Dar es Salaam", rating:4.9, price:"\u03C06.5", image:"https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400&auto=format&fit=crop", badge:"Featured", badgeColor:"#fdf4ff", badgeText:"#a855f7", desc:"5BR luxury villa with swimming pool & ocean view." },
+  { id:"p2", name:"3BR Apartment Westlands", category:"property", icon:"\ud83c\udfe0", lat:-1.2680, lng:36.8110, address:"Westlands, Nairobi", rating:4.5, price:"\u03C01.6", image:"https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400&auto=format&fit=crop", badge:"Featured", badgeColor:"#fdf4ff", badgeText:"#a855f7", desc:"Modern 3-bedroom apartment in prime Nairobi location." },
+  { id:"p3", name:"Commercial Plot CBD", category:"property", icon:"\ud83c\udfe0", lat:-6.8130, lng:39.2870, address:"CBD, Dar es Salaam", rating:4.0, price:"\u03C015", image:"https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&auto=format&fit=crop", badge:"", desc:"Prime commercial plot in the central business district." },
+  { id:"p4", name:"Family Home Mikocheni", category:"property", icon:"\ud83c\udfe0", lat:-6.7600, lng:39.2500, address:"Mikocheni, Dar es Salaam", rating:4.3, price:"\u03C02.5", image:"https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400&auto=format&fit=crop", badge:"", desc:"4BR family home with large garden & parking." },
+
+  // Transport
+  { id:"t1", name:"Pi Ride \u2013 Economy", category:"transport", icon:"\ud83d\ude97", lat:-6.8000, lng:39.2600, address:"City-wide, Dar es Salaam", rating:4.3, price:"\u03C00.00001\u20130.00003", image:"https://images.unsplash.com/photo-1449965408869-ebd13bc9e5a8?w=400&auto=format&fit=crop", badge:"Popular", badgeColor:"#fff7ed", badgeText:"#ea580c", desc:"Affordable everyday rides across the city." },
+  { id:"t2", name:"Pi Luxury Cars", category:"transport", icon:"\ud83d\ude97", lat:-1.2900, lng:36.8200, address:"City-wide, Nairobi", rating:4.7, price:"\u03C00.00005\u20130.0001", image:"https://images.unsplash.com/photo-1549317661-bd32c8ce0afa?w=400&auto=format&fit=crop", badge:"Premium", badgeColor:"#fdf4ff", badgeText:"#a855f7", desc:"Executive cars & luxury SUVs for VIP transport." },
+  { id:"t3", name:"Airport Transfer Hub", category:"transport", icon:"\ud83d\ude97", lat:-6.8700, lng:39.2026, address:"JNIA Airport, Dar es Salaam", rating:4.5, price:"\u03C00.00003\u20130.00007", image:"https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=400&auto=format&fit=crop", badge:"Verified", badgeColor:"#eff6ff", badgeText:"#2563eb", desc:"Reliable airport pickup & drop-off service." },
+  { id:"t4", name:"Boda Express", category:"transport", icon:"\ud83d\ude97", lat:0.3300, lng:32.5700, address:"City-wide, Kampala", rating:4.1, price:"\u03C00.000003\u20130.00001", image:"https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=400&auto=format&fit=crop", badge:"", desc:"Quick motorcycle rides through the city." },
+
+  // Services
+  { id:"sv1", name:"Pi Tech Repairs", category:"service", icon:"\ud83d\udd27", lat:-6.7850, lng:39.2350, address:"Sinza, Dar es Salaam", rating:4.6, price:"\u03C00.0001\u20130.002", image:"https://images.unsplash.com/photo-1581092921461-eab62e97a780?w=400&auto=format&fit=crop", badge:"Verified", badgeColor:"#eff6ff", badgeText:"#2563eb", desc:"Phone & laptop repairs. Screen, battery, software." },
+  { id:"sv2", name:"CleanPro Laundry", category:"service", icon:"\ud83d\udd27", lat:-1.2750, lng:36.8150, address:"Hurlingham, Nairobi", rating:4.3, price:"\u03C00.00005\u20130.0005", image:"https://images.unsplash.com/photo-1517677208171-0bc6725a3e60?w=400&auto=format&fit=crop", badge:"", desc:"Dry cleaning & laundry service. Same-day delivery." },
+  { id:"sv3", name:"Pi Beauty Salon", category:"service", icon:"\ud83d\udd27", lat:-6.8050, lng:39.2750, address:"Mikocheni, Dar es Salaam", rating:4.5, price:"\u03C00.00003\u20130.0003", image:"https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400&auto=format&fit=crop", badge:"Popular", badgeColor:"#fff7ed", badgeText:"#ea580c", desc:"Hair styling, nails, facials & beauty treatments." },
+  { id:"sv4", name:"Swift Delivery Pi", category:"service", icon:"\ud83d\udd27", lat:-1.9550, lng:30.0650, address:"Nyarugenge, Kigali", rating:4.4, price:"\u03C00.000006\u20130.00002", image:"https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=400&auto=format&fit=crop", badge:"New", badgeColor:"#fff7ed", badgeText:"#ea580c", desc:"Same-day express delivery for packages & food." }
+];
+
+// ── Marker Colors by Category ──
+var catColors = {
+  shop:      { bg:"#f97316", border:"#ea580c" },
+  seller:    { bg:"#8b5cf6", border:"#7c3aed" },
+  hotel:     { bg:"#06b6d4", border:"#0891b2" },
+  restaurant:{ bg:"#ef4444", border:"#dc2626" },
+  property:  { bg:"#10b981", border:"#059669" },
+  transport: { bg:"#3b82f6", border:"#2563eb" },
+  service:   { bg:"#f59e0b", border:"#d97706" }
+};
+
+var catEmoji = { shop:"\ud83d\udecd\ufe0f", seller:"\ud83d\udc64", hotel:"\ud83c\udfe8", restaurant:"\ud83c\udf7d\ufe0f", property:"\ud83c\udfe0", transport:"\ud83d\ude97", service:"\ud83d\udd27" };
+
+// ── Initialize Map ──
+var map, osmStreets, esriSat, esriLabels, esriRoads, googleHybrid, googleStreets;
+try {
+
+// Check Leaflet loaded
+if (typeof L === 'undefined') {
+  throw new Error('Map library failed to load. Please check your internet connection and reload.');
+}
+map = L.map('map',{ zoomControl:false }).setView([-6.7924, 39.2083], 14);
+
+L.control.zoom({ position:'bottomright' }).addTo(map);
+
+// OpenStreetMap (reliable default)
+osmStreets = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+  maxZoom:19,
+  crossOrigin:true
+});
+
+// Esri Satellite
+esriSat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+  attribution:'Tiles &copy; Esri &mdash; Maxar, Earthstar Geographics',
+  maxZoom:20
+});
+
+// Esri labels overlay
+esriLabels = L.tileLayer('https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', {
+  maxZoom:20, pane:'overlayPane'
+});
+esriRoads = L.tileLayer('https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}', {
+  maxZoom:20, pane:'overlayPane'
+});
+
+// Google Satellite Hybrid
+googleHybrid = L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+  attribution:'Map data &copy; Google',
+  maxZoom:21
+});
+
+// Google Street Map
+googleStreets = L.tileLayer('https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+  attribution:'Map data &copy; Google',
+  maxZoom:21
+});
+
+// Default: OpenStreetMap
+osmStreets.addTo(map);
+
+// Monitor tile loading errors - auto-switch to Google Streets if OSM fails
+var osmFails = 0;
+osmStreets.on('tileerror', function() {
+  osmFails++;
+  if (osmFails > 3 && map.hasLayer(osmStreets)) {
+    map.removeLayer(osmStreets);
+    googleStreets.addTo(map);
+  }
+});
+
+// Layer switcher control
+var baseLayers = {
+  '\ud83d\uddfa\ufe0f Street Map': osmStreets,
+  '\ud83d\udef0\ufe0f Satellite (Esri)': esriSat,
+  '\ud83d\udef0\ufe0f Satellite (Google)': googleHybrid,
+  '\ud83d\uddfa\ufe0f Google Streets': googleStreets
+};
+var overlays = {
+  '\ud83c\udff7\ufe0f Street Names': esriRoads,
+  '\ud83c\udff7\ufe0f Place Names': esriLabels
+};
+L.control.layers(baseLayers, overlays, { position:'topright', collapsed:true }).addTo(map);
+
+// Auto-manage overlays when switching base layers
+map.on('baselayerchange', function(e) {
+  if (e.name === '\ud83d\udef0\ufe0f Satellite (Esri)') {
+    if (!map.hasLayer(esriLabels)) esriLabels.addTo(map);
+    if (!map.hasLayer(esriRoads)) esriRoads.addTo(map);
+  }
+});
+
+// Auto-locate user on load and show real live location
+var myLocMarker = null;
+var myLocCircle = null;
+var watchId = null;
+
+if (navigator.geolocation) {
+  watchId = navigator.geolocation.watchPosition(function(pos) {
+    var lat = pos.coords.latitude;
+    var lng = pos.coords.longitude;
+    var acc = pos.coords.accuracy;
+    if (!myLocMarker) {
+      map.setView([lat, lng], 17);
+      myLocCircle = L.circle([lat, lng], { radius:acc, color:'#3b82f6', fillColor:'#3b82f6', fillOpacity:0.1, weight:1.5 }).addTo(map);
+      myLocMarker = L.marker([lat, lng], {
+        icon: L.divIcon({
+          className:'',
+          html:'<div style="width:22px;height:22px;border-radius:50%;background:#3b82f6;border:4px solid #fff;box-shadow:0 0 0 8px rgba(59,130,246,.2),0 2px 8px rgba(59,130,246,.5);animation:livePulse 1.5s infinite"></div>',
+          iconSize:[22,22], iconAnchor:[11,11]
+        })
+      }).addTo(map).bindPopup('<b>\ud83d\udccd My Live Location</b><br><small>Lat: '+lat.toFixed(5)+', Lng: '+lng.toFixed(5)+'</small>');
+    } else {
+      myLocMarker.setLatLng([lat, lng]);
+      myLocMarker.setPopupContent('<b>\ud83d\udccd My Live Location</b><br><small>Lat: '+lat.toFixed(5)+', Lng: '+lng.toFixed(5)+'</small>');
+      myLocCircle.setLatLng([lat, lng]);
+      myLocCircle.setRadius(acc);
+    }
+  }, function(){}, { enableHighAccuracy:true, maximumAge:5000, timeout:15000 });
+}
+
+// ── Create markers ──
+var markers = [];
+var activeCategory = 'all';
+
+function createMarkerIcon(category) {
+  var c = catColors[category] || { bg:"#6b7280", border:"#4b5563" };
+  var emoji = catEmoji[category] || "\ud83d\udccd";
+  return L.divIcon({
+    className:'',
+    html:'<div style="width:36px;height:36px;border-radius:50%;background:'+c.bg+';border:3px solid '+c.border+';display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 2px 8px rgba(0,0,0,.25);cursor:pointer">'+emoji+'</div>',
+    iconSize:[36,36],
+    iconAnchor:[18,18],
+    popupAnchor:[0,-20]
+  });
+}
+
+function buildPopup(b) {
+  var badgeHtml = b.badge ? '<span class="popup-badge" style="background:'+(b.badgeColor||'#f0fdf4')+';color:'+(b.badgeText||'#16a34a')+'">'+b.badge+'</span>' : '';
+  return '<div class="popup-card">' +
+    '<img class="popup-img" src="'+b.image+'" alt="'+b.name+'" onerror="this.style.background=\'#f4f4f5\';this.alt=\'Image\'">' +
+    '<div class="popup-body">' +
+      '<div class="popup-cat">'+catEmoji[b.category]+' '+b.category.toUpperCase()+'</div>' +
+      '<div class="popup-name">'+b.name+'</div>' +
+      '<div class="popup-addr">\ud83d\udccd '+b.address+'</div>' +
+      '<div class="popup-row">' +
+        '<span class="popup-rating">\u2b50 '+b.rating+'</span>' +
+        '<span class="popup-price">'+b.price+'</span>' +
+        badgeHtml +
+      '</div>' +
+      '<p style="font-size:.7rem;color:#71717a;margin-top:6px;line-height:1.4">'+b.desc+'</p>' +
+      '<div class="popup-actions">' +
+        '<button class="btn-view" onclick="window.location.href=\'shop.html\'">View Products</button>' +
+        '<button class="btn-dir" onclick="openDirections('+b.lat+','+b.lng+')">Directions</button>' +
+      '</div>' +
+    '</div></div>';
+}
+
+function addMarkers(list) {
+  markers.forEach(function(m){ map.removeLayer(m); });
+  markers = [];
+
+  list.forEach(function(b) {
+    var marker = L.marker([b.lat, b.lng], { icon: createMarkerIcon(b.category) })
+      .bindPopup(buildPopup(b), { maxWidth:280, minWidth:220 });
+    marker.bizData = b;
+    marker.addTo(map);
+    markers.push(marker);
+  });
+
+  document.getElementById('bizCount').textContent = list.length;
+  buildList(list);
+}
+
+// ── Load user-registered businesses from KYC ──
+(function(){
+  try{
+    var raw=localStorage.getItem("kyc_data");
+    if(!raw)return;
+    var d=JSON.parse(raw);
+    if(!d.isBusiness||!d.bizLat||!d.bizLng)return;
+    var userBiz={
+      id:"user_"+Date.now(),
+      name:d.bizName||"My Business",
+      category:"shop",
+      icon:"\ud83c\udfe2",
+      lat:parseFloat(d.bizLat),
+      lng:parseFloat(d.bizLng),
+      address:d.bizAddress||d.city+", "+d.country,
+      rating:5.0,
+      price:"\u03C00.001",
+      image:"https://images.unsplash.com/photo-1556740738-b6a63e27c4df?w=400&auto=format&fit=crop",
+      badge:"Your Business",
+      badgeColor:"#fef3c7",
+      badgeText:"#d97706",
+      desc:(d.bizType?d.bizType.replace(/_/g," ")+". ":"")+"Registered by "+d.firstName+" "+d.lastName+"."
+    };
+    businesses.push(userBiz);
+  }catch(e){}
+})();
+
+// Initial load
+addMarkers(businesses);
+
+// Force map to recalculate size after DOM settles
+setTimeout(function(){ if(map) map.invalidateSize(); }, 300);
+setTimeout(function(){ if(map) map.invalidateSize(); }, 1000);
+setTimeout(function(){ if(map) map.invalidateSize(); }, 3000);
+
+// ── Category Filter ──
+function filterCategory(cat, btn) {
+  activeCategory = cat;
+  document.querySelectorAll('.cat-filter button').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+
+  var filtered = cat === 'all' ? businesses : businesses.filter(function(b){ return b.category === cat; });
+  addMarkers(filtered);
+
+  if (filtered.length > 0) {
+    var group = L.featureGroup(markers);
+    map.fitBounds(group.getBounds().pad(0.1));
+  }
+}
+
+// ── Search ──
+function searchBusiness() {
+  var q = document.getElementById('mapSearch').value.toLowerCase().trim();
+  if (!q) {
+    var filtered = activeCategory === 'all' ? businesses : businesses.filter(function(b){ return b.category === activeCategory; });
+    addMarkers(filtered);
+    return;
+  }
+
+  var results = businesses.filter(function(b) {
+    return b.name.toLowerCase().indexOf(q) !== -1 ||
+           b.address.toLowerCase().indexOf(q) !== -1 ||
+           b.category.toLowerCase().indexOf(q) !== -1 ||
+           b.desc.toLowerCase().indexOf(q) !== -1;
+  });
+
+  addMarkers(results);
+  if (results.length > 0) {
+    var group = L.featureGroup(markers);
+    map.fitBounds(group.getBounds().pad(0.1));
+  }
+}
+
+document.getElementById('mapSearch').addEventListener('keyup', function(e) {
+  if (e.key === 'Enter') searchBusiness();
+});
+
+// ── Locate Me ──
+function locateMe() {
+  if (!navigator.geolocation) { alert('Geolocation not supported by your browser.'); return; }
+  if (myLocMarker) {
+    map.setView(myLocMarker.getLatLng(), 17);
+    myLocMarker.openPopup();
+  } else {
+    navigator.geolocation.getCurrentPosition(function(pos) {
+      map.setView([pos.coords.latitude, pos.coords.longitude], 17);
+    }, function() {
+      alert('Unable to get your location. Please enable location permissions.');
+    }, { enableHighAccuracy:true });
+  }
+}
+
+// ── Directions ──
+function openDirections(lat, lng) {
+  window.open('https://www.google.com/maps/dir/?api=1&destination='+lat+','+lng, '_blank', 'noopener,noreferrer');
+}
+
+// ── List View ──
+function toggleList() {
+  document.getElementById('listPanel').classList.toggle('open');
+}
+
+function buildList(list) {
+  var html = '';
+  list.forEach(function(b) {
+    var badgeHtml = b.badge ? '<span class="biz-badge" style="background:'+(b.badgeColor||'#f0fdf4')+';color:'+(b.badgeText||'#16a34a')+'">'+b.badge+'</span>' : '';
+    html += '<div class="biz-card" onclick="focusBusiness(\''+b.id+'\')">' +
+      '<div class="biz-img"><img src="'+b.image+'" alt="'+b.name+'" loading="lazy" onerror="this.style.background=\'#e4e4e7\'"></div>' +
+      '<div class="biz-info">' +
+        '<div class="biz-name">'+b.name+'</div>' +
+        '<div class="biz-cat">'+catEmoji[b.category]+' '+b.category.charAt(0).toUpperCase()+b.category.slice(1)+'</div>' +
+        '<div class="biz-addr">\ud83d\udccd '+b.address+'</div>' +
+        '<div class="biz-meta">' +
+          '<span class="biz-rating">\u2b50 '+b.rating+'</span>' +
+          '<span class="biz-price">'+b.price+'</span>' +
+          badgeHtml +
+        '</div>' +
+      '</div></div>';
+  });
+  document.getElementById('bizList').innerHTML = html;
+}
+
+function focusBusiness(id) {
+  document.getElementById('listPanel').classList.remove('open');
+  for (var i=0; i<markers.length; i++) {
+    if (markers[i].bizData && markers[i].bizData.id === id) {
+      var b = markers[i].bizData;
+      map.setView([b.lat, b.lng], 15);
+      markers[i].openPopup();
+      break;
+    }
+  }
+}
+
+} catch(e) {
+  var errDiv = document.getElementById('map');
+  if(errDiv) errDiv.innerHTML = '<div style="padding:40px;text-align:center;color:#ef4444"><b>⚠️ Map failed to load</b><br><br>'+e.message+'<br><br><button onclick="location.reload()" style="padding:8px 20px;border-radius:8px;background:#f97316;color:#fff;border:none;font-weight:700;cursor:pointer">Reload Page</button></div>';
+}
+</script>
+</body>
+</html>

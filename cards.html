@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Cards &mdash; Visual Pi Card</title>
+    <meta name="description" content="Browse all Visual Pi Card types — Visa, Mastercard, American Express, Gold, Platinum, and Black unlimited cards powered by Pi Network.">
+    <meta name="theme-color" content="#0d0221">
+    <link rel="manifest" href="manifest.json">
+    <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+    <script>
+        try { Pi.init({ version: "2.0", sandbox: false }); } catch(e) {}
+    </script>
+    <style>
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        body{
+            font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+            background:linear-gradient(135deg,#0d0221 0%,#150535 40%,#1a0640 100%);
+            color:#e2daf0;
+            min-height:100vh;
+            padding:32px 16px 60px;
+        }
+
+        /* Header */
+        .page-header{text-align:center;margin-bottom:40px}
+        .page-header h1{
+            font-size:2.2rem;
+            background:linear-gradient(90deg,#f5c518,#ffdf6f);
+            -webkit-background-clip:text;background-clip:text;
+            -webkit-text-fill-color:transparent;
+            letter-spacing:1px;
+        }
+        .page-header p{font-size:1rem;opacity:.65;margin-top:6px}
+
+        /* Grid */
+        .cards-grid{
+            display:grid;
+            grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+            gap:28px;
+            max-width:1100px;
+            margin:0 auto;
+        }
+
+        /* Card Tile */
+        .card-tile{
+            position:relative;
+            border-radius:20px;
+            overflow:hidden;
+            cursor:pointer;
+            transition:transform .35s cubic-bezier(.4,.2,.2,1),box-shadow .35s;
+            text-decoration:none;
+            color:#fff;
+            display:flex;
+            flex-direction:column;
+        }
+        .card-tile:hover{
+            transform:translateY(-8px) scale(1.02);
+            box-shadow:0 24px 60px rgba(0,0,0,.45);
+        }
+
+        /* Preview area */
+        .tile-preview{
+            height:200px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            position:relative;
+            overflow:hidden;
+        }
+        .tile-preview::after{
+            content:'';position:absolute;inset:0;
+            background:linear-gradient(180deg,transparent 50%,rgba(0,0,0,.5) 100%);
+        }
+
+        /* Mini card inside preview */
+        .mini-card{
+            width:260px;height:160px;
+            border-radius:14px;
+            padding:20px;
+            display:flex;flex-direction:column;
+            justify-content:space-between;
+            position:relative;z-index:1;
+            box-shadow:0 12px 36px rgba(0,0,0,.4);
+            transition:transform .4s;
+        }
+        .card-tile:hover .mini-card{transform:scale(1.05)}
+        .mini-card .mc-top{display:flex;justify-content:space-between;align-items:center}
+        .mini-card .mc-brand{font-weight:700;font-size:.85rem;letter-spacing:2px}
+        .mini-card .mc-pi{
+            width:32px;height:32px;border-radius:50%;
+            display:flex;align-items:center;justify-content:center;
+            font-weight:900;font-size:1rem;
+        }
+        .mini-card .mc-chip{
+            width:36px;height:26px;border-radius:5px;
+            background:linear-gradient(135deg,#d4a810,#f5c518,#d4a810);
+            margin-top:6px;
+        }
+        .mini-card .mc-number{
+            font-family:'Consolas','Courier New',monospace;
+            font-size:.85rem;letter-spacing:3px;opacity:.85;
+        }
+        .mini-card .mc-bottom{display:flex;justify-content:space-between;align-items:flex-end}
+        .mini-card .mc-name{font-size:.7rem;letter-spacing:1.5px;font-weight:600}
+        .mini-card .mc-exp{font-size:.65rem;opacity:.7}
+
+        /* Info area */
+        .tile-info{
+            padding:20px 22px 22px;
+            background:rgba(255,255,255,.04);
+            backdrop-filter:blur(8px);
+            flex:1;display:flex;flex-direction:column;gap:10px;
+        }
+        .tile-info h2{font-size:1.25rem;font-weight:700;letter-spacing:.5px}
+        .tile-info .tile-desc{font-size:.85rem;opacity:.6;line-height:1.5;flex:1}
+        .tile-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+        .tile-tag{
+            font-size:.65rem;padding:3px 10px;border-radius:20px;
+            background:rgba(255,255,255,.08);letter-spacing:.5px;
+            border:1px solid rgba(255,255,255,.1);
+        }
+        .tile-cta{
+            display:inline-flex;align-items:center;gap:6px;
+            font-size:.8rem;font-weight:600;margin-top:8px;opacity:.8;
+            transition:opacity .2s;
+        }
+        .card-tile:hover .tile-cta{opacity:1}
+        .tile-cta::after{content:'→';transition:transform .2s}
+        .card-tile:hover .tile-cta::after{transform:translateX(4px)}
+
+        /* Specific card themes */
+        .card-tile.visa .tile-preview{background:linear-gradient(135deg,#0d0221,#1a1050)}
+        .card-tile.visa .mini-card{background:linear-gradient(135deg,#1b0a3c,#2d1266,#461d8a)}
+        .card-tile.visa .mc-brand{color:#f5c518}
+        .card-tile.visa .mc-pi{background:radial-gradient(circle,#f5c518,#d4a810);color:#1b0a3c}
+
+        .card-tile.mastercard .tile-preview{background:linear-gradient(135deg,#1a0022,#2d0040)}
+        .card-tile.mastercard .mini-card{background:linear-gradient(135deg,#2d0040,#4a0066,#660088)}
+        .card-tile.mastercard .mc-brand{color:#ff6b35}
+        .card-tile.mastercard .mc-pi{background:radial-gradient(circle,#ff6b35,#e04500);color:#fff}
+
+        .card-tile.amex .tile-preview{background:linear-gradient(135deg,#000d1a,#001a33)}
+        .card-tile.amex .mini-card{background:linear-gradient(135deg,#003366,#004488,#0066aa)}
+        .card-tile.amex .mc-brand{color:#00bfff}
+        .card-tile.amex .mc-pi{background:radial-gradient(circle,#00bfff,#0088cc);color:#fff}
+
+        .card-tile.gold .tile-preview{background:linear-gradient(135deg,#1a1200,#2a1f00)}
+        .card-tile.gold .mini-card{background:linear-gradient(135deg,#4a3800,#806200,#b8860b)}
+        .card-tile.gold .mc-brand{color:#ffd700}
+        .card-tile.gold .mc-pi{background:radial-gradient(circle,#ffd700,#daa520);color:#2a1f00}
+
+        .card-tile.platinum .tile-preview{background:linear-gradient(135deg,#1a1a2e,#16213e)}
+        .card-tile.platinum .mini-card{background:linear-gradient(135deg,#2c2c44,#3d3d5c,#555577)}
+        .card-tile.platinum .mc-brand{color:#c0c0e0}
+        .card-tile.platinum .mc-pi{background:radial-gradient(circle,#c0c0e0,#9090b0);color:#2c2c44}
+
+        .card-tile.black .tile-preview{background:linear-gradient(135deg,#000,#111)}
+        .card-tile.black .mini-card{background:linear-gradient(135deg,#111,#1a1a1a,#222)}
+        .card-tile.black .mini-card{border:1px solid rgba(255,255,255,.15)}
+        .card-tile.black .mc-brand{color:#fff}
+        .card-tile.black .mc-pi{background:radial-gradient(circle,#fff,#ccc);color:#000}
+
+        /* Nav */
+        .bottom-nav{
+            position:fixed;bottom:0;left:0;right:0;
+            background:rgba(13,2,33,.95);backdrop-filter:blur(12px);
+            border-top:1px solid rgba(255,255,255,.08);
+            display:flex;justify-content:center;gap:32px;
+            padding:12px 0;z-index:100;
+        }
+        .bottom-nav a{
+            color:#e2daf0;opacity:.55;font-size:.7rem;text-align:center;
+            text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:4px;
+            transition:opacity .2s;
+        }
+        .bottom-nav a:hover,.bottom-nav a.active{opacity:1;color:#f5c518}
+        .bottom-nav svg{width:22px;height:22px}
+
+        /* Responsive */
+        @media(max-width:400px){
+            .cards-grid{grid-template-columns:1fr}
+            .mini-card{width:230px;height:140px}
+            .tile-preview{height:170px}
+            .page-header h1{font-size:1.6rem}
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page-header">
+        <h1>&#960; Visual Pi Cards</h1>
+        <p>Choose your card &mdash; powered by Pi Network</p>
+    </div>
+
+    <div class="cards-grid">
+
+        <!-- VISA -->
+        <a href="card-visa.html" class="card-tile visa">
+            <div class="tile-preview">
+                <div class="mini-card">
+                    <div class="mc-top">
+                        <span class="mc-brand">VISA</span>
+                        <span class="mc-pi">&#960;</span>
+                    </div>
+                    <div class="mc-chip"></div>
+                    <div class="mc-number">4XXX &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; XXXX</div>
+                    <div class="mc-bottom">
+                        <span class="mc-name">PI HOLDER</span>
+                        <span class="mc-exp">12/28</span>
+                    </div>
+                </div>
+            </div>
+            <div class="tile-info">
+                <h2>Visa Card</h2>
+                <p class="tile-desc">Worldwide payments, ATM withdrawal, crypto swap, and live market data with CoinGecko integration.</p>
+                <div class="tile-tags">
+                    <span class="tile-tag">Global</span>
+                    <span class="tile-tag">ATM</span>
+                    <span class="tile-tag">Crypto Swap</span>
+                    <span class="tile-tag">Live Prices</span>
+                </div>
+                <span class="tile-cta">Open Card</span>
+            </div>
+        </a>
+
+        <!-- MASTERCARD -->
+        <a href="card-mastercard.html" class="card-tile mastercard">
+            <div class="tile-preview">
+                <div class="mini-card">
+                    <div class="mc-top">
+                        <span class="mc-brand">MASTERCARD</span>
+                        <span class="mc-pi">&#960;</span>
+                    </div>
+                    <div class="mc-chip"></div>
+                    <div class="mc-number">5XXX &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; XXXX</div>
+                    <div class="mc-bottom">
+                        <span class="mc-name">PI HOLDER</span>
+                        <span class="mc-exp">12/28</span>
+                    </div>
+                </div>
+            </div>
+            <div class="tile-info">
+                <h2>Mastercard</h2>
+                <p class="tile-desc">Free domestic-only card with local merchant directory, country detection, and transaction logging.</p>
+                <div class="tile-tags">
+                    <span class="tile-tag">Free</span>
+                    <span class="tile-tag">Domestic</span>
+                    <span class="tile-tag">Local Merchants</span>
+                </div>
+                <span class="tile-cta">Open Card</span>
+            </div>
+        </a>
+
+        <!-- AMEX -->
+        <a href="card-amex.html" class="card-tile amex">
+            <div class="tile-preview">
+                <div class="mini-card">
+                    <div class="mc-top">
+                        <span class="mc-brand">AMEX</span>
+                        <span class="mc-pi">&#960;</span>
+                    </div>
+                    <div class="mc-chip"></div>
+                    <div class="mc-number">3XXX &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; XXXX</div>
+                    <div class="mc-bottom">
+                        <span class="mc-name">PI HOLDER</span>
+                        <span class="mc-exp">12/28</span>
+                    </div>
+                </div>
+            </div>
+            <div class="tile-info">
+                <h2>American Express</h2>
+                <p class="tile-desc">Travel rewards, membership points, purchase protection, and airport lounge access worldwide.</p>
+                <div class="tile-tags">
+                    <span class="tile-tag">Travel</span>
+                    <span class="tile-tag">Points</span>
+                    <span class="tile-tag">Protection</span>
+                    <span class="tile-tag">Lounges</span>
+                </div>
+                <span class="tile-cta">Open Card</span>
+            </div>
+        </a>
+
+        <!-- GOLD -->
+        <a href="card-gold.html" class="card-tile gold">
+            <div class="tile-preview">
+                <div class="mini-card">
+                    <div class="mc-top">
+                        <span class="mc-brand">GOLD</span>
+                        <span class="mc-pi">&#960;</span>
+                    </div>
+                    <div class="mc-chip"></div>
+                    <div class="mc-number">47XX &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; XXXX</div>
+                    <div class="mc-bottom">
+                        <span class="mc-name">PI HOLDER</span>
+                        <span class="mc-exp">12/28</span>
+                    </div>
+                </div>
+            </div>
+            <div class="tile-info">
+                <h2>Gold Card</h2>
+                <p class="tile-desc">GCV stable pricing at 1&#960;=$314,159. Cashback rewards up to 4%, loyalty tiers, and savings calculator.</p>
+                <div class="tile-tags">
+                    <span class="tile-tag">100&#960; Activation</span>
+                    <span class="tile-tag">Cashback</span>
+                    <span class="tile-tag">GCV Rate</span>
+                    <span class="tile-tag">Loyalty</span>
+                </div>
+                <span class="tile-cta">Open Card</span>
+            </div>
+        </a>
+
+        <!-- PLATINUM -->
+        <a href="card-platinum.html" class="card-tile platinum">
+            <div class="tile-preview">
+                <div class="mini-card">
+                    <div class="mc-top">
+                        <span class="mc-brand">PLATINUM</span>
+                        <span class="mc-pi">&#960;</span>
+                    </div>
+                    <div class="mc-chip"></div>
+                    <div class="mc-number">55XX &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; XXXX</div>
+                    <div class="mc-bottom">
+                        <span class="mc-name">PI HOLDER</span>
+                        <span class="mc-exp">12/28</span>
+                    </div>
+                </div>
+            </div>
+            <div class="tile-info">
+                <h2>Platinum Card</h2>
+                <p class="tile-desc">Scheduled payments, transaction insurance, multi-wallet manager, and daily +10&#960; rewards.</p>
+                <div class="tile-tags">
+                    <span class="tile-tag">10&#960; Activation</span>
+                    <span class="tile-tag">Insurance</span>
+                    <span class="tile-tag">Multi-Wallet</span>
+                    <span class="tile-tag">Daily Rewards</span>
+                </div>
+                <span class="tile-cta">Open Card</span>
+            </div>
+        </a>
+
+        <!-- BLACK -->
+        <a href="card-black.html" class="card-tile black">
+            <div class="tile-preview">
+                <div class="mini-card">
+                    <div class="mc-top">
+                        <span class="mc-brand">BLACK</span>
+                        <span class="mc-pi">&#960;</span>
+                    </div>
+                    <div class="mc-chip"></div>
+                    <div class="mc-number">63XX &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; XXXX</div>
+                    <div class="mc-bottom">
+                        <span class="mc-name">PI HOLDER</span>
+                        <span class="mc-exp">12/28</span>
+                    </div>
+                </div>
+            </div>
+            <div class="tile-info">
+                <h2>Black Unlimited</h2>
+                <p class="tile-desc">Priority processing, concierge service, VIP vault, analytics dashboard, and unlimited transactions.</p>
+                <div class="tile-tags">
+                    <span class="tile-tag">Unlimited</span>
+                    <span class="tile-tag">Concierge</span>
+                    <span class="tile-tag">VIP Vault</span>
+                    <span class="tile-tag">Analytics</span>
+                </div>
+                <span class="tile-cta">Open Card</span>
+            </div>
+        </a>
+
+    </div>
+
+    <!-- Bottom Nav -->
+    <nav class="bottom-nav">
+        <a href="index.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9"/><path d="M9 21V9h6v12"/></svg>
+            Home
+        </a>
+        <a href="cards.html" class="active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+            Cards
+        </a>
+        <a href="shop.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+            Shop
+        </a>
+        <a href="records.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8m8 4H8m2-8H8"/></svg>
+            Records
+        </a>
+        <a href="map.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+            Map
+        </a>
+    </nav>
+
+</body>
+</html>

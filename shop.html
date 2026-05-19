@@ -1,0 +1,1731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Omenda Pi Pays – Marketplace</title>
+<meta name="description" content="Omenda Pi Pays - Buy, sell, and trade with Pi cryptocurrency. Electronics, Fashion, Cars, Hotels, Transport and more.">
+<meta name="robots" content="index, follow">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="icon" type="image/jpeg" href="logo.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://sdk.minepi.com/pi-sdk.js"></script>
+<script>
+/* Pi SDK init — must match index.html exactly */
+var piSdkReady = false;
+try { Pi.init({ version: "2.0", sandbox: false }); piSdkReady = true; } catch(e) { console.warn('Pi SDK not available:', e); }
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons/css/flag-icons.min.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:#f5f5f5;color:#1a1a1a;min-height:100vh;-webkit-font-smoothing:antialiased;padding-bottom:64px}
+a{text-decoration:none;color:inherit}
+.hide-sb::-webkit-scrollbar{display:none}
+.hide-sb{-ms-overflow-style:none;scrollbar-width:none}
+
+/* ── Top Header ── */
+.top-header{background:linear-gradient(135deg,#1a103c 0%,#261654 50%,#1a103c 100%);text-align:center;padding:28px 16px 18px;color:#fff}
+.top-header img{width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,0.15);margin-bottom:8px}
+.top-header h1{font-size:1.3rem;font-weight:800;color:#a78bfa}
+.top-header .handle{font-size:.82rem;color:rgba(255,255,255,.6)}
+
+/* ── Nav Tabs ── */
+.nav-tabs{display:flex;align-items:center;gap:6px;padding:6px 8px;background:linear-gradient(135deg,#1e1245,#2a1760);overflow-x:auto}
+.nav-tabs a{color:rgba(255,255,255,.85);text-decoration:none;font-size:.82rem;font-weight:600;padding:8px 16px;white-space:nowrap;transition:all .2s;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:20px;cursor:pointer}
+.nav-tabs a:hover{color:#fff;background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.3)}
+.nav-tabs a.active{color:#fff;background:rgba(255,255,255,.22);border-color:rgba(255,255,255,.35)}
+.nav-tabs .spacer{flex:1}
+.lang-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(255,255,255,.08);border-radius:8px;padding:6px 10px;font-size:.78rem;color:#fff;font-weight:600;cursor:pointer}
+.profile-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(245,166,35,.15);border:1px solid rgba(245,166,35,.3);border-radius:20px;padding:5px 12px 5px 6px;font-size:.78rem;color:#f5a623;font-weight:700;text-decoration:none;cursor:pointer}
+.profile-badge .dot{width:24px;height:24px;border-radius:50%;background:#f59e0b;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:800;color:#000}
+
+/* ── Search Bar ── */
+.search-header{background:#fff;padding:10px 12px;position:sticky;top:0;z-index:100}
+.search-bar{display:flex;align-items:center;border:2px solid #c0392b;border-radius:28px;overflow:hidden;background:#fff}
+.search-bar input{flex:1;border:none;outline:none;padding:10px 16px;font-size:.92rem;font-family:inherit;color:#1a1a1a;background:transparent}
+.search-bar input::placeholder{color:#bbb}
+.search-bar .cam-btn{width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:transparent;border:none;color:#888;cursor:pointer}
+.search-bar .search-btn{width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:#c0392b;border:none;color:#fff;cursor:pointer;border-radius:0 24px 24px 0}
+
+/* ── Category Tabs ── */
+.cat-tabs{display:flex;overflow-x:auto;background:#fff;border-bottom:1px solid #eee;padding:0 4px;gap:0}
+.cat-tabs button{background:none;border:none;border-bottom:3px solid transparent;padding:12px 16px;font-size:.84rem;font-weight:600;color:#777;cursor:pointer;white-space:nowrap;font-family:inherit;transition:all .15s}
+.cat-tabs button.active{color:#1a1a1a;border-bottom-color:#1a1a1a}
+.cat-tabs .more-btn{display:flex;align-items:center;gap:2px;padding:12px 10px;font-size:.82rem;color:#777;background:none;border:none;cursor:pointer;font-family:inherit;white-space:nowrap}
+
+/* ── Trust Badges Row ── */
+.trust-row{display:flex;gap:0;background:#fff;border-bottom:1px solid #f0f0f0}
+.trust-badge{flex:1;display:flex;align-items:center;gap:8px;padding:12px 14px}
+.trust-badge .icon-circle{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:800;flex-shrink:0}
+.trust-badge .icon-circle.audit{background:#fef3c7;color:#b45309}
+.trust-badge .icon-circle.secure{background:#dcfce7;color:#16a34a}
+.trust-badge .tb-title{font-size:.78rem;font-weight:700;color:#1a1a1a}
+.trust-badge .tb-sub{font-size:.65rem;color:#999}
+
+/* ── Quick Actions ── */
+.quick-actions{display:flex;justify-content:space-around;background:#fff;padding:14px 8px;border-bottom:1px solid #f0f0f0}
+.qa-item{display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer}
+.qa-item .qa-icon{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.3rem}
+.qa-item .qa-label{font-size:.72rem;font-weight:600;color:#555;text-align:center;line-height:1.2}
+
+/* ── Top Rankings Banner ── */
+.rankings-banner{background:linear-gradient(135deg,#fef2f2,#fce7e7);margin:6px 0;padding:16px 14px 10px;position:relative;overflow:hidden}
+.rankings-banner .rb-header{display:flex;align-items:center;justify-content:space-between}
+.rankings-banner h2{font-size:1.05rem;font-weight:800;color:#1a1a1a}
+.rankings-banner .rb-sub{font-size:.75rem;color:#888;margin-top:2px}
+.rankings-banner .trophy{width:60px;height:60px;position:absolute;right:16px;top:8px;font-size:3rem;opacity:.8}
+.rankings-row{display:flex;gap:10px;overflow-x:auto;padding:10px 0 4px;scroll-snap-type:x mandatory}
+.rank-card{min-width:140px;max-width:180px;flex-shrink:0;scroll-snap-align:start;cursor:pointer}
+.rank-card .rc-img{position:relative;height:130px;border-radius:10px;overflow:hidden;background:#f5f5f5}
+.rank-card .rc-img img{width:100%;height:100%;object-fit:cover;transition:opacity .6s ease}
+.rank-card .rc-img .swipe-dots{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);display:flex;gap:3px;z-index:2}
+.rank-card .rc-img .swipe-dots span{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.4);transition:background .3s}
+.rank-card .rc-img .swipe-dots span.active{background:#fff}
+.rank-card .rc-tag{position:absolute;bottom:0;left:0;right:0;padding:5px 10px;font-size:.7rem;font-weight:700;color:#fff}
+.rank-card .rc-price{font-size:.82rem;font-weight:700;color:#c0392b;margin-top:6px}
+.rank-card .rc-stat{font-size:.68rem;color:#999}
+
+/* ── Section ── */
+.section{background:#fff;margin-top:6px;padding:14px 12px}
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.section-title{font-size:1rem;font-weight:800;color:#1a1a1a}
+.section-count{font-size:.72rem;color:#aaa;font-weight:400;margin-left:6px}
+.section-arrow{width:20px;height:20px;color:#ccc}
+
+/* ── Product Grid ── */
+.prod-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+@media(min-width:480px){.prod-grid{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:768px){.prod-grid{grid-template-columns:repeat(4,1fr)}}
+@media(min-width:1024px){.prod-grid{grid-template-columns:repeat(5,1fr)}}
+.prod-card{border-radius:10px;overflow:hidden;background:#fff;cursor:pointer;border:1px solid #f0f0f0;transition:box-shadow .2s}
+.prod-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.06)}
+.prod-card .pc-img{position:relative;height:130px;overflow:hidden;background:#fafafa}
+.prod-card .pc-img img{width:100%;height:100%;object-fit:cover;transition:opacity .4s ease}
+@keyframes cardShake{0%{transform:translateX(0)}15%{transform:translateX(-4px) rotate(-1deg)}30%{transform:translateX(3px) rotate(1deg)}45%{transform:translateX(-2px)}60%{transform:translateX(2px)}75%{transform:translateX(-1px)}100%{transform:translateX(0)}}
+.prod-card.shaking{animation:cardShake .4s ease}
+.prod-card .pc-img .swipe-dots{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);display:flex;gap:3px}
+.prod-card .pc-img .swipe-dots span{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.4);transition:background .3s}
+.prod-card .pc-img .swipe-dots span.active{background:#fff}
+.prod-card .pc-img .img-count{position:absolute;right:4px;top:4px;background:rgba(0,0,0,.5);color:#fff;font-size:.58rem;font-weight:700;padding:2px 6px;border-radius:4px}
+.prod-card .pc-img .tag-overlay{position:absolute;bottom:0;left:0;right:0;padding:4px 8px;font-size:.62rem;font-weight:700;color:#fff}
+.prod-card .pc-body{padding:8px 10px 10px}
+.prod-card .pc-brand{font-size:.68rem;font-weight:700;color:#333;margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.prod-card .pc-price{font-size:.88rem;font-weight:700;color:#c0392b}
+.prod-card .pc-price .high{font-size:.78rem;color:#aaa;font-weight:400}
+.prod-card .pc-stat{font-size:.68rem;color:#999;margin-top:2px}
+.prod-card .pc-name{font-size:.72rem;color:#555;margin-top:4px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.prod-card .pc-moq{font-size:.62rem;color:#888;margin-top:2px}
+.prod-card .pc-badges{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
+.prod-card .pc-badges .badge-a{display:inline-flex;align-items:center;gap:2px;font-size:.56rem;font-weight:700;color:#1a5276;padding:1px 5px;border-radius:3px}
+.prod-card .pc-badges .badge-a .ba-icon{font-size:.65rem}
+.prod-card .pc-badges .badge-s{display:inline-flex;align-items:center;gap:2px;font-size:.56rem;font-weight:700;color:#1e8449;background:#e8f8f5;padding:1px 5px;border-radius:3px}
+.prod-card .pc-badges .badge-s .bs-icon{font-size:.65rem}
+.prod-card .pc-response{font-size:.58rem;color:#888;margin-top:2px;display:flex;align-items:center;gap:3px}
+.prod-card .pc-yrs{font-size:.58rem;color:#aaa}
+.prod-card .pc-img .search-icon{position:absolute;left:6px;bottom:6px;width:26px;height:26px;border-radius:6px;background:rgba(255,255,255,.85);display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,.1)}
+.prod-card .pc-img .stock-badge{position:absolute;left:6px;top:6px;background:#fff;border:1px solid #eee;border-radius:4px;padding:2px 6px;font-size:.58rem;font-weight:700;color:#1a1a1a;display:flex;align-items:center;gap:3px}
+.prod-card .pc-img .stock-badge .sb-dot{width:6px;height:6px;border-radius:50%;background:#22c55e}
+
+/* ── Star Rating ── */
+.pc-stars{display:flex;align-items:center;gap:2px;margin-top:3px}
+.pc-stars .star{width:12px;height:12px;fill:#ddd;flex-shrink:0}
+.pc-stars .star.filled{fill:#f59e0b}
+.pc-stars .star.half{fill:url(#halfStarGrad)}
+.pc-stars .star-count{font-size:.58rem;color:#888;margin-left:3px}
+
+/* ── Big Marketplace / Featured Mall Section ── */
+.big-market{background:#fff;margin-top:6px;padding:16px 12px}
+.big-market .bm-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.big-market .bm-header h2{font-size:1.05rem;font-weight:800;color:#1a1a1a;display:flex;align-items:center;gap:6px}
+.big-market .bm-header .bm-see{font-size:.72rem;color:#c0392b;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:2px}
+.bm-cats{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;margin-bottom:10px}
+.bm-cats button{padding:6px 14px;border-radius:20px;border:1px solid #eee;background:#fafafa;font-size:.72rem;font-weight:600;color:#555;cursor:pointer;white-space:nowrap;font-family:inherit;transition:all .15s}
+.bm-cats button.active{background:#c0392b;color:#fff;border-color:#c0392b}
+.bm-scroll{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px}
+.bm-card{min-width:200px;max-width:260px;flex-shrink:0;scroll-snap-align:start;border:1px solid #f0f0f0;border-radius:12px;overflow:hidden;background:#fff;cursor:pointer;transition:box-shadow .2s}
+.bm-card:hover{box-shadow:0 4px 20px rgba(0,0,0,.08)}
+.bm-card .bmc-img{height:150px;overflow:hidden;position:relative;background:#fafafa}
+.bm-card .bmc-img img{width:100%;height:100%;object-fit:cover;transition:transform .3s}
+.bm-card:hover .bmc-img img{transform:scale(1.04)}
+.bm-card .bmc-rank{position:absolute;top:8px;left:8px;width:24px;height:24px;border-radius:50%;background:#c0392b;color:#fff;font-size:.68rem;font-weight:800;display:flex;align-items:center;justify-content:center}
+.bm-card .bmc-tag{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.5));padding:6px 10px;display:flex;align-items:center;gap:4px}
+.bm-card .bmc-tag span{background:rgba(255,255,255,.9);color:#c0392b;font-size:.56rem;font-weight:700;padding:2px 6px;border-radius:3px}
+.bm-card .bmc-body{padding:10px 12px}
+.bm-card .bmc-brand{font-size:.62rem;font-weight:700;color:#c0392b;margin-bottom:2px;text-transform:uppercase;letter-spacing:.3px}
+.bm-card .bmc-name{font-size:.78rem;font-weight:700;color:#1a1a1a;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.bm-card .bmc-price{font-size:.88rem;font-weight:800;color:#c0392b;margin-top:4px}
+.bm-card .bmc-price .hp{font-size:.72rem;color:#aaa;font-weight:400}
+.bm-card .bmc-meta{display:flex;align-items:center;gap:6px;margin-top:4px;flex-wrap:wrap}
+.bm-card .bmc-stars{display:flex;gap:1px}
+.bm-card .bmc-stars .star{width:11px;height:11px;fill:#ddd}
+.bm-card .bmc-stars .star.filled{fill:#f59e0b}
+.bm-card .bmc-badge{font-size:.56rem;font-weight:700;padding:2px 5px;border-radius:3px}
+.bm-card .bmc-badge.au{color:#1a5276;background:#ebf5fb}
+.bm-card .bmc-badge.sc{color:#1e8449;background:#e8f8f5}
+.bm-card .bmc-sold{font-size:.6rem;color:#888}
+
+/* ── Promo Banner Card (in grid) ── */
+.promo-card{grid-column:1/-1;border-radius:12px;overflow:hidden;cursor:pointer;position:relative;min-height:160px;display:flex;align-items:flex-end}
+@media(min-width:480px){.promo-card{grid-column:span 2}}
+.promo-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.promo-card .promo-overlay{position:relative;z-index:1;padding:16px 18px 14px;width:100%;background:linear-gradient(transparent,rgba(0,0,0,.6))}
+.promo-card .promo-tag{display:inline-block;background:#c0392b;color:#fff;font-size:.6rem;font-weight:800;padding:3px 10px;border-radius:12px;margin-bottom:6px}
+.promo-card h3{font-size:1.1rem;font-weight:800;color:#fff;line-height:1.2}
+.promo-card .promo-sub{font-size:.75rem;color:rgba(255,255,255,.8);margin-top:2px}
+.promo-card .promo-btn{display:inline-block;margin-top:10px;background:#fff;color:#c0392b;font-size:.75rem;font-weight:700;padding:8px 20px;border-radius:20px}
+
+/* ── Hot Searches ── */
+.hot-searches{background:#fff;margin-top:6px;padding:14px 12px}
+.hot-searches h3{font-size:.92rem;font-weight:800;color:#1a1a1a;margin-bottom:10px}
+.hs-list{display:flex;flex-direction:column;gap:6px}
+.hs-item{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:10px;border:1px solid #f0f0f0;cursor:pointer;transition:background .15s}
+.hs-item:hover{background:#fafafa}
+.hs-item .hs-imgs{display:flex;gap:4px;flex-shrink:0}
+.hs-item .hs-imgs img{width:34px;height:34px;border-radius:6px;object-fit:cover}
+.hs-item .hs-name{font-size:.82rem;font-weight:600;color:#333}
+
+/* ── Secured Trading Service ── */
+.secure-service{display:flex;align-items:center;justify-content:space-between;background:#fff;padding:16px 14px;margin-top:6px}
+.secure-service h3{font-size:1rem;font-weight:800}
+.secure-service p{font-size:.75rem;color:#888;margin-top:2px}
+
+/* ── Footprints Row ── */
+.footprints-row{display:flex;gap:8px;overflow-x:auto;padding:4px 0;scroll-snap-type:x mandatory}
+.fp-card{min-width:100px;max-width:130px;flex-shrink:0;scroll-snap-align:start;cursor:pointer}
+.fp-card .fp-img{height:85px;border-radius:8px;overflow:hidden;background:#f5f5f5}
+.fp-card .fp-img img{width:100%;height:100%;object-fit:cover}
+.fp-card .fp-price{font-size:.75rem;font-weight:700;color:#c0392b;margin-top:4px}
+
+/* ── Hotel / Transport / Property Cards ── */
+.h-scroll{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scroll-snap-type:x mandatory}
+.h-card{min-width:165px;max-width:220px;flex-shrink:0;border:1px solid #f0f0f0;border-radius:10px;overflow:hidden;background:#fff;scroll-snap-align:start}
+.h-card .hc-img{height:95px;overflow:hidden;position:relative}
+.h-card .hc-img img{width:100%;height:100%;object-fit:cover}
+.h-card .hc-body{padding:8px}
+.h-card .hc-name{font-size:.78rem;font-weight:700;color:#1a1a1a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.h-card .hc-loc{font-size:.65rem;color:#888}
+.h-card .hc-price{font-size:.84rem;font-weight:700;color:#c0392b;margin-top:4px}
+.h-card .hc-meta{display:flex;gap:8px;font-size:.62rem;color:#888;margin-top:2px}
+.badge-ov{position:absolute;padding:3px 8px;border-radius:12px;font-size:.6rem;font-weight:700}
+
+/* ── Transport Grid ── */
+.trans-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+@media(min-width:480px){.trans-grid{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:768px){.trans-grid{grid-template-columns:repeat(4,1fr)}}
+.trans-card{border:1px solid #f0f0f0;border-radius:10px;padding:10px;background:#fff}
+.trans-card .tc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.trans-card .tc-icon{font-size:1.2rem}
+.trans-card .tc-badge{font-size:.58rem;font-weight:700;padding:2px 8px;border-radius:12px}
+.trans-card .tc-name{font-size:.78rem;font-weight:700;color:#1a1a1a}
+.trans-card .tc-desc{font-size:.62rem;color:#888;line-height:1.3}
+.trans-card .tc-price{font-size:.78rem;font-weight:700;color:#c0392b;margin-top:4px}
+
+/* ── Flight Card ── */
+.fl-card{min-width:150px;max-width:200px;flex-shrink:0;border:1px solid #f0f0f0;border-radius:10px;padding:10px;background:#fff;scroll-snap-align:start}
+.fl-card .fl-air{display:flex;align-items:center;gap:6px;margin-bottom:4px}
+.fl-card .fl-icon{font-size:1rem}
+.fl-card .fl-name{font-size:.72rem;font-weight:700;color:#555}
+.fl-card .fl-route{font-size:.86rem;font-weight:800;color:#1a1a1a}
+.fl-card .fl-route .arr{color:#ccc}
+.fl-card .fl-dur{font-size:.62rem;color:#888}
+.fl-card .fl-price{font-size:.84rem;font-weight:700;color:#c0392b;margin-top:2px}
+
+/* ── Bills ── */
+.bill-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+@media(min-width:480px){.bill-grid{grid-template-columns:repeat(3,1fr)}}
+.bill-card{display:flex;align-items:center;gap:8px;border:1px solid #f0f0f0;border-radius:10px;padding:10px;background:#fff}
+.bill-card .bi-icon{font-size:1.2rem}
+.bill-card .bi-name{font-size:.72rem;font-weight:700;color:#1a1a1a}
+.bill-card .bi-desc{font-size:.6rem;color:#888}
+
+/* ── Single Purchase Ease ── */
+.ease-row{display:flex;align-items:stretch;background:#fff;margin-top:6px;overflow:hidden}
+.ease-row .er-text{flex:1;padding:16px}
+.ease-row .er-text h2{font-size:1rem;font-weight:800;color:#1a1a1a}
+.ease-row .er-text ul{list-style:none;margin-top:8px}
+.ease-row .er-text li{font-size:.78rem;color:#555;display:flex;align-items:center;gap:6px;margin-bottom:5px}
+.ease-row .er-img{width:120px;flex-shrink:0;background:linear-gradient(135deg,#fef2f2,#fce7e7)}
+.ease-row .er-img img{width:100%;height:100%;object-fit:cover}
+
+/* ── Sell CTA ── */
+.sell-cta{background:#fff;margin-top:6px;padding:14px 12px}
+.sell-cta-inner{border-radius:16px;padding:20px;color:#fff;background:linear-gradient(135deg,#1a0533,#2d1065,#0d3f8f);position:relative;overflow:hidden}
+.sell-cta-inner .glow{position:absolute;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.04);top:-30px;right:-30px;filter:blur(40px)}
+.sell-cta-inner h2{font-size:1.1rem;font-weight:800;position:relative;z-index:1}
+.sell-cta-inner p{font-size:.78rem;color:rgba(255,255,255,.65);margin-top:6px;position:relative;z-index:1}
+.sell-cta-inner .cta-btns{display:flex;gap:10px;margin-top:14px;position:relative;z-index:1}
+.sell-cta-inner .btn-sell{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#f59e0b,#f97316);color:#000;font-weight:800;padding:10px 20px;border-radius:24px;font-size:.82rem;border:none;cursor:pointer;text-decoration:none}
+.sell-cta-inner .btn-verify{border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.8);padding:8px 16px;border-radius:24px;font-size:.72rem;font-weight:700;text-decoration:none}
+
+/* ── Bottom Nav ── */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:1000;background:#fff;border-top:1px solid #eee;display:flex;align-items:center;justify-content:space-around;padding:6px 0 env(safe-area-inset-bottom,4px)}
+.bottom-nav a{display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;font-size:.62rem;font-weight:600;color:#bbb;position:relative}
+.bottom-nav a.active{color:#c0392b}
+.bottom-nav a svg{width:22px;height:22px}
+.bottom-nav .sell-btn{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#f97316,#f59e0b);display:flex;align-items:center;justify-content:center;margin-top:-18px;box-shadow:0 4px 16px rgba(249,115,22,.3);transition:transform .2s}
+.bottom-nav .sell-btn:hover{transform:scale(1.05)}
+.bottom-nav .sell-btn svg{width:26px;height:26px;color:#fff}
+.bottom-nav .msg-badge{position:absolute;top:-3px;right:-6px;background:#c0392b;color:#fff;min-width:16px;height:16px;border-radius:8px;font-size:.55rem;font-weight:800;display:flex;align-items:center;justify-content:center;padding:0 3px}
+
+/* ── KYC Modal ── */
+.kyc-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:3000;justify-content:center;align-items:center;padding:16px}
+.kyc-overlay.open{display:flex}
+.kyc-modal{background:#fff;border-radius:20px;width:100%;max-width:420px;padding:28px 20px;text-align:center;position:relative;animation:kycSlide .3s ease;max-height:90vh;overflow-y:auto}
+@keyframes kycSlide{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+.kyc-modal .kyc-close{position:absolute;top:12px;right:14px;background:none;border:none;font-size:1.3rem;color:#999;cursor:pointer}
+.kyc-modal .kyc-icon{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#f59e0b,#f97316);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:1.6rem}
+.kyc-modal h3{font-size:1.1rem;font-weight:800;color:#1a1a1a;margin-bottom:6px}
+.kyc-modal .kyc-sub{font-size:.78rem;color:#888;margin-bottom:16px}
+.kyc-form{text-align:left}
+.kyc-form .kyc-field{margin-bottom:12px}
+.kyc-form label{display:block;font-size:.75rem;font-weight:700;color:#555;margin-bottom:4px;text-transform:uppercase;letter-spacing:.3px}
+.kyc-form input,.kyc-form select{width:100%;padding:10px 12px;border:1.5px solid #e0e0e0;border-radius:12px;font-size:.88rem;font-family:inherit;color:#1a1a1a;background:#fafafa;outline:none;transition:border .2s;box-sizing:border-box}
+.kyc-form input:focus,.kyc-form select:focus{border-color:#f59e0b;background:#fff}
+.kyc-form .kyc-row{display:flex;gap:10px}
+.kyc-form .kyc-row .kyc-field{flex:1}
+.kyc-form .phone-wrap{display:flex;align-items:center;border:1.5px solid #e0e0e0;border-radius:12px;background:#fafafa;overflow:hidden;transition:border .2s}
+.kyc-form .phone-wrap:focus-within{border-color:#f59e0b;background:#fff}
+.kyc-form .phone-wrap .flag-display{display:flex;align-items:center;gap:6px;padding:0 0 0 10px;cursor:pointer}
+.kyc-form .phone-wrap .flag-display .fi{font-size:1.2rem}
+.kyc-form .phone-wrap select{border:none;background:transparent;padding:10px 2px 10px 6px;font-size:.85rem;font-family:inherit;color:#1a1a1a;outline:none;width:auto;min-width:42px;cursor:pointer;-webkit-appearance:none;appearance:none;font-weight:700}
+.kyc-form .phone-wrap .phone-code{font-size:.85rem;font-weight:700;color:#333;padding:0 2px 0 0;white-space:nowrap}
+.kyc-form .phone-wrap input{border:none;background:transparent;flex:1;padding:10px 12px 10px 6px;font-size:.88rem;font-family:inherit;color:#1a1a1a;outline:none;min-width:0}
+.kyc-form .phone-wrap .divider{width:1px;background:#e0e0e0;margin:6px 0;align-self:stretch}
+.kyc-form .kyc-upload{border:2px dashed #ddd;border-radius:12px;padding:14px 10px;text-align:center;cursor:pointer;transition:border .2s;position:relative;flex:1}
+.kyc-form .kyc-upload:hover{border-color:#f59e0b}
+.kyc-form .kyc-upload input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer}
+.kyc-form .kyc-upload .upload-icon{font-size:1.3rem;margin-bottom:2px}
+.kyc-form .kyc-upload .upload-text{font-size:.72rem;color:#888}
+.kyc-form .kyc-upload .upload-name{font-size:.7rem;color:#f59e0b;font-weight:600;margin-top:3px;word-break:break-all}
+.kyc-form .kyc-upload .upload-preview{width:100%;max-height:80px;object-fit:cover;border-radius:8px;margin-top:6px;display:none}
+.kyc-form .upload-row{display:flex;gap:10px}
+.kyc-form .kyc-divider{border:none;border-top:1.5px solid #eee;margin:18px 0 14px}
+.kyc-form .kyc-section-title{display:flex;align-items:center;gap:8px;font-size:.85rem;font-weight:800;color:#1a1a1a;margin-bottom:12px}
+.kyc-form .kyc-section-title .sec-icon{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:.85rem}
+.kyc-form .kyc-toggle{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:.8rem;color:#555;cursor:pointer}
+.kyc-form .kyc-toggle input[type=checkbox]{accent-color:#6366f1;width:18px;height:18px}
+.kyc-form .biz-fields{display:none}
+.kyc-form .biz-fields.open{display:block}
+.kyc-form .biz-map-wrap{border-radius:12px;overflow:hidden;border:1.5px solid #e0e0e0;margin-top:4px;position:relative}
+.kyc-form .biz-map-wrap #kyc-biz-map{height:200px;width:100%;z-index:0}
+.kyc-form .biz-map-wrap .map-hint{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.65);color:#fff;font-size:.7rem;padding:4px 12px;border-radius:12px;z-index:500;pointer-events:none}
+.kyc-form .biz-coords{display:flex;gap:8px;margin-top:6px}
+.kyc-form .biz-coords input{flex:1;font-size:.78rem;padding:7px 10px;text-align:center;background:#f4f4f5;color:#555}
+.kyc-form .btn-use-loc{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;margin-top:8px;padding:10px;border:1.5px solid #6366f1;border-radius:12px;background:rgba(99,102,241,.08);color:#6366f1;font-size:.82rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s}
+.kyc-form .btn-use-loc:hover{background:rgba(99,102,241,.15)}
+.kyc-form .btn-use-loc:disabled{opacity:.5;cursor:not-allowed}
+.kyc-form textarea{width:100%;padding:10px 12px;border:1.5px solid #e0e0e0;border-radius:12px;font-size:.88rem;font-family:inherit;color:#1a1a1a;background:#fafafa;outline:none;transition:border .2s;box-sizing:border-box;resize:vertical;min-height:60px}
+.kyc-form textarea:focus{border-color:#f59e0b;background:#fff}
+.kyc-form .kyc-agree{display:flex;align-items:flex-start;gap:8px;margin:14px 0 16px;font-size:.75rem;color:#666;line-height:1.4}
+.kyc-form .kyc-agree input[type=checkbox]{margin-top:2px;accent-color:#f59e0b}
+.kyc-modal .btn-start-kyc{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#f59e0b,#f97316);color:#fff;font-weight:800;padding:12px 28px;border-radius:24px;font-size:.9rem;border:none;cursor:pointer;width:100%;justify-content:center;text-decoration:none}
+.kyc-modal .btn-start-kyc:hover{filter:brightness(1.05)}
+.kyc-modal .btn-start-kyc:disabled{opacity:.5;cursor:not-allowed}
+.kyc-modal .kyc-skip{display:block;margin-top:10px;font-size:.75rem;color:#999;cursor:pointer;background:none;border:none;width:100%}
+
+/* ── Modal ── */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:2000;justify-content:center;align-items:flex-end}
+.modal-bg.open{display:flex}
+@media(min-width:640px){.modal-bg.open{align-items:center}}
+.modal-box{background:#fff;border-radius:16px 16px 0 0;max-height:92vh;width:100%;max-width:640px;overflow-y:auto;position:relative}
+@media(min-width:640px){.modal-box{border-radius:16px;margin:auto}}
+.modal-box .close-btn{position:absolute;right:12px;top:12px;z-index:10;width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,.4);border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.modal-box .carousel{position:relative;height:280px;overflow:hidden;background:#f5f5f5}
+@media(min-width:640px){.modal-box .carousel{height:340px}}
+.modal-box .carousel img{width:100%;height:100%;object-fit:cover}
+.modal-box .carousel .nav-arrow{position:absolute;top:50%;transform:translateY(-50%);width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,.4);border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.modal-box .carousel .nav-arrow.left{left:8px}
+.modal-box .carousel .nav-arrow.right{right:8px}
+.modal-box .carousel .counter{position:absolute;right:12px;top:12px;background:rgba(0,0,0,.5);color:#fff;padding:3px 10px;border-radius:12px;font-size:.72rem;font-weight:700}
+.modal-box .carousel .dots{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:5px}
+.modal-box .carousel .dots button{border:none;cursor:pointer;padding:0;border-radius:999px;height:6px;transition:all .2s}
+.modal-box .carousel .dots button.active{width:16px;background:#fff}
+.modal-box .carousel .dots button:not(.active){width:6px;background:rgba(255,255,255,.5)}
+.modal-box .thumbs{display:flex;gap:6px;padding:8px 12px;overflow-x:auto}
+.modal-box .thumbs button{width:52px;height:52px;border-radius:8px;overflow:hidden;flex-shrink:0;border:2px solid transparent;cursor:pointer;padding:0;opacity:.55;transition:all .2s}
+.modal-box .thumbs button.active{border-color:#c0392b;opacity:1}
+.modal-box .thumbs button img{width:100%;height:100%;object-fit:cover}
+.modal-box .detail{padding:12px 16px 24px}
+.modal-box .detail .tag-badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:.7rem;font-weight:700;background:#fef2f2;color:#c0392b;margin-bottom:8px}
+.modal-box .detail h2{font-size:1.1rem;font-weight:800;color:#1a1a1a}
+.modal-box .detail .meta-line{font-size:.82rem;color:#888;margin-top:4px}
+.modal-box .detail .price-row{margin-top:12px;display:flex;align-items:baseline;gap:8px}
+.modal-box .detail .price-row .price{font-size:1.5rem;font-weight:800;color:#c0392b}
+.modal-box .detail .price-row .high{font-size:.88rem;color:#aaa}
+.modal-box .detail .price-row .gcv{font-size:.72rem;color:#aaa}
+.modal-box .detail .desc{font-size:.82rem;color:#555;margin-top:12px;line-height:1.6}
+.modal-box .detail .trust-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px;text-align:center}
+.modal-box .detail .trust-grid div{background:#fafafa;border-radius:10px;padding:10px 4px}
+.modal-box .detail .trust-grid .tl{font-size:.72rem;font-weight:700;color:#333}
+.modal-box .detail .trust-grid .ts{font-size:.6rem;color:#aaa}
+.modal-box .detail .pay-msg{margin-top:12px;padding:10px;border-radius:10px;text-align:center;font-size:.88rem;font-weight:600}
+.modal-box .detail .pay-msg.ok{background:#f0fdf4;color:#16a34a}
+.modal-box .detail .pay-msg.err{background:#fef2f2;color:#dc2626}
+.modal-box .detail .pay-msg.processing{background:#eff6ff;color:#2563eb}
+.modal-box .detail .action-btns{display:flex;gap:8px;margin-top:16px}
+.modal-box .detail .action-btns button{flex:1;padding:14px;border-radius:12px;font-weight:700;font-size:.88rem;cursor:pointer;font-family:inherit;transition:all .15s}
+.modal-box .detail .action-btns .buy-btn{background:#c0392b;color:#fff;border:none}
+.modal-box .detail .action-btns .buy-btn:hover{background:#a93226}
+.modal-box .detail .action-btns .buy-btn:disabled{opacity:.6;cursor:not-allowed}
+.modal-box .detail .action-btns .cart-btn{background:#fff;color:#c0392b;border:2px solid #c0392b}
+.modal-box .detail .action-btns .cart-btn:hover{background:#fef2f2}
+.card-chooser{margin-top:14px}
+.card-chooser .chooser-label{font-size:.72rem;font-weight:700;color:#333;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.card-chooser .chooser-label svg{width:16px;height:16px}
+.card-scroll{display:flex;gap:8px;overflow-x:auto;padding:4px 0;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.card-scroll::-webkit-scrollbar{display:none}
+.card-chip{flex-shrink:0;width:110px;padding:10px;border-radius:12px;cursor:pointer;transition:all .2s;border:2px solid transparent;position:relative}
+.card-chip .chip-type{font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.5px;opacity:.85}
+.card-chip .chip-num{font-size:.62rem;font-family:'Courier New',monospace;margin-top:4px;letter-spacing:.5px}
+.card-chip .chip-holder{font-size:.55rem;margin-top:3px;opacity:.7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-chip.selected{border-color:#f5c518;box-shadow:0 0 0 1px #f5c518,0 4px 12px rgba(245,197,24,.3)}
+.card-chip.selected::after{content:'\2713';position:absolute;top:4px;right:6px;font-size:.65rem;color:#f5c518;font-weight:800}
+.card-chip.c-visa{background:linear-gradient(135deg,#1a1a6c,#2d2db5);color:#fff}
+.card-chip.c-mastercard{background:linear-gradient(135deg,#cc0000,#ff6600);color:#fff}
+.card-chip.c-amex{background:linear-gradient(135deg,#006fcf,#00aaff);color:#fff}
+.card-chip.c-gold{background:linear-gradient(135deg,#b8860b,#ffd700);color:#1a1a2e}
+.card-chip.c-platinum{background:linear-gradient(135deg,#667085,#e5e7eb);color:#1a1a2e}
+.card-chip.c-black{background:linear-gradient(135deg,#0a0a0a,#333);color:#fff}
+.card-selected-info{margin-top:8px;padding:10px 12px;border-radius:10px;background:linear-gradient(135deg,#1a1a2e,#16213e);color:#fff;display:flex;align-items:center;gap:10px;font-size:.78rem}
+.card-selected-info .csi-icon{width:38px;height:26px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:800;flex-shrink:0}
+.card-selected-info .csi-num{font-family:'Courier New',monospace;font-weight:700;letter-spacing:1px}
+.card-selected-info .csi-holder{font-size:.6rem;opacity:.7}
+.no-card-msg{margin-top:14px;padding:14px;border-radius:12px;background:#f9fafb;text-align:center;font-size:.82rem;color:#666;cursor:pointer;border:2px dashed #ddd;transition:all .2s}
+.no-card-msg:hover{border-color:#c0392b;color:#c0392b}
+.tx-progress{margin-top:10px;display:flex;gap:4px;align-items:center}
+.tx-progress .step{flex:1;text-align:center;font-size:.6rem;font-weight:600;padding:6px 2px;border-radius:8px;background:#f0f0f0;color:#999;transition:all .3s}
+.tx-progress .step.active{background:#eff6ff;color:#2563eb;animation:pulse-step .8s infinite alternate}
+.tx-progress .step.done{background:#f0fdf4;color:#16a34a}
+.tx-progress .step.fail{background:#fef2f2;color:#dc2626}
+@keyframes pulse-step{from{opacity:.7}to{opacity:1}}
+</style>
+</head>
+<body>
+
+<!-- ── TOP HEADER ── -->
+<div class="top-header">
+  <img src="logo.jpg" alt="Omenda Pi Pays Logo" onerror="this.style.background='#7c3aed';this.alt='π'">
+  <h1>Omenda Pi Pays</h1>
+  <p class="handle" id="pi-handle">@Omfidxx</p>
+</div>
+
+<!-- ── NAV TABS ── -->
+<div class="nav-tabs hide-sb">
+  <a href="index.html" style="background:linear-gradient(135deg,rgba(245,197,24,.25),rgba(212,168,16,.12));border-color:rgba(245,197,24,.4);color:#f5c518;font-weight:700;">💳 Pi Card</a>
+  <a href="test 1.html">Home</a>
+  <a href="newpage.html" class="active">Services</a>
+  <a href="map.html">Map</a>
+  <a href="ride.html">🚀 City Rush</a>
+  <a href="social.html">Social</a>
+  <span class="spacer"></span>
+  <span class="lang-badge">🇬🇧 EN ▾</span>
+  <a href="about.html" class="profile-badge"><span class="dot">O</span> <span id="pi-username-display">@Omfidxx</span></a>
+</div>
+
+<!-- ── SEARCH HEADER ── -->
+<div class="search-header">
+  <div class="search-bar">
+    <input type="text" id="searchInput" placeholder="Search products & services...">
+    <button class="cam-btn" title="Camera search">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+    </button>
+    <button class="search-btn" onclick="doSearch()">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- ── CATEGORY TABS ── -->
+<div class="cat-tabs hide-sb" id="catTabs"></div>
+
+<!-- ── MAIN CONTENT ── -->
+<div id="app"></div>
+
+<!-- ── BOTTOM NAVIGATION ── -->
+<nav class="bottom-nav">
+  <a href="test 1.html">
+    <svg fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg>
+    Home
+  </a>
+  <a href="newpage.html" class="active">
+    <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"/></svg>
+    Buy Now
+  </a>
+  <a href="#" onclick="handleSellClick(event)">
+    <div class="sell-btn">
+      <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 4.5v15m7.5-7.5h-15"/></svg>
+    </div>
+    Sell
+  </a>
+  <a href="social.html">
+    <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z"/></svg>
+    <span class="msg-badge">3</span>
+    Messages
+  </a>
+  <a href="index.html" style="color:#f59e0b;">
+    <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+    Pi Card
+  </a>
+  <a href="about.html">
+    <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
+    My Account
+  </a>
+</nav>
+
+<!-- ── KYC MODAL ── -->
+<div class="kyc-overlay" id="kyc-overlay" onclick="closeKycModal()">
+  <div class="kyc-modal" onclick="event.stopPropagation()">
+    <button class="kyc-close" onclick="closeKycModal()">&times;</button>
+    <div class="kyc-icon">🛡️</div>
+    <h3>KYC Verification</h3>
+    <p class="kyc-sub">Verify your identity to start selling on Omenda Pi Pays</p>
+    <form class="kyc-form" id="kyc-form" onsubmit="submitKyc(event)">
+      <div class="kyc-row">
+        <div class="kyc-field"><label>First Name</label><input type="text" id="kyc-fname" placeholder="John" required></div>
+        <div class="kyc-field"><label>Last Name</label><input type="text" id="kyc-lname" placeholder="Doe" required></div>
+      </div>
+      <div class="kyc-field"><label>Pi Username</label><input type="text" id="kyc-pi-user" placeholder="@username" required></div>
+      <div class="kyc-field"><label>Email</label><input type="email" id="kyc-email" placeholder="you@example.com" required></div>
+      <div class="kyc-field"><label>Phone Number</label>
+        <div class="phone-wrap">
+          <span class="flag-display"><span class="fi fi-ke" id="phone-flag"></span></span>
+          <select id="kyc-phone-code" onchange="updatePhoneCode()">
+            <option value="+254" data-flag="ke">+254</option>
+            <option value="+1" data-flag="us">+1</option>
+            <option value="+44" data-flag="gb">+44</option>
+            <option value="+91" data-flag="in">+91</option>
+            <option value="+234" data-flag="ng">+234</option>
+            <option value="+27" data-flag="za">+27</option>
+            <option value="+255" data-flag="tz">+255</option>
+            <option value="+256" data-flag="ug">+256</option>
+            <option value="+251" data-flag="et">+251</option>
+            <option value="+233" data-flag="gh">+233</option>
+            <option value="+237" data-flag="cm">+237</option>
+            <option value="+243" data-flag="cd">+243</option>
+            <option value="+250" data-flag="rw">+250</option>
+            <option value="+260" data-flag="zm">+260</option>
+            <option value="+263" data-flag="zw">+263</option>
+            <option value="+86" data-flag="cn">+86</option>
+            <option value="+81" data-flag="jp">+81</option>
+            <option value="+82" data-flag="kr">+82</option>
+            <option value="+55" data-flag="br">+55</option>
+            <option value="+52" data-flag="mx">+52</option>
+            <option value="+49" data-flag="de">+49</option>
+            <option value="+33" data-flag="fr">+33</option>
+            <option value="+39" data-flag="it">+39</option>
+            <option value="+34" data-flag="es">+34</option>
+            <option value="+61" data-flag="au">+61</option>
+            <option value="+7" data-flag="ru">+7</option>
+            <option value="+971" data-flag="ae">+971</option>
+            <option value="+966" data-flag="sa">+966</option>
+            <option value="+20" data-flag="eg">+20</option>
+            <option value="+212" data-flag="ma">+212</option>
+            <option value="+63" data-flag="ph">+63</option>
+            <option value="+62" data-flag="id">+62</option>
+            <option value="+60" data-flag="my">+60</option>
+            <option value="+66" data-flag="th">+66</option>
+            <option value="+84" data-flag="vn">+84</option>
+            <option value="+92" data-flag="pk">+92</option>
+            <option value="+880" data-flag="bd">+880</option>
+            <option value="+48" data-flag="pl">+48</option>
+            <option value="+90" data-flag="tr">+90</option>
+            <option value="+31" data-flag="nl">+31</option>
+            <option value="+46" data-flag="se">+46</option>
+            <option value="+47" data-flag="no">+47</option>
+            <option value="+41" data-flag="ch">+41</option>
+          </select>
+          <span class="divider"></span>
+          <input type="tel" id="kyc-phone" placeholder="700 000 000" required>
+        </div>
+      </div>
+      <div class="kyc-row">
+        <div class="kyc-field"><label>Country</label><input type="text" id="kyc-country" placeholder="Kenya" required></div>
+        <div class="kyc-field"><label>City</label><input type="text" id="kyc-city" placeholder="Nairobi" required></div>
+      </div>
+      <div class="kyc-field">
+        <label>ID Type</label>
+        <select id="kyc-id-type" required>
+          <option value="" disabled selected>Select ID type</option>
+          <option value="national_id">National ID</option>
+          <option value="passport">Passport</option>
+          <option value="drivers_license">Driver's License</option>
+        </select>
+      </div>
+      <div class="kyc-field"><label>ID Number</label><input type="text" id="kyc-id-num" placeholder="ID number" required></div>
+      <div class="kyc-field">
+        <label>Upload ID Photo</label>
+        <div class="upload-row">
+          <div class="kyc-upload">
+            <input type="file" id="kyc-id-front" accept="image/*" onchange="showUpload(this,'front')">
+            <div class="upload-icon">🌟</div>
+            <div class="upload-text">Front Side</div>
+            <div class="upload-name" id="kyc-front-name"></div>
+            <img class="upload-preview" id="kyc-front-preview">
+          </div>
+          <div class="kyc-upload">
+            <input type="file" id="kyc-id-back" accept="image/*" onchange="showUpload(this,'back')">
+            <div class="upload-icon">🔄</div>
+            <div class="upload-text">Back Side</div>
+            <div class="upload-name" id="kyc-back-name"></div>
+            <img class="upload-preview" id="kyc-back-preview">
+          </div>
+        </div>
+      </div>
+
+      <!-- Business KYC -->
+      <hr class="kyc-divider">
+      <div class="kyc-section-title"><span class="sec-icon">🏢</span> Business Verification</div>
+      <label class="kyc-toggle"><input type="checkbox" id="kyc-biz-toggle" onchange="toggleBizFields()"> I'm registering as a business seller</label>
+      <div class="biz-fields" id="kyc-biz-fields">
+        <div class="kyc-field"><label>Business Name</label><input type="text" id="kyc-biz-name" placeholder="Omenda Enterprises"></div>
+        <div class="kyc-field">
+          <label>Business Type</label>
+          <select id="kyc-biz-type">
+            <option value="" disabled selected>Select business type</option>
+            <option value="sole_proprietor">Sole Proprietor</option>
+            <option value="partnership">Partnership</option>
+            <option value="llc">LLC / Limited Company</option>
+            <option value="corporation">Corporation</option>
+            <option value="cooperative">Cooperative</option>
+            <option value="ngo">NGO / Non-Profit</option>
+            <option value="freelancer">Freelancer</option>
+          </select>
+        </div>
+        <div class="kyc-field"><label>Registration Number</label><input type="text" id="kyc-biz-reg" placeholder="BN-000000"></div>
+        <div class="kyc-field"><label>Business Address</label><textarea id="kyc-biz-address" placeholder="Street, City, Country"></textarea></div>
+        <div class="kyc-field">
+          <label>Business Certificate / License</label>
+          <div class="kyc-upload">
+            <input type="file" id="kyc-biz-cert" accept="image/*,.pdf" onchange="showUpload(this,'biz')">
+            <div class="upload-icon">📜</div>
+            <div class="upload-text">Upload certificate</div>
+            <div class="upload-name" id="kyc-biz-name-file"></div>
+            <img class="upload-preview" id="kyc-biz-preview">
+          </div>
+        </div>
+        <div class="kyc-field">
+          <label>📍 Pin Business Location on Map</label>
+          <div class="biz-map-wrap">
+            <div id="kyc-biz-map"></div>
+            <div class="map-hint">Tap map to pin your business location</div>
+          </div>
+          <div class="biz-coords">
+            <input type="text" id="kyc-biz-lat" placeholder="Latitude" readonly>
+            <input type="text" id="kyc-biz-lng" placeholder="Longitude" readonly>
+          </div>
+          <button type="button" class="btn-use-loc" id="btn-use-loc" onclick="useMyLocation()">📍 Use My Current Location</button>
+        </div>
+      </div>
+
+      <div class="kyc-agree">
+        <input type="checkbox" id="kyc-agree" required>
+        <span>I confirm the information is accurate and agree to the <strong>Terms of Service</strong> and <strong>Privacy Policy</strong>.</span>
+      </div>
+      <button type="submit" class="btn-start-kyc" id="kyc-submit-btn">✅ Submit Verification</button>
+    </form>
+    <button class="kyc-skip" onclick="closeKycModal()">Cancel</button>
+  </div>
+</div>
+
+<!-- ── PRODUCT MODAL ── -->
+<div class="modal-bg" id="modal-bg" onclick="closeModal()">
+  <div class="modal-box" onclick="event.stopPropagation()" id="modal-content"></div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════════════════
+   DATA
+   ══════════════════════════════════════════════════════════════ */
+var marketProducts = [
+  // ── Electronics ──
+  {id:"e1",title:"17 PRO MAX Smartphone",price:"\u03C00.003",priceHigh:"0.005",stat:"100+ Heats",brand:"TechVista",moq:"1 Piece",audited:true,secured:true,inStock:true,yrs:"3yrs",responseTime:"\u22641h",image:"https://images.unsplash.com/photo-1592750475338-74b7b21085ab?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1592750475338-74b7b21085ab?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1565849904461-04a58ad377e0?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1580910051074-3eb694886571?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1598327105666-5b89351aff97?q=80&w=400&auto=format&fit=crop"],tag:"Most Popular",tagColor:"#c0392b",category:"Electronics"},
+  {id:"e2",title:"DELL Latitude x360 7320 Detachable",price:"\u03C00.004",stat:"50+ sold",brand:"Dell Official",moq:"1 Piece",audited:true,secured:false,inStock:true,yrs:"5yrs",responseTime:"\u22641h",image:"https://images.unsplash.com/photo-1496181133206-80ce9b88a853?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1496181133206-80ce9b88a853?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1593642702821-c8da6771f0c6?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1558618666-fcd25c85f82e?q=80&w=400&auto=format&fit=crop"],category:"Electronics"},
+  {id:"e3",title:"MacBook Air M3 2024",price:"\u03C00.004",stat:"120+ views",brand:"Apple Store",moq:"1 Piece",audited:true,secured:true,inStock:true,yrs:"2yrs",image:"https://images.unsplash.com/photo-1517336714739-489689fd1ca8?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1517336714739-489689fd1ca8?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1541807084-5c52b6b3adef?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1629131726692-1acfc0d42e2a?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1518546305927-5a555bb7020d?q=80&w=400&auto=format&fit=crop"],tag:"New Releases",tagColor:"#d97706",category:"Electronics"},
+  {id:"e4",title:"Smart Watch Ultra Series 9",price:"\u03C00.001",priceHigh:"0.002",stat:"1100+ Heats",brand:"WearTech",moq:"1 Piece",audited:true,secured:true,inStock:true,yrs:"2yrs",responseTime:"\u22641h",image:"https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1579586337278-3befd40fd17a?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1434493789847-2f02dc6ca35d?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1546868871-af0de0ae72be?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?q=80&w=400&auto=format&fit=crop"],tag:"Most Wished",tagColor:"#7c3aed",category:"Electronics"},
+  {id:"e5",title:"Wireless Earbuds Pro ANC",price:"\u03C00.0005",stat:"200+ sold",brand:"SoundCore",moq:"2 Pieces",audited:true,secured:false,inStock:true,yrs:"1yr",image:"https://images.unsplash.com/photo-1590658268037-6bf12f032f55?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1590658268037-6bf12f032f55?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1606220588913-b3aacb4d2f46?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1631176093617-63490a3d785a?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1613040809024-b4ef7ba99bc3?q=80&w=400&auto=format&fit=crop"],category:"Electronics"},
+  {id:"e6",title:'Am3-21 LCD Single Monitor Arm Stand',price:"\u03C00.002",priceHigh:"0.003",stat:"500 (MOQ)",brand:"Ergomy",moq:"500 Pieces",audited:true,secured:true,inStock:true,yrs:"4yrs",responseTime:"\u22641h Fastest Response",image:"https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1585792180666-f7347c490ee2?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1616763355548-1b606f439f86?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1593640408182-31c70c8268f5?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1558618666-fcd25c85f82e?q=80&w=400&auto=format&fit=crop"],category:"Electronics"},
+  {id:"e7",title:"High Brightness LCD Display Stand",price:"\u03C00.009",priceHigh:"0.011",stat:"1 Piece (MOQ)",brand:"DisplayMax",moq:"1 Piece",audited:true,secured:true,inStock:false,yrs:"3yrs",image:"https://images.unsplash.com/photo-1550009158-9ebf69173e03?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1550009158-9ebf69173e03?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1593640408182-31c70c8268f5?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1616763355548-1b606f439f86?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1585792180666-f7347c490ee2?q=80&w=400&auto=format&fit=crop"],category:"Electronics"},
+  {id:"e8",title:"1080P Resolution Gaming Monitor",price:"\u03C00.002",priceHigh:"0.003",stat:"50 Pieces (MOQ)",brand:"GameView",moq:"50 Pieces",audited:true,secured:false,inStock:true,yrs:"2yrs",image:"https://images.unsplash.com/photo-1593640495253-23196b27a87f?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1593640495253-23196b27a87f?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1616763355548-1b606f439f86?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1585792180666-f7347c490ee2?q=80&w=400&auto=format&fit=crop"],category:"Electronics"},
+  {id:"e9",title:"Wireless Bluetooth Speaker 40W",price:"\u03C00.0008",stat:"340+ sold",brand:"BassBox",moq:"5 Pieces",audited:true,secured:true,inStock:true,yrs:"2yrs",responseTime:"\u22644h",image:"https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1545454675-3531b543be5d?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1589003077984-894e133dabab?q=80&w=400&auto=format&fit=crop"],category:"Electronics"},
+  {id:"e10",title:"Portable Power Bank 20000mAh",price:"\u03C00.0004",priceHigh:"0.0006",stat:"88+ sold",brand:"ChargePro",moq:"10 Pieces",audited:true,secured:false,inStock:true,yrs:"1yr",image:"https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1585338107529-13afc5f02586?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1618384887929-16ec33fab9ef?q=80&w=400&auto=format&fit=crop"],category:"Electronics"},
+  {id:"e11",title:"4K Action Camera Waterproof",price:"\u03C00.0015",stat:"45+ sold",brand:"GoCapture",moq:"1 Piece",audited:true,secured:true,inStock:true,yrs:"3yrs",responseTime:"\u22641h",image:"https://images.unsplash.com/photo-1502920917128-1aa500764cbd?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1502920917128-1aa500764cbd?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1510127034890-ba27508e9f1c?q=80&w=400&auto=format&fit=crop"],category:"Electronics"},
+  {id:"e12",title:"Mechanical RGB Gaming Keyboard",price:"\u03C00.0006",stat:"160+ sold",brand:"KeyForge",moq:"1 Piece",audited:true,secured:false,inStock:true,yrs:"2yrs",image:"https://images.unsplash.com/photo-1587829741301-dc798b83add3?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1587829741301-dc798b83add3?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1595225476474-87563907a212?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1618384887929-16ec33fab9ef?q=80&w=400&auto=format&fit=crop"],category:"Electronics"},
+  // ── Fashion ──
+  {id:"f1",title:"Leather Crossbody Bag Premium",price:"\u03C00.0003",stat:"40+ sold",brand:"BagStudio",moq:"1 Piece",audited:true,secured:false,inStock:true,yrs:"2yrs",image:"https://images.unsplash.com/photo-1548036328-c9fa89d128fa?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1548036328-c9fa89d128fa?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1590874103328-eac38a683ce7?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1553062407-98eeb64c6a62?q=80&w=400&auto=format&fit=crop"],category:"Fashion"},
+  {id:"f2",title:"Running Sneakers Air Max",price:"\u03C00.0004",stat:"85+ sold",brand:"StepKing",moq:"1 Piece",audited:true,secured:true,inStock:true,yrs:"3yrs",responseTime:"\u22641h",image:"https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1608231387042-66d1773070a5?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1491553895911-0055eca6402d?q=80&w=400&auto=format&fit=crop"],category:"Fashion"},
+  {id:"f3",title:"Sunglasses UV400 Polarized",price:"\u03C00.0001",stat:"60+ sold",brand:"ShadesPro",moq:"10 Pieces",audited:true,secured:false,inStock:true,yrs:"1yr",image:"https://images.unsplash.com/photo-1572635196237-14b3f281503f?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1572635196237-14b3f281503f?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1511499767150-a48a237f0083?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1577803645773-f96470509666?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1509695507497-903c140c43b0?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1473496169904-658ba7c44d8a?q=80&w=400&auto=format&fit=crop"],category:"Fashion"},
+  {id:"f4",title:"Leather Belt Set 6-Pack",price:"\u03C00.0001",priceHigh:"0.0002",stat:"6 Pieces (MOQ)",brand:"BeltCraft",moq:"6 Pieces",audited:true,secured:true,inStock:true,yrs:"2yrs",image:"https://images.unsplash.com/photo-1553062407-98eeb64c6a62?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1553062407-98eeb64c6a62?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1624222247344-550fb60583dc?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1603487742131-4160ec999306?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1585487000160-6ebcfceb0d44?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1608505362930-da3c8e0a43a4?q=80&w=400&auto=format&fit=crop"],category:"Fashion"},
+  {id:"f5",title:"Fashion T-Shirts Bundle Cotton",price:"\u03C00.00003",stat:"1 Piece (MOQ)",brand:"ThreadWorks",moq:"1 Piece",audited:false,secured:false,inStock:true,yrs:"1yr",image:"https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1503341504253-dff4f94032fc?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1562157873-818bc0726f68?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=400&auto=format&fit=crop"],category:"Fashion"},
+  {id:"f6",title:"Women's Silk Dress Elegant",price:"\u03C00.0005",priceHigh:"0.0008",stat:"30+ sold",brand:"SilkHouse",moq:"5 Pieces",audited:true,secured:true,inStock:true,yrs:"3yrs",responseTime:"\u22641h",image:"https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1562572159-4efc207f5aff?q=80&w=400&auto=format&fit=crop"],category:"Fashion"},
+  {id:"f7",title:"Men's Casual Jacket Slim Fit",price:"\u03C00.0004",stat:"22+ sold",brand:"UrbanWear",moq:"1 Piece",audited:true,secured:false,inStock:true,yrs:"2yrs",image:"https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=400&auto=format&fit=crop"],category:"Fashion"},
+  {id:"f8",title:"Diamond Stud Earrings 18K Gold",price:"\u03C00.003",priceHigh:"0.005",stat:"Premium",brand:"LuxGems",moq:"1 Piece",audited:true,secured:true,inStock:true,yrs:"5yrs",responseTime:"\u22641h",image:"https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1515562141589-67f0d54242b6?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?q=80&w=400&auto=format&fit=crop"],category:"Fashion"},
+  {id:"f9",title:"Handmade Woven Straw Hat",price:"\u03C00.00005",stat:"45+ sold",brand:"HatWorld",moq:"20 Pieces",audited:true,secured:false,inStock:true,yrs:"1yr",image:"https://images.unsplash.com/photo-1521369909029-2afed882baee?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1521369909029-2afed882baee?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1572307480813-ceb0e59d8325?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1576871337632-b9aef4c17ab9?q=80&w=400&auto=format&fit=crop"],category:"Fashion"},
+  {id:"f10",title:"Sport Watch Digital Waterproof",price:"\u03C00.0002",stat:"70+ sold",brand:"SportTime",moq:"5 Pieces",audited:true,secured:true,inStock:true,yrs:"2yrs",image:"https://images.unsplash.com/photo-1524805444758-089113d48a6d?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1524805444758-089113d48a6d?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1434493789847-2f02dc6ca35d?q=80&w=400&auto=format&fit=crop"],category:"Fashion"},
+  // ── Home & Garden ──
+  {id:"hg1",title:"Premium Hair Dryer Kit Professional",price:"\u03C00.0004",stat:"New",brand:"StylePro",moq:"1 Piece",audited:true,secured:false,inStock:true,yrs:"1yr",image:"https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1585747860036-4cb2f4c6ea5c?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1560750588-73207b1ef5b8?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1576426863848-c21f53c60b19?q=80&w=400&auto=format&fit=crop"],tag:"Movers & Shakers",tagColor:"#059669",category:"Home & Garden"},
+  {id:"hg2",title:"7-Layer Shoe Rack Organizer",price:"\u03C00.0002",stat:"Popular",brand:"HomeNest",moq:"1 Piece",audited:true,secured:true,inStock:true,yrs:"3yrs",responseTime:"\u22641h",image:"https://images.unsplash.com/photo-1616628182509-6f8046f8cb07?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1616628182509-6f8046f8cb07?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1556906781-9a412961c28c?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1600585152220-90363fe7e115?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1558997519-83ea9252edf8?q=80&w=400&auto=format&fit=crop"],category:"Home & Garden"},
+  {id:"hg3",title:"Portable Blender USB-C 600ml",price:"\u03C00.0003",stat:"25+ sold",brand:"BlendGo",moq:"10 Pieces",audited:true,secured:false,inStock:true,yrs:"1yr",image:"https://images.unsplash.com/photo-1570222094114-d054a817e56b?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1570222094114-d054a817e56b?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1585515320310-259814833e62?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1622480916113-9000ac49b79d?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1517142089942-ba376ce32a2e?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1544148103-0773bf10d330?q=80&w=400&auto=format&fit=crop"],category:"Home & Garden"},
+  {id:"hg4",title:"LED Desk Lamp Touch Dimmable",price:"\u03C00.0001",stat:"Fast seller",brand:"LightWave",moq:"5 Pieces",audited:true,secured:true,inStock:true,yrs:"2yrs",image:"https://images.unsplash.com/photo-1507473885765-e6ed057ab6fe?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1507473885765-e6ed057ab6fe?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1534105615256-13940a56ff44?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1573790387438-4da905039392?q=80&w=400&auto=format&fit=crop"],category:"Home & Garden"},
+  {id:"hg5",title:"Garden Spray Nozzle Heavy Duty",price:"\u03C00.000003",priceHigh:"0.00001",stat:"",brand:"GardenTools",moq:"100 Pieces",audited:true,secured:false,inStock:false,yrs:"2yrs",image:"https://images.unsplash.com/photo-1416879595882-3373a0480b5b?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1416879595882-3373a0480b5b?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1591857177580-dc82b9ac4e1e?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?q=80&w=400&auto=format&fit=crop"],category:"Home & Garden"},
+  {id:"hg6",title:"Premium Bedding Set King Size",price:"\u03C00.00004",priceHigh:"0.00008",stat:"100 Pieces (MOQ)",brand:"SleepWell",moq:"100 Pieces",audited:true,secured:true,inStock:true,yrs:"4yrs",responseTime:"\u22641h",image:"https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1556905055-8f358a7a47b2?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1631049307264-da0ec9d70304?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1616627547584-bf28cee262db?q=80&w=400&auto=format&fit=crop"],category:"Home & Garden"},
+  {id:"hg7",title:"Robot Vacuum Cleaner Smart WiFi",price:"\u03C00.001",priceHigh:"0.002",stat:"18+ sold",brand:"CleanBot",moq:"1 Piece",audited:true,secured:true,inStock:true,yrs:"2yrs",responseTime:"\u22644h",image:"https://images.unsplash.com/photo-1558618666-fcd25c85f82e?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1558618666-fcd25c85f82e?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1585515320310-259814833e62?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1622480916113-9000ac49b79d?q=80&w=400&auto=format&fit=crop"],category:"Home & Garden"},
+  {id:"hg8",title:"Stainless Steel Cookware 12-Piece",price:"\u03C00.0006",stat:"55+ sold",brand:"ChefPro",moq:"1 Set",audited:true,secured:false,inStock:true,yrs:"3yrs",image:"https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1584990347449-a4f5eb10e6e0?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1585515320310-259814833e62?q=80&w=400&auto=format&fit=crop"],category:"Home & Garden"},
+  {id:"hg9",title:"Air Purifier HEPA H13 Quiet",price:"\u03C00.0008",stat:"12+ sold",brand:"PureAir",moq:"1 Piece",audited:true,secured:true,inStock:true,yrs:"2yrs",responseTime:"\u22641h",image:"https://images.unsplash.com/photo-1585771724684-38269d6639fd?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1585771724684-38269d6639fd?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1573790387438-4da905039392?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1558997519-83ea9252edf8?q=80&w=400&auto=format&fit=crop"],category:"Home & Garden"},
+  {id:"hg10",title:"Outdoor Solar LED String Lights",price:"\u03C00.00002",priceHigh:"0.00005",stat:"200+ sold",brand:"SolarGlow",moq:"50 Pieces",audited:true,secured:false,inStock:true,yrs:"1yr",image:"https://images.unsplash.com/photo-1513694203232-719a280e022f?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1513694203232-719a280e022f?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1534105615256-13940a56ff44?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1573790387438-4da905039392?q=80&w=400&auto=format&fit=crop"],category:"Home & Garden"},
+  // ── Cars ──
+  {id:"c1",title:"Mercedes-Benz GLE 350 AMG Line",price:"\u03C00.19",stat:"Premium",brand:"Benz Official",moq:"1 Piece",audited:true,secured:true,inStock:false,yrs:"5yrs",responseTime:"\u22641h",image:"https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1617531653332-bd46c24f2068?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1563720223185-11003d516935?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1619682817481-e994891cd1f5?q=80&w=400&auto=format&fit=crop"],category:"Cars"},
+  {id:"c2",title:"Toyota Camry SE 2018 Clean Title",price:"\u03C00.08",stat:"Clean title",brand:"Toyota Motors",moq:"1 Piece",audited:true,secured:false,inStock:false,yrs:"3yrs",image:"https://images.unsplash.com/photo-1550355291-bbee04a92027?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1550355291-bbee04a92027?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1590362891991-f776e747a588?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1549317661-bd32c8ce0afa?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1580273916550-e323be2ae537?q=80&w=400&auto=format&fit=crop"],category:"Cars"},
+  {id:"c3",title:"Range Rover Evoque 2019 Automatic",price:"\u03C00.17",stat:"Automatic",brand:"LandRover",moq:"1 Piece",audited:true,secured:true,inStock:false,yrs:"4yrs",responseTime:"\u22641h",image:"https://images.unsplash.com/photo-1511919884226-fd3cad34687c?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1511919884226-fd3cad34687c?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1606611013016-969c19ba27a5?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1544636331-e26879cd4d9b?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?q=80&w=400&auto=format&fit=crop"],category:"Cars"},
+  {id:"c4",title:"Honda Civic 2021 Low Mileage",price:"\u03C00.09",stat:"Low mileage",brand:"Honda Auto",moq:"1 Piece",audited:true,secured:false,inStock:false,yrs:"2yrs",image:"https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1494976388531-d1058494cdd8?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1550355291-bbee04a92027?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1580273916550-e323be2ae537?q=80&w=400&auto=format&fit=crop"],category:"Cars"},
+  {id:"c5",title:"2025 Chery iCar Electric SUV",price:"\u03C00.05",priceHigh:"0.06",stat:"1 Piece (MOQ)",brand:"Chery Auto",moq:"1 Piece",audited:true,secured:true,inStock:false,yrs:"3yrs",image:"https://images.unsplash.com/photo-1560958089-b8a1929cea89?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1560958089-b8a1929cea89?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1619682817481-e994891cd1f5?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1606611013016-969c19ba27a5?q=80&w=400&auto=format&fit=crop"],category:"Cars"},
+  {id:"c6",title:"Tesla Model Y Long Range 2024",price:"\u03C00.13",priceHigh:"0.15",stat:"3 Pieces (MOQ)",brand:"Tesla Inc",moq:"3 Pieces",audited:true,secured:true,inStock:false,yrs:"2yrs",responseTime:"\u22641h",image:"https://images.unsplash.com/photo-1560958089-b8a1929cea89?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1560958089-b8a1929cea89?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1617886903355-9354cee8d02b?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1606611013016-969c19ba27a5?q=80&w=400&auto=format&fit=crop"],tag:"Hot Deal",tagColor:"#c0392b",category:"Cars"},
+  {id:"c7",title:"Rox 01 2024 Exclusive 6-Seat SUV",price:"\u03C00.17",priceHigh:"0.19",stat:"1 Piece (MOQ)",brand:"YHE-MOTORS",moq:"1 Piece",audited:true,secured:false,inStock:false,yrs:"1yr",image:"https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1544636331-e26879cd4d9b?q=80&w=400&auto=format&fit=crop"],category:"Cars"},
+  {id:"c8",title:"BMW X5 xDrive40i 2023",price:"\u03C00.22",stat:"Premium Import",brand:"BMW Group",moq:"1 Piece",audited:true,secured:true,inStock:false,yrs:"4yrs",responseTime:"\u22641h",image:"https://images.unsplash.com/photo-1555215695-3004980ad54e?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1555215695-3004980ad54e?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1617531653332-bd46c24f2068?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1563720223185-11003d516935?q=80&w=400&auto=format&fit=crop"],category:"Cars"},
+  // ── Real Estate ──
+  {id:"re1",title:"Modern 3BR Apartment Downtown",price:"\u03C05.0",priceHigh:"6.5",stat:"Hot Listing",brand:"Prime Realty",moq:"1 Unit",audited:true,secured:true,inStock:true,yrs:"8yrs",responseTime:"\u22641h",image:"https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1600573472592-401b489a3cdc?q=80&w=400&auto=format&fit=crop"],tag:"Featured",tagColor:"#c0392b",category:"Real Estate"},
+  {id:"re2",title:"Beachfront Villa 5BR Pool & Garden",price:"\u03C015.0",priceHigh:"18.0",stat:"Premium",brand:"Coastal Homes",moq:"1 Unit",audited:true,secured:true,inStock:false,yrs:"12yrs",responseTime:"\u22641h",image:"https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1613977257363-707ba9348227?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1600585154526-990dced4db0d?q=80&w=400&auto=format&fit=crop"],tag:"Luxury",tagColor:"#7c3aed",category:"Real Estate"},
+  {id:"re3",title:"Studio Apartment City Center",price:"\u03C00.8",priceHigh:"1.2",stat:"Ready to Move",brand:"UrbanLiving",moq:"1 Unit",audited:true,secured:false,inStock:true,yrs:"3yrs",image:"https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1600573472592-401b489a3cdc?q=80&w=400&auto=format&fit=crop"],category:"Real Estate"},
+  {id:"re4",title:"Commercial Office Space 500sqm",price:"\u03C012.0",priceHigh:"15.0",stat:"High ROI",brand:"BizSpace Corp",moq:"1 Unit",audited:true,secured:true,inStock:true,yrs:"10yrs",responseTime:"\u22644h",image:"https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1524758631624-e2822e304c36?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1497366811353-6870744d04b2?q=80&w=400&auto=format&fit=crop"],category:"Real Estate"},
+  {id:"re5",title:"Luxury Penthouse Rooftop Terrace",price:"\u03C025.0",stat:"Exclusive",brand:"SkyHigh Realty",moq:"1 Unit",audited:true,secured:true,inStock:false,yrs:"6yrs",responseTime:"\u22641h",image:"https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=400&auto=format&fit=crop"],tag:"Top Pick",tagColor:"#d97706",category:"Real Estate"},
+  {id:"re6",title:"4BR Family Home with Garden",price:"\u03C03.5",priceHigh:"4.0",stat:"Family Friendly",brand:"HomeSweet",moq:"1 Unit",audited:true,secured:false,inStock:true,yrs:"5yrs",image:"https://images.unsplash.com/photo-1600585154526-990dced4db0d?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1600585154526-990dced4db0d?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1600573472592-401b489a3cdc?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?q=80&w=400&auto=format&fit=crop"],category:"Real Estate"},
+  {id:"re7",title:"Warehouse Industrial Space 1000sqm",price:"\u03C08.0",priceHigh:"10.0",stat:"Investment",brand:"InduPark",moq:"1 Unit",audited:true,secured:true,inStock:true,yrs:"7yrs",image:"https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1524758631624-e2822e304c36?q=80&w=400&auto=format&fit=crop"],category:"Real Estate"},
+  {id:"re8",title:"2BR Apartment Gated Community",price:"\u03C02.0",priceHigh:"2.5",stat:"Secure Living",brand:"GateLife",moq:"1 Unit",audited:true,secured:true,inStock:true,yrs:"4yrs",responseTime:"\u22641h",image:"https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=400&auto=format&fit=crop"],category:"Real Estate"},
+  {id:"re9",title:"Plot of Land 1 Acre Near Highway",price:"\u03C01.5",priceHigh:"2.0",stat:"Land Sale",brand:"TerraDeals",moq:"1 Acre",audited:true,secured:false,inStock:true,yrs:"2yrs",image:"https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1501854140801-50d01698950b?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?q=80&w=400&auto=format&fit=crop"],category:"Real Estate"},
+  {id:"re10",title:"Shopping Mall Retail Unit 200sqm",price:"\u03C020.0",stat:"Prime Location",brand:"MallSpace Ltd",moq:"1 Unit",audited:true,secured:true,inStock:false,yrs:"15yrs",responseTime:"\u22641h",image:"https://images.unsplash.com/photo-1567449303078-57ad995bd329?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1567449303078-57ad995bd329?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1524758631624-e2822e304c36?q=80&w=400&auto=format&fit=crop"],tag:"Investment",tagColor:"#059669",category:"Real Estate"}
+];
+
+/* Assign star ratings (1-5, supports .5) & review counts */
+(function(){
+  var ratings={
+    e1:[4.5,238],e2:[4,89],e3:[5,312],e4:[4.5,1102],e5:[4,195],e6:[4.5,67],
+    e7:[3.5,23],e8:[4,48],e9:[4.5,341],e10:[4,88],e11:[5,45],e12:[4.5,160],
+    f1:[4,40],f2:[4.5,85],f3:[4,60],f4:[3.5,30],f5:[3,15],f6:[5,30],f7:[4,22],f8:[5,18],f9:[4,45],f10:[4.5,70],
+    hg1:[4,28],hg2:[4.5,52],hg3:[4,25],hg4:[4.5,38],hg5:[3.5,10],hg6:[4,55],hg7:[4.5,18],hg8:[4,55],hg9:[5,12],hg10:[4,200],
+    c1:[5,14],c2:[4,20],c3:[4.5,9],c4:[4,16],c5:[4.5,7],c6:[5,3],c7:[3.5,5],c8:[5,11],
+    re1:[4.5,42],re2:[5,18],re3:[4,35],re4:[4.5,12],re5:[5,8],re6:[4,27],re7:[4,15],re8:[4.5,33],re9:[3.5,9],re10:[5,6]
+  };
+  marketProducts.forEach(function(p){var r=ratings[p.id];if(r){p.rating=r[0];p.reviews=r[1]}else{p.rating=4;p.reviews=0}});
+})();
+
+var promoBanners = [
+  {id:"pb1",title:"Amazing April",subtitle:"Get Ready to Be Amazed!",btnText:"Source Now",bgColor:"linear-gradient(135deg,#ff6b35,#f7931e)",insertAt:4},
+  {id:"pb2",title:"Free Shipping Week",subtitle:"On orders over \u03C00.001",btnText:"Shop Now",bgColor:"linear-gradient(135deg,#667eea,#764ba2)",insertAt:10},
+  {id:"pb3",title:"New Seller Deals",subtitle:"Up to 30% off first orders",btnText:"Explore",bgColor:"linear-gradient(135deg,#11998e,#38ef7d)",insertAt:16}
+];
+
+var hotSearches = [
+  {name:"Stand display",image:"https://images.unsplash.com/photo-1550009158-9ebf69173e03?q=80&w=100&auto=format&fit=crop"},
+  {name:"Advertising",image:"https://images.unsplash.com/photo-1557838923-2985c318be48?q=80&w=100&auto=format&fit=crop"},
+  {name:"Advertising product",image:"https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=100&auto=format&fit=crop"},
+  {name:"Interactive",image:"https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=100&auto=format&fit=crop"},
+  {name:"LED display",image:"https://images.unsplash.com/photo-1550009158-9ebf69173e03?q=80&w=100&auto=format&fit=crop"},
+  {name:"Smart home",image:"https://images.unsplash.com/photo-1558002038-1055907df827?q=80&w=100&auto=format&fit=crop"},
+  {name:"Solar panel",image:"https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=100&auto=format&fit=crop"},
+  {name:"Wireless charger",image:"https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?q=80&w=100&auto=format&fit=crop"}
+];
+
+var hotels = [
+  {id:"h1",name:"Serena Hotel Dar es Salaam",location:"Dar es Salaam, Tanzania",rating:4.8,pricePerNight:0.0006,image:"https://picsum.photos/seed/serena/600/400",type:"luxury"},
+  {id:"h2",name:"Hyatt Regency",location:"Nairobi, Kenya",rating:4.6,pricePerNight:0.0005,image:"https://picsum.photos/seed/hyatt/600/400",type:"luxury"},
+  {id:"h3",name:"Zanzibar Beach Resort",location:"Zanzibar, Tanzania",rating:4.9,pricePerNight:0.001,image:"https://picsum.photos/seed/zanzibar/600/400",type:"luxury"},
+  {id:"h4",name:"City Lodge Hotel",location:"Kampala, Uganda",rating:4.2,pricePerNight:0.0002,image:"https://picsum.photos/seed/citylodge/600/400",type:"standard"},
+  {id:"h5",name:"Mountain View Inn",location:"Arusha, Tanzania",rating:4.4,pricePerNight:0.0003,image:"https://picsum.photos/seed/mountainview/600/400",type:"standard"},
+  {id:"h6",name:"Pioneer Backpackers",location:"Mombasa, Kenya",rating:4.0,pricePerNight:0.00008,image:"https://picsum.photos/seed/backpack/600/400",type:"budget"}
+];
+
+var properties = [
+  {id:"p1",title:"Modern 3BR Apartment",location:"Nairobi, Kenya",price:0.05,image:"https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=400&auto=format&fit=crop",bedrooms:3,bathrooms:2,featured:true},
+  {id:"p2",title:"Beachfront Villa",location:"Zanzibar, Tanzania",price:0.15,image:"https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=400&auto=format&fit=crop",bedrooms:5,bathrooms:4,featured:true},
+  {id:"p3",title:"Studio Apartment",location:"Dar es Salaam, Tanzania",price:0.008,image:"https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=400&auto=format&fit=crop",bedrooms:1,bathrooms:1,featured:false},
+  {id:"p4",title:"Family Home 4BR",location:"Kampala, Uganda",price:0.04,image:"https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?q=80&w=400&auto=format&fit=crop",bedrooms:4,bathrooms:3,featured:false},
+  {id:"p5",title:"Penthouse Suite",location:"Kigali, Rwanda",price:0.12,image:"https://images.unsplash.com/photo-1600607687644-c7171b42498f?q=80&w=400&auto=format&fit=crop",bedrooms:3,bathrooms:2,featured:true}
+];
+
+var billProviders = [
+  {id:"b1",name:"TANESCO",icon:"\u26A1",description:"Tanzania Electric Supply"},
+  {id:"b2",name:"DAWASCO",icon:"\uD83D\uDCA7",description:"Dar es Salaam Water"},
+  {id:"b3",name:"Vodacom",icon:"\uD83D\uDCF1",description:"Vodacom Tanzania"},
+  {id:"b4",name:"Airtel",icon:"\uD83D\uDCF1",description:"Airtel Tanzania"},
+  {id:"b5",name:"Tigo/MIC",icon:"\uD83D\uDCF1",description:"MIC Tanzania (Tigo)"},
+  {id:"b6",name:"TTCL Fiber",icon:"\uD83C\uDF10",description:"TTCL Internet"},
+  {id:"b7",name:"DSTV",icon:"\uD83D\uDCFA",description:"MultiChoice DSTV"},
+  {id:"b8",name:"Kenya Power",icon:"\u26A1",description:"Kenya Power & Lighting"}
+];
+
+var transportServices = [
+  {id:"tr1",icon:"\uD83D\uDE97",name:"Economy Ride",price:"0.00001-0.00003 \u03C0",desc:"Affordable everyday rides",badge:"Popular"},
+  {id:"tr2",icon:"\uD83D\uDE99",name:"Comfort Plus",price:"0.00003-0.00005 \u03C0",desc:"Spacious SUVs, premium interiors"},
+  {id:"tr3",icon:"\uD83C\uDFCE\uFE0F",name:"Luxury",price:"0.00005-0.0001 \u03C0",desc:"Executive cars for VIP transport",badge:"Premium"},
+  {id:"tr4",icon:"\uD83D\uDE95",name:"City Taxi",price:"0.00001-0.00003 \u03C0",desc:"Licensed metered taxis",badge:"Popular"},
+  {id:"tr5",icon:"\u2708\uFE0F\uD83D\uDE95",name:"Airport Transfer",price:"0.00003-0.00007 \u03C0",desc:"Reliable airport pickup & drop"},
+  {id:"tr6",icon:"\uD83C\uDFCD\uFE0F",name:"Boda / Motorbike",price:"0.000003-0.00001 \u03C0",desc:"Quick motorcycle rides"},
+  {id:"tr7",icon:"\uD83D\uDEFA",name:"Tuk-Tuk",price:"0.000006-0.00002 \u03C0",desc:"Short city trips",badge:"New"},
+  {id:"tr8",icon:"\uD83D\uDC68\u200D\u2708\uFE0F",name:"Daily Driver",price:"0.00006-0.0001 \u03C0/day",desc:"Personal driver for the day"},
+  {id:"tr9",icon:"\uD83D\uDCE6",name:"Express Delivery",price:"0.000006-0.00002 \u03C0",desc:"Same-day delivery, under 2 hrs",badge:"Popular"},
+  {id:"tr10",icon:"\uD83D\uDE9B",name:"Heavy Cargo",price:"0.00003-0.0001 \u03C0",desc:"Furniture & large items"}
+];
+
+var flights = [
+  {id:"fl1",airline:"Kenya Airways",icon:"\uD83C\uDDF0\uD83C\uDDEA",from:"NBO",to:"DXB",price:"0.002 \u03C0",duration:"5h 20m"},
+  {id:"fl2",airline:"Ethiopian Airlines",icon:"\uD83C\uDDEA\uD83C\uDDF9",from:"ADD",to:"LHR",price:"0.003 \u03C0",duration:"8h 15m"},
+  {id:"fl3",airline:"Emirates",icon:"\uD83C\uDDE6\uD83C\uDDEA",from:"DXB",to:"JFK",price:"0.004 \u03C0",duration:"13h 40m"},
+  {id:"fl4",airline:"RwandAir",icon:"\uD83C\uDDF7\uD83C\uDDFC",from:"NBO",to:"EBB",price:"0.0005 \u03C0",duration:"1h 05m"},
+  {id:"fl5",airline:"Qatar Airways",icon:"\uD83C\uDDF6\uD83C\uDDE6",from:"NBO",to:"NRT",price:"0.005 \u03C0",duration:"18h 30m"},
+  {id:"fl6",airline:"Turkish Airlines",icon:"\uD83C\uDDF9\uD83C\uDDF7",from:"DAR",to:"CDG",price:"0.004 \u03C0",duration:"12h 45m"}
+];
+
+var allCategories = ["All","Electronics","Fashion","Home & Garden","Cars","Real Estate","Hotels","Properties","Transport","Bills"];
+
+/* ── STATE ── */
+var activeTab = "All";
+var searchQuery = "";
+var modalImgIdx = 0;
+var selectedProduct = null;
+
+/* ── HELPERS ── */
+function esc(s){if(s==null)return"";var d=document.createElement("div");d.textContent=String(s);return d.innerHTML}
+function parsePiPrice(p){return parseFloat(String(p).replace(/[^\d.]/g,""))||0}
+function doSearch(){var i=document.getElementById("searchInput");searchQuery=i?i.value:"";render()}
+var starSvg='<svg class="star filled" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>';
+var starEmpty='<svg class="star" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>';
+var starHalf='<svg class="star filled" viewBox="0 0 20 20"><defs><linearGradient id="hg"><stop offset="50%" stop-color="#f59e0b"/><stop offset="50%" stop-color="#ddd"/></linearGradient></defs><path fill="url(#hg)" d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>';
+function renderStars(r,cnt){
+  var h='<div class="pc-stars">';
+  for(var i=1;i<=5;i++){if(r>=i)h+=starSvg;else if(r>=i-0.5)h+=starHalf;else h+=starEmpty}
+  if(cnt!==undefined) h+='<span class="star-count">('+cnt+')</span>';
+  return h+'</div>';
+}
+var bmActiveCat='All';
+function setBmCat(c){bmActiveCat=c;render()}
+
+/* ══════════════════════════════════════════════════════════════
+   RENDER
+   ══════════════════════════════════════════════════════════════ */
+function render(){
+  var q=searchQuery.toLowerCase();
+  var filtered=marketProducts.filter(function(p){
+    var mt=activeTab==="All"||p.category===activeTab;
+    var ms=!q||p.title.toLowerCase().indexOf(q)!==-1;
+    return mt&&ms;
+  });
+
+  var showHotels=activeTab==="All"||activeTab==="Hotels";
+  var showProps=activeTab==="All"||activeTab==="Properties";
+  var showTrans=activeTab==="All"||activeTab==="Transport";
+  var showBills=activeTab==="All"||activeTab==="Bills";
+
+  var fHotels=hotels.filter(function(h){return !q||h.name.toLowerCase().indexOf(q)!==-1||h.location.toLowerCase().indexOf(q)!==-1});
+  var fProps=properties.filter(function(p){return !q||p.title.toLowerCase().indexOf(q)!==-1||p.location.toLowerCase().indexOf(q)!==-1});
+  var fBills=billProviders.filter(function(b){return !q||b.name.toLowerCase().indexOf(q)!==-1});
+
+  /* ── Tabs ── */
+  var th="";
+  allCategories.forEach(function(t){
+    th+='<button onclick="setTab(\''+t.replace(/'/g,"\\'")+'\')" class="'+(t===activeTab?"active":"")+'">'+esc(t)+"</button>";
+  });
+  th+='<button class="more-btn"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg></button>';
+  document.getElementById("catTabs").innerHTML=th;
+
+  var html="";
+
+  /* ── Trust Badges (Audited Supplier / Secured Trading) ── */
+  if(activeTab==="All"&&!searchQuery){
+    html+='<div class="trust-row">';
+    html+='<div class="trust-badge"><div class="icon-circle audit">A</div><div><div class="tb-title">Audited Supplier</div><div class="tb-sub">On-site verified suppliers</div></div></div>';
+    html+='<div class="trust-badge" style="border-left:1px solid #f0f0f0"><div class="icon-circle secure">S</div><div><div class="tb-title">Secured Trading</div><div class="tb-sub">Escrow payment protection</div></div></div>';
+    html+='</div>';
+
+    /* ── Quick Actions (Categories / RFQ / New User) ── */
+    html+='<div class="quick-actions">';
+    html+='<div class="qa-item"><div class="qa-icon" style="background:#fef3c7">'+
+      '<svg width="22" height="22" fill="none" stroke="#b45309" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>'+
+      '</div><div class="qa-label">Categories</div></div>';
+    html+='<div class="qa-item"><div class="qa-icon" style="background:#fce7e7">'+
+      '<svg width="22" height="22" fill="none" stroke="#c0392b" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 12h6m-3-3v6m-7 4h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>'+
+      '</div><div class="qa-label">Request for<br>Quotation</div></div>';
+    html+='<div class="qa-item"><div class="qa-icon" style="background:#fef9c3">'+
+      '<svg width="22" height="22" fill="none" stroke="#a16207" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 8v13m0-13V6a2 2 0 012-2h4a2 2 0 010 4h-4m-2 0V6a2 2 0 00-2-2H6a2 2 0 000 4h4m-2 8H5a2 2 0 00-2 2v2h18v-2a2 2 0 00-2-2h-3"/></svg>'+
+      '</div><div class="qa-label">New User<br>Guide</div></div>';
+    html+='</div>';
+  }
+
+  /* ── Top Rankings Banner ── */
+  if(activeTab==="All"&&!searchQuery){
+    var tagged=marketProducts.filter(function(p){return p.tag});
+    html+='<div class="rankings-banner"><div class="rb-header"><div><h2>Top Rankings</h2><div class="rb-sub">Make your sourcing efficient</div></div>'+
+      '<svg class="section-arrow" style="position:relative;z-index:1" width="20" height="20" fill="none" stroke="#aaa" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></div>'+
+      '<div class="trophy">\uD83C\uDFC6</div>'+
+      '<div class="rankings-row hide-sb">';
+    tagged.forEach(function(p){
+      html+='<article class="rank-card" data-pid="'+p.id+'" onclick="openModal(\''+p.id+'\')">';
+      html+='<div class="rc-img"><img src="'+p.images[0]+'" alt="'+esc(p.title)+'" loading="lazy">';
+      if(p.images.length>1){html+='<div class="swipe-dots">';for(var di=0;di<p.images.length;di++){html+='<span'+(di===0?' class="active"':'')+'></span>'}html+='</div>'}
+      html+='<div class="rc-tag" style="background:'+p.tagColor+'">'+esc(p.tag)+'</div></div>';
+      html+='<div class="rc-price">'+esc(p.price)+(p.priceHigh?'-'+esc(p.priceHigh):'')+'</div>';
+      html+='<div class="rc-stat">'+esc(p.stat)+'</div></article>';
+    });
+    html+='</div></div>';
+  }
+
+  /* ── Secured Trading Service ── */
+  if(activeTab==="All"&&!searchQuery){
+    html+='<div class="secure-service"><div><h3>Secured Trading Service</h3><p>Money safe \u00B7 Multiple payments \u00B7 Online support</p></div>'+
+      '<svg width="20" height="20" fill="none" stroke="#ccc" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></div>';
+  }
+
+  /* ── Products Grid ── */
+  if(filtered.length>0){
+    html+='<div class="section"><div class="section-header"><div class="section-title">'+(activeTab==="All"?"All Products":esc(activeTab))+
+      '<span class="section-count">('+filtered.length+')</span></div></div><div class="prod-grid">';
+    var promoPositions={};promoBanners.forEach(function(pb){promoPositions[pb.insertAt]=pb});
+    filtered.forEach(function(item,idx){
+      // Insert promo banner at specific positions
+      if(promoPositions[idx]){
+        var pb=promoPositions[idx];
+        html+='<div class="promo-card" style="background:'+pb.bgColor+'">';
+        html+='<div class="promo-content"><div class="promo-title">'+esc(pb.title)+'</div>';
+        html+='<div class="promo-sub">'+esc(pb.subtitle)+'</div>';
+        html+='<button class="promo-btn">'+esc(pb.btnText)+'</button></div></div>';
+      }
+      html+='<article class="prod-card" data-pid="'+item.id+'" onclick="openModal(\''+item.id+'\')">';
+      html+='<div class="pc-img"><img src="'+item.images[0]+'" alt="'+esc(item.title)+'" loading="lazy">';
+      if(item.images.length>1){html+='<span class="img-count">1/'+item.images.length+'</span>';html+='<div class="swipe-dots">';for(var di=0;di<item.images.length;di++){html+='<span'+(di===0?' class="active"':'')+'></span>'}html+='</div>'}
+      if(item.tag) html+='<div class="tag-overlay" style="background:'+item.tagColor+'">'+esc(item.tag)+'</div>';
+      if(item.inStock) html+='<div class="stock-badge"><span class="sb-dot"></span>In Stock</div>';
+      html+='<div class="search-icon"><svg width="16" height="16" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></div>';
+      html+='</div><div class="pc-body">';
+      html+='<div class="pc-price">'+esc(item.price)+(item.priceHigh?' <span class="high">-'+esc(item.priceHigh)+'</span>':'')+'</div>';
+      if(item.moq) html+='<div class="pc-moq">'+esc(item.moq)+' (MOQ)</div>';
+      html+='<div class="pc-name">'+esc(item.title)+'</div>';
+      if(item.brand) html+='<div class="pc-brand">'+esc(item.brand)+'</div>';
+      html+='<div class="pc-badges">';
+      if(item.audited) html+='<span class="badge-a"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> Audited</span>';
+      if(item.secured) html+='<span class="badge-s">\uD83D\uDEE1\uFE0F Secured Trading</span>';
+      html+='</div>';
+      if(item.rating) html+=renderStars(item.rating,item.reviews);
+      if(item.responseTime||item.yrs){
+        html+='<div class="pc-response">';
+        if(item.responseTime) html+='<span>\u26A1 '+esc(item.responseTime)+'</span>';
+        if(item.yrs) html+='<span class="pc-yrs">'+esc(item.yrs)+'</span>';
+        html+='</div>';
+      }
+      html+='</div></article>';
+    });
+    html+='</div></div>';
+
+    /* ── Hot Searches ── */
+    html+='<div class="hot-searches"><div class="section-header"><div class="section-title">\uD83D\uDD25 Hot Searches</div></div>';
+    html+='<div class="hs-list">';
+    hotSearches.forEach(function(hs){
+      html+='<div class="hs-item" onclick="document.getElementById(\'searchInput\').value=\''+esc(hs.name)+'\';doSearch()"><img src="'+hs.image+'" alt="'+esc(hs.name)+'"><span>'+esc(hs.name)+'</span></div>';
+    });
+    html+='</div></div>';
+
+    /* ── Big Marketplace Section ── */
+    var bmFiltered=bmActiveCat==='All'?marketProducts:marketProducts.filter(function(p){return p.category===bmActiveCat});
+    html+='<div class="big-market"><div class="bm-header"><h2>\uD83C\uDFEA Featured Marketplace</h2><span class="bm-see">See All <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></span></div>';
+    html+='<div class="bm-cats hide-sb">';
+    ['All','Electronics','Fashion','Home & Garden','Cars','Real Estate'].forEach(function(c){
+      html+='<button class="'+(bmActiveCat===c?'active':'')+'" onclick="setBmCat(\''+c.replace(/'/g,"\\'")+'\')">'+esc(c)+'</button>';
+    });
+    html+='</div><div class="bm-scroll hide-sb">';
+    bmFiltered.slice(0,12).forEach(function(item,idx){
+      html+='<article class="bm-card" onclick="openModal(\''+item.id+'\')"><div class="bmc-img">';
+      html+='<img src="'+item.images[0]+'" alt="'+esc(item.title)+'" loading="lazy">';
+      html+='<span class="bmc-rank">'+(idx+1)+'</span>';
+      var tags=[];
+      if(item.audited) tags.push('Verified');
+      if(item.secured) tags.push('Secured');
+      if(item.inStock) tags.push('In Stock');
+      if(tags.length) html+='<div class="bmc-tag">'+tags.map(function(t){return '<span>'+t+'</span>'}).join('')+'</div>';
+      html+='</div><div class="bmc-body">';
+      if(item.brand) html+='<div class="bmc-brand">'+esc(item.brand)+'</div>';
+      html+='<div class="bmc-name">'+esc(item.title)+'</div>';
+      html+='<div class="bmc-price">'+esc(item.price)+(item.priceHigh?' <span class="hp">- '+esc(item.priceHigh)+'</span>':'')+'</div>';
+      html+='<div class="bmc-meta">';
+      if(item.rating){
+        html+='<span class="bmc-stars">';
+        for(var si=1;si<=5;si++){html+=si<=Math.floor(item.rating)?starSvg:starEmpty}
+        html+='</span>';
+      }
+      if(item.audited) html+='<span class="bmc-badge au">\u2713 Audited</span>';
+      if(item.secured) html+='<span class="bmc-badge sc">\uD83D\uDEE1\uFE0F Secured</span>';
+      if(item.reviews) html+='<span class="bmc-sold">'+item.reviews+' reviews</span>';
+      html+='</div></div></article>';
+    });
+    html+='</div></div>';
+  }
+
+  /* ── Hotels ── */
+  if(showHotels&&fHotels.length>0){
+    html+='<div class="section"><div class="section-header"><div class="section-title">\uD83C\uDFE8 Hotels <span class="section-count">('+fHotels.length+')</span></div></div>'+
+      '<div class="h-scroll hide-sb">';
+    fHotels.forEach(function(h){
+      html+='<article class="h-card"><div class="hc-img"><img src="'+h.image+'" alt="'+esc(h.name)+'" loading="lazy">'+
+        '<span class="badge-ov" style="left:6px;top:6px;background:rgba(0,0,0,.6);color:#fff;text-transform:capitalize">'+esc(h.type)+'</span>'+
+        '<span class="badge-ov" style="right:6px;top:6px;background:#f59e0b;color:#000">\u2605 '+h.rating+'</span>'+
+        '</div><div class="hc-body"><div class="hc-name">'+esc(h.name)+'</div>'+
+        '<div class="hc-loc">\uD83D\uDCCD '+esc(h.location)+'</div>'+
+        '<div style="display:flex;align-items:center;justify-content:space-between;margin-top:6px">'+
+        '<span class="hc-price">'+h.pricePerNight+' \u03C0</span>'+
+        '<span style="background:#c0392b;color:#fff;padding:3px 10px;border-radius:6px;font-size:.62rem;font-weight:700;cursor:pointer">Book</span>'+
+        '</div></div></article>';
+    });
+    html+='</div></div>';
+  }
+
+  /* ── Quickly track your footprints ── */
+  if(activeTab==="All"&&!searchQuery){
+    html+='<div class="section"><div class="section-header"><div class="section-title">Quickly track your footprints</div>'+
+      '<svg width="20" height="20" fill="none" stroke="#ccc" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></div>'+
+      '<div class="footprints-row hide-sb">';
+    marketProducts.slice(10,18).forEach(function(p){
+      html+='<article class="fp-card" onclick="openModal(\''+p.id+'\')">'+
+        '<div class="fp-img"><img src="'+p.image+'" alt="'+esc(p.title)+'" loading="lazy"></div>'+
+        '<div class="fp-price">'+esc(p.price)+(p.priceHigh?'-'+esc(p.priceHigh):'')+'</div></article>';
+    });
+    html+='</div></div>';
+  }
+
+  /* ── Properties ── */
+  if(showProps&&fProps.length>0){
+    html+='<div class="section"><div class="section-header"><div class="section-title">\uD83C\uDFE0 Properties <span class="section-count">('+fProps.length+')</span></div></div>'+
+      '<div class="h-scroll hide-sb">';
+    fProps.forEach(function(pr){
+      html+='<article class="h-card"><div class="hc-img"><img src="'+pr.image+'" alt="'+esc(pr.title)+'" loading="lazy">';
+      if(pr.featured) html+='<span class="badge-ov" style="left:6px;top:6px;background:#f59e0b;color:#000;font-weight:700">\u2B50 Featured</span>';
+      html+='</div><div class="hc-body"><div class="hc-name">'+esc(pr.title)+'</div>'+
+        '<div class="hc-loc">\uD83D\uDCCD '+esc(pr.location)+'</div>'+
+        '<div class="hc-meta">';
+      if(pr.bedrooms>0) html+='<span>\uD83D\uDECF '+pr.bedrooms+'</span>';
+      if(pr.bathrooms>0) html+='<span>\uD83D\uDEBF '+pr.bathrooms+'</span>';
+      html+='</div><div class="hc-price">'+pr.price.toLocaleString()+' \u03C0</div></div></article>';
+    });
+    html+='</div></div>';
+  }
+
+  /* ── Transport & Delivery ── */
+  if(showTrans){
+    html+='<div class="section"><div class="section-header"><div class="section-title">\uD83D\uDE97 Transport & Delivery</div><a href="ride.html" style="font-size:.72rem;font-weight:700;color:#fff;background:linear-gradient(135deg,#3b82f6,#06b6d4);padding:5px 12px;border-radius:14px;text-decoration:none">🚀 City Rush</a></div><div class="trans-grid">';
+    transportServices.forEach(function(s){
+      var bs="";
+      if(s.badge==="Popular") bs="background:#fef3c7;color:#92400e";
+      else if(s.badge==="Premium") bs="background:#ede9fe;color:#6d28d9";
+      else if(s.badge) bs="background:#d1fae5;color:#065f46";
+      html+='<div class="trans-card" onclick="window.location.href=&quot;ride.html&quot;" style="cursor:pointer"><div class="tc-top"><span class="tc-icon">'+s.icon+'</span>'+
+        (s.badge?'<span class="tc-badge" style="'+bs+'">'+esc(s.badge)+'</span>':'')+
+        '</div><div class="tc-name">'+esc(s.name)+'</div><div class="tc-desc">'+esc(s.desc)+'</div><div class="tc-price">'+esc(s.price)+'</div></div>';
+    });
+    html+='</div>';
+
+    /* Flights */
+    html+='<h3 style="font-size:.84rem;font-weight:700;color:#1a1a1a;margin:14px 0 8px">\u2708\uFE0F Flights</h3>'+
+      '<div class="h-scroll hide-sb">';
+    flights.forEach(function(f){
+      html+='<div class="fl-card"><div class="fl-air"><span class="fl-icon">'+f.icon+'</span><span class="fl-name">'+esc(f.airline)+'</span></div>'+
+        '<div class="fl-route">'+esc(f.from)+' <span class="arr">\u2192</span> '+esc(f.to)+'</div>'+
+        '<div class="fl-dur">'+esc(f.duration)+'</div><div class="fl-price">'+esc(f.price)+'</div></div>';
+    });
+    html+='</div></div>';
+  }
+
+  /* ── Bills ── */
+  if(showBills&&fBills.length>0){
+    html+='<div class="section"><div class="section-header"><div class="section-title">\uD83D\uDCB3 Pay Bills <span class="section-count">('+fBills.length+')</span></div></div>'+
+      '<div class="bill-grid">';
+    fBills.forEach(function(b){
+      html+='<div class="bill-card"><span class="bi-icon">'+b.icon+'</span><div><div class="bi-name">'+esc(b.name)+'</div><div class="bi-desc">'+esc(b.description)+'</div></div></div>';
+    });
+    html+='</div></div>';
+  }
+
+  /* ── Single Purchase Ease ── */
+  if(activeTab==="All"&&!searchQuery){
+    var ck='<svg width="14" height="14" fill="#22c55e" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>';
+    html+='<div class="ease-row"><div class="er-text"><h2>Single Purchase Ease</h2><ul>'+
+      '<li>'+ck+'Bulk Flexibility</li><li>'+ck+'Certified Sellers</li><li>'+ck+'Secure Pi Trading</li>'+
+      '</ul></div><div class="er-img"><img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=400&auto=format&fit=crop" alt="Secure" loading="lazy"></div></div>';
+  }
+
+  /* ── Sell CTA ── */
+  html+='<div class="sell-cta"><div class="sell-cta-inner"><div class="glow"></div>'+
+    '<h2>Sell Your Product for Pi</h2>'+
+    '<p>Post your item, chat with buyers, and accept Pi cryptocurrency securely through our marketplace.</p>'+
+    '<div class="cta-btns"><a href="#" class="btn-sell" id="sell-btn">\uD83D\uDE80 Sell Now</a><a href="form.html?redirect=post product.html" class="btn-verify">Get Verified</a></div>'+
+    '</div></div>';
+
+  html+='<div style="height:20px"></div>';
+  document.getElementById("app").innerHTML=html;
+
+  /* Re-bind search */
+  var si=document.getElementById("searchInput");
+  if(si){si.value=searchQuery;si.oninput=function(){searchQuery=this.value;render()}}
+
+  /* Sell button KYC redirect */
+  var sb=document.getElementById("sell-btn");
+  if(sb){sb.onclick=function(e){e.preventDefault();handleSellClick(e);}}
+
+  startAutoSwipe();
+}
+
+function setTab(t){activeTab=t;render()}
+
+/* ══════════════════════════════════════════════════════════════
+   MODAL
+   ══════════════════════════════════════════════════════════════ */
+function openModal(id){
+  selectedProduct=marketProducts.find(function(p){return p.id===id});
+  if(!selectedProduct)return;
+  modalImgIdx=0;
+  renderModal();
+  document.getElementById("modal-bg").classList.add("open");
+  document.body.style.overflow="hidden";
+}
+function closeModal(){
+  document.getElementById("modal-bg").classList.remove("open");
+  document.body.style.overflow="";
+  selectedProduct=null;
+}
+function setModalImg(i){modalImgIdx=i;renderModal()}
+function nextModalImg(){if(!selectedProduct)return;modalImgIdx=(modalImgIdx+1)%selectedProduct.images.length;renderModal()}
+function prevModalImg(){if(!selectedProduct)return;modalImgIdx=(modalImgIdx-1+selectedProduct.images.length)%selectedProduct.images.length;renderModal()}
+
+function renderModal(){
+  var p=selectedProduct;if(!p)return;
+  var imgs=p.images;
+  var h='';
+
+  h+='<button class="close-btn" onclick="closeModal()"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg></button>';
+
+  /* Carousel */
+  h+='<div class="carousel"><img src="'+imgs[modalImgIdx]+'" alt="'+esc(p.title)+' '+(modalImgIdx+1)+'">';
+  h+='<button class="nav-arrow left" onclick="event.stopPropagation();prevModalImg()"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg></button>';
+  h+='<button class="nav-arrow right" onclick="event.stopPropagation();nextModalImg()"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>';
+  h+='<span class="counter">'+(modalImgIdx+1)+'/'+imgs.length+'</span>';
+  h+='<div class="dots">';
+  for(var i=0;i<imgs.length;i++){h+='<button onclick="event.stopPropagation();setModalImg('+i+')" class="'+(i===modalImgIdx?"active":"")+'"></button>'}
+  h+='</div></div>';
+
+  /* Thumbnails */
+  h+='<div class="thumbs hide-sb">';
+  imgs.forEach(function(src,i){
+    h+='<button onclick="event.stopPropagation();setModalImg('+i+')" class="'+(i===modalImgIdx?"active":"")+'"><img src="'+src+'" alt="Thumb '+(i+1)+'"></button>';
+  });
+  h+='</div>';
+
+  /* Detail */
+  h+='<div class="detail">';
+  if(p.tag) h+='<span class="tag-badge">'+esc(p.tag)+'</span>';
+  h+='<h2>'+esc(p.title)+'</h2>';
+  h+='<div class="meta-line">'+esc(p.category)+' \u00B7 '+esc(p.stat)+'</div>';
+  if(p.rating) h+=renderStars(p.rating,p.reviews);
+  h+='<div class="price-row"><span class="price">'+esc(p.price)+'</span>';
+  if(p.priceHigh) h+='<span class="high">\u2013 '+esc(p.priceHigh)+'</span>';
+  h+='<span class="gcv">GCV</span></div>';
+
+  h+='<div class="trust-grid">'+
+    '<div><div class="tl">Pi Secured</div><div class="ts">Safe Trade</div></div>'+
+    '<div><div class="tl">Verified</div><div class="ts">Seller</div></div>'+
+    '<div><div class="tl">Global</div><div class="ts">Shipping</div></div></div>';
+
+  h+='<div id="modal-card-strip"></div>';
+  h+='<div id="modal-pay-msg"></div>';
+  h+='<div id="modal-tx-progress"></div>';
+
+  h+='<div class="action-btns">'+
+    '<button class="buy-btn" id="modal-buy-btn" onclick="handlePiBuy(\''+p.id+'\')">\u03C0 Pay with Card ('+esc(p.price)+')</button>'+
+    '<button class="cart-btn" onclick="addToCardBalance(\''+p.id+'\')">\uD83D\uDCB3 Add to Card</button></div>';
+  h+='</div>';
+  document.getElementById("modal-content").innerHTML=h;
+  /* Show card info strip if user has a registered card */
+  setTimeout(function(){renderCardStrip()},0);
+}
+
+/* ── Card Data from Pi Visual Card ── */
+var selectedPayCard=null;
+var cardTypes=['visa','mastercard','amex','gold','platinum','black'];
+var cardLabels={visa:'VISA',mastercard:'MasterCard',amex:'AMEX',gold:'Gold',platinum:'Platinum',black:'Black'};
+var cardShort={visa:'VISA',mastercard:'MC',amex:'AMEX',gold:'GOLD',platinum:'PLAT',black:'BLK'};
+
+function getCardUser(){
+  try{var d=localStorage.getItem('pivisualcard_user');return d?JSON.parse(d):null}catch(e){return null}
+}
+function getCardState(){
+  try{var d=localStorage.getItem('pivisualcard_data');return d?JSON.parse(d):null}catch(e){return null}
+}
+function getCardByType(type){
+  var u=getCardUser();
+  if(!u)return null;
+  var num=(u.cardNumbers&&u.cardNumbers[type])?u.cardNumbers[type]:null;
+  if(!num&&type===(u.cardType||'visa'))num=u.cardNumber;
+  return num?{number:num,type:type,holder:(u.firstName+' '+u.lastName).toUpperCase(),piUser:u.piUser}:null;
+}
+function getSelectedCard(){
+  if(selectedPayCard)return getCardByType(selectedPayCard);
+  var u=getCardUser();
+  if(!u)return null;
+  var state=getCardState();
+  var type=(state&&state.cardType)?state.cardType:(u.cardType||'visa');
+  selectedPayCard=type;
+  return getCardByType(type);
+}
+
+function renderCardStrip(){
+  var el=document.getElementById('modal-card-strip');
+  if(!el)return;
+  var u=getCardUser();
+  if(!u||!u.cardNumbers){
+    el.innerHTML='<div class="no-card-msg" onclick="window.location.href=\'index.html\'">\uD83D\uDCB3 No Pi Card registered \u2014 <b>Get your Visual Pi Card</b></div>';
+    return;
+  }
+  var state=getCardState();
+  var defaultType=(state&&state.cardType)?state.cardType:(u.cardType||'visa');
+  if(!selectedPayCard)selectedPayCard=defaultType;
+  var holder=(u.firstName+' '+u.lastName).toUpperCase();
+
+  var h='<div class="card-chooser">';
+  h+='<div class="chooser-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="3"/><line x1="1" y1="10" x2="23" y2="10"/></svg> Choose your card</div>';
+  h+='<div class="card-scroll">';
+  for(var i=0;i<cardTypes.length;i++){
+    var ct=cardTypes[i];
+    var num=u.cardNumbers[ct];
+    if(!num)continue;
+    var masked=num.replace(/\d(?=\d{4})/g,'\u2022');
+    var sel=ct===selectedPayCard?' selected':'';
+    h+='<div class="card-chip c-'+ct+sel+'" onclick="pickCard(\''+ct+'\')">'+
+      '<div class="chip-type">'+(cardShort[ct]||ct)+'</div>'+
+      '<div class="chip-num">'+esc(masked.slice(-9))+'</div>'+
+      '<div class="chip-holder">'+esc(holder)+'</div></div>';
+  }
+  h+='</div>';
+
+  var sc=getCardByType(selectedPayCard);
+  if(sc){
+    var scMasked=sc.number.replace(/\d(?=\d{4})/g,'\u2022');
+    h+='<div class="card-selected-info">'+
+      '<div class="csi-icon c-'+sc.type+'">'+(cardShort[sc.type]||'')+'</div>'+
+      '<div><div class="csi-num">'+esc(scMasked)+'</div>'+
+      '<div class="csi-holder">'+esc(sc.holder)+'</div></div></div>';
+  }
+  h+='</div>';
+  el.innerHTML=h;
+}
+
+function pickCard(type){
+  selectedPayCard=type;
+  renderCardStrip();
+  var buyBtn=document.getElementById('modal-buy-btn');
+  if(buyBtn&&selectedProduct){
+    buyBtn.textContent='\u03C0 Pay with '+(cardLabels[type]||type)+' ('+esc(selectedProduct.price)+')';
+  }
+}
+
+function addToCardBalance(productId){
+  var p=marketProducts.find(function(x){return x.id===productId});
+  if(!p)return;
+  var card=getSelectedCard();
+  if(!card||!card.number){window.location.href='index.html';return}
+  try{
+    var state=JSON.parse(localStorage.getItem('pivisualcard_data')||'{}');
+    if(!state.transactions)state.transactions=[];
+    state.transactions.unshift({type:'shop',name:p.title+' (Marketplace)',amount:-parsePiPrice(p.price),date:new Date().toISOString(),card:card.type});
+    localStorage.setItem('pivisualcard_data',JSON.stringify(state));
+  }catch(e){}
+  var msgEl=document.getElementById('modal-pay-msg');
+  if(msgEl) msgEl.innerHTML='<div class="pay-msg ok">\u2705 Added to '+esc(cardLabels[card.type]||card.type)+' card \u2014 <a href="index.html" style="color:#16a34a;text-decoration:underline">View Card</a></div>';
+}
+
+/* ── Transaction Progress ── */
+function txShow(){
+  var el=document.getElementById('modal-tx-progress');
+  if(el) el.innerHTML='<div class="tx-progress">'+
+    '<div class="step" id="txs1">\u2460 Create</div>'+
+    '<div class="step" id="txs2">\u2461 Approve</div>'+
+    '<div class="step" id="txs3">\u2462 Sign</div>'+
+    '<div class="step" id="txs4">\u2463 Complete</div></div>';
+}
+function txStep(n,cls){
+  var el=document.getElementById('txs'+n);
+  if(el){el.className='step '+cls}
+}
+function txHide(){var el=document.getElementById('modal-tx-progress');if(el)el.innerHTML=''}
+
+/* ── Pi Payment ── */
+var piAuthReady = false;
+var piAuthUser = null;
+var piAuthPromise = null;
+var piInitDone = false;
+var piDebugLog = [];
+
+function piDebug(msg){
+  piDebugLog.push(new Date().toLocaleTimeString()+' '+msg);
+  console.log('PI-DEBUG: '+msg);
+  /* Show debug on the page if panel exists */
+  var el=document.getElementById('pi-debug-panel');
+  if(el) el.textContent=piDebugLog.slice(-8).join('\n');
+}
+
+function piWithTimeout(promise, ms){
+  return new Promise(function(resolve, reject){
+    var done=false;
+    var timer=setTimeout(function(){
+      if(!done){done=true; reject(new Error('Timed out after '+(ms/1000)+'s'));}
+    }, ms);
+    promise.then(function(v){if(!done){done=true;clearTimeout(timer);resolve(v);}})
+           .catch(function(e){if(!done){done=true;clearTimeout(timer);reject(e);}});
+  });
+}
+
+function piHandleIncomplete(payment){
+  piDebug('Incomplete payment: id='+payment.identifier+' status='+(payment.status&&payment.status.developer_completed?'completed':'pending')+' txid='+(payment.transaction&&payment.transaction.txid?'yes':'no'));
+  /* Must approve and/or complete this payment through server so Pi SDK unblocks auth */
+  var pid=payment.identifier;
+  if(payment.status && !payment.status.developer_approved){
+    piDebug('Approving incomplete: '+pid);
+    fetch('/api/pi/approve',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({paymentId:pid})})
+    .then(function(r){return r.json()})
+    .then(function(d){
+      piDebug('Approve result: '+JSON.stringify(d));
+      if(payment.transaction && payment.transaction.txid && !payment.status.developer_completed){
+        piDebug('Completing incomplete: '+pid+' txid='+payment.transaction.txid);
+        return fetch('/api/pi/complete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({paymentId:pid,txid:payment.transaction.txid})}).then(function(r){return r.json()}).then(function(d2){piDebug('Complete result: '+JSON.stringify(d2));});
+      }
+    }).catch(function(e){piDebug('Incomplete approve err: '+e.message);});
+  } else if(payment.transaction && payment.transaction.txid && payment.status && !payment.status.developer_completed){
+    piDebug('Completing incomplete (already approved): '+pid);
+    fetch('/api/pi/complete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({paymentId:pid,txid:payment.transaction.txid})})
+    .then(function(r){return r.json()}).then(function(d){piDebug('Complete result: '+JSON.stringify(d));})
+    .catch(function(e){piDebug('Incomplete complete err: '+e.message);});
+  } else {
+    piDebug('Incomplete has no actionable state, sending to /api/pi/incomplete');
+    fetch('/api/pi/incomplete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({paymentId:pid})})
+    .then(function(r){return r.json()}).then(function(d){piDebug('Incomplete result: '+JSON.stringify(d));})
+    .catch(function(e){piDebug('Incomplete err: '+e.message);});
+  }
+}
+
+function handlePiBuy(productId){
+  var p=marketProducts.find(function(x){return x.id===productId});
+  if(!p)return;
+  var amount=parsePiPrice(p.price);
+  var msgEl=document.getElementById("modal-pay-msg");
+  var buyBtn=document.getElementById("modal-buy-btn");
+
+  if(typeof window.Pi==="undefined"){
+    if(msgEl) msgEl.innerHTML='<div class="pay-msg err">\u274C Pi SDK not available. Open in Pi Browser.</div>';
+    return;
+  }
+
+  if(amount<=0){
+    if(msgEl) msgEl.innerHTML='<div class="pay-msg err">\u274C Invalid price.</div>';
+    return;
+  }
+
+  /* Get selected card info for metadata */
+  var card=getSelectedCard();
+  var meta={productId:p.id,productTitle:p.title};
+  if(card&&card.number){meta.cardType=card.type;meta.cardNumber=card.number;meta.cardHolder=card.holder}
+
+  if(buyBtn){buyBtn.disabled=true;buyBtn.textContent='Processing\u2026'}
+
+  /* Ensure Pi authentication is done before creating payment */
+  function startPayment(){
+    if(msgEl) msgEl.innerHTML='<div class="pay-msg processing">\u23F3 Initiating payment\u2026</div>';
+    txShow();
+    txStep(1,'active');
+
+    /* Timeout: if Pi SDK doesn't respond in 20 seconds, show error */
+    var paymentStarted = false;
+    var payTimeout = setTimeout(function(){
+      if(!paymentStarted){
+        txStep(1,'fail');
+        if(msgEl) msgEl.innerHTML='<div class="pay-msg err">\u274C Payment timed out. Pi Network may be busy. <a href="javascript:void(0)" onclick="document.getElementById(\'modal-pay-msg\').innerHTML=\'\'" style="text-decoration:underline">Dismiss</a></div>';
+        if(buyBtn){buyBtn.disabled=false;buyBtn.textContent='\u03C0 Pay with Card ('+esc(p.price)+')'}
+      }
+    }, 20000);
+
+    try {
+      Pi.createPayment({
+        amount:amount,
+        memo:"Buy "+p.title+" \u2013 Omenda Pi Pays",
+        metadata:meta
+      },{
+        onReadyForServerApproval:function(paymentId){
+          paymentStarted = true;
+          clearTimeout(payTimeout);
+          txStep(1,'done');
+          txStep(2,'active');
+          if(msgEl) msgEl.innerHTML='<div class="pay-msg processing">\u23F3 Server approving\u2026</div>';
+          fetch('/api/pi/approve',{
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({paymentId:paymentId})
+          }).then(function(r){return r.json()}).then(function(data){
+            if(data.success){txStep(2,'done');txStep(3,'active');if(msgEl) msgEl.innerHTML='<div class="pay-msg processing">\u23F3 Waiting for blockchain\u2026</div>'}
+            else{txStep(2,'fail');if(msgEl) msgEl.innerHTML='<div class="pay-msg err">\u274C Approval failed: '+(data.error||'Unknown')+'. Try again.</div>';if(buyBtn){buyBtn.disabled=false;buyBtn.textContent='\u03C0 Pay with Card ('+esc(p.price)+')'}}
+          }).catch(function(err){
+            txStep(2,'fail');if(msgEl) msgEl.innerHTML='<div class="pay-msg err">\u274C Server error. Try again.</div>';if(buyBtn){buyBtn.disabled=false;buyBtn.textContent='\u03C0 Pay with Card ('+esc(p.price)+')'}
+          });
+        },
+        onReadyForServerCompletion:function(paymentId,txid){
+          paymentStarted = true;
+          clearTimeout(payTimeout);
+          txStep(3,'done');
+          txStep(4,'active');
+          if(msgEl) msgEl.innerHTML='<div class="pay-msg processing">\u23F3 Completing\u2026</div>';
+          fetch('/api/pi/complete',{
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({paymentId:paymentId,txid:txid})
+          }).then(function(r){return r.json()}).then(function(data){
+            txStep(4,'done');
+            /* Record transaction on card */
+            if(card&&card.number){
+              try{
+                var state=JSON.parse(localStorage.getItem('pivisualcard_data')||'{}');
+                if(!state.transactions)state.transactions=[];
+                state.transactions.unshift({type:'shop',name:p.title+' (Marketplace)',amount:-amount,date:new Date().toISOString(),txid:txid});
+                if(typeof state.balance==='number')state.balance-=amount;
+                localStorage.setItem('pivisualcard_data',JSON.stringify(state));
+              }catch(e){}
+            }
+            if(msgEl) msgEl.innerHTML='<div class="pay-msg ok">\u2705 Payment successful! TxID: '+esc(txid.substring(0,12))+'\u2026'+(card?' \u2014 Charged to '+esc(card.type)+' card':'')+'</div>';
+            if(buyBtn){buyBtn.disabled=false;buyBtn.textContent='\u2705 Paid!'}
+          }).catch(function(err){
+            txStep(4,'fail');
+            if(msgEl) msgEl.innerHTML='<div class="pay-msg err">\u274C Completion error. Contact support.</div>';
+            if(buyBtn){buyBtn.disabled=false;buyBtn.textContent='\u03C0 Pay with Card ('+esc(p.price)+')'}
+          });
+        },
+        onCancel:function(paymentId){
+          paymentStarted = true;
+          clearTimeout(payTimeout);
+          txHide();
+          fetch('/api/pi/cancel',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({paymentId:paymentId})}).catch(function(){});
+          if(msgEl) msgEl.innerHTML='<div class="pay-msg err">\u274C Payment cancelled. <a href="javascript:void(0)" onclick="document.getElementById(\'modal-pay-msg\').innerHTML=\'\'" style="text-decoration:underline">Dismiss</a></div>';
+          if(buyBtn){buyBtn.disabled=false;buyBtn.textContent='\u03C0 Pay with Card ('+esc(p.price)+')'}
+        },
+        onError:function(err,payment){
+          paymentStarted = true;
+          clearTimeout(payTimeout);
+          txHide();
+          var errMsg = (err && err.message) ? err.message : String(err);
+          fetch('/api/pi/error',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({paymentId:payment?payment.identifier:null,error:errMsg})}).catch(function(){});
+          if(msgEl) msgEl.innerHTML='<div class="pay-msg err">\u274C '+esc(errMsg)+' <a href="javascript:void(0)" onclick="document.getElementById(\'modal-pay-msg\').innerHTML=\'\'" style="text-decoration:underline">Dismiss</a></div>';
+          if(buyBtn){buyBtn.disabled=false;buyBtn.textContent='\u03C0 Pay with Card ('+esc(p.price)+')'}
+        }
+      });
+    } catch(e) {
+      clearTimeout(payTimeout);
+      txStep(1,'fail');
+      if(msgEl) msgEl.innerHTML='<div class="pay-msg err">\u274C '+esc(e.message||'Payment creation failed')+' <a href="javascript:void(0)" onclick="document.getElementById(\'modal-pay-msg\').innerHTML=\'\'" style="text-decoration:underline">Dismiss</a></div>';
+      if(buyBtn){buyBtn.disabled=false;buyBtn.textContent='\u03C0 Pay with Card ('+esc(p.price)+')'}
+    }
+  }
+
+  /* Authenticate then pay — called on user click (gesture required by Pi Browser) */
+  if(piAuthReady){
+    piDebug('Already authenticated, starting payment');
+    startPayment();
+  } else {
+    piDebug('Authenticating on user click...');
+    if(msgEl) msgEl.innerHTML='<div class="pay-msg processing">\u23F3 Authenticating\u2026<br><small id="pi-debug-panel" style="font-size:10px;color:#aaa;white-space:pre;text-align:left;display:block;margin-top:8px"></small></div>';
+    /* Scopes: match index.html exactly */
+    var authScopes = ["username","payments","wallet_address"];
+    piDebug('Scopes: '+authScopes.join(','));
+    try {
+      piAuthPromise = Pi.authenticate(authScopes, function onIncompletePaymentFound(payment){
+        piDebug('INCOMPLETE found: id='+payment.identifier);
+        /* Approve then complete the stuck payment */
+        fetch('/api/pi/approve',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({paymentId:payment.identifier})})
+        .then(function(r){return r.json()}).then(function(d){
+          piDebug('Incomplete approve: '+JSON.stringify(d));
+          if(payment.transaction && payment.transaction.txid){
+            fetch('/api/pi/complete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({paymentId:payment.identifier,txid:payment.transaction.txid})})
+            .then(function(r){return r.json()}).then(function(d2){piDebug('Incomplete complete: '+JSON.stringify(d2));}).catch(function(e){piDebug('Incomplete complete err: '+e);});
+          }
+        }).catch(function(e){piDebug('Incomplete approve err: '+e);});
+      });
+      piDebug('authenticate() called, waiting...');
+    } catch(syncErr) {
+      piDebug('authenticate() threw sync: '+syncErr.message);
+      if(msgEl) msgEl.innerHTML='<div class="pay-msg err">\u274C '+esc(syncErr.message)+' <a href="javascript:void(0)" onclick="document.getElementById(\'modal-pay-msg\').innerHTML=\'\'" style="text-decoration:underline">Dismiss</a></div>';
+      if(buyBtn){buyBtn.disabled=false;buyBtn.textContent='\u03C0 Pay with Card ('+esc(p.price)+')'}
+      return;
+    }
+    piWithTimeout(piAuthPromise, 25000).then(function(auth){
+      piDebug('Auth OK: user='+(auth.user?auth.user.username:'unknown')+' token='+(auth.accessToken?'yes':'no'));
+      piAuthReady = true;
+      piAuthUser = auth.user;
+      sessionStorage.setItem("piUser",JSON.stringify(auth.user));
+      if(auth.user&&auth.user.username) updateUsernameUI(auth.user.username);
+      startPayment();
+    }).catch(function(e){
+      piAuthPromise = null;
+      /* Capture full error details */
+      var errMsg = '';
+      try { errMsg = typeof e === 'object' ? JSON.stringify(e, Object.getOwnPropertyNames(e)) : String(e); } catch(j){ errMsg = String(e); }
+      piDebug('Auth FAILED type='+(typeof e)+' msg='+(e&&e.message||'none')+' full='+errMsg);
+      if(msgEl) msgEl.innerHTML='<div class="pay-msg err">\u274C Authentication failed<br><br><b>Debug log:</b><pre style="font-size:10px;color:#666;text-align:left;margin-top:4px;max-height:200px;overflow:auto">'+esc(piDebugLog.join('\n'))+'</pre><br><a href="javascript:void(0)" onclick="document.getElementById(\'modal-pay-msg\').innerHTML=\'\'" style="text-decoration:underline">Dismiss</a></div>';
+      if(buyBtn){buyBtn.disabled=false;buyBtn.textContent='\u03C0 Pay with Card ('+esc(p.price)+')'}
+    });
+  }
+}
+
+/* ── Modal swipe ── */
+var mtx=0;
+document.addEventListener("touchstart",function(e){if(!selectedProduct)return;var c=document.querySelector(".modal-box .carousel");if(c&&c.contains(e.target))mtx=e.touches[0].clientX},{passive:true});
+document.addEventListener("touchend",function(e){if(!selectedProduct||!mtx)return;var c=document.querySelector(".modal-box .carousel");if(c&&c.contains(e.target)){var d=mtx-e.changedTouches[0].clientX;if(Math.abs(d)>30)d>0?nextModalImg():prevModalImg();mtx=0}},{passive:true});
+
+/* ── Keyboard ── */
+document.addEventListener("keydown",function(e){
+  if(!selectedProduct)return;
+  if(e.key==="Escape")closeModal();
+  if(e.key==="ArrowLeft")prevModalImg();
+  if(e.key==="ArrowRight")nextModalImg();
+});
+
+/* ── Pi SDK Init ── */
+function updateUsernameUI(username) {
+  var handle = document.getElementById("pi-handle");
+  var navName = document.getElementById("pi-username-display");
+  var dotEl = document.querySelector(".profile-badge .dot");
+  if (handle) handle.textContent = "@" + username;
+  if (navName) navName.textContent = "@" + username;
+  if (dotEl) dotEl.textContent = username.charAt(0).toUpperCase();
+}
+
+/* ── KYC Gate for Sell ── */
+function handleSellClick(e){
+  if(e)e.preventDefault();
+  if(localStorage.getItem("kyc_completed")){
+    window.location.href="post product.html";
+  }else{
+    document.getElementById("kyc-overlay").classList.add("open");
+  }
+}
+function closeKycModal(){
+  document.getElementById("kyc-overlay").classList.remove("open");
+}
+function updatePhoneCode(){
+  var sel=document.getElementById("kyc-phone-code");
+  var flagCode=sel.options[sel.selectedIndex].dataset.flag;
+  document.getElementById("phone-flag").className="fi fi-"+flagCode;
+}
+function toggleBizFields(){
+  var fields=document.getElementById("kyc-biz-fields");
+  var isOpen=document.getElementById("kyc-biz-toggle").checked;
+  fields.classList.toggle("open",isOpen);
+  if(isOpen&&!window.kycBizMap){
+    setTimeout(function(){
+      var mapEl=document.getElementById("kyc-biz-map");
+      if(!mapEl)return;
+      window.kycBizMap=L.map("kyc-biz-map",{zoomControl:true,attributionControl:false}).setView([-1.29,36.82],6);
+      L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",{maxZoom:19}).addTo(window.kycBizMap);
+      L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}",{maxZoom:19}).addTo(window.kycBizMap);
+      L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}",{maxZoom:19}).addTo(window.kycBizMap);
+      window.kycBizPin=null;
+      window.kycBizMap.on("click",function(e){
+        var lat=e.latlng.lat.toFixed(6);
+        var lng=e.latlng.lng.toFixed(6);
+        document.getElementById("kyc-biz-lat").value=lat;
+        document.getElementById("kyc-biz-lng").value=lng;
+        if(window.kycBizPin){window.kycBizPin.setLatLng(e.latlng);}else{
+          window.kycBizPin=L.marker(e.latlng,{draggable:true}).addTo(window.kycBizMap);
+          window.kycBizPin.on("dragend",function(){
+            var p=window.kycBizPin.getLatLng();
+            document.getElementById("kyc-biz-lat").value=p.lat.toFixed(6);
+            document.getElementById("kyc-biz-lng").value=p.lng.toFixed(6);
+          });
+        }
+      });
+      /* Try to center on user location */
+      if(navigator.geolocation){
+        navigator.geolocation.getCurrentPosition(function(pos){
+          window.kycBizMap.setView([pos.coords.latitude,pos.coords.longitude],14);
+        },function(){},{ enableHighAccuracy:true, timeout:5000 });
+      }
+    },200);
+  }
+}
+function useMyLocation(){
+  var btn=document.getElementById("btn-use-loc");
+  btn.disabled=true;btn.textContent="Locating...";
+  if(!navigator.geolocation){btn.textContent="\u274c Location not supported";btn.disabled=false;return;}
+  navigator.geolocation.getCurrentPosition(function(pos){
+    var lat=pos.coords.latitude;
+    var lng=pos.coords.longitude;
+    document.getElementById("kyc-biz-lat").value=lat.toFixed(6);
+    document.getElementById("kyc-biz-lng").value=lng.toFixed(6);
+    if(window.kycBizMap){
+      window.kycBizMap.setView([lat,lng],16);
+      var ll=L.latLng(lat,lng);
+      if(window.kycBizPin){window.kycBizPin.setLatLng(ll);}else{
+        window.kycBizPin=L.marker(ll,{draggable:true}).addTo(window.kycBizMap);
+        window.kycBizPin.on("dragend",function(){
+          var p=window.kycBizPin.getLatLng();
+          document.getElementById("kyc-biz-lat").value=p.lat.toFixed(6);
+          document.getElementById("kyc-biz-lng").value=p.lng.toFixed(6);
+        });
+      }
+    }
+    btn.textContent="\u2705 Location Set";
+    setTimeout(function(){btn.textContent="\ud83d\udccd Use My Current Location";btn.disabled=false;},2000);
+  },function(err){
+    btn.textContent="\u274c "+err.message;
+    setTimeout(function(){btn.textContent="\ud83d\udccd Use My Current Location";btn.disabled=false;},2500);
+  },{enableHighAccuracy:true,timeout:10000});
+}
+function showUpload(input,side){
+  var nm=document.getElementById("kyc-"+side+"-name");
+  if(!nm) nm=document.getElementById("kyc-"+side+"-name-file");
+  var prev=document.getElementById("kyc-"+side+"-preview");
+  if(input.files&&input.files[0]){
+    nm.textContent=input.files[0].name;
+    var reader=new FileReader();
+    reader.onload=function(e){prev.src=e.target.result;prev.style.display="block";};
+    reader.readAsDataURL(input.files[0]);
+  }else{nm.textContent="";prev.style.display="none";prev.src="";}
+}
+function submitKyc(e){
+  e.preventDefault();
+  var btn=document.getElementById("kyc-submit-btn");
+  btn.disabled=true;
+  btn.textContent="Verifying...";
+  /* Save KYC data locally */
+  var kycData={
+    firstName:document.getElementById("kyc-fname").value.trim(),
+    lastName:document.getElementById("kyc-lname").value.trim(),
+    piUsername:document.getElementById("kyc-pi-user").value.trim(),
+    email:document.getElementById("kyc-email").value.trim(),
+    phone:document.getElementById("kyc-phone-code").value+" "+document.getElementById("kyc-phone").value.trim(),
+    country:document.getElementById("kyc-country").value.trim(),
+    city:document.getElementById("kyc-city").value.trim(),
+    idType:document.getElementById("kyc-id-type").value,
+    idNumber:document.getElementById("kyc-id-num").value.trim(),
+    isBusiness:document.getElementById("kyc-biz-toggle").checked,
+    bizName:document.getElementById("kyc-biz-name").value.trim(),
+    bizType:document.getElementById("kyc-biz-type").value,
+    bizReg:document.getElementById("kyc-biz-reg").value.trim(),
+    bizAddress:document.getElementById("kyc-biz-address").value.trim(),
+    bizLat:document.getElementById("kyc-biz-lat").value,
+    bizLng:document.getElementById("kyc-biz-lng").value,
+    timestamp:new Date().toISOString()
+  };
+  localStorage.setItem("kyc_data",JSON.stringify(kycData));
+  /* Simulate verification delay */
+  setTimeout(function(){
+    localStorage.setItem("kyc_completed","true");
+    btn.textContent="✅ Verified!";
+    btn.style.background="linear-gradient(135deg,#22c55e,#16a34a)";
+    setTimeout(function(){
+      closeKycModal();
+      window.location.href="post product.html";
+    },800);
+  },1500);
+}
+
+var isPiBrowser=/PiBrowser/i.test(navigator.userAgent)||typeof window.Pi!=="undefined";
+(function(){
+  /* Restore saved user from previous auth */
+  try {
+    var saved = sessionStorage.getItem("piUser");
+    if (saved) {
+      var u = JSON.parse(saved);
+      if (u && u.username) updateUsernameUI(u.username);
+    }
+  } catch(e){}
+  piDebug('Page load: piSdkReady='+piSdkReady+', isPiBrowser='+isPiBrowser);
+  /* Do NOT call Pi.authenticate on page load — it requires user gesture in Pi Browser */
+})();
+
+/* ── AUTO-SWIPE: cycle product images & shake at 3/5/7s ── */
+var cardImgState={};
+var cardTimers={};
+var swipeIntervals=[3000,5000,7000];
+function swipeCard(pid){
+  var card=document.querySelector('[data-pid="'+pid+'"]');
+  if(!card)return;
+  var p=marketProducts.find(function(x){return x.id===pid});
+  if(!p||p.images.length<2)return;
+  var cur=cardImgState[pid]||0;
+  var nxt=(cur+1)%p.images.length;
+  cardImgState[pid]=nxt;
+  /* shake */
+  card.classList.remove('shaking');
+  void card.offsetWidth;
+  card.classList.add('shaking');
+  /* fade image */
+  var img=card.querySelector('img');
+  if(img){
+    img.style.opacity='0';
+    setTimeout(function(){img.src=p.images[nxt];img.style.opacity='1'},250);
+  }
+  var cnt=card.querySelector('.img-count');
+  if(cnt)cnt.textContent=(nxt+1)+'/'+p.images.length;
+  var dots=card.querySelectorAll('.swipe-dots span');
+  dots.forEach(function(d,i){d.className=i===nxt?'active':''});
+  setTimeout(function(){card.classList.remove('shaking')},400);
+  scheduleCard(pid);
+}
+function randInterval(){return swipeIntervals[Math.floor(Math.random()*swipeIntervals.length)]}
+function scheduleCard(pid){
+  if(cardTimers[pid])clearTimeout(cardTimers[pid]);
+  cardTimers[pid]=setTimeout(function(){swipeCard(pid)},randInterval());
+}
+function startAutoSwipe(){
+  Object.keys(cardTimers).forEach(function(k){clearTimeout(cardTimers[k])});
+  cardTimers={};
+  cardImgState={};
+  var cards=document.querySelectorAll('[data-pid]');
+  cards.forEach(function(card){
+    var pid=card.getAttribute('data-pid');
+    var p=marketProducts.find(function(x){return x.id===pid});
+    if(!p||p.images.length<2)return;
+    scheduleCard(pid);
+  });
+}
+
+/* ── AUTO-CATEGORY: sweep right & left every 5 min ── */
+var catSweepTimer=null;
+var catSweepIdx=0;
+var catSweepDir=1; /* 1 = right, -1 = left */
+function scheduleCatSweep(){
+  if(catSweepTimer)clearTimeout(catSweepTimer);
+  catSweepTimer=setTimeout(function(){
+    catSweepIdx+=catSweepDir;
+    if(catSweepIdx>=allCategories.length-1){catSweepIdx=allCategories.length-1;catSweepDir=-1}
+    else if(catSweepIdx<=0){catSweepIdx=0;catSweepDir=1}
+    activeTab=allCategories[catSweepIdx];
+    render();
+    var tabsEl=document.getElementById('catTabs');
+    if(tabsEl){var active=tabsEl.querySelector('.active');if(active)active.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'})}
+    scheduleCatSweep();
+  },300000);
+}
+function startCatSweep(){
+  catSweepIdx=allCategories.indexOf(activeTab);
+  if(catSweepIdx<0)catSweepIdx=0;
+  scheduleCatSweep();
+}
+/* pause auto-sweep when user taps a tab manually */
+var _origSetTab=setTab;
+setTab=function(t){
+  if(catSweepTimer)clearTimeout(catSweepTimer);
+  catSweepIdx=allCategories.indexOf(t);
+  if(catSweepIdx<0)catSweepIdx=0;
+  _origSetTab(t);
+  scheduleCatSweep();
+};
+
+/* ── INIT ── */
+render();
+startAutoSwipe();
+startCatSweep();
+</script>
+</body>
+</html>

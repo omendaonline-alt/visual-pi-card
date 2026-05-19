@@ -1,6 +1,6 @@
 <#
-    Visual Pi Card — Auto Deploy to cPanel
-    Domain: pivisualcard.online
+    Visual Pi Card - Auto Deploy to cPanel
+    Domain: omendapipaysglobel.online
     Server: 198.54.116.227
 
     This script uploads all required files to your cPanel hosting.
@@ -9,13 +9,13 @@
 
 Write-Host ""
 Write-Host "  ========================================" -ForegroundColor Yellow
-Write-Host "  VISUAL PI CARD — AUTO DEPLOY" -ForegroundColor Yellow
-Write-Host "  pivisualcard.online (198.54.116.227)" -ForegroundColor Yellow
+Write-Host "  VISUAL PI CARD - AUTO DEPLOY" -ForegroundColor Yellow
+Write-Host "  omendapipaysglobel.online (198.54.116.227)" -ForegroundColor Yellow
 Write-Host "  ========================================" -ForegroundColor Yellow
 Write-Host ""
 
 # ===== CONFIGURATION =====
-$DOMAIN = "pivisualcard.online"
+$DOMAIN = "omendapipaysglobel.online"
 $SERVER_IP = "198.54.116.227"
 $FTP_HOST = "ftp.$DOMAIN"
 $REMOTE_DIR = "/public_html"
@@ -24,9 +24,13 @@ $REMOTE_DIR = "/public_html"
 $DEPLOY_FILES = @(
     "index.html",
     ".htaccess",
+    ".env",
     "manifest.json",
     "sw.js",
+    "server.js",
+    "package.json",
     "setup.html",
+    "pi visual card.html",
     "card-visa.html",
     "card-mastercard.html",
     "card-gold.html",
@@ -51,9 +55,11 @@ foreach ($file in $DEPLOY_FILES) {
     $path = Join-Path $SOURCE_DIR $file
     if (Test-Path $path) {
         $size = (Get-Item $path).Length
-        Write-Host "    OK  $file ($size bytes)" -ForegroundColor Green
+        $msg = "    OK  $file - $size bytes"
+        Write-Host $msg -ForegroundColor Green
     } else {
-        Write-Host "    MISSING  $file" -ForegroundColor Red
+        $msg = "    MISSING  $file"
+        Write-Host $msg -ForegroundColor Red
         $missing += $file
     }
 }
@@ -74,14 +80,15 @@ try {
         if ($resolvedIP -eq $SERVER_IP) {
             Write-Host "    OK  $DOMAIN -> $resolvedIP" -ForegroundColor Green
         } else {
-            Write-Host "    WARN  $DOMAIN -> $resolvedIP (expected $SERVER_IP)" -ForegroundColor Yellow
+            Write-Host "    WARN  $DOMAIN -> $resolvedIP [expected $SERVER_IP]" -ForegroundColor Yellow
             Write-Host "    DNS may need updating. Set A record to $SERVER_IP" -ForegroundColor Yellow
         }
     } else {
-        Write-Host "    WARN  Cannot resolve $DOMAIN — DNS not set up yet" -ForegroundColor Yellow
+        Write-Host "    WARN  Cannot resolve $DOMAIN - DNS not set up yet" -ForegroundColor Yellow
     }
 } catch {
     Write-Host "    WARN  DNS lookup failed. Set A record: $DOMAIN -> $SERVER_IP" -ForegroundColor Yellow
+    Write-Host "" 
 }
 Write-Host ""
 
@@ -157,14 +164,14 @@ if ($failed -eq 0) {
     Write-Host "    https://$DOMAIN/setup.html  (verify setup)" -ForegroundColor Yellow
     Write-Host ""
     Write-Host "  DNS Settings (set in your domain registrar):" -ForegroundColor Cyan
-    Write-Host "    A Record:  @    -> $SERVER_IP" -ForegroundColor White
+    Write-Host "    A Record:  `@    -> $SERVER_IP" -ForegroundColor White
     Write-Host "    A Record:  www  -> $SERVER_IP" -ForegroundColor White
     Write-Host ""
 } else {
     Write-Host "  Some files failed to upload." -ForegroundColor Red
     Write-Host "  Try uploading manually via cPanel File Manager:" -ForegroundColor Yellow
-    Write-Host "    1. Go to https://$SERVER_IP`:2083" -ForegroundColor White
-    Write-Host "    2. Open File Manager -> public_html" -ForegroundColor White
-    Write-Host "    3. Upload: $($DEPLOY_FILES -join ', ')" -ForegroundColor White
+    Write-Host "    1. Go to cPanel File Manager" -ForegroundColor White
+    Write-Host "    2. Open public_html folder" -ForegroundColor White
+    Write-Host "    3. Upload all project files" -ForegroundColor White
     Write-Host ""
 }

@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Visual Pi Card &mdash; pivisualcard.online</title>
+    <title>Visual Pi Card &mdash; omendapipaysglobel.online</title>
 
     <!-- Domain & SEO -->
-    <link rel="canonical" href="https://pivisualcard.online/">
+    <link rel="canonical" href="https://omendapipaysglobel.online/">
     <meta name="description" content="Visual Pi Card - Your Pi Network payment card. Send, receive, and pay with Pi cryptocurrency. Visa, Mastercard, Black Card, Gold, Platinum, Amex.">
     <meta name="keywords" content="Pi Network, Pi coin, Pi payment card, pivisualcard, cryptocurrency card, Visual Pi Card">
     <meta name="author" content="Visual Pi Card">
@@ -15,7 +15,7 @@
     <!-- Open Graph -->
     <meta property="og:title" content="Visual Pi Card - Pi Network Payment Card">
     <meta property="og:description" content="Your Pi Network payment card. Send, receive, and pay with Pi cryptocurrency worldwide.">
-    <meta property="og:url" content="https://pivisualcard.online/">
+    <meta property="og:url" content="https://omendapipaysglobel.online/">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Visual Pi Card">
 
@@ -27,8 +27,8 @@
     <link rel="manifest" href="manifest.json">
 
     <!-- DNS Prefetch for performance -->
-    <link rel="dns-prefetch" href="https://pivisualcard.online">
-    <link rel="preconnect" href="https://pivisualcard.online">
+    <link rel="dns-prefetch" href="https://omendapipaysglobel.online">
+    <link rel="preconnect" href="https://omendapipaysglobel.online">
     <link rel="dns-prefetch" href="https://api.coingecko.com">
     <link rel="preconnect" href="https://api.coingecko.com" crossorigin>
     <link rel="dns-prefetch" href="https://sdk.minepi.com">
@@ -411,6 +411,94 @@
             transition: all .2s;
         }
         .btn-secondary:hover { background: rgba(255,255,255,.06); }
+
+        /* ===== TOP-UP ENHANCEMENTS ===== */
+        .topup-card-info {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border-radius: 12px;
+            background: rgba(245,197,24,.08);
+            border: 1px solid rgba(245,197,24,.18);
+            margin-bottom: 10px;
+        }
+        .topup-card-chip {
+            width: 38px; height: 26px;
+            border-radius: 6px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 800; font-size: .55rem; color: #fff; letter-spacing: .5px;
+        }
+        .topup-card-chip.tc-visa      { background: linear-gradient(135deg,#1a1f71,#f5c518); }
+        .topup-card-chip.tc-mastercard { background: linear-gradient(135deg,#eb001b,#f79e1b); }
+        .topup-card-chip.tc-amex       { background: linear-gradient(135deg,#006fcf,#4da6ff); }
+        .topup-card-chip.tc-gold       { background: linear-gradient(135deg,#b8860b,#daa520); }
+        .topup-card-chip.tc-platinum   { background: linear-gradient(135deg,#6a6a8f,#c0c0e0); }
+        .topup-card-chip.tc-black      { background: linear-gradient(135deg,#1a1a2e,#333); border:1px solid rgba(255,255,255,.15); }
+        .topup-card-name {
+            font-size: .82rem; font-weight: 600; color: #e2daf0;
+        }
+        .topup-card-bal {
+            margin-left: auto;
+            font-size: .85rem; font-weight: 700; color: #f5c518;
+        }
+        /* Card type selector for topup */
+        .topup-card-select {
+            display: none;
+            gap: 6px;
+            margin-bottom: 12px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: 4px;
+        }
+        .topup-card-select::-webkit-scrollbar { height: 0; }
+        .tc-pick {
+            flex: 0 0 auto;
+            display: flex; flex-direction: column; align-items: center; gap: 4px;
+            padding: 8px 10px;
+            border-radius: 10px;
+            border: 2px solid rgba(255,255,255,.08);
+            background: rgba(255,255,255,.03);
+            cursor: pointer;
+            transition: all .2s;
+            min-width: 52px;
+        }
+        .tc-pick:hover { border-color: rgba(245,197,24,.3); background: rgba(245,197,24,.06); }
+        .tc-pick.selected { border-color: #f5c518; background: rgba(245,197,24,.12); box-shadow: 0 4px 16px rgba(245,197,24,.18); }
+        .tc-pick .tc-chip-mini {
+            width: 34px; height: 22px;
+            border-radius: 5px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 800; font-size: .48rem; color: #fff; letter-spacing: .3px;
+        }
+        .tc-pick .tc-label { font-size: .6rem; color: rgba(255,255,255,.5); font-weight: 600; white-space: nowrap; }
+        .tc-pick.selected .tc-label { color: #f5c518; }
+        .topup-quick {
+            display: none;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+        .topup-quick-label {
+            display: none;
+            font-size: .72rem; opacity: .5; margin-bottom: 6px;
+        }
+        .tq-chip {
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid rgba(245,197,24,.25);
+            background: rgba(245,197,24,.06);
+            color: #f5c518;
+            font-weight: 700;
+            font-size: .88rem;
+            cursor: pointer;
+            transition: all .2s;
+        }
+        .tq-chip:hover, .tq-chip.active {
+            background: rgba(245,197,24,.2);
+            border-color: #f5c518;
+            box-shadow: 0 4px 14px rgba(245,197,24,.2);
+        }
 
         /* ===== SUCCESS TOAST ===== */
         .toast {
@@ -798,6 +886,54 @@
             margin-top: 4px;
             display: none;
         }
+        /* Join with Pi button */
+        .btn-join-pi {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #7b2ff2;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #7b2ff2, #5b1db8);
+            color: #fff;
+            font-weight: 700;
+            font-size: 1.05rem;
+            cursor: pointer;
+            margin-bottom: 18px;
+            transition: all .25s;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .btn-join-pi:hover {
+            box-shadow: 0 8px 28px rgba(123,47,242,.45);
+            transform: translateY(-2px);
+        }
+        .btn-join-pi:disabled {
+            opacity: .55;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        .btn-join-pi .pi-logo {
+            width: 22px; height: 22px;
+            background: #fff;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 900; font-size: .9rem; color: #7b2ff2;
+        }
+        .btn-join-pi.connected {
+            background: linear-gradient(135deg, #27ae60, #1e8c4c);
+            border-color: #27ae60;
+        }
+        .btn-join-pi.connected .pi-logo { color: #27ae60; }
+        .pi-or-divider {
+            display: flex; align-items: center; gap: 12px;
+            margin-bottom: 16px; opacity: .45; font-size: .78rem;
+        }
+        .pi-or-divider::before, .pi-or-divider::after {
+            content: ''; flex: 1; height: 1px; background: rgba(255,255,255,.3);
+        }
         .btn-register {
             width: 100%;
             padding: 15px;
@@ -876,6 +1012,12 @@
                 &#127380; <strong>Visa — 5 &pi;</strong> — Worldwide payments, ATM &amp; Crypto Swap!
             </div>
 
+            <button type="button" class="btn-join-pi" id="btnJoinPi" onclick="joinWithPi()">
+                <span class="pi-logo">π</span>
+                <span id="joinPiText">Join with Pi</span>
+            </button>
+            <div class="pi-or-divider">or fill in manually</div>
+
             <form id="registerForm" onsubmit="return handleRegister(event)" novalidate>
                 <div class="form-row">
                     <div class="form-group">
@@ -894,6 +1036,12 @@
                     <label for="regPiUser">Pi Network Username</label>
                     <input type="text" id="regPiUser" placeholder="@your_pi_username" required autocomplete="username">
                     <div class="form-error" id="errPiUser">Pi username is required</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="regPiAddress">Pi Wallet Address</label>
+                    <input type="text" id="regPiAddress" placeholder="GABC...XYZ" style="font-family:'Courier New',monospace;font-size:.8rem" autocomplete="off">
+                    <div style="margin-top:4px;font-size:.68rem;color:rgba(255,255,255,.35)">Auto-filled from Pi Browser — or paste your public address</div>
                 </div>
 
                 <div class="form-group">
@@ -979,7 +1127,7 @@
     <!-- CONNECTION INFO BANNER (shows on first visit) -->
     <div id="setupBanner" style="display:none; width:100%; max-width:480px; margin-bottom:18px; padding:16px 20px; border-radius:14px; background:rgba(39,174,96,.12); border:1px solid rgba(39,174,96,.3); font-size:0.82rem; line-height:1.5; text-align:center;">
         <strong style="color:#27ae60;">&#10003; Domain Connected Successfully</strong><br>
-        <span style="opacity:0.7;">pivisualcard.online &bull; 198.54.116.227 &bull; SSL Active</span>
+        <span style="opacity:0.7;">omendapipaysglobel.online &bull; 198.54.116.227 &bull; SSL Active</span>
         <div style="margin-top:8px;">
             <button onclick="document.getElementById('setupBanner').style.display='none'; try{localStorage.setItem('pvc_setup_seen','1')}catch(e){}" style="padding:6px 18px; border-radius:20px; border:1px solid rgba(39,174,96,.4); background:rgba(39,174,96,.15); color:#27ae60; cursor:pointer; font-size:0.78rem;">Got it</button>
         </div>
@@ -988,7 +1136,7 @@
     <!-- HEADER -->
     <header class="header">
         <h1>VISUAL PI CARD</h1>
-        <p>pivisualcard.online &mdash; Pi Network Payment Card</p>
+        <p>omendapipaysglobel.online &mdash; Pi Network Payment Card</p>
     </header>
 
     <!-- CARD TYPE SELECTOR -->
@@ -1026,7 +1174,7 @@
                     </div>
                     <div class="pi-logo">&pi;</div>
                 </div>
-                <div class="card-number" id="cardNumber">4314 1592 6535 8979</div>
+                <div class="card-number" id="cardNumber">•••• •••• •••• ••••</div>
                 <div class="card-bottom">
                     <div>
                         <div class="card-holder-label">Card Holder</div>
@@ -1054,7 +1202,7 @@
                     <span class="cvv" id="cardCvv">314</span>
                 </div>
                 <div class="card-back-info" id="cardBackInfo">
-                    Issued by Visual Pi Card (pivisualcard.online) for the Pi Network
+                    Issued by Visual Pi Card (omendapipaysglobel.online) for the Pi Network
                     ecosystem. All transactions are settled in Pi (&pi;). Authorized
                     for peer-to-peer and merchant payments worldwide. VISA network.
                 </div>
@@ -1124,6 +1272,22 @@
             <span class="action-icon">&#128260;</span>
             Swap
         </button>
+        <button class="action-btn" onclick="openModal('a2u')">
+            <span class="action-icon">&#127873;</span>
+            Claim Reward
+        </button>
+        <button class="action-btn" onclick="window.location.href='shop.html'" style="background:linear-gradient(135deg,rgba(245,197,24,.15),rgba(212,168,16,.08));border-color:rgba(245,197,24,.3);">
+            <span class="action-icon">&#128722;</span>
+            Marketplace
+        </button>
+        <button class="action-btn" onclick="window.location.href='map.html'" style="background:linear-gradient(135deg,rgba(249,115,22,.15),rgba(249,115,22,.08));border-color:rgba(249,115,22,.3);">
+            <span class="action-icon">&#128205;</span>
+            Map
+        </button>
+        <button class="action-btn" onclick="window.location.href='records.html'" style="background:linear-gradient(135deg,rgba(139,92,246,.15),rgba(139,92,246,.08));border-color:rgba(139,92,246,.3);">
+            <span class="action-icon">&#128196;</span>
+            Records
+        </button>
     </div>
 
     <!-- SUPPORTED PAYMENT TYPES -->
@@ -1134,7 +1298,7 @@
                 <div class="icon">&#128101;</div>
                 <div class="label">Peer-to-Peer</div>
             </div>
-            <div class="payment-type">
+            <div class="payment-type" onclick="window.location.href='shop.html'" style="cursor:pointer;">
                 <div class="icon">&#128722;</div>
                 <div class="label">Online Shopping</div>
             </div>
@@ -1230,7 +1394,7 @@
 
     <!-- FOOTER -->
     <footer class="footer">
-        Visual Pi Card &copy; 2026 &mdash; pivisualcard.online<br>
+        Visual Pi Card &copy; 2026 &mdash; omendapipaysglobel.online<br>
         Powered by Pi Blockchain &bull; All transactions in &pi; &bull; 198.54.116.227
     </footer>
 
@@ -1243,6 +1407,50 @@
 
             <label for="modalRecipient" id="recipientLabel">Recipient Pi Username</label>
             <input type="text" id="modalRecipient" placeholder="@username" autocomplete="off">
+            <div id="resolvedWallet" style="display:none; margin-top:6px; padding:8px 12px; border-radius:8px; background:rgba(39,174,96,.1); border:1px solid rgba(39,174,96,.2); font-size:.72rem; color:#27ae60; word-break:break-all;"></div>
+
+            <div class="topup-card-select" id="topupCardSelect">
+                <div class="tc-pick" data-card="visa" onclick="pickTopupCard('visa')">
+                    <div class="tc-chip-mini tc-visa">VISA</div>
+                    <div class="tc-label">Visa</div>
+                </div>
+                <div class="tc-pick" data-card="mastercard" onclick="pickTopupCard('mastercard')">
+                    <div class="tc-chip-mini tc-mastercard">MC</div>
+                    <div class="tc-label">Master</div>
+                </div>
+                <div class="tc-pick" data-card="amex" onclick="pickTopupCard('amex')">
+                    <div class="tc-chip-mini tc-amex">AMEX</div>
+                    <div class="tc-label">Amex</div>
+                </div>
+                <div class="tc-pick" data-card="gold" onclick="pickTopupCard('gold')">
+                    <div class="tc-chip-mini tc-gold">GOLD</div>
+                    <div class="tc-label">Gold</div>
+                </div>
+                <div class="tc-pick" data-card="platinum" onclick="pickTopupCard('platinum')">
+                    <div class="tc-chip-mini tc-platinum">PLAT</div>
+                    <div class="tc-label">Platinum</div>
+                </div>
+                <div class="tc-pick" data-card="black" onclick="pickTopupCard('black')">
+                    <div class="tc-chip-mini tc-black">BLK</div>
+                    <div class="tc-label">Black</div>
+                </div>
+            </div>
+
+            <div class="topup-card-info" id="topupCardInfo">
+                <div class="topup-card-chip" id="topupChip"></div>
+                <div class="topup-card-name" id="topupCardName">Visa</div>
+                <div class="topup-card-bal" id="topupCardBal">0.00 &pi;</div>
+            </div>
+
+            <div class="topup-quick-label" id="topupQuickLabel">Quick amount</div>
+            <div class="topup-quick" id="topupQuick">
+                <div class="tq-chip" onclick="pickTopupAmt(1)">1 &pi;</div>
+                <div class="tq-chip" onclick="pickTopupAmt(5)">5 &pi;</div>
+                <div class="tq-chip" onclick="pickTopupAmt(10)">10 &pi;</div>
+                <div class="tq-chip" onclick="pickTopupAmt(25)">25 &pi;</div>
+                <div class="tq-chip" onclick="pickTopupAmt(50)">50 &pi;</div>
+                <div class="tq-chip" onclick="pickTopupAmt(100)">100 &pi;</div>
+            </div>
 
             <label for="modalAmount">Amount (&pi;)</label>
             <input type="number" id="modalAmount" placeholder="0.00" min="0.01" step="0.01">
@@ -1259,6 +1467,14 @@
                 <button class="btn-secondary" onclick="closeModal()">Cancel</button>
                 <button class="btn-primary" id="modalConfirm" onclick="confirmAction()">Confirm</button>
             </div>
+            <div id="txProgress" style="display:none; margin-top:14px; padding:12px 14px; border-radius:10px; background:rgba(245,197,24,.06); border:1px solid rgba(245,197,24,.15); font-size:0.78rem; line-height:1.7; text-align:left;">
+                <div style="font-weight:700;color:#f5c518;margin-bottom:6px;text-align:center;">Transaction Progress</div>
+                <div id="txStep1" style="color:rgba(255,255,255,.35);">&#9711; Initiating payment...</div>
+                <div id="txStep2" style="color:rgba(255,255,255,.35);">&#9711; Server approval...</div>
+                <div id="txStep3" style="color:rgba(255,255,255,.35);">&#9711; Blockchain confirmation...</div>
+                <div id="txStep4" style="color:rgba(255,255,255,.35);">&#9711; Transaction complete</div>
+            </div>
+            <div id="a2uStatus" style="display:none; margin-top:12px; padding:10px 14px; border-radius:10px; font-size:0.8rem; text-align:center; word-break:break-all;"></div>
         </div>
     </div>
 
@@ -1358,7 +1574,7 @@
     <script>
         /* ===== CONFIG ===== */
         var STORAGE_KEY = 'pivisualcard_data';
-        var DOMAIN = 'pivisualcard.online';
+        var DOMAIN = 'omendapipaysglobel.online';
         var SERVER_IP = '198.54.116.227';
 
         /* ===== STATE ===== */
@@ -1367,6 +1583,8 @@
         let currentCardType = 'visa';
         let piPrice = { usd: 0, btc: 0, change24h: 0, volume: 0, lastFetch: 0 };
         let fiatRates = { EUR: 0.92, GBP: 0.79, NGN: 1550, KES: 153, INR: 83.5, PHP: 56, BRL: 5.0, USD: 1 };
+        /* Card-specific stable Pi prices (USD per 1 π) — null = use live market price */
+        var cardPriceRates = { gold: 314159, black: 2248000, platinum: 3.14, visa: null, mastercard: null, amex: null };
         let transactions = [
             { type: 'recv', name: 'Mining Reward',          amount: 3.14,   date: '2026-03-25T10:00:00Z' },
             { type: 'sent', name: 'Sent to @pioneer42',     amount: -15.00, date: '2026-03-24T14:30:00Z' },
@@ -1453,7 +1671,7 @@
             visa: {
                 name: 'VISA',
                 badge: 'VISA WORLDWIDE',
-                number: '4314 1592 6535 8979',
+                number: '',
                 cvv: '314',
                 frontBg: 'linear-gradient(135deg, #1a1f71 0%, #2d3494 50%, #4654b8 100%)',
                 backBg: 'linear-gradient(135deg, #2d3494 0%, #1a1f71 100%)',
@@ -1471,7 +1689,7 @@
             mastercard: {
                 name: 'MASTERCARD',
                 badge: 'DOMESTIC',
-                number: '5314 1592 6535 8979',
+                number: '',
                 cvv: '271',
                 frontBg: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
                 backBg: 'linear-gradient(135deg, #16213e 0%, #1a1a2e 100%)',
@@ -1487,7 +1705,7 @@
             black: {
                 name: 'BLACK CARD',
                 badge: 'UNLIMITED',
-                number: '6314 1592 6535 8979',
+                number: '',
                 cvv: '007',
                 frontBg: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 40%, #2c2c2c 100%)',
                 backBg: 'linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%)',
@@ -1502,7 +1720,7 @@
             gold: {
                 name: 'GOLD',
                 badge: 'GOLD',
-                number: '4714 1592 6535 8979',
+                number: '',
                 cvv: '618',
                 frontBg: 'linear-gradient(135deg, #744210 0%, #b8860b 50%, #daa520 100%)',
                 backBg: 'linear-gradient(135deg, #b8860b 0%, #744210 100%)',
@@ -1517,7 +1735,7 @@
             platinum: {
                 name: 'PLATINUM',
                 badge: 'PLATINUM',
-                number: '5514 1592 6535 8979',
+                number: '',
                 cvv: '420',
                 frontBg: 'linear-gradient(135deg, #3d3d5c 0%, #5a5a7a 40%, #8888a8 100%)',
                 backBg: 'linear-gradient(135deg, #5a5a7a 0%, #3d3d5c 100%)',
@@ -1532,7 +1750,7 @@
             amex: {
                 name: 'AMEX',
                 badge: 'AMERICAN EXPRESS',
-                number: '3714 159265 35897',
+                number: '',
                 cvv: '1618',
                 frontBg: 'linear-gradient(135deg, #006fcf 0%, #0080e8 50%, #4da6ff 100%)',
                 backBg: 'linear-gradient(135deg, #0080e8 0%, #006fcf 100%)',
@@ -1569,8 +1787,19 @@
             // Badge
             document.getElementById('cardBadge').textContent = c.badge;
 
-            // Number
-            document.getElementById('cardNumber').textContent = c.number;
+            // Number — use user's unique card number for this card type
+            var displayNum = c.number;
+            if (!displayNum) {
+                var u = getRegisteredUser();
+                if (u && u.cardNumbers && u.cardNumbers[type]) {
+                    displayNum = u.cardNumbers[type];
+                } else if (u && u.cardNumber) {
+                    displayNum = u.cardNumber;
+                } else {
+                    displayNum = '\u2022\u2022\u2022\u2022 \u2022\u2022\u2022\u2022 \u2022\u2022\u2022\u2022 \u2022\u2022\u2022\u2022';
+                }
+            }
+            document.getElementById('cardNumber').textContent = displayNum;
 
             // Network text
             document.getElementById('cardNetworkText').textContent = c.netText;
@@ -1612,6 +1841,9 @@
             var detailLink = document.getElementById('cardDetailsLink');
             if (detailLink && detailPages[type]) { detailLink.href = detailPages[type]; }
 
+            // Update balance fiat display for new card rate
+            updateBalanceFiat();
+
             // Save preference
             saveState();
         }
@@ -1632,16 +1864,17 @@
             switch (type) {
                 case 'send':
                     title.textContent = 'Send Pi';
-                    recipientLabel.textContent = 'Recipient Pi Username';
-                    recipientInput.placeholder = '@username';
+                    recipientLabel.textContent = 'Recipient Card Number or @username';
+                    recipientInput.placeholder = 'Card number or @username';
                     recipientInput.style.display = '';
                     recipientLabel.style.display = '';
                     confirmBtn.textContent = 'Send';
                     break;
                 case 'receive':
                     title.textContent = 'Receive Pi';
-                    recipientLabel.textContent = 'Your Pi Address';
-                    recipientInput.value = 'GCDXL7HQ4GKMV5YA...';
+                    recipientLabel.textContent = 'Your Pi Wallet Address';
+                    var ru = getRegisteredUser();
+                    recipientInput.value = (ru && ru.piAddress) ? ru.piAddress : (ru && ru.cardNumber ? ru.cardNumber : '—');
                     recipientInput.readOnly = true;
                     recipientInput.style.display = '';
                     recipientLabel.style.display = '';
@@ -1660,6 +1893,23 @@
                     recipientLabel.style.display = 'none';
                     recipientInput.style.display = 'none';
                     confirmBtn.textContent = 'Top Up';
+                    // Show card selector
+                    document.getElementById('topupCardSelect').style.display = 'flex';
+                    // Show card info & quick amounts
+                    updateTopupCardInfo(currentCardType);
+                    document.getElementById('topupQuickLabel').style.display = 'block';
+                    document.getElementById('topupQuick').style.display = 'flex';
+                    // Clear previous quick-amount selection
+                    var chips = document.querySelectorAll('.tq-chip');
+                    for (var ci = 0; ci < chips.length; ci++) chips[ci].classList.remove('active');
+                    break;
+                case 'a2u':
+                    title.textContent = 'Claim Reward (A2U)';
+                    recipientLabel.textContent = 'Reward will be sent to your wallet';
+                    recipientInput.style.display = 'none';
+                    recipientLabel.style.display = '';
+                    confirmBtn.textContent = 'Claim';
+                    document.getElementById('a2uStatus').style.display = 'none';
                     break;
             }
 
@@ -1676,6 +1926,22 @@
             }
 
             overlay.classList.add('active');
+
+            // Resolve card number → wallet address on input
+            if (type === 'send' || type === 'pay') {
+                recipientInput.oninput = function() {
+                    var val = this.value.replace(/\s/g, '');
+                    var resolved = document.getElementById('resolvedWallet');
+                    var u = getRegisteredUser();
+                    if (u && u.cardNumber && val === u.cardNumber.replace(/\s/g, '') && u.piAddress) {
+                        resolved.style.display = 'block';
+                        resolved.innerHTML = '&#128274; Wallet: ' + u.piAddress + (u.piUser ? '<br>Owner: @' + u.piUser : '');
+                    } else {
+                        resolved.style.display = 'none';
+                        resolved.textContent = '';
+                    }
+                };
+            }
         }
 
         function closeModal() {
@@ -1686,6 +1952,50 @@
             document.getElementById('modalRecipient').readOnly = false;
             document.getElementById('modalAmount').value = '';
             document.getElementById('modalNote').value = '';
+            document.getElementById('resolvedWallet').style.display = 'none';
+            document.getElementById('resolvedWallet').textContent = '';
+            // Reset topup elements
+            document.getElementById('topupCardInfo').style.display = 'none';
+            document.getElementById('topupCardSelect').style.display = 'none';
+            document.getElementById('topupQuickLabel').style.display = 'none';
+            document.getElementById('topupQuick').style.display = 'none';
+            var chips = document.querySelectorAll('.tq-chip');
+            for (var ci = 0; ci < chips.length; ci++) chips[ci].classList.remove('active');
+            txProgressHide();
+        }
+
+        function pickTopupAmt(val) {
+            document.getElementById('modalAmount').value = val;
+            var chips = document.querySelectorAll('.tq-chip');
+            for (var ci = 0; ci < chips.length; ci++) {
+                chips[ci].classList.toggle('active', parseFloat(chips[ci].textContent) === val);
+            }
+        }
+
+        var topupSelectedCard = null;
+        var _topupLabels = { visa:'Visa',mastercard:'Mastercard',amex:'Amex',gold:'Gold',platinum:'Platinum',black:'Black Card' };
+
+        function updateTopupCardInfo(cardType) {
+            topupSelectedCard = cardType;
+            // highlight picker
+            var picks = document.querySelectorAll('.tc-pick');
+            for (var i = 0; i < picks.length; i++) {
+                picks[i].classList.toggle('selected', picks[i].getAttribute('data-card') === cardType);
+            }
+            // update info bar
+            var tcInfo = document.getElementById('topupCardInfo');
+            var tcChip = document.getElementById('topupChip');
+            var tcName = document.getElementById('topupCardName');
+            var tcBal  = document.getElementById('topupCardBal');
+            tcChip.className = 'topup-card-chip tc-' + cardType;
+            tcChip.textContent = (_topupLabels[cardType] || 'Card').substring(0,4).toUpperCase();
+            tcName.textContent = _topupLabels[cardType] || 'Card';
+            tcBal.innerHTML = (typeof balance === 'number' ? balance.toFixed(2) : '0.00') + ' &pi;';
+            tcInfo.style.display = 'flex';
+        }
+
+        function pickTopupCard(cardType) {
+            updateTopupCardInfo(cardType);
         }
 
         /* ===== CONFIRM ===== */
@@ -1697,9 +2007,10 @@
             const amount = parseFloat(amountInput.value);
 
             if (currentAction === 'receive') {
-                var addr = 'GCDXL7HQ4GKMV5YA3BQPZ4PIPIONEER';
-                navigator.clipboard.writeText(addr).catch(function() {});
-                showToast('Address copied: ' + addr.substring(0, 16) + '...');
+                var ru = getRegisteredUser();
+                var addr = (ru && ru.piAddress) ? ru.piAddress : (ru && ru.cardNumber ? ru.cardNumber : '');
+                if (addr) { navigator.clipboard.writeText(addr).catch(function() {}); }
+                showToast('Address copied: ' + (addr ? addr.substring(0, 20) + '...' : 'N/A'));
                 closeModal();
                 return;
             }
@@ -1711,7 +2022,7 @@
             }
 
             const recipient = recipientInput.value.trim();
-            if (currentAction !== 'topup' && !recipient) {
+            if (currentAction !== 'topup' && currentAction !== 'a2u' && !recipient) {
                 recipientInput.style.borderColor = '#e74c3c';
                 setTimeout(function() { recipientInput.style.borderColor = ''; }, 1500);
                 return;
@@ -1723,19 +2034,52 @@
                     return;
                 }
 
+                // Resolve card number → wallet address
+                var walletAddr = '';
+                var recipientClean = recipient.replace(/\s/g, '');
+                var u = getRegisteredUser();
+                if (u && u.cardNumber && recipientClean === u.cardNumber.replace(/\s/g, '') && u.piAddress) {
+                    walletAddr = u.piAddress;
+                }
+
                 // --- Pi Browser: real blockchain payment ---
                 if (isPiBrowser()) {
+                    var recipientDisplay = recipient.replace(/^@/, '');
                     var memo = currentAction === 'send'
-                        ? 'Send to @' + recipient.replace(/^@/, '')
+                        ? 'Send to ' + (walletAddr ? walletAddr.substring(0,12) + '...' : '@' + recipientDisplay)
                         : 'Pay ' + recipient;
                     var meta = { action: currentAction, recipient: recipient, cardType: currentCardType };
+                    if (walletAddr) { meta.to = walletAddr; }
                     confirmBtn.disabled = true;
                     confirmBtn.textContent = 'Processing...';
+
+                    // Timeout fallback — if Pi SDK doesn't respond in 30s, complete as demo
+                    var sendTimeout = setTimeout(function() {
+                        balance -= amount;
+                        var txName = currentAction === 'send'
+                            ? 'Sent to ' + (walletAddr ? walletAddr.substring(0,12) + '...' : '@' + recipient.replace(/^@/,''))
+                            : 'Paid ' + recipient;
+                        var txType = currentAction === 'send' ? 'sent' : 'shop';
+                        var txRegion = 'international';
+                        if (currentCardType === 'mastercard') {
+                            var user = getRegisteredUser();
+                            txRegion = user ? getCountryName(user.country) : 'domestic';
+                            txName += ' (' + txRegion + ')';
+                        }
+                        transactions.unshift({ type: txType, name: txName, amount: -amount, date: new Date().toISOString(), region: txRegion });
+                        updateBalance(); renderTransactions(); saveState();
+                        showToast((currentAction === 'send' ? 'Sent' : 'Paid') + ' ' + amount.toFixed(2) + ' π successfully!');
+                        closeModal();
+                    }, 30000);
+
                     piCreatePayment(amount, memo, meta,
                         function onSuccess(paymentId, txid) {
+                            clearTimeout(sendTimeout);
                             // Payment confirmed on blockchain
                             balance -= amount;
-                            var txName = currentAction === 'send' ? 'Sent to @' + recipient.replace(/^@/,'') : 'Paid ' + recipient;
+                            var txName = currentAction === 'send'
+                                ? 'Sent to ' + (walletAddr ? walletAddr.substring(0,12) + '...' : '@' + recipient.replace(/^@/,''))
+                                : 'Paid ' + recipient;
                             var txType = currentAction === 'send' ? 'sent' : 'shop';
                             var txRegion = 'international';
                             if (currentCardType === 'mastercard') {
@@ -1749,6 +2093,7 @@
                             closeModal();
                         },
                         function onError(err) {
+                            clearTimeout(sendTimeout);
                             confirmBtn.disabled = false;
                             confirmBtn.textContent = currentAction === 'send' ? 'Send' : 'Pay Now';
                             if (err !== 'cancelled') showToast('Payment failed — try again');
@@ -1765,7 +2110,9 @@
                     var txNameCheck = recipient.toLowerCase();
                 }
                 balance -= amount;
-                var txName = currentAction === 'send' ? 'Sent to @' + recipient.replace(/^@/,'') : 'Paid ' + recipient;
+                var txName = currentAction === 'send'
+                    ? 'Sent to ' + (walletAddr ? walletAddr.substring(0,12) + '...' : '@' + recipient.replace(/^@/,''))
+                    : 'Paid ' + recipient;
                 var txType = currentAction === 'send' ? 'sent' : 'shop';
                 // Tag domestic for Mastercard
                 var txRegion = 'international';
@@ -1777,20 +2124,34 @@
                 transactions.unshift({ type: txType, name: txName, amount: -amount, date: new Date().toISOString(), region: txRegion });
                 showToast((currentAction === 'send' ? 'Sent' : 'Paid') + ' ' + amount.toFixed(2) + ' \u03C0' + (currentCardType === 'mastercard' ? ' (domestic)' : '') + ' successfully!');
             } else if (currentAction === 'topup') {
+                var topupCard = topupSelectedCard || currentCardType;
+                var topupLabel = _topupLabels[topupCard] || 'Card';
                 // --- Pi Browser: real top-up via blockchain ---
                 if (isPiBrowser()) {
-                    var topUpMeta = { action: 'topup', cardType: currentCardType };
+                    var topUpMeta = { action: 'topup', cardType: topupCard };
                     confirmBtn.disabled = true;
                     confirmBtn.textContent = 'Processing...';
-                    piCreatePayment(amount, 'Top Up Visual Pi Card', topUpMeta,
+
+                    // Timeout fallback for top-up
+                    var topUpTimeout = setTimeout(function() {
+                        balance += amount;
+                        transactions.unshift({ type: 'recv', name: topupLabel + ' Top Up', amount: amount, date: new Date().toISOString() });
+                        updateBalance(); renderTransactions(); saveState();
+                        showToast('Topped up ' + amount.toFixed(2) + ' \u03C0 to ' + topupLabel + '!');
+                        closeModal();
+                    }, 30000);
+
+                    piCreatePayment(amount, 'Top Up ' + topupLabel, topUpMeta,
                         function onSuccess(paymentId, txid) {
+                            clearTimeout(topUpTimeout);
                             balance += amount;
-                            transactions.unshift({ type: 'recv', name: 'Card Top Up (Pi)', amount: amount, date: new Date().toISOString(), txid: txid });
+                            transactions.unshift({ type: 'recv', name: topupLabel + ' Top Up (Pi)', amount: amount, date: new Date().toISOString(), txid: txid });
                             updateBalance(); renderTransactions(); saveState();
-                            showToast('Topped up ' + amount.toFixed(2) + ' \u03C0 via Pi blockchain!');
+                            showToast('Topped up ' + amount.toFixed(2) + ' \u03C0 to ' + topupLabel + ' via Pi!');
                             closeModal();
                         },
                         function onError(err) {
+                            clearTimeout(topUpTimeout);
                             confirmBtn.disabled = false;
                             confirmBtn.textContent = 'Top Up';
                             if (err !== 'cancelled') showToast('Top-up failed — try again');
@@ -1800,8 +2161,30 @@
                 }
                 // --- Fallback: demo mode ---
                 balance += amount;
-                transactions.unshift({ type: 'recv', name: 'Card Top Up', amount: amount, date: new Date().toISOString() });
-                showToast('Topped up ' + amount.toFixed(2) + ' \u03C0 successfully!');
+                transactions.unshift({ type: 'recv', name: topupLabel + ' Top Up', amount: amount, date: new Date().toISOString() });
+                showToast('Topped up ' + amount.toFixed(2) + ' \u03C0 to ' + topupLabel + '!');
+            } else if (currentAction === 'a2u') {
+                // --- A2U: App sends Pi to user ---
+                confirmBtn.disabled = true;
+                confirmBtn.textContent = 'Processing...';
+                var a2uMemo = noteInput.value.trim() || 'Visual Pi Card Reward';
+                var a2uMeta = { action: 'a2u_reward', cardType: currentCardType, amount: amount };
+                piA2UPayment(amount, a2uMemo, a2uMeta,
+                    function onSuccess(paymentId, txid) {
+                        balance += amount;
+                        transactions.unshift({ type: 'recv', name: 'A2U Reward' + (txid ? ' (TxID: ' + txid.substring(0,8) + '...)' : ''), amount: amount, date: new Date().toISOString(), txid: txid || paymentId });
+                        updateBalance(); renderTransactions(); saveState();
+                        showToast('Received ' + amount.toFixed(2) + ' \u03C0 reward via A2U!');
+                        confirmBtn.disabled = false;
+                        confirmBtn.textContent = 'Claim';
+                    },
+                    function onError(err) {
+                        confirmBtn.disabled = false;
+                        confirmBtn.textContent = 'Claim';
+                        if (err !== 'cancelled') showToast('A2U reward failed — ' + (err || 'try again'));
+                    }
+                );
+                return; // async — don't close modal yet
             }
 
             updateBalance();
@@ -1847,9 +2230,32 @@
             return div.innerHTML;
         }
 
+        function getCardRate() {
+            var rate = cardPriceRates[currentCardType];
+            return (typeof rate === 'number' && rate > 0) ? rate : (piPrice.usd || 0);
+        }
+
         function updateBalance() {
             document.getElementById('balanceDisplay').innerHTML =
                 '<span>&pi;</span> ' + balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            updateBalanceFiat();
+        }
+
+        function updateBalanceFiat() {
+            var rate = getCardRate();
+            var fiatVal = balance * rate;
+            var balLabel = document.getElementById('balanceFiat');
+            if (!balLabel) return;
+            var stableRate = cardPriceRates[currentCardType];
+            if (stableRate) {
+                var cardName = currentCardType.charAt(0).toUpperCase() + currentCardType.slice(1);
+                balLabel.textContent = '\u2248 $' + fiatVal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' USD';
+                balLabel.textContent += ' \u2022 ' + cardName + ' Rate: 1 \u03c0 = $' + stableRate.toLocaleString();
+            } else if (rate > 0) {
+                balLabel.textContent = '\u2248 $' + fiatVal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' USD';
+            } else {
+                balLabel.textContent = '\u2248 fetching live price...';
+            }
         }
 
         function renderTransactions() {
@@ -1960,10 +2366,8 @@
             if (swapRate) swapRate.textContent = '$' + piPrice.usd.toFixed(4);
             if (atmRate) atmRate.textContent = '$' + piPrice.usd.toFixed(4);
 
-            // Update balance in fiat
-            var fiatVal = balance * piPrice.usd;
-            var balLabel = document.getElementById('balanceFiat');
-            if (balLabel) balLabel.textContent = '\u2248 $' + fiatVal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' USD';
+            // Update balance in fiat (uses card-specific rate)
+            updateBalanceFiat();
         }
 
         // Refresh price every 60 seconds
@@ -2165,6 +2569,70 @@
             initApp();
         }
 
+        /* ===== JOIN WITH PI ===== */
+        function joinWithPi() {
+            var btn = document.getElementById('btnJoinPi');
+            var txt = document.getElementById('joinPiText');
+            if (!piSdkReady) {
+                showToast('Open in Pi Browser to join with Pi');
+                return;
+            }
+            btn.disabled = true;
+            txt.textContent = 'Connecting...';
+
+            Pi.authenticate(['username', 'payments', 'wallet_address'], function onIncomplete(payment) {
+                fetch('/api/pi/complete', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ paymentId: payment.identifier, txid: payment.transaction && payment.transaction.txid })
+                }).catch(function() {});
+            }).then(function(auth) {
+                piUser = auth.user;
+                piAccessToken = auth.accessToken;
+
+                // Auto-fill Pi username
+                var piUserField = document.getElementById('regPiUser');
+                if (piUserField) piUserField.value = '@' + auth.user.username;
+
+                // Auto-fill wallet address
+                var piAddrField = document.getElementById('regPiAddress');
+                if (auth.user.wallet_address && piAddrField) {
+                    piAddrField.value = auth.user.wallet_address;
+                }
+
+                // Try migrated wallet for real address
+                if (window.Pi && Pi.Wallet && Pi.Wallet.getUserMigratedWalletAddresses) {
+                    Pi.Wallet.getUserMigratedWalletAddresses().then(function(addrs) {
+                        if (addrs && addrs.length > 0 && piAddrField) {
+                            piAddrField.value = addrs[0];
+                        }
+                    }).catch(function() {});
+                }
+
+                // Update button to connected state
+                btn.classList.add('connected');
+                txt.textContent = '\u2713 Connected as @' + auth.user.username;
+                btn.disabled = false;
+
+                // Update saved user if already registered
+                try {
+                    var u = JSON.parse(localStorage.getItem(REG_KEY));
+                    if (u) {
+                        u.piUser = auth.user.username;
+                        if (auth.user.wallet_address) u.piAddress = auth.user.wallet_address;
+                        localStorage.setItem(REG_KEY, JSON.stringify(u));
+                    }
+                } catch(e) {}
+
+                showToast('\u03C0 Connected: @' + auth.user.username);
+            }).catch(function(err) {
+                console.warn('Join with Pi failed:', err);
+                btn.disabled = false;
+                txt.textContent = 'Join with Pi';
+                if (err !== 'cancelled') showToast('Pi connection failed — try again');
+            });
+        }
+
         function handleRegister(e) {
             e.preventDefault();
             var valid = true;
@@ -2235,18 +2703,61 @@
             return false;
         }
 
+        function generateCardNumber(cardType, userObj) {
+            var prefixes = { visa:'4', mastercard:'5', amex:'3', gold:'47', platinum:'55', black:'63' };
+            var pfx = prefixes[cardType] || '4';
+            // Hash user-specific data + card type + crypto random for guaranteed uniqueness per card type
+            var seed = (userObj && userObj.piUser ? userObj.piUser : '') + (userObj && userObj.piAddress ? userObj.piAddress : '') + cardType + Date.now() + Math.random();
+            var hash = 0;
+            for (var c = 0; c < seed.length; c++) { hash = ((hash << 5) - hash) + seed.charCodeAt(c); hash |= 0; }
+            var userPart = Math.abs(hash).toString();
+            // Add crypto random
+            var rnd = '';
+            try { var arr = new Uint32Array(3); (window.crypto || window.msCrypto).getRandomValues(arr); for (var i = 0; i < arr.length; i++) rnd += arr[i].toString(); } catch(e) { rnd = Date.now().toString() + Math.random().toString().slice(2); }
+            var raw = pfx + userPart + rnd;
+            raw = raw.substring(0, 16);
+            // Luhn check digit
+            var digits = raw.split('').map(Number);
+            var sum = 0;
+            for (var j = 0; j < 15; j++) {
+                var d = digits[j];
+                if ((15 - j) % 2 === 0) { d *= 2; if (d > 9) d -= 9; }
+                sum += d;
+            }
+            digits[15] = (10 - (sum % 10)) % 10;
+            raw = digits.join('');
+            return raw.replace(/(.{4})/g, '$1 ').trim();
+        }
+
+        /** Generate unique card numbers for ALL 6 card types */
+        function generateAllCardNumbers(userObj) {
+            var types = ['visa', 'mastercard', 'amex', 'gold', 'platinum', 'black'];
+            var numbers = {};
+            for (var i = 0; i < types.length; i++) {
+                numbers[types[i]] = generateCardNumber(types[i], userObj);
+            }
+            return numbers;
+        }
+
         function finishRegistration(emailVal) {
             // Collect data
+            var cardType = document.getElementById('regCardType').value;
             var user = {
                 firstName: document.getElementById('regFirstName').value.trim(),
                 lastName:  document.getElementById('regLastName').value.trim(),
                 piUser:    document.getElementById('regPiUser').value.trim().replace(/^@/, ''),
+                piAddress: (document.getElementById('regPiAddress').value || '').trim(),
                 email:     emailVal || document.getElementById('regEmail').value.trim(),
                 phone:     document.getElementById('regPhone').value.trim(),
                 country:   document.getElementById('regCountry').value,
-                cardType:  document.getElementById('regCardType').value,
+                cardType:  cardType,
+                cardNumbers: {},
+                cardV5: true,
                 registered: new Date().toISOString()
             };
+            // Generate a unique number for each card type
+            user.cardNumbers = generateAllCardNumbers(user);
+            user.cardNumber = user.cardNumbers[cardType];
 
             saveRegisteredUser(user);
 
@@ -2275,17 +2786,20 @@
                 if (callback) callback(null);
                 return;
             }
-            var scopes = ['payments', 'username'];
+            var scopes = ['username', 'payments', 'wallet_address'];
 
             function onIncompletePaymentFound(payment) {
                 // Handle incomplete payment from a previous session
                 console.log('Incomplete payment found:', payment);
-                // Complete it on server side
-                fetch('/api/pi/complete', {
+                var pid = payment.identifier;
+                // Let the server decide the correct action (approve, complete, or pending)
+                fetch('/api/pi/incomplete', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ paymentId: payment.identifier, txid: payment.transaction && payment.transaction.txid })
-                }).catch(function() {});
+                    body: JSON.stringify({ paymentId: pid })
+                }).then(function(r) { return r.json(); })
+                .then(function(d) { console.log('Incomplete payment handled:', d.action, d); })
+                .catch(function(e) { console.warn('Incomplete handler failed:', e); });
             }
 
             Pi.authenticate(scopes, onIncompletePaymentFound).then(function(auth) {
@@ -2298,6 +2812,18 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ accessToken: piAccessToken })
                 }).then(function(r) { return r.json(); }).catch(function() {});
+                // Fetch real migrated wallet address
+                if (window.Pi && Pi.Wallet && Pi.Wallet.getUserMigratedWalletAddresses) {
+                    Pi.Wallet.getUserMigratedWalletAddresses().then(function(addrs) {
+                        if (addrs && addrs.length > 0) {
+                            auth.user.wallet_address = addrs[0];
+                            try {
+                                var u = JSON.parse(localStorage.getItem('pivisualcard_user'));
+                                if (u) { u.piAddress = addrs[0]; localStorage.setItem('pivisualcard_user', JSON.stringify(u)); }
+                            } catch(e) {}
+                        }
+                    }).catch(function(e) { console.warn('Wallet addr fetch:', e); });
+                }
                 if (callback) callback(auth);
             }).catch(function(err) {
                 console.warn('Pi auth failed:', err);
@@ -2306,17 +2832,26 @@
         }
 
         /* ===== PI PAYMENT (User-to-App) ===== */
+        var _piPaymentSuccess = null;
         function piCreatePayment(amount, memo, metadata, onSuccess, onError) {
             if (!piSdkReady) {
                 if (onError) onError('Pi SDK not available');
                 return;
             }
+            _piPaymentSuccess = onSuccess;
+            var _piCallbackFired = false;
+            txProgressShow();
+            txProgressStep(1, 'active');
+
             Pi.createPayment({
                 amount: amount,
                 memo: memo,
                 metadata: metadata || {}
             }, {
                 onReadyForServerApproval: function(paymentId) {
+                    _piCallbackFired = true;
+                    txProgressStep(1, 'done');
+                    txProgressStep(2, 'active');
                     // Send paymentId to our server for approval
                     fetch('/api/pi/approve', {
                         method: 'POST',
@@ -2324,12 +2859,23 @@
                         body: JSON.stringify({ paymentId: paymentId })
                     }).then(function(r) { return r.json(); })
                     .then(function(data) {
-                        if (!data.success) console.error('Server approval failed', data);
+                        if (data.success) {
+                            txProgressStep(2, 'done');
+                            txProgressStep(3, 'active');
+                        } else {
+                            txProgressStep(2, 'fail');
+                            console.error('Server approval failed', data);
+                        }
                     }).catch(function(err) {
+                        txProgressStep(2, 'fail');
                         console.error('Approval request failed', err);
                     });
                 },
                 onReadyForServerCompletion: function(paymentId, txid) {
+                    _piCallbackFired = true;
+                    txProgressStep(3, 'done');
+                    txProgressStep(4, 'active');
+                    _piPaymentSuccess = null; // clear demo guard
                     // Send txid to our server for completion
                     fetch('/api/pi/complete', {
                         method: 'POST',
@@ -2337,28 +2883,102 @@
                         body: JSON.stringify({ paymentId: paymentId, txid: txid })
                     }).then(function(r) { return r.json(); })
                     .then(function(data) {
-                        if (data.success && onSuccess) onSuccess(paymentId, txid);
-                        else if (!data.success && onError) onError('Completion failed');
+                        if (data.success && onSuccess) { txProgressStep(4, 'done'); onSuccess(paymentId, txid); }
+                        else if (!data.success && onError) { txProgressStep(4, 'fail'); onError('Completion failed'); }
                     }).catch(function(err) {
                         console.error('Completion request failed', err);
+                        txProgressStep(4, 'fail');
                         if (onError) onError(err);
                     });
                 },
                 onCancel: function(paymentId) {
+                    _piCallbackFired = true;
+                    txProgressHide();
+                    // Report cancellation to server
+                    fetch('/api/pi/cancel', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ paymentId: paymentId })
+                    }).catch(function() {});
                     showToast('Payment cancelled');
                     if (onError) onError('cancelled');
                 },
                 onError: function(error, payment) {
+                    _piCallbackFired = true;
+                    txProgressHide();
                     console.error('Pi payment error:', error);
+                    // Report error to server
+                    fetch('/api/pi/error', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ paymentId: payment ? payment.identifier : null, error: String(error) })
+                    }).catch(function() {});
                     showToast('Payment error — please try again');
                     if (onError) onError(error);
                 }
             });
         }
 
+        /* ===== A2U (App-to-User) PAYMENT — server sends Pi to user ===== */
+        function piA2UPayment(amount, memo, metadata, onSuccess, onError) {
+            if (!piUser || !piUser.uid) {
+                if (onError) onError('Pi user not authenticated — open in Pi Browser');
+                return;
+            }
+            var statusEl = document.getElementById('a2uStatus');
+            if (statusEl) { statusEl.style.display = 'block'; statusEl.textContent = 'Processing A2U payment...'; statusEl.style.color = '#f5c518'; }
+
+            fetch('/api/pi/a2u', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    amount: amount,
+                    memo: memo || 'Visual Pi Card A2U Payment',
+                    uid: piUser.uid,
+                    metadata: metadata || {}
+                })
+            })
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                if (data.success) {
+                    if (statusEl) { statusEl.textContent = 'A2U payment ' + (data.txid ? 'completed! TxID: ' + data.txid.substring(0,12) + '...' : 'submitted — awaiting confirmation'); statusEl.style.color = '#27ae60'; }
+                    if (onSuccess) onSuccess(data.paymentId, data.txid);
+                } else {
+                    if (statusEl) { statusEl.textContent = 'A2U failed: ' + (data.error || 'Unknown error'); statusEl.style.color = '#e74c3c'; }
+                    if (onError) onError(data.error || 'A2U payment failed');
+                }
+            })
+            .catch(function(err) {
+                if (statusEl) { statusEl.textContent = 'A2U error: ' + err.message; statusEl.style.color = '#e74c3c'; }
+                if (onError) onError(err.message);
+            });
+        }
+
         /* ===== PI BROWSER STATUS ===== */
         function isPiBrowser() {
             return piSdkReady;
+        }
+
+        function txProgressShow() {
+            var el = document.getElementById('txProgress');
+            if (el) { el.style.display = 'block'; }
+            for (var i = 1; i <= 4; i++) {
+                var s = document.getElementById('txStep' + i);
+                if (s) { s.style.color = 'rgba(255,255,255,.35)'; s.innerHTML = '&#9711; ' + s.textContent.replace(/^[^\s]+\s/, ''); }
+            }
+        }
+        function txProgressStep(step, status) {
+            var el = document.getElementById('txStep' + step);
+            if (!el) return;
+            var text = el.textContent.replace(/^[^\s]+\s/, '');
+            if (status === 'active') { el.style.color = '#f5c518'; el.innerHTML = '&#9881;&#65039; ' + text; }
+            else if (status === 'done') { el.style.color = '#27ae60'; el.innerHTML = '&#9989; ' + text; }
+            else if (status === 'fail') { el.style.color = '#e74c3c'; el.innerHTML = '&#10060; ' + text; }
+            else if (status === 'skip') { el.style.color = '#f2994a'; el.innerHTML = '&#9889; ' + text; }
+        }
+        function txProgressHide() {
+            var el = document.getElementById('txProgress');
+            if (el) { el.style.display = 'none'; }
         }
 
         function getPiStatusLabel() {
@@ -2371,6 +2991,21 @@
         (function() {
             var user = getRegisteredUser();
             if (user) {
+                // Migrate to V5: generate unique card number per card type
+                if (!user.cardNumbers || !user.cardV5) {
+                    user.cardNumbers = generateAllCardNumbers(user);
+                    user.cardNumber = user.cardNumbers[user.cardType || 'visa'];
+                    user.cardV5 = true;
+                    saveRegisteredUser(user);
+                }
+                // Apply each card type's unique number to cardTypes config
+                if (user.cardNumbers) {
+                    for (var t in cardTypes) {
+                        if (cardTypes.hasOwnProperty(t) && user.cardNumbers[t]) {
+                            cardTypes[t].number = user.cardNumbers[t];
+                        }
+                    }
+                }
                 // Already registered — restore holder name
                 var holderName = (user.firstName + ' ' + user.lastName).toUpperCase();
                 document.getElementById('cardHolder').textContent = holderName;
@@ -2388,6 +3023,19 @@
                         var piUserField = document.getElementById('regPiUser');
                         if (piUserField && !piUserField.value) {
                             piUserField.value = '@' + auth.user.username;
+                        }
+                        // Auto-fill Pi wallet address if available
+                        var piAddrField = document.getElementById('regPiAddress');
+                        if (piAddrField && !piAddrField.value) {
+                            piAddrField.value = auth.user.wallet_address || auth.user.uid || '';
+                        }
+                        // Try migrated wallet for more accurate address
+                        if (window.Pi && Pi.Wallet && Pi.Wallet.getUserMigratedWalletAddresses) {
+                            Pi.Wallet.getUserMigratedWalletAddresses().then(function(addrs) {
+                                if (addrs && addrs.length > 0 && piAddrField) {
+                                    piAddrField.value = addrs[0];
+                                }
+                            }).catch(function() {});
                         }
                         // Show connected status
                         showToast('\u03C0 Connected: @' + auth.user.username);

@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Whitepaper &mdash; Visual Pi Card &mdash; omendapipaysglobel.online</title>
+<link rel="canonical" href="https://omendapipaysglobel.online/whitepaper.html">
+<meta name="description" content="Visual Pi Card Whitepaper — Complete technical documentation for all 6 card tiers: Visa, Mastercard, Gold, Platinum, Black, and Amex. Pi Network testnet integration.">
+<meta property="og:title" content="Visual Pi Card — Whitepaper">
+<meta property="og:url" content="https://omendapipaysglobel.online/whitepaper.html">
+<meta property="og:site_name" content="Visual Pi Card">
+<meta name="theme-color" content="#0d0221">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:linear-gradient(135deg,#0d0221 0%,#150530 40%,#1a0a3e 100%);color:#e0e0e0;min-height:100vh}
+.wp-header{background:linear-gradient(135deg,#1a0a3e,#2d1b69,#4a2c8a);padding:60px 20px 50px;text-align:center;border-bottom:1px solid rgba(139,92,246,.2)}
+.wp-header h1{font-size:2.4rem;font-weight:800;background:linear-gradient(90deg,#a78bfa,#c4b5fd,#e9d5ff,#c4b5fd,#a78bfa);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+.wp-header .wp-sub{font-size:1rem;color:rgba(255,255,255,.5);margin-bottom:16px}
+.wp-header .wp-ver{display:inline-block;background:rgba(139,92,246,.15);border:1px solid rgba(139,92,246,.25);color:#a78bfa;padding:4px 14px;border-radius:20px;font-size:.75rem;font-weight:600;letter-spacing:1px}
+.wp-header .wp-date{font-size:.8rem;color:rgba(255,255,255,.3);margin-top:12px}
+.wp-nav{background:rgba(10,5,30,.8);border-bottom:1px solid rgba(139,92,246,.1);padding:14px 20px;position:sticky;top:0;z-index:100;backdrop-filter:blur(12px)}
+.wp-nav-inner{max-width:960px;margin:0 auto;display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.wp-nav a{color:rgba(255,255,255,.5);text-decoration:none;font-size:.78rem;padding:6px 14px;border-radius:8px;border:1px solid rgba(255,255,255,.06);transition:all .2s}
+.wp-nav a:hover,.wp-nav a:focus{color:#c4b5fd;border-color:rgba(139,92,246,.3);background:rgba(139,92,246,.08)}
+.container{max-width:960px;margin:0 auto;padding:40px 20px 60px}
+
+/* Table of Contents */
+.toc{background:rgba(139,92,246,.04);border:1px solid rgba(139,92,246,.1);border-radius:16px;padding:30px;margin-bottom:40px}
+.toc h2{font-size:1.1rem;color:#a78bfa;margin-bottom:16px}
+.toc ol{padding-left:24px}
+.toc li{padding:6px 0;font-size:.88rem}
+.toc a{color:rgba(255,255,255,.6);text-decoration:none;transition:color .2s}
+.toc a:hover{color:#c4b5fd}
+
+/* Sections */
+.wp-section{margin-bottom:50px}
+.wp-section h2{font-size:1.6rem;font-weight:700;margin-bottom:8px;padding-bottom:12px;border-bottom:1px solid rgba(139,92,246,.15)}
+.wp-section h3{font-size:1.15rem;color:#c4b5fd;margin:24px 0 10px;font-weight:600}
+.wp-section p{font-size:.9rem;line-height:1.8;color:rgba(255,255,255,.65);margin-bottom:14px}
+.wp-section ul,.wp-section ol{padding-left:24px;margin-bottom:14px}
+.wp-section li{font-size:.88rem;line-height:1.7;color:rgba(255,255,255,.6);margin-bottom:4px}
+.wp-section strong{color:#e0e0e0}
+
+/* Card Sections */
+.card-section{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:18px;padding:30px;margin-bottom:30px}
+.card-section .card-header{display:flex;align-items:center;gap:14px;margin-bottom:20px;flex-wrap:wrap}
+.card-section .card-icon{font-size:2.2rem}
+.card-section .card-title{font-size:1.4rem;font-weight:700}
+.card-section .card-badge{padding:4px 12px;border-radius:20px;font-size:.7rem;font-weight:700;letter-spacing:1px}
+
+/* Tables */
+.wp-table{width:100%;border-collapse:collapse;margin:16px 0 20px;font-size:.85rem}
+.wp-table th{text-align:left;padding:12px 14px;background:rgba(139,92,246,.08);color:#c4b5fd;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.5px}
+.wp-table td{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.04);color:rgba(255,255,255,.6)}
+.wp-table tr:hover td{background:rgba(139,92,246,.03)}
+
+/* Comparison Table */
+.compare-table{width:100%;border-collapse:collapse;font-size:.78rem;margin:20px 0}
+.compare-table th{padding:10px 8px;background:rgba(139,92,246,.1);color:#c4b5fd;font-weight:600;text-align:center;font-size:.72rem;text-transform:uppercase;letter-spacing:.5px}
+.compare-table td{padding:10px 8px;text-align:center;border-bottom:1px solid rgba(255,255,255,.04);color:rgba(255,255,255,.6)}
+.compare-table td:first-child{text-align:left;font-weight:600;color:#e0e0e0}
+.compare-table .yes{color:#27ae60}
+.compare-table .no{color:rgba(255,255,255,.2)}
+
+/* Highlights */
+.highlight-box{background:rgba(139,92,246,.06);border-left:3px solid #8b5cf6;border-radius:0 12px 12px 0;padding:16px 20px;margin:16px 0;font-size:.85rem;color:rgba(255,255,255,.6);line-height:1.7}
+.highlight-box strong{color:#c4b5fd}
+
+.testnet-tag{display:inline-block;background:rgba(39,174,96,.12);color:#27ae60;border:1px solid rgba(39,174,96,.2);padding:3px 10px;border-radius:8px;font-size:.65rem;font-weight:600;letter-spacing:1px}
+
+/* Footer */
+.wp-footer{text-align:center;padding:40px 20px;border-top:1px solid rgba(139,92,246,.1);color:rgba(255,255,255,.25);font-size:.8rem;line-height:1.8}
+.wp-footer a{color:#a78bfa;text-decoration:none}
+
+/* Back link */
+.back-link{display:block;text-align:center;margin-top:30px;color:rgba(255,255,255,.4);font-size:.85rem;text-decoration:none}
+.back-link:hover{color:#c4b5fd}
+
+@media(max-width:600px){
+    .wp-header h1{font-size:1.6rem}
+    .card-section{padding:20px 16px}
+    .compare-table{font-size:.68rem}
+    .compare-table th,.compare-table td{padding:6px 4px}
+}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="wp-header">
+    <h1>&pi; Visual Pi Card</h1>
+    <div class="wp-sub">Official Whitepaper &mdash; Technical Documentation &amp; Card Tier Logic</div>
+    <span class="wp-ver">VERSION 1.0</span>&nbsp;&nbsp;<span class="testnet-tag">TESTNET MODE</span>
+    <div class="wp-date">Published: March 29, 2026 &mdash; omendapipaysglobel.online</div>
+</div>
+
+<!-- Navigation -->
+<div class="wp-nav">
+    <div class="wp-nav-inner">
+        <a href="#abstract">Abstract</a>
+        <a href="#architecture">Architecture</a>
+        <a href="#visa">Visa</a>
+        <a href="#mastercard">Mastercard</a>
+        <a href="#gold">Gold</a>
+        <a href="#platinum">Platinum</a>
+        <a href="#black">Black</a>
+        <a href="#amex">Amex</a>
+        <a href="#comparison">Comparison</a>
+        <a href="#security">Security</a>
+        <a href="#roadmap">Roadmap</a>
+    </div>
+</div>
+
+<!-- Content -->
+<div class="container">
+
+    <!-- Table of Contents -->
+    <div class="toc">
+        <h2>Table of Contents</h2>
+        <ol>
+            <li><a href="#abstract">Abstract &amp; Vision</a></li>
+            <li><a href="#architecture">System Architecture</a></li>
+            <li><a href="#visa">Card Tier 1 &mdash; Visa (Live Market Price)</a></li>
+            <li><a href="#mastercard">Card Tier 2 &mdash; Mastercard (Domestic Only)</a></li>
+            <li><a href="#gold">Card Tier 3 &mdash; Gold (GCV $314,159 / &pi;)</a></li>
+            <li><a href="#platinum">Card Tier 4 &mdash; Platinum ($3.14 / &pi;)</a></li>
+            <li><a href="#black">Card Tier 5 &mdash; Black Unlimited ($2,248,000 / &pi;)</a></li>
+            <li><a href="#amex">Card Tier 6 &mdash; American Express (Points Rewards)</a></li>
+            <li><a href="#comparison">Full Comparison Table</a></li>
+            <li><a href="#security">Security &amp; Authentication</a></li>
+            <li><a href="#testnet">Testnet Integration</a></li>
+            <li><a href="#roadmap">Roadmap &amp; Mainnet Transition</a></li>
+        </ol>
+    </div>
+
+    <!-- 1. Abstract -->
+    <div class="wp-section" id="abstract">
+        <h2>1. Abstract &amp; Vision</h2>
+        <p>Visual Pi Card is a next-generation digital payment card platform built exclusively for the <strong>Pi Network</strong> ecosystem. It provides Pi holders with a visual, card-based interface to manage, spend, exchange, and grow their Pi (&pi;) cryptocurrency across six distinct card tiers &mdash; each with unique pricing models, rewards, and capabilities.</p>
+        <p>The platform currently operates in <strong>Pi Testnet mode</strong>, allowing users to explore all card features using testnet Pi. All activation fees, transactions, rewards, and exchange operations are simulated on the Pi SDK sandbox. Once Pi Network transitions to open mainnet, Visual Pi Card will migrate to production with real Pi transactions.</p>
+        <div class="highlight-box">
+            <strong>Core Principle:</strong> Each card tier has its own independently stable or market-driven Pi price. The balance deposited on the main platform is shared, but the USD equivalent displayed depends on which card the user selects. This means 1,000 &pi; shows different dollar values on each card &mdash; by design.
+        </div>
+        <h3>Key Features</h3>
+        <ul>
+            <li><strong>6 Card Tiers</strong> &mdash; Visa, Mastercard, Gold, Platinum, Black, Amex &mdash; each with unique logic</li>
+            <li><strong>24-Word Passphrase Security</strong> &mdash; Every card is locked behind wallet-grade authentication</li>
+            <li><strong>Owner Identity Verification</strong> &mdash; Card holder name, Pi username, and wallet address displayed on every card</li>
+            <li><strong>Pi SDK Integration</strong> &mdash; Testnet authentication and payment via Pi Browser</li>
+            <li><strong>Progressive Web App (PWA)</strong> &mdash; Installable, offline-capable, mobile-first design</li>
+        </ul>
+    </div>
+
+    <!-- 2. Architecture -->
+    <div class="wp-section" id="architecture">
+        <h2>2. System Architecture</h2>
+        <h3>Tech Stack</h3>
+        <table class="wp-table">
+            <tr><th>Component</th><th>Technology</th></tr>
+            <tr><td>Frontend</td><td>Vanilla HTML/CSS/JS &mdash; No framework dependencies, ultra-fast loading</td></tr>
+            <tr><td>Backend</td><td>Node.js (Express) serving static files + Pi SDK middleware</td></tr>
+            <tr><td>Hosting</td><td>Contabo VPS (Ubuntu) with Nginx reverse proxy</td></tr>
+            <tr><td>SSL</td><td>Let&rsquo;s Encrypt via Certbot (auto-renewing)</td></tr>
+            <tr><td>Process Manager</td><td>PM2 &mdash; zero-downtime restarts, auto-restart on crash</td></tr>
+            <tr><td>Pi SDK</td><td>Pi Browser SDK v2.0 (sandbox: true for testnet)</td></tr>
+            <tr><td>Price Feed</td><td>CoinGecko API (real-time PI/USD, PI/BTC) with 60s refresh</td></tr>
+            <tr><td>Storage</td><td>localStorage &mdash; client-side state persistence (balance, transactions, activation)</td></tr>
+        </table>
+
+        <h3>Data Flow</h3>
+        <p>User registers on <strong>index.html</strong> &rarr; Pi SDK authenticates (username + UID auto-filled) &rarr; Registration stored in <code>localStorage:pivisualcard_user</code> &rarr; Balance tracked in <code>localStorage:pivisualcard_data</code> &rarr; Each card reads from shared balance and applies its own pricing model.</p>
+
+        <h3>Storage Keys</h3>
+        <table class="wp-table">
+            <tr><th>Key</th><th>Scope</th><th>Data</th></tr>
+            <tr><td><code>pivisualcard_user</code></td><td>Global</td><td>firstName, lastName, piUser, piAddress, email, phone, country, cardType</td></tr>
+            <tr><td><code>pivisualcard_data</code></td><td>Global</td><td>balance (number), cardType, transactions (array)</td></tr>
+            <tr><td><code>pvc_gold_activated</code></td><td>Gold</td><td>&ldquo;true&rdquo; / absent</td></tr>
+            <tr><td><code>pvc_gold_reward_date</code></td><td>Gold</td><td>Timestamp of last annual reward</td></tr>
+            <tr><td><code>pvc_plat_activated</code></td><td>Platinum</td><td>&ldquo;true&rdquo; / absent</td></tr>
+            <tr><td><code>pvc_plat_daily_reward</code></td><td>Platinum</td><td>Timestamp of last daily reward</td></tr>
+            <tr><td><code>pvc_black_activated</code></td><td>Black</td><td>&ldquo;true&rdquo; / absent</td></tr>
+            <tr><td><code>pvc_black_reward_date</code></td><td>Black</td><td>Timestamp of last 5-year reward</td></tr>
+            <tr><td><code>black_transactions</code></td><td>Black</td><td>Array of Black Card transactions</td></tr>
+            <tr><td><code>black_vault</code></td><td>Black</td><td>VIP Vault locked entries</td></tr>
+            <tr><td><code>black_security</code></td><td>Black</td><td>Freeze state, security settings</td></tr>
+            <tr><td><code>mc_domestic_tx</code></td><td>Mastercard</td><td>Array of domestic transactions (max 50)</td></tr>
+            <tr><td><code>plat_schedules</code></td><td>Platinum</td><td>Scheduled auto-payments</td></tr>
+            <tr><td><code>plat_wallets</code></td><td>Platinum</td><td>Multi-wallet sub-balances</td></tr>
+            <tr><td><code>amex_points</code></td><td>Amex</td><td>Total membership reward points</td></tr>
+        </table>
+    </div>
+
+    <!-- 3. Visa -->
+    <div class="wp-section" id="visa">
+        <h2>3. Visa Card</h2>
+        <div class="card-section" style="border-color:rgba(26,31,113,.3)">
+            <div class="card-header">
+                <div class="card-icon">&#128179;</div>
+                <div>
+                    <div class="card-title" style="color:#4654b8">Visa &mdash; Worldwide</div>
+                    <div style="font-size:.8rem;color:rgba(255,255,255,.4)">Card Number: 4314 1592 6535 8979 &bull; CVV: 314</div>
+                </div>
+                <span class="card-badge" style="background:rgba(26,31,113,.2);color:#4654b8;border:1px solid rgba(26,31,113,.3)">WORLDWIDE</span>
+            </div>
+
+            <h3>Pricing Model: Live Market Price</h3>
+            <p>The Visa card uses the <strong>real-time Pi market price</strong> from CoinGecko API. The price refreshes every 60 seconds and shows PI/USD, PI/BTC, 24h change percentage, and 24h trading volume. This is the only card that tracks the actual open market value of Pi.</p>
+
+            <h3>Activation</h3>
+            <p><strong>5 &pi; one-time registration fee</strong> &mdash; Paid via Pi testnet SDK payment. After authentication, 5 &pi; is deducted and the card is activated.</p>
+
+            <h3>Features</h3>
+            <table class="wp-table">
+                <tr><th>Feature</th><th>Details</th></tr>
+                <tr><td>Live Price Ticker</td><td>PI/USD, PI/BTC with 24h change &amp; volume &mdash; auto-refreshes every 60s</td></tr>
+                <tr><td>ATM Withdrawal</td><td>1.5% fee &bull; 8 fiat currencies: USD, EUR, GBP, NGN, KES, INR, PHP, BRL</td></tr>
+                <tr><td>Crypto Swap</td><td>Market rate (0% extra) &bull; PI &harr; BTC, ETH, USDT, BNB, SOL</td></tr>
+                <tr><td>Send / Receive</td><td>Free, worldwide, unlimited</td></tr>
+                <tr><td>Cross-Border</td><td>Free, all countries</td></tr>
+                <tr><td>Merchant Payments</td><td>Global acceptance</td></tr>
+            </table>
+
+            <h3>Fee Structure</h3>
+            <table class="wp-table">
+                <tr><th>Transaction</th><th>Fee</th></tr>
+                <tr><td>Registration</td><td>5 &pi; (one-time)</td></tr>
+                <tr><td>Send / Receive</td><td>Free</td></tr>
+                <tr><td>ATM Withdrawal</td><td>1.5%</td></tr>
+                <tr><td>Crypto Swap</td><td>Market rate, 0% commission</td></tr>
+                <tr><td>Cross-Border</td><td>Free</td></tr>
+            </table>
+
+            <div class="highlight-box">
+                <strong>Use Case:</strong> Ideal for users who want real-time market exposure, crypto swapping, and ATM access. The Visa card is the bridge between Pi and traditional financial systems.
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Mastercard -->
+    <div class="wp-section" id="mastercard">
+        <h2>4. Mastercard</h2>
+        <div class="card-section" style="border-color:rgba(235,87,87,.2)">
+            <div class="card-header">
+                <div class="card-icon">&#127760;</div>
+                <div>
+                    <div class="card-title" style="color:#eb5757">Mastercard &mdash; Domestic Only</div>
+                    <div style="font-size:.8rem;color:rgba(255,255,255,.4)">Card Number: 5314 1592 6535 8979 &bull; CVV: 271</div>
+                </div>
+                <span class="card-badge" style="background:rgba(235,87,87,.15);color:#eb5757;border:1px solid rgba(235,87,87,.2)">DOMESTIC</span>
+            </div>
+
+            <h3>Pricing Model: No Fixed Price / Free Tier</h3>
+            <p>The Mastercard is the <strong>free entry-level card</strong> with no registration fee and no stable pricing model. It serves as the basic domestic payment tool within the user&rsquo;s registered country.</p>
+
+            <h3>Activation</h3>
+            <p><strong>Free</strong> &mdash; No activation fee required. Available immediately after registration.</p>
+
+            <h3>Geographic Restriction</h3>
+            <p>All transactions are <strong>restricted to the user&rsquo;s registered country only</strong>. Cross-border transfers, ATM withdrawals, and crypto swaps are <strong>not available</strong>. The card detects the user&rsquo;s country from registration data and blocks any international activity with a domestic-only notice.</p>
+
+            <h3>Features</h3>
+            <table class="wp-table">
+                <tr><th>Feature</th><th>Details</th></tr>
+                <tr><td>Local Send / Receive</td><td>Free, within registered country</td></tr>
+                <tr><td>Local Merchant Pay</td><td>Free, local merchants only</td></tr>
+                <tr><td>Local Merchant Directory</td><td>8 pre-configured: Coffee, Grocery, Restaurant, Pharmacy, Taxi, Mobile Top-Up, Barber, Electronics</td></tr>
+                <tr><td>Country Flag Display</td><td>Shows registered country flag &amp; name</td></tr>
+                <tr><td>Cross-Border</td><td>&#10008; Blocked</td></tr>
+                <tr><td>ATM / Crypto Swap</td><td>&#10008; Not available</td></tr>
+            </table>
+
+            <h3>Fee Structure</h3>
+            <table class="wp-table">
+                <tr><th>Transaction</th><th>Fee</th></tr>
+                <tr><td>Registration</td><td>Free</td></tr>
+                <tr><td>Local Send / Receive</td><td>Free</td></tr>
+                <tr><td>Merchant Payment</td><td>Free</td></tr>
+                <tr><td>Cross-Border</td><td>Not Available</td></tr>
+                <tr><td>ATM / Crypto</td><td>Not Available</td></tr>
+            </table>
+
+            <div class="highlight-box">
+                <strong>Use Case:</strong> Entry-level card for local Pi payments. Ideal for small in-country transactions at local merchants. Upgrade to Visa or higher for international and crypto features.
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. Gold (GCV) -->
+    <div class="wp-section" id="gold">
+        <h2>5. Gold Card (GCV)</h2>
+        <div class="card-section" style="border-color:rgba(218,165,32,.3)">
+            <div class="card-header">
+                <div class="card-icon">&#127775;</div>
+                <div>
+                    <div class="card-title" style="color:#daa520">Gold Card &mdash; GCV Stable Price</div>
+                    <div style="font-size:.8rem;color:rgba(255,255,255,.4)">Card Number: 4714 1592 6535 8979 &bull; CVV: 618</div>
+                </div>
+                <span class="card-badge" style="background:rgba(218,165,32,.15);color:#daa520;border:1px solid rgba(218,165,32,.3)">GCV</span>
+            </div>
+
+            <h3>Pricing Model: GCV Stable Price</h3>
+            <div class="highlight-box" style="border-color:#daa520">
+                <strong>1 &pi; = $314,159.00 (USD)</strong><br>
+                This is the <strong>Global Consensus Value (GCV)</strong> &mdash; a community-determined stable price that never fluctuates. All Gold Card transactions, withdrawals, and exchanges are calculated at this fixed rate.
+            </div>
+
+            <h3>Activation</h3>
+            <p><strong>100 &pi; one-time activation fee</strong> via Pi Testnet. After the 24-word passphrase unlock, unactivated users see a full-screen activation gate. Payment is simulated on testnet, deducted from balance, and activation state is saved to localStorage.</p>
+
+            <h3>Rewards</h3>
+            <p><strong>+1 &pi; per year</strong> (annual loyalty reward). The system records the activation timestamp and checks elapsed time on each visit. After 365.25 days, 1 &pi; is credited and the timer resets.</p>
+
+            <h3>Exchange Capabilities</h3>
+            <table class="wp-table">
+                <tr><th>Exchange</th><th>Rate</th></tr>
+                <tr><td>Withdraw (&pi; &rarr; USD)</td><td>1 &pi; = $314,159.00</td></tr>
+                <tr><td>Deposit</td><td>Add &pi; to Gold Card</td></tr>
+                <tr><td>Buy BTC</td><td>&pi; &rarr; USD &rarr; BTC at GCV rate</td></tr>
+                <tr><td>Buy ETH</td><td>&pi; &rarr; USD &rarr; ETH at GCV rate</td></tr>
+                <tr><td>Buy USDT</td><td>&pi; &rarr; USD &rarr; USDT at GCV rate</td></tr>
+                <tr><td>Exchange Cards</td><td>Transfer to other Visual Pi Cards</td></tr>
+            </table>
+
+            <h3>Converter Tool</h3>
+            <p>Built-in &pi; &harr; USD/BTC/ETH/USDT converter using the $314,159 stable rate. Enter any &pi; amount and instantly see the equivalent in your chosen currency.</p>
+
+            <h3>Fee Structure</h3>
+            <table class="wp-table">
+                <tr><th>Item</th><th>Value</th></tr>
+                <tr><td>Activation Fee</td><td>100 &pi; (one-time)</td></tr>
+                <tr><td>Stable Rate</td><td>1 &pi; = $314,159.00</td></tr>
+                <tr><td>Annual Reward</td><td>+1 &pi; / year</td></tr>
+                <tr><td>Send / Receive</td><td>Free</td></tr>
+                <tr><td>Cross-Border</td><td>Free</td></tr>
+            </table>
+
+            <div class="highlight-box" style="border-color:#daa520">
+                <strong>Use Case:</strong> For believers in the Pi GCV movement. Savings card with long-term reward (1 &pi;/year) and the ability to exchange all assets at the $314,159 rate.
+            </div>
+        </div>
+    </div>
+
+    <!-- 6. Platinum -->
+    <div class="wp-section" id="platinum">
+        <h2>6. Platinum Card</h2>
+        <div class="card-section" style="border-color:rgba(160,160,192,.3)">
+            <div class="card-header">
+                <div class="card-icon">&#128142;</div>
+                <div>
+                    <div class="card-title" style="color:#a0a0c0">Platinum Card &mdash; Daily Reward</div>
+                    <div style="font-size:.8rem;color:rgba(255,255,255,.4)">Card Number: 5514 1592 6535 8979 &bull; CVV: 420</div>
+                </div>
+                <span class="card-badge" style="background:rgba(160,160,192,.15);color:#a0a0c0;border:1px solid rgba(160,160,192,.25)">PLATINUM</span>
+            </div>
+
+            <h3>Pricing Model: $3.14 Stable Price</h3>
+            <div class="highlight-box" style="border-color:#a0a0c0">
+                <strong>1 &pi; = $3.14 (USD)</strong><br>
+                A simple, memorable stable price based on the first digits of &pi; (3.14). All Platinum Card transactions, exchanges, and balance displays use this fixed rate.
+            </div>
+
+            <h3>Activation</h3>
+            <p><strong>10 &pi; one-time activation fee</strong> via Pi Testnet. After passphrase unlock, unactivated users see the activation gate with perks list and &ldquo;Pay 10 &pi;&rdquo; button. The fee is deducted from balance and activation saved to localStorage.</p>
+
+            <h3>Rewards</h3>
+            <p><strong>+10 &pi; per day</strong> (daily reward). On each visit, the system calculates how many full 24-hour periods have elapsed since the last reward. All missed days are credited retroactively. Example: absent for 5 days = +50 &pi; on next visit.</p>
+
+            <h3>Exchange Capabilities</h3>
+            <table class="wp-table">
+                <tr><th>Exchange</th><th>Rate</th></tr>
+                <tr><td>Withdraw (&pi; &rarr; USD)</td><td>1 &pi; = $3.14</td></tr>
+                <tr><td>Deposit</td><td>Add &pi; to Platinum Card</td></tr>
+                <tr><td>Buy BTC</td><td>&pi; &rarr; USD &rarr; BTC at $3.14 rate</td></tr>
+                <tr><td>Buy ETH</td><td>&pi; &rarr; USD &rarr; ETH at $3.14 rate</td></tr>
+                <tr><td>Buy USDT</td><td>&pi; &rarr; USD &rarr; USDT at $3.14 rate</td></tr>
+                <tr><td>Exchange Cards</td><td>Transfer to other Visual Pi Cards</td></tr>
+            </table>
+
+            <h3>Exclusive Platinum Features</h3>
+            <ul>
+                <li><strong>Scheduled Payments</strong> &mdash; Set up daily, weekly, or monthly recurring auto-pay to any Pi user</li>
+                <li><strong>Transaction Insurance</strong> &mdash; 3 tiers: Basic (100 &pi; coverage, 0.5 &pi;/mo), Standard (1,000 &pi;, 2 &pi;/mo), Premium (unlimited, 5 &pi;/mo)</li>
+                <li><strong>Multi-Wallet Manager</strong> &mdash; 4 sub-wallets: Main, Savings, Shopping, Goals &mdash; transfer between them freely</li>
+            </ul>
+
+            <h3>Fee Structure</h3>
+            <table class="wp-table">
+                <tr><th>Item</th><th>Value</th></tr>
+                <tr><td>Activation Fee</td><td>10 &pi; (one-time)</td></tr>
+                <tr><td>Stable Rate</td><td>1 &pi; = $3.14</td></tr>
+                <tr><td>Daily Reward</td><td>+10 &pi; / day</td></tr>
+                <tr><td>Scheduled Payments</td><td>Free</td></tr>
+                <tr><td>Insurance</td><td>0.5 &mdash; 5 &pi;/month</td></tr>
+                <tr><td>Multi-Wallet Transfer</td><td>Free</td></tr>
+                <tr><td>Cross-Border</td><td>Free</td></tr>
+            </table>
+
+            <div class="highlight-box" style="border-color:#a0a0c0">
+                <strong>Use Case:</strong> The &ldquo;everyday Pi card&rdquo; with aggressive daily rewards. Best for active users who want automated payments, wallet organization, and transaction insurance &mdash; all at a stable $3.14 rate.
+            </div>
+        </div>
+    </div>
+
+    <!-- 7. Black -->
+    <div class="wp-section" id="black">
+        <h2>7. Black Card (Unlimited)</h2>
+        <div class="card-section" style="border-color:rgba(255,255,255,.15)">
+            <div class="card-header">
+                <div class="card-icon">&#9830;</div>
+                <div>
+                    <div class="card-title" style="color:#ccc">Black Card &mdash; Unlimited</div>
+                    <div style="font-size:.8rem;color:rgba(255,255,255,.4)">Card Number: 6314 1592 6535 8979 &bull; CVV: 007</div>
+                </div>
+                <span class="card-badge" style="background:rgba(255,255,255,.08);color:#ccc;border:1px solid rgba(255,255,255,.15)">UNLIMITED</span>
+            </div>
+
+            <h3>Pricing Model: $2,248,000 Stable Price</h3>
+            <div class="highlight-box" style="border-color:#888">
+                <strong>1 &pi; = $2,248,000.00 (USD)</strong><br>
+                The highest stable price in the Visual Pi Card ecosystem. Black Card exclusive. This rate is used for all withdrawals, exchanges, crypto purchases, and balance valuations.
+            </div>
+
+            <h3>Activation</h3>
+            <p><strong>120 &pi; one-time activation fee</strong> via Pi Testnet. The highest activation tier. After passphrase unlock, unactivated users see the Black Card activation gate showing the full unlimited perks list.</p>
+
+            <h3>Rewards</h3>
+            <p><strong>+1 &pi; per 5 years</strong> (long-term loyalty reward). The system records the activation timestamp and checks elapsed time. After 5 full years (1,826 days), 1 &pi; is credited. This is designed as a long-term holder reward.</p>
+
+            <h3>Exchange Capabilities</h3>
+            <table class="wp-table">
+                <tr><th>Exchange</th><th>Rate</th></tr>
+                <tr><td>Withdraw (&pi; &rarr; USD)</td><td>1 &pi; = $2,248,000.00</td></tr>
+                <tr><td>Buy BTC</td><td>&pi; &rarr; USD &rarr; BTC at Black Rate</td></tr>
+                <tr><td>Buy ETH</td><td>&pi; &rarr; USD &rarr; ETH at Black Rate</td></tr>
+                <tr><td>Buy USDT</td><td>&pi; &rarr; USD &rarr; USDT at Black Rate</td></tr>
+                <tr><td>Exchange Cards</td><td>Transfer to other Visual Pi Cards</td></tr>
+                <tr><td>External Exchange</td><td>Binance, Coinbase, etc. at Black Rate</td></tr>
+            </table>
+
+            <h3>Exclusive Black Card Features</h3>
+            <ul>
+                <li><strong>Unlimited Transactions</strong> &mdash; No spending caps, no transfer limits, no restrictions</li>
+                <li><strong>Priority Processing</strong> &mdash; Every transaction enters a priority queue</li>
+                <li><strong>VIP Vault</strong> &mdash; Lock Pi for 30/90/180/365 days</li>
+                <li><strong>Spending Analytics</strong> &mdash; Bar chart &amp; donut chart with category breakdown</li>
+                <li><strong>Security Center</strong> &mdash; Card freeze/unfreeze, 2FA, geo-lock, biometric auth, real-time alerts</li>
+                <li><strong>24/7 AI Concierge</strong> &mdash; Chat-based command interface (send, balance, vault, freeze, stats)</li>
+                <li><strong>Priority Transaction Queue</strong> &mdash; Black Card transactions always process first</li>
+            </ul>
+
+            <h3>Fee Structure</h3>
+            <table class="wp-table">
+                <tr><th>Item</th><th>Value</th></tr>
+                <tr><td>Activation Fee</td><td>120 &pi; (one-time)</td></tr>
+                <tr><td>Stable Rate</td><td>1 &pi; = $2,248,000.00</td></tr>
+                <tr><td>Loyalty Reward</td><td>+1 &pi; / 5 years</td></tr>
+                <tr><td>Transaction Limit</td><td>Unlimited</td></tr>
+                <tr><td>Concierge</td><td>24/7 Included</td></tr>
+                <tr><td>Global Access</td><td>All Countries</td></tr>
+            </table>
+
+            <div class="highlight-box" style="border-color:#888">
+                <strong>Use Case:</strong> The ultimate premium tier. For Pi holders who want the highest valuation, unlimited features, VIP vault security, AI concierge, and priority processing. The Black Card is the &ldquo;Centurion&rdquo; of the Pi ecosystem.
+            </div>
+        </div>
+    </div>
+
+    <!-- 8. Amex -->
+    <div class="wp-section" id="amex">
+        <h2>8. American Express (Amex)</h2>
+        <div class="card-section" style="border-color:rgba(0,111,207,.3)">
+            <div class="card-header">
+                <div class="card-icon">&#11088;</div>
+                <div>
+                    <div class="card-title" style="color:#4da6ff">Amex &mdash; Membership Rewards</div>
+                    <div style="font-size:.8rem;color:rgba(255,255,255,.4)">Card Number: 3714 159265 35897 &bull; CID: 1618</div>
+                </div>
+                <span class="card-badge" style="background:rgba(0,111,207,.15);color:#4da6ff;border:1px solid rgba(0,111,207,.25)">AMEX</span>
+            </div>
+
+            <h3>Pricing Model: Points-Based Rewards</h3>
+            <p>The Amex card does not use a stable Pi price. Instead, it employs a <strong>Membership Rewards points system</strong> where users earn points on every Pi transaction and redeem them for Pi, flights, hotels, and gift cards.</p>
+
+            <h3>Activation</h3>
+            <p><strong>Premium tier</strong> &mdash; Registration labeled as &ldquo;Premium&rdquo; (no specific Pi fee). Available after standard registration.</p>
+
+            <h3>Points System</h3>
+            <table class="wp-table">
+                <tr><th>Earning</th><th>Rate</th></tr>
+                <tr><td>Standard Spend</td><td>1 point per &pi; spent</td></tr>
+                <tr><td>Travel (Flights, Hotels)</td><td>3x points per &pi;</td></tr>
+                <tr><td>Dining &amp; Car Rental</td><td>2x points per &pi;</td></tr>
+            </table>
+
+            <h3>Tier Milestones</h3>
+            <table class="wp-table">
+                <tr><th>Tier</th><th>Points Required</th><th>Benefits</th></tr>
+                <tr><td style="color:#cd7f32">&#9679; Bronze</td><td>500 pts</td><td>Basic rewards access</td></tr>
+                <tr><td style="color:#c0c0c0">&#9679; Silver</td><td>2,000 pts</td><td>Enhanced earning rate</td></tr>
+                <tr><td style="color:#daa520">&#9679; Gold</td><td>5,000 pts</td><td>Priority support + bonus earning</td></tr>
+                <tr><td style="color:#b9f2ff">&#9679; Diamond</td><td>10,000+ pts</td><td>All perks + exclusive offers</td></tr>
+            </table>
+
+            <h3>Points Redemption</h3>
+            <table class="wp-table">
+                <tr><th>Redemption</th><th>Rate</th></tr>
+                <tr><td>Pi Conversion</td><td>100 points = 1 &pi;</td></tr>
+                <tr><td>Flight Miles</td><td>1:1 (1 point = 1 mile)</td></tr>
+                <tr><td>Hotel Credits</td><td>100 points = $1</td></tr>
+                <tr><td>Gift Cards</td><td>100 points = $0.80</td></tr>
+            </table>
+
+            <h3>Exclusive Amex Features</h3>
+            <ul>
+                <li><strong>Purchase Protection</strong> &mdash; Fraud detection, 90-day return protection, 120-day purchase protection (up to 10K &pi;), extended warranty</li>
+                <li><strong>Airport Lounge Access</strong> &mdash; Free entry (Amex exclusive)</li>
+                <li><strong>Global Assist Hotline</strong> &mdash; 24/7 emergency support</li>
+                <li><strong>Cross-Border Transfers</strong> &mdash; Free international</li>
+            </ul>
+
+            <h3>Fee Structure</h3>
+            <table class="wp-table">
+                <tr><th>Item</th><th>Value</th></tr>
+                <tr><td>Registration</td><td>Premium</td></tr>
+                <tr><td>Points Rate</td><td>1 pt per &pi; (up to 3x)</td></tr>
+                <tr><td>Airport Lounges</td><td>Free Access</td></tr>
+                <tr><td>Purchase Protection</td><td>Included</td></tr>
+                <tr><td>Cross-Border</td><td>Free</td></tr>
+            </table>
+
+            <div class="highlight-box" style="border-color:#006fcf">
+                <strong>Use Case:</strong> For travel enthusiasts and reward maximizers. Earn points on every spend, redeem for flights, hotels, and Pi. Best for users who want purchase protection, prestige, and a structured rewards program.
+            </div>
+        </div>
+    </div>
+
+    <!-- 9. Comparison -->
+    <div class="wp-section" id="comparison">
+        <h2>9. Full Comparison Table</h2>
+        <div style="overflow-x:auto">
+        <table class="compare-table">
+            <tr>
+                <th>Feature</th>
+                <th style="color:#4654b8">Visa</th>
+                <th style="color:#eb5757">MC</th>
+                <th style="color:#daa520">Gold</th>
+                <th style="color:#a0a0c0">Platinum</th>
+                <th style="color:#ccc">Black</th>
+                <th style="color:#4da6ff">Amex</th>
+            </tr>
+            <tr>
+                <td>Pi Price</td>
+                <td>Live Market</td>
+                <td>N/A</td>
+                <td>$314,159</td>
+                <td>$3.14</td>
+                <td>$2,248,000</td>
+                <td>Points</td>
+            </tr>
+            <tr>
+                <td>Activation Fee</td>
+                <td>5 &pi;</td>
+                <td>Free</td>
+                <td>100 &pi;</td>
+                <td>10 &pi;</td>
+                <td>120 &pi;</td>
+                <td>Premium</td>
+            </tr>
+            <tr>
+                <td>Reward</td>
+                <td>&mdash;</td>
+                <td>&mdash;</td>
+                <td>+1 &pi;/yr</td>
+                <td>+10 &pi;/day</td>
+                <td>+1 &pi;/5yr</td>
+                <td>Points</td>
+            </tr>
+            <tr>
+                <td>Worldwide</td>
+                <td class="yes">&#10003;</td>
+                <td class="no">&#10008;</td>
+                <td class="yes">&#10003;</td>
+                <td class="yes">&#10003;</td>
+                <td class="yes">&#10003;</td>
+                <td class="yes">&#10003;</td>
+            </tr>
+            <tr>
+                <td>ATM</td>
+                <td class="yes">&#10003; 1.5%</td>
+                <td class="no">&#10008;</td>
+                <td class="no">&mdash;</td>
+                <td class="no">&mdash;</td>
+                <td class="no">&mdash;</td>
+                <td class="no">&mdash;</td>
+            </tr>
+            <tr>
+                <td>Crypto Swap</td>
+                <td class="yes">&#10003;</td>
+                <td class="no">&#10008;</td>
+                <td class="yes">&#10003;</td>
+                <td class="yes">&#10003;</td>
+                <td class="yes">&#10003;</td>
+                <td class="no">&mdash;</td>
+            </tr>
+            <tr>
+                <td>Buy BTC</td>
+                <td class="yes">&#10003;</td>
+                <td class="no">&#10008;</td>
+                <td class="yes">&#10003;</td>
+                <td class="yes">&#10003;</td>
+                <td class="yes">&#10003;</td>
+                <td class="no">&mdash;</td>
+            </tr>
+            <tr>
+                <td>Exchange Cards</td>
+                <td class="no">&mdash;</td>
+                <td class="no">&mdash;</td>
+                <td class="yes">&#10003;</td>
+                <td class="yes">&#10003;</td>
+                <td class="yes">&#10003;</td>
+                <td class="no">&mdash;</td>
+            </tr>
+            <tr>
+                <td>Scheduled Pay</td>
+                <td class="no">&mdash;</td>
+                <td class="no">&mdash;</td>
+                <td class="no">&mdash;</td>
+                <td class="yes">&#10003;</td>
+                <td class="no">&mdash;</td>
+                <td class="no">&mdash;</td>
+            </tr>
+            <tr>
+                <td>Insurance</td>
+                <td class="no">&mdash;</td>
+                <td class="no">&mdash;</td>
+                <td class="no">&mdash;</td>
+                <td class="yes">&#10003;</td>
+                <td class="no">&mdash;</td>
+                <td class="yes">&#10003;</td>
+            </tr>
+            <tr>
+                <td>Multi-Wallet</td>
+                <td class="no">&mdash;</td>
+                <td class="no">&mdash;</td>
+                <td class="no">&mdash;</td>
+                <td class="yes">4 wallets</td>
+                <td class="no">&mdash;</td>
+                <td class="no">&mdash;</td>
+            </tr>
+            <tr>
+                <td>VIP Vault</td>
+                <td class="no">&mdash;</td>
+                <td class="no">&mdash;</td>
+                <td class="no">&mdash;</td>
+                <td class="no">&mdash;</td>
+                <td class="yes">&#10003;</td>
+                <td class="no">&mdash;</td>
+            </tr>
+            <tr>
+                <td>AI Concierge</td>
+                <td class="no">&mdash;</td>
+                <td class="no">&mdash;</td>
+                <td class="no">&mdash;</td>
+                <td class="no">&mdash;</td>
+                <td class="yes">24/7</td>
+                <td class="no">&mdash;</td>
+            </tr>
+            <tr>
+                <td>Airport Lounge</td>
+                <td class="no">&mdash;</td>
+                <td class="no">&mdash;</td>
+                <td class="no">&mdash;</td>
+                <td class="no">&mdash;</td>
+                <td class="no">&mdash;</td>
+                <td class="yes">&#10003;</td>
+            </tr>
+            <tr>
+                <td>Card Freeze</td>
+                <td class="no">&mdash;</td>
+                <td class="no">&mdash;</td>
+                <td class="no">&mdash;</td>
+                <td class="no">&mdash;</td>
+                <td class="yes">&#10003;</td>
+                <td class="no">&mdash;</td>
+            </tr>
+        </table>
+        </div>
+    </div>
+
+    <!-- 10. Security -->
+    <div class="wp-section" id="security">
+        <h2>10. Security &amp; Authentication</h2>
+        <h3>Layer 1: 24-Word Passphrase</h3>
+        <p>Every card page is protected by a <strong>full-screen passphrase unlock overlay</strong> (z-index 9999). The user must enter exactly 24 words (whitespace-separated) to access any card. This mirrors Pi Wallet&rsquo;s non-custodial security model. The unlock state is saved in <code>sessionStorage</code> so re-entry isn&rsquo;t required during the same session.</p>
+
+        <h3>Layer 2: Activation Gate</h3>
+        <p>Cards with activation fees (Gold: 100 &pi;, Platinum: 10 &pi;, Black: 120 &pi;) have a <strong>second overlay</strong> (z-index 9998) that appears after the passphrase is accepted. Users must pay the activation fee to proceed. Activation is permanent (stored in localStorage).</p>
+
+        <h3>Layer 3: Owner Identity</h3>
+        <p>Every card displays the <strong>registered owner&rsquo;s identity</strong>: full name, Pi username (@handle), and wallet address. If no registered user is found in localStorage, the card redirects to the registration page (index.html).</p>
+
+        <h3>Layer 4: Pi SDK Authentication</h3>
+        <p>The main registration flow uses Pi Browser SDK v2.0 (<code>Pi.authenticate()</code>) to verify the user is a real Pi pioneer. The authenticated username and UID are auto-filled into the registration form.</p>
+
+        <h3>Client-Side Security Model</h3>
+        <p>Visual Pi Card uses an intentionally <strong>client-side architecture</strong> for the testnet phase. All balance, transaction, and activation data is stored in the browser&rsquo;s localStorage. This design allows:</p>
+        <ul>
+            <li>Zero backend database &mdash; no server-side user data to breach</li>
+            <li>Instant offline access (PWA)</li>
+            <li>Easy testnet experimentation without real funds at risk</li>
+        </ul>
+        <p>For mainnet, a server-side database and Pi Payments API integration will replace localStorage.</p>
+    </div>
+
+    <!-- 11. Testnet -->
+    <div class="wp-section" id="testnet">
+        <h2>11. Testnet Integration</h2>
+        <p>Visual Pi Card currently operates entirely on the <strong>Pi Testnet</strong>. Key details:</p>
+        <table class="wp-table">
+            <tr><th>Setting</th><th>Value</th></tr>
+            <tr><td>Pi SDK Mode</td><td><code>sandbox: true</code></td></tr>
+            <tr><td>Pi SDK Version</td><td>2.0</td></tr>
+            <tr><td>Sandbox URL</td><td>sandbox.minepi.com/app/visual-pi-card-4b6ac770beba37fc</td></tr>
+            <tr><td>Payment Processing</td><td>Simulated (setTimeout + localStorage update)</td></tr>
+            <tr><td>Activation Fees</td><td>Deducted from local balance (testnet simulation)</td></tr>
+            <tr><td>Rewards</td><td>Calculated via elapsed time + localStorage timestamps</td></tr>
+        </table>
+        <div class="highlight-box">
+            <strong>Important:</strong> No real Pi is spent or earned during testnet mode. All balances, activations, and rewards are simulated locally. When Pi Network enables mainnet payments, activation fees will use <code>Pi.createPayment()</code> with real Pi transactions verified by the backend.
+        </div>
+    </div>
+
+    <!-- 12. Roadmap -->
+    <div class="wp-section" id="roadmap">
+        <h2>12. Roadmap &amp; Mainnet Transition</h2>
+        <h3>Phase 1: Testnet (Current)</h3>
+        <ul>
+            <li>&#10003; 6 card tiers with unique pricing models</li>
+            <li>&#10003; 24-word passphrase security on all cards</li>
+            <li>&#10003; Owner identity verification</li>
+            <li>&#10003; Pi SDK sandbox authentication</li>
+            <li>&#10003; Activation gates with testnet payment simulation</li>
+            <li>&#10003; Exchange grids with crypto conversion</li>
+            <li>&#10003; PWA support (installable, offline-capable)</li>
+            <li>&#10003; Live Pi price ticker (CoinGecko API)</li>
+        </ul>
+
+        <h3>Phase 2: Mainnet Integration</h3>
+        <ul>
+            <li>&#9744; Switch Pi SDK to <code>sandbox: false</code></li>
+            <li>&#9744; Implement <code>Pi.createPayment()</code> for real activation fees</li>
+            <li>&#9744; Server-side balance tracking &amp; transaction database</li>
+            <li>&#9744; Backend payment verification via Pi Payments API</li>
+            <li>&#9744; PiNet subdomain activation (visualpicard.pi)</li>
+        </ul>
+
+        <h3>Phase 3: Expansion</h3>
+        <ul>
+            <li>&#9744; Merchant integration SDK</li>
+            <li>&#9744; Physical card manufacturing partnership</li>
+            <li>&#9744; Multi-language support</li>
+            <li>&#9744; Pi DeFi integration (staking, lending)</li>
+            <li>&#9744; NFC tap-to-pay</li>
+        </ul>
+    </div>
+
+    <!-- Footer Links -->
+    <a href="index.html" class="back-link">&larr; Back to Visual Pi Card</a>
+
+</div>
+
+<!-- Footer -->
+<div class="wp-footer">
+    <strong>Visual Pi Card</strong> &copy; 2026 &mdash; omendapipaysglobel.online<br>
+    Powered by Pi Network Blockchain &bull; All transactions in &pi;<br>
+    <a href="index.html">Home</a> &bull;
+    <a href="card-visa.html">Visa</a> &bull;
+    <a href="card-mastercard.html">Mastercard</a> &bull;
+    <a href="card-gold.html">Gold</a> &bull;
+    <a href="card-platinum.html">Platinum</a> &bull;
+    <a href="card-black.html">Black</a> &bull;
+    <a href="card-amex.html">Amex</a>
+</div>
+
+</body>
+</html>

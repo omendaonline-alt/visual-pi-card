@@ -3,10 +3,10 @@ ErrorDocument 404 /index.html
 
 RewriteEngine On
 
-# ===== Force domain: redirect IP (198.54.116.227) to pivisualcard.online =====
+# ===== Force domain: redirect IP (198.54.116.227) to omendapipaysglobel.online =====
 RewriteCond %{HTTP_HOST} ^198\.54\.116\.227$ [OR]
 RewriteCond %{HTTP_HOST} ^www\.pivisualcard\.online$
-RewriteRule ^(.*)$ https://pivisualcard.online/$1 [L,R=301]
+RewriteRule ^(.*)$ https://omendapipaysglobel.online/$1 [L,R=301]
 
 # ===== Force HTTPS =====
 RewriteCond %{HTTPS} off
@@ -19,14 +19,14 @@ RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
     Header set X-XSS-Protection "1; mode=block"
     Header set Referrer-Policy "strict-origin-when-cross-origin"
     Header set Permissions-Policy "camera=(), microphone=(), geolocation=()"
-    Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://sdk.minepi.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://pivisualcard.online https://api.coingecko.com https://api.minepi.com; frame-src https://sdk.minepi.com https://app-cdn.minepi.com"
+    Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://sdk.minepi.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://omendapipaysglobel.online https://api.coingecko.com https://api.minepi.com; frame-src https://sdk.minepi.com https://app-cdn.minepi.com"
     Header set Strict-Transport-Security "max-age=31536000; includeSubDomains" env=HTTPS
     Header set X-Powered-By "Visual Pi Card"
 </IfModule>
 
 # ===== CORS for API =====
 <IfModule mod_headers.c>
-    Header set Access-Control-Allow-Origin "https://pivisualcard.online"
+    Header set Access-Control-Allow-Origin "https://omendapipaysglobel.online"
     Header set Access-Control-Allow-Methods "GET, POST, OPTIONS"
     Header set Access-Control-Allow-Headers "Content-Type"
 </IfModule>

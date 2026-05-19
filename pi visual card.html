@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Visual Pi Card &mdash; pivisualcard.online</title>
+    <title>Visual Pi Card &mdash; omendapipaysglobel.online</title>
 
     <!-- Domain & SEO -->
-    <link rel="canonical" href="https://pivisualcard.online/">
+    <link rel="canonical" href="https://omendapipaysglobel.online/">
     <meta name="description" content="Visual Pi Card - Your Pi Network payment card. Send, receive, and pay with Pi cryptocurrency. Visa, Mastercard, Black Card, Gold, Platinum, Amex.">
     <meta name="keywords" content="Pi Network, Pi coin, Pi payment card, pivisualcard, cryptocurrency card, Visual Pi Card">
     <meta name="author" content="Visual Pi Card">
@@ -15,7 +15,7 @@
     <!-- Open Graph -->
     <meta property="og:title" content="Visual Pi Card - Pi Network Payment Card">
     <meta property="og:description" content="Your Pi Network payment card. Send, receive, and pay with Pi cryptocurrency worldwide.">
-    <meta property="og:url" content="https://pivisualcard.online/">
+    <meta property="og:url" content="https://omendapipaysglobel.online/">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Visual Pi Card">
 
@@ -27,8 +27,8 @@
     <link rel="manifest" href="manifest.json">
 
     <!-- DNS Prefetch for performance -->
-    <link rel="dns-prefetch" href="https://pivisualcard.online">
-    <link rel="preconnect" href="https://pivisualcard.online">
+    <link rel="dns-prefetch" href="https://omendapipaysglobel.online">
+    <link rel="preconnect" href="https://omendapipaysglobel.online">
     <link rel="dns-prefetch" href="https://api.coingecko.com">
     <link rel="preconnect" href="https://api.coingecko.com" crossorigin>
     <link rel="dns-prefetch" href="https://sdk.minepi.com">
@@ -979,7 +979,7 @@
     <!-- CONNECTION INFO BANNER (shows on first visit) -->
     <div id="setupBanner" style="display:none; width:100%; max-width:480px; margin-bottom:18px; padding:16px 20px; border-radius:14px; background:rgba(39,174,96,.12); border:1px solid rgba(39,174,96,.3); font-size:0.82rem; line-height:1.5; text-align:center;">
         <strong style="color:#27ae60;">&#10003; Domain Connected Successfully</strong><br>
-        <span style="opacity:0.7;">pivisualcard.online &bull; 198.54.116.227 &bull; SSL Active</span>
+        <span style="opacity:0.7;">omendapipaysglobel.online &bull; 198.54.116.227 &bull; SSL Active</span>
         <div style="margin-top:8px;">
             <button onclick="document.getElementById('setupBanner').style.display='none'; try{localStorage.setItem('pvc_setup_seen','1')}catch(e){}" style="padding:6px 18px; border-radius:20px; border:1px solid rgba(39,174,96,.4); background:rgba(39,174,96,.15); color:#27ae60; cursor:pointer; font-size:0.78rem;">Got it</button>
         </div>
@@ -988,7 +988,7 @@
     <!-- HEADER -->
     <header class="header">
         <h1>VISUAL PI CARD</h1>
-        <p>pivisualcard.online &mdash; Pi Network Payment Card</p>
+        <p>omendapipaysglobel.online &mdash; Pi Network Payment Card</p>
     </header>
 
     <!-- CARD TYPE SELECTOR -->
@@ -1054,7 +1054,7 @@
                     <span class="cvv" id="cardCvv">314</span>
                 </div>
                 <div class="card-back-info" id="cardBackInfo">
-                    Issued by Visual Pi Card (pivisualcard.online) for the Pi Network
+                    Issued by Visual Pi Card (omendapipaysglobel.online) for the Pi Network
                     ecosystem. All transactions are settled in Pi (&pi;). Authorized
                     for peer-to-peer and merchant payments worldwide. VISA network.
                 </div>
@@ -1230,7 +1230,7 @@
 
     <!-- FOOTER -->
     <footer class="footer">
-        Visual Pi Card &copy; 2026 &mdash; pivisualcard.online<br>
+        Visual Pi Card &copy; 2026 &mdash; omendapipaysglobel.online<br>
         Powered by Pi Blockchain &bull; All transactions in &pi; &bull; 198.54.116.227
     </footer>
 
@@ -1243,6 +1243,7 @@
 
             <label for="modalRecipient" id="recipientLabel">Recipient Pi Username</label>
             <input type="text" id="modalRecipient" placeholder="@username" autocomplete="off">
+            <div id="resolvedWallet" style="display:none; margin-top:6px; padding:8px 12px; border-radius:8px; background:rgba(39,174,96,.1); border:1px solid rgba(39,174,96,.2); font-size:.72rem; color:#27ae60; word-break:break-all;"></div>
 
             <label for="modalAmount">Amount (&pi;)</label>
             <input type="number" id="modalAmount" placeholder="0.00" min="0.01" step="0.01">
@@ -1358,7 +1359,7 @@
     <script>
         /* ===== CONFIG ===== */
         var STORAGE_KEY = 'pivisualcard_data';
-        var DOMAIN = 'pivisualcard.online';
+        var DOMAIN = 'omendapipaysglobel.online';
         var SERVER_IP = '198.54.116.227';
 
         /* ===== STATE ===== */
@@ -1632,16 +1633,17 @@
             switch (type) {
                 case 'send':
                     title.textContent = 'Send Pi';
-                    recipientLabel.textContent = 'Recipient Pi Username';
-                    recipientInput.placeholder = '@username';
+                    recipientLabel.textContent = 'Recipient Card Number or @username';
+                    recipientInput.placeholder = 'Card number or @username';
                     recipientInput.style.display = '';
                     recipientLabel.style.display = '';
                     confirmBtn.textContent = 'Send';
                     break;
                 case 'receive':
                     title.textContent = 'Receive Pi';
-                    recipientLabel.textContent = 'Your Pi Address';
-                    recipientInput.value = 'GCDXL7HQ4GKMV5YA...';
+                    recipientLabel.textContent = 'Your Pi Wallet Address';
+                    var ru = getRegisteredUser();
+                    recipientInput.value = (ru && ru.piAddress) ? ru.piAddress : (ru && ru.cardNumber ? ru.cardNumber : '—');
                     recipientInput.readOnly = true;
                     recipientInput.style.display = '';
                     recipientLabel.style.display = '';
@@ -1676,6 +1678,22 @@
             }
 
             overlay.classList.add('active');
+
+            // Resolve card number → wallet address on input
+            if (type === 'send' || type === 'pay') {
+                recipientInput.oninput = function() {
+                    var val = this.value.replace(/\s/g, '');
+                    var resolved = document.getElementById('resolvedWallet');
+                    var u = getRegisteredUser();
+                    if (u && u.cardNumber && val === u.cardNumber.replace(/\s/g, '') && u.piAddress) {
+                        resolved.style.display = 'block';
+                        resolved.innerHTML = '&#128274; Wallet: ' + u.piAddress + (u.piUser ? '<br>Owner: @' + u.piUser : '');
+                    } else {
+                        resolved.style.display = 'none';
+                        resolved.textContent = '';
+                    }
+                };
+            }
         }
 
         function closeModal() {
@@ -1686,6 +1704,8 @@
             document.getElementById('modalRecipient').readOnly = false;
             document.getElementById('modalAmount').value = '';
             document.getElementById('modalNote').value = '';
+            document.getElementById('resolvedWallet').style.display = 'none';
+            document.getElementById('resolvedWallet').textContent = '';
         }
 
         /* ===== CONFIRM ===== */
@@ -1697,9 +1717,10 @@
             const amount = parseFloat(amountInput.value);
 
             if (currentAction === 'receive') {
-                var addr = 'GCDXL7HQ4GKMV5YA3BQPZ4PIPIONEER';
-                navigator.clipboard.writeText(addr).catch(function() {});
-                showToast('Address copied: ' + addr.substring(0, 16) + '...');
+                var ru = getRegisteredUser();
+                var addr = (ru && ru.piAddress) ? ru.piAddress : (ru && ru.cardNumber ? ru.cardNumber : '');
+                if (addr) { navigator.clipboard.writeText(addr).catch(function() {}); }
+                showToast('Address copied: ' + (addr ? addr.substring(0, 20) + '...' : 'N/A'));
                 closeModal();
                 return;
             }
@@ -1723,19 +1744,31 @@
                     return;
                 }
 
+                // Resolve card number → wallet address
+                var walletAddr = '';
+                var recipientClean = recipient.replace(/\s/g, '');
+                var u = getRegisteredUser();
+                if (u && u.cardNumber && recipientClean === u.cardNumber.replace(/\s/g, '') && u.piAddress) {
+                    walletAddr = u.piAddress;
+                }
+
                 // --- Pi Browser: real blockchain payment ---
                 if (isPiBrowser()) {
+                    var recipientDisplay = recipient.replace(/^@/, '');
                     var memo = currentAction === 'send'
-                        ? 'Send to @' + recipient.replace(/^@/, '')
+                        ? 'Send to ' + (walletAddr ? walletAddr.substring(0,12) + '...' : '@' + recipientDisplay)
                         : 'Pay ' + recipient;
                     var meta = { action: currentAction, recipient: recipient, cardType: currentCardType };
+                    if (walletAddr) { meta.to = walletAddr; }
                     confirmBtn.disabled = true;
                     confirmBtn.textContent = 'Processing...';
                     piCreatePayment(amount, memo, meta,
                         function onSuccess(paymentId, txid) {
                             // Payment confirmed on blockchain
                             balance -= amount;
-                            var txName = currentAction === 'send' ? 'Sent to @' + recipient.replace(/^@/,'') : 'Paid ' + recipient;
+                            var txName = currentAction === 'send'
+                                ? 'Sent to ' + (walletAddr ? walletAddr.substring(0,12) + '...' : '@' + recipient.replace(/^@/,''))
+                                : 'Paid ' + recipient;
                             var txType = currentAction === 'send' ? 'sent' : 'shop';
                             var txRegion = 'international';
                             if (currentCardType === 'mastercard') {
@@ -1765,7 +1798,9 @@
                     var txNameCheck = recipient.toLowerCase();
                 }
                 balance -= amount;
-                var txName = currentAction === 'send' ? 'Sent to @' + recipient.replace(/^@/,'') : 'Paid ' + recipient;
+                var txName = currentAction === 'send'
+                    ? 'Sent to ' + (walletAddr ? walletAddr.substring(0,12) + '...' : '@' + recipient.replace(/^@/,''))
+                    : 'Paid ' + recipient;
                 var txType = currentAction === 'send' ? 'sent' : 'shop';
                 // Tag domestic for Mastercard
                 var txRegion = 'international';

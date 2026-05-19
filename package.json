@@ -1,7 +1,7 @@
 {
   "name": "pi-visual-card",
   "version": "1.0.0",
-  "description": "Pi Visual Card - pivisualcard.online (198.54.116.227) - Pi Network Payment Card Server",
+  "description": "Pi Visual Card - omendapipaysglobel.online (198.54.116.227) - Pi Network Payment Card Server",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

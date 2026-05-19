@@ -3,26 +3,69 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Visual Pi Card &mdash; pivisualcard.online</title>
-<link rel="canonical" href="https://pivisualcard.online/card-visa.html">
+<title>Visual Pi Card &mdash; omendapipaysglobel.online</title>
+<link rel="canonical" href="https://omendapipaysglobel.online/card-visa.html">
 <meta name="description" content="Visual Pi Card - Visa worldwide payments, ATM withdrawal, crypto swap, and live market data.">
 <meta property="og:title" content="Visual Pi Card - Visa">
-<meta property="og:url" content="https://pivisualcard.online/card-visa.html">
+<meta property="og:url" content="https://omendapipaysglobel.online/card-visa.html">
 <meta property="og:site_name" content="Visual Pi Card">
 <meta name="theme-color" content="#0d0221">
+<!-- Pi Network SDK -->
+<script src="https://sdk.minepi.com/pi-sdk.js"></script>
+<script>
+var piSdkReady=false,piUser=null,piAccessToken=null;
+try{Pi.init({version:"2.0",sandbox:false});piSdkReady=true;}catch(e){console.warn('Pi SDK not available');}
+function piAuthenticate(cb){
+    if(!piSdkReady){if(cb)cb(null);return;}
+    Pi.authenticate(['username','payments','wallet_address'],function(payment){
+        fetch('/api/pi/complete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({paymentId:payment.identifier,txid:payment.transaction&&payment.transaction.txid})}).catch(function(){});
+    }).then(function(auth){piUser=auth.user;piAccessToken=auth.accessToken;if(cb)cb(auth);}).catch(function(e){if(cb)cb(null);});
+}
+var _piPayCb=null;
+function piCreatePayment(amount,memo,metadata,onSuccess,onError){
+    if(!piSdkReady){if(onError)onError('Pi SDK not available');return;}
+    _piPayCb=onSuccess;
+    Pi.createPayment({amount:amount,memo:memo,metadata:metadata||{}},{
+        onReadyForServerApproval:function(pid){fetch('/api/pi/approve',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({paymentId:pid})}).then(function(r){return r.json();}).then(function(d){if(!d.success){console.error('Approve failed',d);}}).catch(function(e){console.error('Approve err',e);});},
+        onReadyForServerCompletion:function(pid,txid){_piPayCb=null;fetch('/api/pi/complete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({paymentId:pid,txid:txid})}).then(function(r){return r.json();}).then(function(d){if(d.success&&onSuccess)onSuccess(pid,txid);else if(onError)onError('Completion failed');}).catch(function(e){if(onError)onError(e);});},
+        onCancel:function(){_piPayCb=null;if(onError)onError('cancelled');},
+        onError:function(e){_piPayCb=null;if(onError)onError(e);}
+    });
+}
+function piA2UPayment(amount,memo,metadata,onSuccess,onError){
+    if(!piUser||!piUser.uid){if(onError)onError('Pi user not authenticated');return;}
+    fetch('/api/pi/a2u',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({amount:amount,memo:memo||'Visual Pi Card A2U',uid:piUser.uid,metadata:metadata||{}})})
+    .then(function(r){return r.json();})
+    .then(function(d){if(d.success&&onSuccess)onSuccess(d.paymentId,d.txid);else if(onError)onError(d.error||'A2U failed');})
+    .catch(function(e){if(onError)onError(e.message);});
+}
+</script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Segoe UI',system-ui,sans-serif;background:linear-gradient(135deg,#0f0c29,#1a1f71,#24243e);color:#fff;min-height:100vh;padding:20px}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:linear-gradient(135deg,#0d0221,#1a1f71,#0d0937);color:#fff;min-height:100vh;padding:20px}
 .container{max-width:900px;margin:0 auto}
 h1{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient(90deg,#f5c518,#fff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 .subtitle{text-align:center;color:rgba(255,255,255,.6);margin-bottom:30px;font-size:.9rem}
 .badge{display:inline-block;background:#f5c518;color:#1a1f71;padding:4px 14px;border-radius:20px;font-weight:700;font-size:.75rem;margin-bottom:20px}
 .card-preview{background:linear-gradient(135deg,#1a1f71 0%,#2d3494 50%,#4654b8 100%);border-radius:20px;padding:30px;margin:0 auto 30px;max-width:420px;box-shadow:0 20px 50px rgba(26,31,113,.35);position:relative;overflow:hidden}
 .card-preview::after{content:'';position:absolute;top:-50%;right:-50%;width:100%;height:100%;background:radial-gradient(circle,rgba(255,255,255,.05) 0%,transparent 70%);pointer-events:none}
-.card-number{font-family:'Courier New',monospace;font-size:1.4rem;letter-spacing:3px;margin:20px 0 10px;text-shadow:0 2px 4px rgba(0,0,0,.3)}
+.card-number{font-family:'Courier New',monospace;font-size:1.3rem;letter-spacing:3px;margin:20px 0 4px;text-shadow:0 2px 4px rgba(0,0,0,.3)}
+.card-wallet{font-family:'Courier New',monospace;font-size:.7rem;color:rgba(255,255,255,.6);word-break:break-all;margin-bottom:10px;letter-spacing:.5px}
 .card-label{font-size:.65rem;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:1px}
 .card-val{font-size:.9rem;margin-bottom:12px}
 .net-badge{font-size:.6rem;color:rgba(255,255,255,.4);letter-spacing:2px;margin-top:15px}
+
+.send-pi{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:20px;margin-bottom:20px;text-align:center}
+.send-pi h3{font-size:.95rem;margin-bottom:6px;color:#f5c518}
+.send-pi .send-note{font-size:.72rem;color:rgba(255,255,255,.45);margin-bottom:14px;line-height:1.4}
+.send-pi .send-note b{color:rgba(255,255,255,.7)}
+.send-pi .send-row{display:flex;gap:10px;align-items:center;justify-content:center}
+.send-pi input{flex:1;max-width:160px;padding:10px 14px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#fff;border-radius:10px;font-size:.9rem;text-align:center;outline:none}
+.send-pi input:focus{border-color:#f5c518}
+.send-pi button{padding:10px 22px;border:none;background:linear-gradient(135deg,#f5c518,#e0a800);color:#1a1f71;font-weight:700;border-radius:10px;font-size:.85rem;cursor:pointer;transition:transform .2s,box-shadow .2s}
+.send-pi button:hover{transform:scale(1.04);box-shadow:0 4px 16px rgba(245,197,24,.35)}
+.send-pi .send-dest{font-family:'Courier New',monospace;font-size:.65rem;color:rgba(255,255,255,.35);margin-top:10px;word-break:break-all}
+.send-pi .send-status{margin-top:10px;font-size:.8rem;display:none;padding:8px;border-radius:8px}
 
 .section{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:24px;margin-bottom:20px}
 .section h2{font-size:1.1rem;margin-bottom:14px;color:#f5c518}
@@ -74,10 +117,46 @@ h1{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient
 
 .back-link{display:block;text-align:center;margin-top:30px;color:rgba(255,255,255,.5);font-size:.85rem;text-decoration:none}
 .back-link:hover{color:#f5c518}
+.card-nav{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:20px;padding:0 10px}
+.card-nav a{display:inline-flex;align-items:center;gap:5px;padding:8px 14px;border-radius:10px;font-size:.75rem;font-weight:700;text-decoration:none;transition:all .2s;border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.6)}
+.card-nav a:hover{border-color:rgba(245,197,24,.4);color:#f5c518}
+.card-nav a.active{background:rgba(245,197,24,.15);border-color:rgba(245,197,24,.4);color:#f5c518}
+.card-nav .nav-shop{background:linear-gradient(135deg,rgba(192,57,43,.2),rgba(192,57,43,.1));border-color:rgba(192,57,43,.3);color:#e74c3c}
+.card-nav .nav-shop:hover{background:rgba(192,57,43,.3);color:#fff}
+/* Owner Identity */
+.owner-id{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:14px 18px;margin-bottom:20px;font-size:.78rem}
+.owner-id .oid-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.owner-id .oid-row:last-child{border-bottom:none}
+.owner-id .oid-label{color:rgba(255,255,255,.35);min-width:90px;font-size:.7rem;text-transform:uppercase;letter-spacing:.5px}
+.owner-id .oid-val{color:#fff;font-weight:600;word-break:break-all}
+.owner-id .oid-val.mono{font-family:'Courier New',monospace;font-size:.72rem;color:rgba(255,255,255,.7)}
+.owner-id .oid-badge{display:inline-block;background:rgba(39,174,96,.12);color:#27ae60;border:1px solid rgba(39,174,96,.2);padding:2px 8px;border-radius:8px;font-size:.6rem;font-weight:600;margin-left:auto;letter-spacing:.5px}
+.oid-actions{display:flex;gap:8px;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.06)}
+.oid-btn{flex:1;padding:8px 0;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:rgba(255,255,255,.6);border-radius:10px;font-size:.7rem;font-weight:600;cursor:pointer;text-align:center;transition:all .2s}
+.oid-btn:hover{background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.2)}
+.oid-btn.copied{background:rgba(39,174,96,.12);color:#27ae60;border-color:rgba(39,174,96,.2)}
+/* Passphrase Unlock */
+.unlock-overlay{position:fixed;top:0;left:0;width:100%;height:100%;z-index:9999;background:#fff;display:flex;flex-direction:column;align-items:center}
+.unlock-header{width:100%;background:linear-gradient(135deg,#6b3fa0,#8b5cf6);padding:18px 20px;display:flex;align-items:center;justify-content:center;gap:10px}
+.unlock-header svg{width:28px;height:28px}
+.unlock-header span{color:#fff;font-size:1.1rem;font-weight:600}
+.unlock-body{width:100%;max-width:480px;padding:30px 20px;flex:1;display:flex;flex-direction:column;align-items:center}
+.unlock-body h2{font-size:1.4rem;color:#1a1a2e;margin-bottom:24px;font-weight:600}
+.unlock-body textarea{width:100%;min-height:160px;border:2px solid #8b5cf6;border-radius:16px;padding:16px;font-family:'Courier New',monospace;font-size:.95rem;resize:vertical;outline:none;color:#333;line-height:1.6}
+.unlock-body textarea::placeholder{color:#aaa;font-family:'Segoe UI',sans-serif;font-size:.9rem}
+.unlock-body textarea:focus{border-color:#6b3fa0;box-shadow:0 0 0 3px rgba(139,92,246,.15)}
+.btn-unlock{width:100%;padding:14px;border-radius:30px;border:2px solid #8b5cf6;background:#fff;color:#4a3580;font-size:.95rem;font-weight:600;cursor:pointer;margin-top:16px;transition:all .2s}
+.btn-unlock:hover{background:#f5f0ff}
+.btn-unlock-primary{width:100%;padding:14px;border-radius:30px;border:none;background:linear-gradient(135deg,#6b3fa0,#8b5cf6);color:#fff;font-size:.95rem;font-weight:600;cursor:pointer;margin-top:10px;transition:all .2s}
+.btn-unlock-primary:hover{opacity:.9}
+.unlock-info{margin-top:24px;font-size:.85rem;color:#666;line-height:1.6;text-align:center}
+.unlock-info a{color:#8b5cf6;text-decoration:none}
+.unlock-error{color:#e74c3c;font-size:.82rem;margin-top:8px;display:none}
 </style>
 </head>
 <body>
-<div class="container">
+<!-- Card Content -->
+<div class="container" id="cardContent" style="display:block">
     <h1>&#127380; Visual Pi Card</h1>
     <p class="subtitle">Worldwide Payments • ATM Access • Crypto Swap • Live Market</p>
     <div style="text-align:center"><span class="badge">VISA WORLDWIDE</span></div>
@@ -90,13 +169,38 @@ h1{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient
             <span style="font-size:.7rem;color:rgba(255,255,255,.6)">Visual Pi Card</span>
             <span style="font-size:.65rem;background:rgba(255,255,255,.1);padding:3px 10px;border-radius:8px;color:#f5c518">WORLDWIDE</span>
         </div>
-        <div class="card-number">4314 1592 6535 8979</div>
+        <div class="card-label">Card Number</div>
+        <div class="card-number" id="cardNumber">—</div>
+        <div class="card-wallet" id="cardWallet"></div>
         <div style="display:flex;gap:30px">
             <div><div class="card-label">Card Holder</div><div class="card-val" id="holderName">PI PIONEER</div></div>
             <div><div class="card-label">Expires</div><div class="card-val">12/30</div></div>
             <div><div class="card-label">CVV</div><div class="card-val">314</div></div>
         </div>
         <div class="net-badge">PI NETWORK • VISA • WORLDWIDE</div>
+    </div>
+
+    <!-- Send Pi to Card -->
+    <div class="send-pi">
+        <h3>💸 Send π to This Card</h3>
+        <div class="send-note">Your card &amp; wallet address are <b>the same destination</b>. Send π using the card number — the owner receives it at the wallet shown on this card.</div>
+        <div class="send-row">
+            <input type="number" id="sendAmount" placeholder="Amount π" min="0.01" step="0.01">
+            <button onclick="sendPiToCard()">Send π</button>
+        </div>
+        <div class="send-dest" id="sendDest"></div>
+        <div class="send-status" id="sendStatus"></div>
+    </div>
+
+    <!-- Card Owner Identity -->
+    <div class="owner-id">
+        <div class="oid-row"><div class="oid-label">Owner</div><div class="oid-val" id="oidName">—</div><div class="oid-badge">VERIFIED</div></div>
+        <div class="oid-row"><div class="oid-label">Pi User</div><div class="oid-val" id="oidPiUser">—</div></div>
+        <div class="oid-row"><div class="oid-label">Wallet</div><div class="oid-val mono" id="oidWallet">—</div></div>
+        <div class="oid-actions">
+            <button class="oid-btn" onclick="copyWallet(this)">📋 Copy Wallet</button>
+            <button class="oid-btn" onclick="shareCard()">📤 Share Card</button>
+        </div>
     </div>
 
     <!-- Live Price Ticker -->
@@ -276,6 +380,17 @@ h1{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient
     </div>
 
     <a href="index.html" class="back-link">← Back to Visual Pi Card</a>
+    <div class="card-nav">
+      <a href="card-visa.html" class="active">VISA</a>
+      <a href="card-mastercard.html">MC</a>
+      <a href="card-amex.html">AMEX</a>
+      <a href="card-gold.html">GOLD</a>
+      <a href="card-platinum.html">PLAT</a>
+      <a href="card-black.html">BLK</a>
+      <a href="shop.html" class="nav-shop">🛒 Marketplace</a>
+      <a href="map.html" class="nav-shop">📍 Map</a>
+      <a href="records.html" class="nav-shop">📋 Records</a>
+    </div>
 </div>
 
 <script>
@@ -286,8 +401,26 @@ var fiatRates = { EUR: 0.92, GBP: 0.79, NGN: 1550, KES: 153, INR: 83.5, PHP: 56,
 (function() {
     try {
         var u = JSON.parse(localStorage.getItem('pivisualcard_user'));
-        if (u) document.getElementById('holderName').textContent = (u.firstName + ' ' + u.lastName).toUpperCase();
+        if (!u) { window.location.href = 'index.html'; return; }
+        if (!u.cardNumbers || !u.cardV5) { var _pfs={visa:'4',mastercard:'5',amex:'3',gold:'47',platinum:'55',black:'63'},_ts=['visa','mastercard','amex','gold','platinum','black'],_cn={};for(var ti=0;ti<_ts.length;ti++){var ct=_ts[ti],pf=_pfs[ct],seed=(u.piUser||'')+(u.piAddress||'')+ct+Date.now()+Math.random(),hash=0;for(var c=0;c<seed.length;c++){hash=((hash<<5)-hash)+seed.charCodeAt(c);hash|=0;}var up=Math.abs(hash).toString(),rn='';try{var a=new Uint32Array(3);(window.crypto||window.msCrypto).getRandomValues(a);for(var k=0;k<a.length;k++)rn+=a[k];}catch(e){rn=Date.now().toString()+Math.random().toString().slice(2);}var raw=(pf+up+rn).substring(0,16).split('').map(Number),sm=0;for(var j=0;j<15;j++){var dd=raw[j];if((15-j)%2===0){dd*=2;if(dd>9)dd-=9;}sm+=dd;}raw[15]=(10-(sm%10))%10;_cn[ct]=raw.join('').replace(/(.{4})/g,'$1 ').trim();}u.cardNumbers=_cn;u.cardV5=true;localStorage.setItem('pivisualcard_user',JSON.stringify(u)); }
+        var name = (u.firstName + ' ' + u.lastName).toUpperCase();
+        document.getElementById('holderName').textContent = name;
+        document.getElementById('cardNumber').textContent = (u.cardNumbers && u.cardNumbers['visa']) || u.cardNumber || '—';
+        document.getElementById('cardWallet').textContent = u.piAddress ? '🔒 ' + u.piAddress : '';
+        document.getElementById('oidName').textContent = name;
+        document.getElementById('oidPiUser').textContent = u.piUser ? '@' + u.piUser : '—';
+        document.getElementById('oidWallet').textContent = u.piAddress || '—';
     } catch(e) {}
+    // Fetch real wallet address from Pi Wallet SDK
+    if (piSdkReady && window.Pi && Pi.Wallet && Pi.Wallet.getUserMigratedWalletAddresses) {
+        Pi.Wallet.getUserMigratedWalletAddresses().then(function(addrs) {
+            if (addrs && addrs.length > 0) {
+                document.getElementById('oidWallet').textContent = addrs[0];
+                document.getElementById('cardWallet').textContent = '🔒 ' + addrs[0];
+                try { var u = JSON.parse(localStorage.getItem('pivisualcard_user')); if (u) { u.piAddress = addrs[0]; localStorage.setItem('pivisualcard_user', JSON.stringify(u)); } } catch(e) {}
+            }
+        }).catch(function() {});
+    }
 })();
 
 // Fetch Pi price
@@ -327,6 +460,40 @@ function updateTicker() {
     document.getElementById('lastUpdate').textContent = 'Last updated: ' + new Date().toLocaleTimeString();
 }
 
+function sendPiToCard() {
+    var addr = document.getElementById('oidWallet').textContent;
+    var amt = parseFloat(document.getElementById('sendAmount').value);
+    var status = document.getElementById('sendStatus');
+    if (!addr || addr === '—') { status.style.display='block'; status.style.background='rgba(231,76,60,.15)'; status.style.color='#e74c3c'; status.textContent='No wallet address on this card yet.'; return; }
+    if (isNaN(amt) || amt <= 0) { status.style.display='block'; status.style.background='rgba(231,76,60,.15)'; status.style.color='#e74c3c'; status.textContent='Enter a valid amount.'; return; }
+    var uname = document.getElementById('oidPiUser').textContent; document.getElementById('sendDest').textContent='To: ' + (uname && uname !== '—' ? uname + ' • ' : '') + addr;
+    if (piSdkReady && window.Pi) {
+        piCreatePayment(amt, 'Send ' + amt + ' π to Visa card ' + addr.substring(0,8) + '...', {to: addr, card:'visa'}, function(pid,txid) {
+            status.style.display='block'; status.style.background='rgba(39,174,96,.15)'; status.style.color='#27ae60'; status.textContent='✅ Sent ' + amt + ' π — TxID: ' + (txid||pid).substring(0,12) + '...';
+            document.getElementById('sendAmount').value='';
+        }, function(err) {
+            status.style.display='block'; status.style.background='rgba(231,76,60,.15)'; status.style.color='#e74c3c'; status.textContent='Payment failed: ' + (err||'cancelled');
+        });
+    } else {
+        Pi.copyText ? Pi.copyText(addr) : navigator.clipboard.writeText(addr).catch(function(){});
+        status.style.display='block'; status.style.background='rgba(245,197,24,.15)'; status.style.color='#f5c518'; status.textContent='Address copied! Open Pi Browser to send ' + amt + ' π to this address.';
+    }
+}
+function copyWallet(btn) {
+    var wallet = document.getElementById('oidWallet').textContent;
+    if (!wallet || wallet === '—') return;
+    if (piSdkReady && window.Pi && window.Pi.copyText) {
+        Pi.copyText(wallet).then(function() { btn.textContent = '✅ Copied!'; btn.classList.add('copied'); setTimeout(function() { btn.textContent = '📋 Copy Wallet'; btn.classList.remove('copied'); }, 2000); }).catch(function() { _fbCopy(wallet, btn); });
+    } else { _fbCopy(wallet, btn); }
+}
+function _fbCopy(text, btn) { navigator.clipboard.writeText(text).then(function() { btn.textContent = '✅ Copied!'; btn.classList.add('copied'); setTimeout(function() { btn.textContent = '📋 Copy Wallet'; btn.classList.remove('copied'); }, 2000); }).catch(function() {}); }
+function shareCard() {
+    var user = null; try { user = JSON.parse(localStorage.getItem('pivisualcard_user')); } catch(e) {}
+    var name = user ? (user.firstName + ' ' + user.lastName) : 'Pioneer';
+    var msg = name + ' uses Visual Pi Card (Visa) — worldwide payments, ATM, and crypto swap. Get your card at omendapipaysglobel.online';
+    if (piSdkReady && window.Pi && window.Pi.openShareDialog) { Pi.openShareDialog('Visual Pi Card — Visa', msg); }
+    else if (navigator.share) { navigator.share({ title: 'Visual Pi Card — Visa', text: msg, url: 'https://omendapipaysglobel.online/card-visa.html' }).catch(function() {}); }
+}
 function calcAtm() {
     var amt = parseFloat(document.getElementById('atmAmount').value);
     var cur = document.getElementById('atmCurrency').value;
@@ -362,5 +529,6 @@ function calcSwap() {
 fetchPrice();
 setInterval(fetchPrice, 60000);
 </script>
+</div><!-- /cardContent -->
 </body>
 </html>

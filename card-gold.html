@@ -3,16 +3,58 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gold Card &mdash; Visual Pi Card &mdash; pivisualcard.online</title>
-<link rel="canonical" href="https://pivisualcard.online/card-gold.html">
+<title>Gold Card &mdash; Visual Pi Card &mdash; omendapipaysglobel.online</title>
+<link rel="canonical" href="https://omendapipaysglobel.online/card-gold.html">
 <meta name="description" content="Visual Pi Card - Gold card rewards, cashback program, savings calculator, loyalty tiers.">
 <meta property="og:title" content="Gold Card - Visual Pi Card">
-<meta property="og:url" content="https://pivisualcard.online/card-gold.html">
+<meta property="og:url" content="https://omendapipaysglobel.online/card-gold.html">
 <meta property="og:site_name" content="Visual Pi Card">
 <meta name="theme-color" content="#0d0221">
+<!-- Pi Network SDK -->
+<script src="https://sdk.minepi.com/pi-sdk.js"></script>
+<script>
+var piSdkReady=false,piUser=null,piAccessToken=null;
+try{Pi.init({version:"2.0",sandbox:false});piSdkReady=true;}catch(e){console.warn('Pi SDK not available');}
+function piAuthenticate(cb){
+    if(!piSdkReady){if(cb)cb(null);return;}
+    Pi.authenticate(['username','payments','wallet_address'],function(payment){
+        console.log('Incomplete payment found:',payment);
+        fetch('/api/pi/complete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({paymentId:payment.identifier,txid:payment.transaction&&payment.transaction.txid})}).catch(function(){});
+    }).then(function(auth){piUser=auth.user;piAccessToken=auth.accessToken;if(cb)cb(auth);}).catch(function(e){console.warn('Pi auth:',e);if(cb)cb(null);});
+}
+var _piPayCb=null;
+function piCreatePayment(amount,memo,metadata,onSuccess,onError){
+    if(!piSdkReady){if(onError)onError('Pi SDK not available');return;}
+    _piPayCb=onSuccess;
+    Pi.createPayment({amount:amount,memo:memo,metadata:metadata||{}},{
+        onReadyForServerApproval:function(pid){fetch('/api/pi/approve',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({paymentId:pid})}).then(function(r){return r.json();}).then(function(d){if(!d.success){console.error('Approve failed',d);}}).catch(function(e){console.error('Approve err',e);});},
+        onReadyForServerCompletion:function(pid,txid){_piPayCb=null;fetch('/api/pi/complete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({paymentId:pid,txid:txid})}).then(function(r){return r.json();}).then(function(d){if(d.success&&onSuccess)onSuccess(pid,txid);else if(onError)onError('Completion failed');}).catch(function(e){if(onError)onError(e);});},
+        onCancel:function(){_piPayCb=null;if(onError)onError('cancelled');},
+        onError:function(e){_piPayCb=null;if(onError)onError(e);}
+    });
+}
+function piA2UPayment(amount,memo,metadata,onSuccess,onError){
+    if(!piUser||!piUser.uid){if(onError)onError('Pi user not authenticated');return;}
+    fetch('/api/pi/a2u',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({amount:amount,memo:memo||'Visual Pi Card A2U',uid:piUser.uid,metadata:metadata||{}})})
+    .then(function(r){return r.json();})
+    .then(function(d){if(d.success&&onSuccess)onSuccess(d.paymentId,d.txid);else if(onError)onError(d.error||'A2U failed');})
+    .catch(function(e){if(onError)onError(e.message);});
+}
+</script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:linear-gradient(135deg,#1a0e00,#2a1800,#3d2200);color:#fff;min-height:100vh;padding:20px}
+.send-pi{background:rgba(218,165,32,.06);border:1px solid rgba(218,165,32,.1);border-radius:16px;padding:20px;margin-bottom:20px;text-align:center}
+.send-pi h3{font-size:.95rem;margin-bottom:6px;color:#daa520}
+.send-pi .send-note{font-size:.72rem;color:rgba(255,255,255,.45);margin-bottom:14px;line-height:1.4}
+.send-pi .send-note b{color:rgba(255,255,255,.7)}
+.send-pi .send-row{display:flex;gap:10px;align-items:center;justify-content:center}
+.send-pi input{flex:1;max-width:160px;padding:10px 14px;border:1px solid rgba(218,165,32,.15);background:rgba(255,255,255,.06);color:#fff;border-radius:10px;font-size:.9rem;text-align:center;outline:none}
+.send-pi input:focus{border-color:#daa520}
+.send-pi button{padding:10px 22px;border:none;background:linear-gradient(135deg,#b8860b,#daa520);color:#fff;font-weight:700;border-radius:10px;font-size:.85rem;cursor:pointer;transition:transform .2s,box-shadow .2s}
+.send-pi button:hover{transform:scale(1.04);box-shadow:0 4px 16px rgba(218,165,32,.35)}
+.send-pi .send-dest{font-family:'Courier New',monospace;font-size:.65rem;color:rgba(255,255,255,.35);margin-top:10px;word-break:break-all}
+.send-pi .send-status{margin-top:10px;font-size:.8rem;display:none;padding:8px;border-radius:8px}
 .container{max-width:900px;margin:0 auto}
 h1{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient(90deg,#b8860b,#daa520,#f5c518,#daa520,#b8860b);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 .subtitle{text-align:center;color:rgba(255,255,255,.5);margin-bottom:30px;font-size:.9rem}
@@ -20,7 +62,8 @@ h1{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient
 
 .card-preview{background:linear-gradient(135deg,#744210 0%,#b8860b 50%,#daa520 100%);border-radius:20px;padding:30px;margin:0 auto 30px;max-width:420px;box-shadow:0 20px 50px rgba(218,165,32,.35),0 0 0 1px rgba(255,255,255,.1);position:relative;overflow:hidden}
 .card-preview::after{content:'';position:absolute;top:-30%;right:-30%;width:60%;height:60%;background:radial-gradient(circle,rgba(255,255,255,.08) 0%,transparent 70%);pointer-events:none}
-.card-number{font-family:'Courier New',monospace;font-size:1.4rem;letter-spacing:3px;margin:20px 0 10px;text-shadow:0 2px 4px rgba(0,0,0,.3)}
+.card-number{font-family:'Courier New',monospace;font-size:1.3rem;letter-spacing:3px;margin:20px 0 4px;text-shadow:0 2px 4px rgba(0,0,0,.3)}
+.card-wallet{font-family:'Courier New',monospace;font-size:.7rem;color:rgba(255,255,255,.6);word-break:break-all;margin-bottom:10px;letter-spacing:.5px}
 .card-label{font-size:.65rem;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:1px}
 .card-val{font-size:.9rem;margin-bottom:12px}
 .net-badge{font-size:.6rem;color:rgba(255,255,255,.4);letter-spacing:2px;margin-top:15px}
@@ -70,13 +113,99 @@ h1{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient
 
 .back-link{display:block;text-align:center;margin-top:30px;color:rgba(255,255,255,.4);font-size:.85rem;text-decoration:none}
 .back-link:hover{color:#daa520}
+.card-nav{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:20px;padding:0 10px}
+.card-nav a{display:inline-flex;align-items:center;gap:5px;padding:8px 14px;border-radius:10px;font-size:.75rem;font-weight:700;text-decoration:none;transition:all .2s;border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.6)}
+.card-nav a:hover{border-color:rgba(245,197,24,.4);color:#f5c518}
+.card-nav a.active{background:rgba(245,197,24,.15);border-color:rgba(245,197,24,.4);color:#f5c518}
+.card-nav .nav-shop{background:linear-gradient(135deg,rgba(192,57,43,.2),rgba(192,57,43,.1));border-color:rgba(192,57,43,.3);color:#e74c3c}
+.card-nav .nav-shop:hover{background:rgba(192,57,43,.3);color:#fff}
+/* Owner Identity */
+.owner-id{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:14px 18px;margin-bottom:20px;font-size:.78rem}
+.owner-id .oid-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.owner-id .oid-row:last-child{border-bottom:none}
+.owner-id .oid-label{color:rgba(255,255,255,.35);min-width:90px;font-size:.7rem;text-transform:uppercase;letter-spacing:.5px}
+.owner-id .oid-val{color:#fff;font-weight:600;word-break:break-all}
+.owner-id .oid-val.mono{font-family:'Courier New',monospace;font-size:.72rem;color:rgba(255,255,255,.7)}
+.owner-id .oid-badge{display:inline-block;background:rgba(39,174,96,.12);color:#27ae60;border:1px solid rgba(39,174,96,.2);padding:2px 8px;border-radius:8px;font-size:.6rem;font-weight:600;margin-left:auto;letter-spacing:.5px}
+.oid-actions{display:flex;gap:8px;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.06)}
+.oid-btn{flex:1;padding:8px 0;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:rgba(255,255,255,.6);border-radius:10px;font-size:.7rem;font-weight:600;cursor:pointer;text-align:center;transition:all .2s}
+.oid-btn:hover{background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.2)}
+.oid-btn.copied{background:rgba(39,174,96,.12);color:#27ae60;border-color:rgba(39,174,96,.2)}
+
+/* GCV Stable Price */
+.gcv-banner{background:linear-gradient(135deg,#744210,#b8860b,#daa520);border-radius:16px;padding:20px 24px;margin-bottom:20px;text-align:center;position:relative;overflow:hidden;box-shadow:0 8px 30px rgba(218,165,32,.3)}
+.gcv-banner::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle,rgba(255,255,255,.06) 0%,transparent 60%);pointer-events:none;animation:gcvShine 6s ease-in-out infinite}
+@keyframes gcvShine{0%,100%{transform:rotate(0deg)}50%{transform:rotate(180deg)}}
+.gcv-label{font-size:.7rem;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:2px;margin-bottom:4px}
+.gcv-rate{font-size:1.8rem;font-weight:800;background:linear-gradient(90deg,#fff8dc,#fff,#fff8dc);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;text-shadow:none}
+.gcv-sub{font-size:.75rem;color:rgba(255,255,255,.5);margin-top:4px}
+.gcv-badge{display:inline-block;background:rgba(255,255,255,.15);padding:4px 12px;border-radius:20px;font-size:.65rem;color:#fff8dc;margin-top:8px;letter-spacing:1px}
+.gcv-balance{background:rgba(218,165,32,.06);border:1px solid rgba(218,165,32,.15);border-radius:14px;padding:18px;margin-bottom:20px;text-align:center}
+.gcv-balance .pi-amount{font-size:1.3rem;font-weight:700;color:#daa520}
+.gcv-balance .usd-amount{font-size:1.6rem;font-weight:800;color:#27ae60;margin-top:4px}
+.gcv-balance .usd-label{font-size:.7rem;color:rgba(255,255,255,.4)}
+.exchange-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.exchange-btn{padding:14px;border:1px solid rgba(218,165,32,.15);border-radius:12px;background:rgba(218,165,32,.06);color:#fff;text-align:center;cursor:pointer;transition:all .2s;font-size:.82rem}
+.exchange-btn:hover{background:rgba(218,165,32,.12);border-color:rgba(218,165,32,.3);transform:translateY(-2px)}
+.exchange-btn .ex-icon{font-size:1.4rem;margin-bottom:6px}
+.exchange-btn .ex-label{font-weight:600}
+.exchange-btn .ex-rate{font-size:.68rem;color:rgba(255,255,255,.4);margin-top:4px}
+.convert-box{background:rgba(218,165,32,.06);border:1px solid rgba(218,165,32,.12);border-radius:14px;padding:20px;margin-top:14px}
+.convert-row{display:flex;gap:10px;align-items:end;flex-wrap:wrap;margin-bottom:12px}
+.convert-row label{font-size:.75rem;color:rgba(255,255,255,.5)}
+.convert-row input,.convert-row select{background:rgba(255,255,255,.06);border:1px solid rgba(218,165,32,.15);color:#fff;padding:10px 14px;border-radius:10px;font-size:.9rem;width:100%}
+.convert-row input:focus,.convert-row select:focus{outline:none;border-color:#daa520}
+.convert-result{background:rgba(39,174,96,.08);border:1px solid rgba(39,174,96,.2);border-radius:10px;padding:14px;text-align:center;margin-top:10px;display:none}
+.convert-result .cv-from{font-size:.85rem;color:rgba(255,255,255,.5)}
+.convert-result .cv-to{font-size:1.4rem;font-weight:700;color:#27ae60;margin-top:4px}
+.convert-result .cv-rate{font-size:.7rem;color:rgba(255,255,255,.3);margin-top:4px}
+/* Activation Gate */
+.activate-overlay{position:fixed;top:0;left:0;width:100%;height:100%;z-index:9998;background:linear-gradient(135deg,#1a0e00,#2a1800,#3d2200);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}
+.activate-card{background:rgba(218,165,32,.06);border:1px solid rgba(218,165,32,.2);border-radius:24px;padding:40px 30px;max-width:440px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.activate-card .ac-icon{font-size:3.5rem;margin-bottom:16px}
+.activate-card h2{font-size:1.5rem;background:linear-gradient(90deg,#b8860b,#daa520,#f5c518);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+.activate-card .ac-desc{font-size:.85rem;color:rgba(255,255,255,.5);line-height:1.6;margin-bottom:20px}
+.activate-card .ac-price{font-size:2rem;font-weight:800;color:#daa520;margin-bottom:4px}
+.activate-card .ac-price-sub{font-size:.75rem;color:rgba(255,255,255,.4);margin-bottom:20px}
+.activate-card .ac-perks{text-align:left;margin-bottom:24px}
+.activate-card .ac-perk{display:flex;align-items:center;gap:10px;padding:8px 0;font-size:.82rem;color:rgba(255,255,255,.7);border-bottom:1px solid rgba(218,165,32,.06)}
+.activate-card .ac-perk:last-child{border-bottom:none}
+.activate-card .ac-perk-icon{font-size:1.1rem;width:28px;text-align:center}
+.btn-activate{width:100%;padding:16px;border:none;border-radius:14px;background:linear-gradient(135deg,#b8860b,#daa520);color:#fff;font-size:1rem;font-weight:700;cursor:pointer;transition:all .2s;margin-bottom:10px}
+.btn-activate:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(218,165,32,.4)}
+.btn-activate:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+.ac-status{font-size:.8rem;color:rgba(255,255,255,.4);min-height:20px}
+.ac-testnet{display:inline-block;background:rgba(39,174,96,.15);color:#27ae60;border:1px solid rgba(39,174,96,.2);padding:3px 10px;border-radius:8px;font-size:.65rem;font-weight:600;margin-top:12px;letter-spacing:1px}
+/* Annual Reward Banner */
+.annual-reward{background:rgba(39,174,96,.08);border:1px solid rgba(39,174,96,.15);border-radius:14px;padding:16px;margin-bottom:20px;text-align:center}
+.annual-reward .ar-title{font-size:.7rem;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1px}
+.annual-reward .ar-amount{font-size:1.3rem;font-weight:700;color:#27ae60;margin-top:4px}
+.annual-reward .ar-sub{font-size:.72rem;color:rgba(255,255,255,.35);margin-top:4px}
+/* Passphrase Unlock */
+.unlock-overlay{position:fixed;top:0;left:0;width:100%;height:100%;z-index:9999;background:#fff;display:flex;flex-direction:column;align-items:center}
+.unlock-header{width:100%;background:linear-gradient(135deg,#6b3fa0,#8b5cf6);padding:18px 20px;display:flex;align-items:center;justify-content:center;gap:10px}
+.unlock-header svg{width:28px;height:28px}
+.unlock-header span{color:#fff;font-size:1.1rem;font-weight:600}
+.unlock-body{width:100%;max-width:480px;padding:30px 20px;flex:1;display:flex;flex-direction:column;align-items:center}
+.unlock-body h2{font-size:1.4rem;color:#1a1a2e;margin-bottom:24px;font-weight:600}
+.unlock-body textarea{width:100%;min-height:160px;border:2px solid #8b5cf6;border-radius:16px;padding:16px;font-family:'Courier New',monospace;font-size:.95rem;resize:vertical;outline:none;color:#333;line-height:1.6}
+.unlock-body textarea::placeholder{color:#aaa;font-family:'Segoe UI',sans-serif;font-size:.9rem}
+.unlock-body textarea:focus{border-color:#6b3fa0;box-shadow:0 0 0 3px rgba(139,92,246,.15)}
+.btn-unlock{width:100%;padding:14px;border-radius:30px;border:2px solid #8b5cf6;background:#fff;color:#4a3580;font-size:.95rem;font-weight:600;cursor:pointer;margin-top:16px;transition:all .2s}
+.btn-unlock:hover{background:#f5f0ff}
+.btn-unlock-primary{width:100%;padding:14px;border-radius:30px;border:none;background:linear-gradient(135deg,#6b3fa0,#8b5cf6);color:#fff;font-size:.95rem;font-weight:600;cursor:pointer;margin-top:10px;transition:all .2s}
+.btn-unlock-primary:hover{opacity:.9}
+.unlock-info{margin-top:24px;font-size:.85rem;color:#666;line-height:1.6;text-align:center}
+.unlock-info a{color:#8b5cf6;text-decoration:none}
+.unlock-error{color:#e74c3c;font-size:.82rem;margin-top:8px;display:none}
 </style>
 </head>
 <body>
-<div class="container">
+<!-- Card Content -->
+<div class="container" id="cardContent" style="display:block">
     <h1>⭐ Gold Card</h1>
     <p class="subtitle">Rewards Program • Savings Calculator • Cashback • Loyalty Tiers</p>
-    <div style="text-align:center"><span class="badge">GOLD</span></div>
+    <div style="text-align:center"><span class="badge">GOLD</span> <span class="ac-testnet">TESTNET</span></div>
 
     <!-- Card Preview -->
     <div class="card-preview">
@@ -84,13 +213,61 @@ h1{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient
             <span style="font-size:.7rem;color:rgba(255,255,255,.5)">Visual Pi Card</span>
             <span style="font-size:.65rem;background:rgba(255,255,255,.1);padding:3px 10px;border-radius:8px;color:#fff8dc">GOLD</span>
         </div>
-        <div class="card-number">4714 1592 6535 8979</div>
+        <div class="card-label">Card Number</div>
+        <div class="card-number" id="cardNumber">—</div>
+        <div class="card-wallet" id="cardWallet"></div>
         <div style="display:flex;gap:30px">
             <div><div class="card-label">Card Holder</div><div class="card-val" id="holderName">PI PIONEER</div></div>
             <div><div class="card-label">Expires</div><div class="card-val">12/30</div></div>
             <div><div class="card-label">CVV</div><div class="card-val">618</div></div>
         </div>
         <div class="net-badge">PI NETWORK • GOLD</div>
+    </div>
+
+    <!-- Send Pi to Card -->
+    <div class="send-pi">
+        <h3>💸 Send π to This Card</h3>
+        <div class="send-note">Your card &amp; wallet address are <b>the same destination</b>. Send π using the card number — the owner receives it at the wallet shown on this card.</div>
+        <div class="send-row">
+            <input type="number" id="sendAmount" placeholder="Amount π" min="0.01" step="0.01">
+            <button onclick="sendPiToCard()">Send π</button>
+        </div>
+        <div class="send-dest" id="sendDest"></div>
+        <div class="send-status" id="sendStatus"></div>
+    </div>
+
+    <!-- Card Owner Identity -->
+    <div class="owner-id">
+        <div class="oid-row"><div class="oid-label">Owner</div><div class="oid-val" id="oidName">—</div><div class="oid-badge">VERIFIED</div></div>
+        <div class="oid-row"><div class="oid-label">Pi User</div><div class="oid-val" id="oidPiUser">—</div></div>
+        <div class="oid-row"><div class="oid-label">Wallet</div><div class="oid-val mono" id="oidWallet">—</div></div>
+        <div class="oid-actions">
+            <button class="oid-btn" onclick="copyWallet()">📋 Copy Wallet</button>
+            <button class="oid-btn" onclick="shareCard()">📤 Share Card</button>
+        </div>
+    </div>
+
+    <!-- Annual Reward -->
+    <div class="annual-reward">
+        <div class="ar-title">Annual Gold Card Reward</div>
+        <div class="ar-amount">+1 π / year</div>
+        <div class="ar-sub" id="rewardStatus">Activated — next reward accrues automatically</div>
+    </div>
+
+    <!-- GCV Stable Price Banner -->
+    <div class="gcv-banner">
+        <div class="gcv-label">Gold Card Stable Price — GCV</div>
+        <div class="gcv-rate">1 π = $314,159.00</div>
+        <div class="gcv-sub">Global Consensus Value • Fixed Rate • Gold Card Exclusive</div>
+        <div class="gcv-badge">🔒 STABLE — NEVER FLUCTUATES</div>
+    </div>
+
+    <!-- GCV Balance Display -->
+    <div class="gcv-balance">
+        <div class="usd-label">Your Gold Card Balance at GCV</div>
+        <div class="pi-amount" id="gcvPiBalance">0.00 π</div>
+        <div class="usd-amount" id="gcvUsdBalance">$0.00</div>
+        <div class="usd-label" style="margin-top:6px">1 π = $314,159.00 — Withdraw & Exchange at this rate</div>
     </div>
 
     <!-- Cashback Rewards -->
@@ -161,11 +338,50 @@ h1{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient
         </div>
     </div>
 
+    <!-- Withdraw & Exchange at GCV -->
+    <div class="section">
+        <h2><span>💱</span> Withdraw & Exchange at GCV</h2>
+        <p style="font-size:.8rem;color:rgba(255,255,255,.4);margin-bottom:14px">All Gold Card transactions use the stable GCV rate: <strong style="color:#daa520">1 π = $314,159.00</strong></p>
+        <div class="exchange-grid">
+            <div class="exchange-btn" onclick="showConvert('withdraw')"><div class="ex-icon">🏧</div><div class="ex-label">Withdraw</div><div class="ex-rate">π → USD at GCV</div></div>
+            <div class="exchange-btn" onclick="showConvert('deposit')"><div class="ex-icon">📥</div><div class="ex-label">Deposit</div><div class="ex-rate">USD → π at GCV</div></div>
+            <div class="exchange-btn" onclick="showConvert('btc')"><div class="ex-icon">₿</div><div class="ex-label">Exchange BTC</div><div class="ex-rate">π → BTC at GCV</div></div>
+            <div class="exchange-btn" onclick="showConvert('eth')"><div class="ex-icon">⟠</div><div class="ex-label">Exchange ETH</div><div class="ex-rate">π → ETH at GCV</div></div>
+            <div class="exchange-btn" onclick="showConvert('usdt')"><div class="ex-icon">💵</div><div class="ex-label">Exchange USDT</div><div class="ex-rate">π → USDT at GCV</div></div>
+            <div class="exchange-btn" onclick="showConvert('card')"><div class="ex-icon">💳</div><div class="ex-label">Transfer Card</div><div class="ex-rate">To other Visual Pi Cards</div></div>
+        </div>
+        <div class="convert-box" id="convertBox" style="display:none">
+            <div class="convert-row">
+                <div style="flex:1">
+                    <label>Amount (π)</label>
+                    <input type="number" id="convertAmount" placeholder="1" min="0" step="0.01">
+                </div>
+                <div style="flex:1">
+                    <label>Convert To</label>
+                    <select id="convertTarget">
+                        <option value="usd">USD ($)</option>
+                        <option value="btc">Bitcoin (BTC)</option>
+                        <option value="eth">Ethereum (ETH)</option>
+                        <option value="usdt">USDT</option>
+                    </select>
+                </div>
+            </div>
+            <button class="btn btn-gold" onclick="calcConvert()" style="width:100%">💱 Convert at GCV Rate</button>
+            <div class="convert-result" id="convertResult">
+                <div class="cv-from" id="cvFrom">1.00 π</div>
+                <div class="cv-to" id="cvTo">$314,159.00</div>
+                <div class="cv-rate" id="cvRate">GCV Rate: 1 π = $314,159.00 (stable)</div>
+            </div>
+        </div>
+    </div>
+
     <!-- Fee Structure -->
     <div class="section">
         <h2><span>💰</span> Fee Structure</h2>
         <table style="width:100%;font-size:.85rem;border-collapse:collapse">
-            <tr style="border-bottom:1px solid rgba(218,165,32,.06)"><td style="padding:10px;color:rgba(255,255,255,.5)">Registration</td><td style="padding:10px;font-weight:600;color:#daa520">Premium</td></tr>
+            <tr style="border-bottom:1px solid rgba(218,165,32,.06)"><td style="padding:10px;color:rgba(255,255,255,.5)">Activation Fee</td><td style="padding:10px;font-weight:600;color:#daa520">100 π (one-time)</td></tr>
+            <tr style="border-bottom:1px solid rgba(218,165,32,.06)"><td style="padding:10px;color:rgba(255,255,255,.5)">Annual Reward</td><td style="padding:10px;color:#27ae60">+1 π / year</td></tr>
+            <tr style="border-bottom:1px solid rgba(218,165,32,.06)"><td style="padding:10px;color:rgba(255,255,255,.5)">GCV Rate</td><td style="padding:10px;color:#daa520">1 π = $314,159.00 (stable)</td></tr>
             <tr style="border-bottom:1px solid rgba(218,165,32,.06)"><td style="padding:10px;color:rgba(255,255,255,.5)">Cashback</td><td style="padding:10px;color:#27ae60">1% — 4%</td></tr>
             <tr style="border-bottom:1px solid rgba(218,165,32,.06)"><td style="padding:10px;color:rgba(255,255,255,.5)">Send / Receive</td><td style="padding:10px">Free</td></tr>
             <tr style="border-bottom:1px solid rgba(218,165,32,.06)"><td style="padding:10px;color:rgba(255,255,255,.5)">Cross-Border</td><td style="padding:10px">Free</td></tr>
@@ -174,19 +390,61 @@ h1{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient
     </div>
 
     <a href="index.html" class="back-link">← Back to Visual Pi Card</a>
+    <div class="card-nav">
+      <a href="card-visa.html">VISA</a>
+      <a href="card-mastercard.html">MC</a>
+      <a href="card-amex.html">AMEX</a>
+      <a href="card-gold.html" class="active">GOLD</a>
+      <a href="card-platinum.html">PLAT</a>
+      <a href="card-black.html">BLK</a>
+      <a href="shop.html" class="nav-shop">🛒 Marketplace</a>
+      <a href="map.html" class="nav-shop">📍 Map</a>
+      <a href="records.html" class="nav-shop">📋 Records</a>
+    </div>
 </div>
 
 <script>
+var GCV = 314159; // 1 π = $314,159.00 — Gold Card Exclusive Stable Rate
+
 (function() {
     try {
         var u = JSON.parse(localStorage.getItem('pivisualcard_user'));
-        if (u) document.getElementById('holderName').textContent = (u.firstName + ' ' + u.lastName).toUpperCase();
+        if (!u) { window.location.href = 'index.html'; return; }
+        if (!u.cardNumbers || !u.cardV5) { var _pfs={visa:'4',mastercard:'5',amex:'3',gold:'47',platinum:'55',black:'63'},_ts=['visa','mastercard','amex','gold','platinum','black'],_cn={};for(var ti=0;ti<_ts.length;ti++){var ct=_ts[ti],pf=_pfs[ct],seed=(u.piUser||'')+(u.piAddress||'')+ct+Date.now()+Math.random(),hash=0;for(var c=0;c<seed.length;c++){hash=((hash<<5)-hash)+seed.charCodeAt(c);hash|=0;}var up=Math.abs(hash).toString(),rn='';try{var a=new Uint32Array(3);(window.crypto||window.msCrypto).getRandomValues(a);for(var k=0;k<a.length;k++)rn+=a[k];}catch(e){rn=Date.now().toString()+Math.random().toString().slice(2);}var raw=(pf+up+rn).substring(0,16).split('').map(Number),sm=0;for(var j=0;j<15;j++){var dd=raw[j];if((15-j)%2===0){dd*=2;if(dd>9)dd-=9;}sm+=dd;}raw[15]=(10-(sm%10))%10;_cn[ct]=raw.join('').replace(/(.{4})/g,'$1 ').trim();}u.cardNumbers=_cn;u.cardV5=true;localStorage.setItem('pivisualcard_user',JSON.stringify(u)); }
+        var name = (u.firstName + ' ' + u.lastName).toUpperCase();
+        document.getElementById('holderName').textContent = name;
+        document.getElementById('cardNumber').textContent = (u.cardNumbers && u.cardNumbers['gold']) || u.cardNumber || '—';
+        document.getElementById('cardWallet').textContent = u.piAddress ? '🔒 ' + u.piAddress : '';
+        document.getElementById('oidName').textContent = name;
+        document.getElementById('oidPiUser').textContent = u.piUser ? '@' + u.piUser : '—';
+        document.getElementById('oidWallet').textContent = u.piAddress || '—';
     } catch(e) {}
-    // Update tier based on spending
+    // Fetch real wallet address from Pi Wallet SDK
+    if (piSdkReady && window.Pi && Pi.Wallet && Pi.Wallet.getUserMigratedWalletAddresses) {
+        Pi.Wallet.getUserMigratedWalletAddresses().then(function(addrs) {
+            if (addrs && addrs.length > 0) {
+                document.getElementById('oidWallet').textContent = addrs[0];
+                document.getElementById('cardWallet').textContent = '🔒 ' + addrs[0];
+                try { var u = JSON.parse(localStorage.getItem('pivisualcard_user')); if (u) { u.piAddress = addrs[0]; localStorage.setItem('pivisualcard_user', JSON.stringify(u)); } } catch(e) {}
+            }
+        }).catch(function() {});
+    }
+
+    // Load balance and display at GCV
     try {
         var d = JSON.parse(localStorage.getItem('pivisualcard_data'));
-        if (d && Array.isArray(d.transactions)) {
-            var spent = d.transactions.reduce(function(sum, tx) { return tx.amount < 0 ? sum + Math.abs(tx.amount) : sum; }, 0);
+        if (d && typeof d.balance === 'number') {
+            var bal = d.balance;
+            document.getElementById('gcvPiBalance').textContent = bal.toFixed(2) + ' π';
+            document.getElementById('gcvUsdBalance').textContent = '$' + (bal * GCV).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
+        }
+    } catch(e) {}
+
+    // Update tier based on spending
+    try {
+        var d2 = JSON.parse(localStorage.getItem('pivisualcard_data'));
+        if (d2 && Array.isArray(d2.transactions)) {
+            var spent = d2.transactions.reduce(function(sum, tx) { return tx.amount < 0 ? sum + Math.abs(tx.amount) : sum; }, 0);
             var tiers = document.querySelectorAll('.tier');
             tiers.forEach(function(t) { t.classList.remove('current'); t.classList.add('locked'); });
             if (spent >= 10000) tiers[3].classList.replace('locked','current');
@@ -203,10 +461,65 @@ function calcSavings() {
     if (isNaN(spend) || spend <= 0) return;
     var monthly = spend * rate;
     var annual = monthly * 12;
-    document.getElementById('calcTotal').textContent = annual.toFixed(2) + ' π';
-    document.getElementById('calcMonthly').textContent = monthly.toFixed(2) + ' π / month';
+    var annualUsd = (annual * GCV).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
+    document.getElementById('calcTotal').textContent = annual.toFixed(2) + ' π  ≈  $' + annualUsd;
+    document.getElementById('calcMonthly').textContent = monthly.toFixed(2) + ' π / month  ≈  $' + (monthly * GCV).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' / month';
     document.getElementById('calcResult').style.display = 'block';
 }
+
+// Approximate crypto prices for conversion display (illustrative)
+var cryptoPrices = { btc: 105000, eth: 3800, usdt: 1 };
+
+function showConvert(type) {
+    var box = document.getElementById('convertBox');
+    box.style.display = 'block';
+    var sel = document.getElementById('convertTarget');
+    if (type === 'withdraw' || type === 'deposit') sel.value = 'usd';
+    else if (type === 'btc') sel.value = 'btc';
+    else if (type === 'eth') sel.value = 'eth';
+    else if (type === 'usdt') sel.value = 'usdt';
+    else sel.value = 'usd';
+    document.getElementById('convertAmount').value = '';
+    document.getElementById('convertResult').style.display = 'none';
+    box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function calcConvert() {
+    var amt = parseFloat(document.getElementById('convertAmount').value);
+    if (isNaN(amt) || amt <= 0) return;
+    var target = document.getElementById('convertTarget').value;
+    var usdValue = amt * GCV;
+    var result, symbol, rateTxt;
+
+    if (target === 'usd') {
+        result = '$' + usdValue.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
+        rateTxt = 'GCV Rate: 1 π = $314,159.00 (stable)';
+    } else if (target === 'btc') {
+        var btc = usdValue / cryptoPrices.btc;
+        result = btc.toFixed(8) + ' BTC';
+        rateTxt = '1 π = $314,159.00 → ~' + (GCV / cryptoPrices.btc).toFixed(6) + ' BTC';
+    } else if (target === 'eth') {
+        var eth = usdValue / cryptoPrices.eth;
+        result = eth.toFixed(6) + ' ETH';
+        rateTxt = '1 π = $314,159.00 → ~' + (GCV / cryptoPrices.eth).toFixed(4) + ' ETH';
+    } else if (target === 'usdt') {
+        result = usdValue.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' USDT';
+        rateTxt = '1 π = 314,159.00 USDT (stable)';
+    }
+
+    document.getElementById('cvFrom').textContent = amt.toFixed(2) + ' π';
+    document.getElementById('cvTo').textContent = result;
+    document.getElementById('cvRate').textContent = rateTxt;
+    document.getElementById('convertResult').style.display = 'block';
+}
+</script>
+</div><!-- /cardContent -->
+<script>
+(function(){
+    try {
+        if (isGoldActivated()) { showGoldContent(); } else { showActivateScreen(); }
+    } catch(e) {}
+})();
 </script>
 </body>
 </html>
