@@ -1,0 +1,36 @@
+name: FTP Deploy to cPanel
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  ftp-deploy:
+    name: Deploy to omendapipaysglobel.online
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Deploy site via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.0
+        with:
+          server: ftp.omendapipaysglobel.online
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftp
+          local-dir: './'
+          server-dir: '/public_html'
+          exclude: |
+            .git*
+            .github*
+            node_modules*
+            package-lock.json
+            .vscode*
+            README.md
+            deploy.ps1
+            git-deploy.ps1
+            .env*
+            Pi network visual card/**
