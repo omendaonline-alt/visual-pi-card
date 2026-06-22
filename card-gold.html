@@ -8,9 +8,7 @@
 <meta name="description" content="Visual Pi Card - Gold card rewards, cashback program, savings calculator, loyalty tiers.">
 <meta property="og:title" content="Gold Card - Visual Pi Card">
 <meta property="og:url" content="https://omendapipaysglobel.online/card-gold.html">
-<meta property="og:site_name" content="Visual Pi Card">
-<meta name="theme-color" content="#0d0221">
-<!-- Pi Network SDK -->
+<meta property="og:site_name" content="Visual Pi Card"><!-- Pi Network SDK -->
 <script src="https://sdk.minepi.com/pi-sdk.js"></script>
 <script src="pi-sdk-helper.js"></script>
 <script>
@@ -49,182 +47,26 @@ function piA2UPayment(amount,memo,metadata,onSuccess,onError){
     .catch(function(e){if(onError)onError(e.message);});
 }
 </script>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Segoe UI',system-ui,sans-serif;background:linear-gradient(135deg,#1a0e00,#2a1800,#3d2200);color:#fff;min-height:100vh;padding:20px}
-.send-pi{background:rgba(218,165,32,.06);border:1px solid rgba(218,165,32,.1);border-radius:16px;padding:20px;margin-bottom:20px;text-align:center}
-.send-pi h3{font-size:.95rem;margin-bottom:6px;color:#daa520}
-.send-pi .send-note{font-size:.72rem;color:rgba(255,255,255,.45);margin-bottom:14px;line-height:1.4}
-.send-pi .send-note b{color:rgba(255,255,255,.7)}
-.send-pi .send-row{display:flex;gap:10px;align-items:center;justify-content:center}
-.send-pi input{flex:1;max-width:160px;padding:10px 14px;border:1px solid rgba(218,165,32,.15);background:rgba(255,255,255,.06);color:#fff;border-radius:10px;font-size:.9rem;text-align:center;outline:none}
-.send-pi input:focus{border-color:#daa520}
-.send-pi button{padding:10px 22px;border:none;background:linear-gradient(135deg,#b8860b,#daa520);color:#fff;font-weight:700;border-radius:10px;font-size:.85rem;cursor:pointer;transition:transform .2s,box-shadow .2s}
-.send-pi button:hover{transform:scale(1.04);box-shadow:0 4px 16px rgba(218,165,32,.35)}
-.send-pi .send-dest{font-family:'Courier New',monospace;font-size:.65rem;color:rgba(255,255,255,.35);margin-top:10px;word-break:break-all}
-.send-pi .send-status{margin-top:10px;font-size:.8rem;display:none;padding:8px;border-radius:8px}
-.container{max-width:900px;margin:0 auto}
-h1{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient(90deg,#b8860b,#daa520,#f5c518,#daa520,#b8860b);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-.subtitle{text-align:center;color:rgba(255,255,255,.5);margin-bottom:30px;font-size:.9rem}
-.badge{display:inline-block;background:linear-gradient(135deg,#b8860b,#daa520);color:#fff;padding:4px 14px;border-radius:20px;font-weight:700;font-size:.75rem;margin-bottom:20px}
 
-.card-preview{background:linear-gradient(135deg,#744210 0%,#b8860b 50%,#daa520 100%);border-radius:20px;padding:30px;margin:0 auto 30px;max-width:420px;box-shadow:0 20px 50px rgba(218,165,32,.35),0 0 0 1px rgba(255,255,255,.1);position:relative;overflow:hidden}
-.card-preview::after{content:'';position:absolute;top:-30%;right:-30%;width:60%;height:60%;background:radial-gradient(circle,rgba(255,255,255,.08) 0%,transparent 70%);pointer-events:none}
-.card-number{font-family:'Courier New',monospace;font-size:1.3rem;letter-spacing:3px;margin:20px 0 4px;text-shadow:0 2px 4px rgba(0,0,0,.3)}
-.card-wallet{font-family:'Courier New',monospace;font-size:.7rem;color:rgba(255,255,255,.6);word-break:break-all;margin-bottom:10px;letter-spacing:.5px}
-.card-label{font-size:.65rem;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:1px}
-.card-val{font-size:.9rem;margin-bottom:12px}
-.net-badge{font-size:.6rem;color:rgba(255,255,255,.4);letter-spacing:2px;margin-top:15px}
-
-.section{background:rgba(218,165,32,.04);border:1px solid rgba(218,165,32,.1);border-radius:16px;padding:24px;margin-bottom:20px}
-.section h2{font-size:1.1rem;margin-bottom:14px;color:#daa520}
-.section h2 span{margin-right:8px}
-
-.feature-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
-.feature-card{background:rgba(218,165,32,.04);border:1px solid rgba(218,165,32,.08);border-radius:12px;padding:16px;text-align:center;transition:transform .2s,border-color .2s}
-.feature-card:hover{transform:translateY(-3px);border-color:rgba(218,165,32,.3)}
-.feature-card .icon{font-size:1.8rem;margin-bottom:8px}
-.feature-card h3{font-size:.85rem;margin-bottom:4px}
-.feature-card p{font-size:.72rem;color:rgba(255,255,255,.5);line-height:1.4}
-.tag{display:inline-block;font-size:.6rem;padding:2px 8px;border-radius:8px;margin-top:6px}
-.tag-gold{background:rgba(218,165,32,.15);color:#daa520;border:1px solid rgba(218,165,32,.25)}
-.tag-green{background:rgba(39,174,96,.15);color:#27ae60;border:1px solid rgba(39,174,96,.2)}
-
-/* Savings / Rewards */
-.rewards-box{background:rgba(218,165,32,.06);border:1px solid rgba(218,165,32,.12);border-radius:14px;padding:20px;margin-top:14px}
-.reward-item{display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid rgba(218,165,32,.06)}
-.reward-item:last-child{border-bottom:none}
-.reward-icon{font-size:1.5rem;width:40px;text-align:center}
-.reward-info h4{font-size:.85rem;margin-bottom:2px}
-.reward-info p{font-size:.72rem;color:rgba(255,255,255,.5)}
-.reward-pct{font-size:1rem;font-weight:700;color:#daa520;margin-left:auto}
-
-/* Savings Calculator */
-.calc-box{background:rgba(218,165,32,.06);border:1px solid rgba(218,165,32,.12);border-radius:14px;padding:20px;margin-top:14px}
-.calc-row{display:flex;gap:10px;align-items:end;flex-wrap:wrap;margin-bottom:12px}
-.calc-row label{font-size:.75rem;color:rgba(255,255,255,.5)}
-.calc-row input{background:rgba(255,255,255,.06);border:1px solid rgba(218,165,32,.15);color:#fff;padding:10px 14px;border-radius:10px;font-size:.9rem;width:100%}
-.calc-row input:focus{outline:none;border-color:#daa520}
-.calc-result{background:rgba(218,165,32,.08);border:1px solid rgba(218,165,32,.2);border-radius:10px;padding:14px;text-align:center;margin-top:10px;display:none}
-.calc-result .total{font-size:1.4rem;font-weight:700;color:#daa520}
-
-/* Tier Progress */
-.tier-box{margin-top:14px}
-.tier{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:10px;margin-bottom:8px;font-size:.85rem}
-.tier.current{background:rgba(218,165,32,.1);border:1px solid rgba(218,165,32,.25)}
-.tier.locked{opacity:.4;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04)}
-.tier-icon{font-size:1.2rem}
-
-.btn{padding:12px 24px;border:none;border-radius:12px;font-size:.85rem;font-weight:600;cursor:pointer;transition:all .2s}
-.btn-gold{background:linear-gradient(135deg,#b8860b,#daa520);color:#fff}
-.btn-gold:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(218,165,32,.4)}
-
-.back-link{display:block;text-align:center;margin-top:30px;color:rgba(255,255,255,.4);font-size:.85rem;text-decoration:none}
-.back-link:hover{color:#daa520}
-.card-nav{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:20px;padding:0 10px}
-.card-nav a{display:inline-flex;align-items:center;gap:5px;padding:8px 14px;border-radius:10px;font-size:.75rem;font-weight:700;text-decoration:none;transition:all .2s;border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.6)}
-.card-nav a:hover{border-color:rgba(245,197,24,.4);color:#f5c518}
-.card-nav a.active{background:rgba(245,197,24,.15);border-color:rgba(245,197,24,.4);color:#f5c518}
-.card-nav .nav-shop{background:linear-gradient(135deg,rgba(192,57,43,.2),rgba(192,57,43,.1));border-color:rgba(192,57,43,.3);color:#e74c3c}
-.card-nav .nav-shop:hover{background:rgba(192,57,43,.3);color:#fff}
-/* Owner Identity */
-.owner-id{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:14px 18px;margin-bottom:20px;font-size:.78rem}
-.owner-id .oid-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04)}
-.owner-id .oid-row:last-child{border-bottom:none}
-.owner-id .oid-label{color:rgba(255,255,255,.35);min-width:90px;font-size:.7rem;text-transform:uppercase;letter-spacing:.5px}
-.owner-id .oid-val{color:#fff;font-weight:600;word-break:break-all}
-.owner-id .oid-val.mono{font-family:'Courier New',monospace;font-size:.72rem;color:rgba(255,255,255,.7)}
-.owner-id .oid-badge{display:inline-block;background:rgba(39,174,96,.12);color:#27ae60;border:1px solid rgba(39,174,96,.2);padding:2px 8px;border-radius:8px;font-size:.6rem;font-weight:600;margin-left:auto;letter-spacing:.5px}
-.oid-actions{display:flex;gap:8px;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.06)}
-.oid-btn{flex:1;padding:8px 0;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:rgba(255,255,255,.6);border-radius:10px;font-size:.7rem;font-weight:600;cursor:pointer;text-align:center;transition:all .2s}
-.oid-btn:hover{background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.2)}
-.oid-btn.copied{background:rgba(39,174,96,.12);color:#27ae60;border-color:rgba(39,174,96,.2)}
-
-/* GCV Stable Price */
-.gcv-banner{background:linear-gradient(135deg,#744210,#b8860b,#daa520);border-radius:16px;padding:20px 24px;margin-bottom:20px;text-align:center;position:relative;overflow:hidden;box-shadow:0 8px 30px rgba(218,165,32,.3)}
-.gcv-banner::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle,rgba(255,255,255,.06) 0%,transparent 60%);pointer-events:none;animation:gcvShine 6s ease-in-out infinite}
-@keyframes gcvShine{0%,100%{transform:rotate(0deg)}50%{transform:rotate(180deg)}}
-.gcv-label{font-size:.7rem;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:2px;margin-bottom:4px}
-.gcv-rate{font-size:1.8rem;font-weight:800;background:linear-gradient(90deg,#fff8dc,#fff,#fff8dc);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;text-shadow:none}
-.gcv-sub{font-size:.75rem;color:rgba(255,255,255,.5);margin-top:4px}
-.gcv-badge{display:inline-block;background:rgba(255,255,255,.15);padding:4px 12px;border-radius:20px;font-size:.65rem;color:#fff8dc;margin-top:8px;letter-spacing:1px}
-.gcv-balance{background:rgba(218,165,32,.06);border:1px solid rgba(218,165,32,.15);border-radius:14px;padding:18px;margin-bottom:20px;text-align:center}
-.gcv-balance .pi-amount{font-size:1.3rem;font-weight:700;color:#daa520}
-.gcv-balance .usd-amount{font-size:1.6rem;font-weight:800;color:#27ae60;margin-top:4px}
-.gcv-balance .usd-label{font-size:.7rem;color:rgba(255,255,255,.4)}
-.exchange-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
-.exchange-btn{padding:14px;border:1px solid rgba(218,165,32,.15);border-radius:12px;background:rgba(218,165,32,.06);color:#fff;text-align:center;cursor:pointer;transition:all .2s;font-size:.82rem}
-.exchange-btn:hover{background:rgba(218,165,32,.12);border-color:rgba(218,165,32,.3);transform:translateY(-2px)}
-.exchange-btn .ex-icon{font-size:1.4rem;margin-bottom:6px}
-.exchange-btn .ex-label{font-weight:600}
-.exchange-btn .ex-rate{font-size:.68rem;color:rgba(255,255,255,.4);margin-top:4px}
-.convert-box{background:rgba(218,165,32,.06);border:1px solid rgba(218,165,32,.12);border-radius:14px;padding:20px;margin-top:14px}
-.convert-row{display:flex;gap:10px;align-items:end;flex-wrap:wrap;margin-bottom:12px}
-.convert-row label{font-size:.75rem;color:rgba(255,255,255,.5)}
-.convert-row input,.convert-row select{background:rgba(255,255,255,.06);border:1px solid rgba(218,165,32,.15);color:#fff;padding:10px 14px;border-radius:10px;font-size:.9rem;width:100%}
-.convert-row input:focus,.convert-row select:focus{outline:none;border-color:#daa520}
-.convert-result{background:rgba(39,174,96,.08);border:1px solid rgba(39,174,96,.2);border-radius:10px;padding:14px;text-align:center;margin-top:10px;display:none}
-.convert-result .cv-from{font-size:.85rem;color:rgba(255,255,255,.5)}
-.convert-result .cv-to{font-size:1.4rem;font-weight:700;color:#27ae60;margin-top:4px}
-.convert-result .cv-rate{font-size:.7rem;color:rgba(255,255,255,.3);margin-top:4px}
-/* Activation Gate */
-.activate-overlay{position:fixed;top:0;left:0;width:100%;height:100%;z-index:9998;background:linear-gradient(135deg,#1a0e00,#2a1800,#3d2200);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}
-.activate-card{background:rgba(218,165,32,.06);border:1px solid rgba(218,165,32,.2);border-radius:24px;padding:40px 30px;max-width:440px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.5)}
-.activate-card .ac-icon{font-size:3.5rem;margin-bottom:16px}
-.activate-card h2{font-size:1.5rem;background:linear-gradient(90deg,#b8860b,#daa520,#f5c518);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
-.activate-card .ac-desc{font-size:.85rem;color:rgba(255,255,255,.5);line-height:1.6;margin-bottom:20px}
-.activate-card .ac-price{font-size:2rem;font-weight:800;color:#daa520;margin-bottom:4px}
-.activate-card .ac-price-sub{font-size:.75rem;color:rgba(255,255,255,.4);margin-bottom:20px}
-.activate-card .ac-perks{text-align:left;margin-bottom:24px}
-.activate-card .ac-perk{display:flex;align-items:center;gap:10px;padding:8px 0;font-size:.82rem;color:rgba(255,255,255,.7);border-bottom:1px solid rgba(218,165,32,.06)}
-.activate-card .ac-perk:last-child{border-bottom:none}
-.activate-card .ac-perk-icon{font-size:1.1rem;width:28px;text-align:center}
-.btn-activate{width:100%;padding:16px;border:none;border-radius:14px;background:linear-gradient(135deg,#b8860b,#daa520);color:#fff;font-size:1rem;font-weight:700;cursor:pointer;transition:all .2s;margin-bottom:10px}
-.btn-activate:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(218,165,32,.4)}
-.btn-activate:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
-.ac-status{font-size:.8rem;color:rgba(255,255,255,.4);min-height:20px}
-.ac-testnet{display:inline-block;background:rgba(39,174,96,.15);color:#27ae60;border:1px solid rgba(39,174,96,.2);padding:3px 10px;border-radius:8px;font-size:.65rem;font-weight:600;margin-top:12px;letter-spacing:1px}
-/* Annual Reward Banner */
-.annual-reward{background:rgba(39,174,96,.08);border:1px solid rgba(39,174,96,.15);border-radius:14px;padding:16px;margin-bottom:20px;text-align:center}
-.annual-reward .ar-title{font-size:.7rem;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1px}
-.annual-reward .ar-amount{font-size:1.3rem;font-weight:700;color:#27ae60;margin-top:4px}
-.annual-reward .ar-sub{font-size:.72rem;color:rgba(255,255,255,.35);margin-top:4px}
-/* Passphrase Unlock */
-.unlock-overlay{position:fixed;top:0;left:0;width:100%;height:100%;z-index:9999;background:#fff;display:flex;flex-direction:column;align-items:center}
-.unlock-header{width:100%;background:linear-gradient(135deg,#6b3fa0,#8b5cf6);padding:18px 20px;display:flex;align-items:center;justify-content:center;gap:10px}
-.unlock-header svg{width:28px;height:28px}
-.unlock-header span{color:#fff;font-size:1.1rem;font-weight:600}
-.unlock-body{width:100%;max-width:480px;padding:30px 20px;flex:1;display:flex;flex-direction:column;align-items:center}
-.unlock-body h2{font-size:1.4rem;color:#1a1a2e;margin-bottom:24px;font-weight:600}
-.unlock-body textarea{width:100%;min-height:160px;border:2px solid #8b5cf6;border-radius:16px;padding:16px;font-family:'Courier New',monospace;font-size:.95rem;resize:vertical;outline:none;color:#333;line-height:1.6}
-.unlock-body textarea::placeholder{color:#aaa;font-family:'Segoe UI',sans-serif;font-size:.9rem}
-.unlock-body textarea:focus{border-color:#6b3fa0;box-shadow:0 0 0 3px rgba(139,92,246,.15)}
-.btn-unlock{width:100%;padding:14px;border-radius:30px;border:2px solid #8b5cf6;background:#fff;color:#4a3580;font-size:.95rem;font-weight:600;cursor:pointer;margin-top:16px;transition:all .2s}
-.btn-unlock:hover{background:#f5f0ff}
-.btn-unlock-primary{width:100%;padding:14px;border-radius:30px;border:none;background:linear-gradient(135deg,#6b3fa0,#8b5cf6);color:#fff;font-size:.95rem;font-weight:600;cursor:pointer;margin-top:10px;transition:all .2s}
-.btn-unlock-primary:hover{opacity:.9}
-.unlock-info{margin-top:24px;font-size:.85rem;color:#666;line-height:1.6;text-align:center}
-.unlock-info a{color:#8b5cf6;text-decoration:none}
-.unlock-error{color:#e74c3c;font-size:.82rem;margin-top:8px;display:none}
-</style>
+    <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="page-card-gold">
 <!-- Card Content -->
-<div class="container" id="cardContent" style="display:block">
+<div class="container inline-style-1" id="cardContent" >
     <h1>⭐ Gold Card</h1>
     <p class="subtitle">Rewards Program • Savings Calculator • Cashback • Loyalty Tiers</p>
-    <div style="text-align:center"><span class="badge">GOLD</span> <span class="ac-testnet">TESTNET</span></div>
+    <div class="inline-style-2"><span class="badge">GOLD</span> <span class="ac-testnet">TESTNET</span></div>
 
     <!-- Card Preview -->
     <div class="card-preview">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-            <span style="font-size:.7rem;color:rgba(255,255,255,.5)">Visual Pi Card</span>
-            <span style="font-size:.65rem;background:rgba(255,255,255,.1);padding:3px 10px;border-radius:8px;color:#fff8dc">GOLD</span>
+        <div class="inline-style-3">
+            <span class="inline-style-4">Visual Pi Card</span>
+            <span class="inline-style-5">GOLD</span>
         </div>
         <div class="card-label">Card Number</div>
         <div class="card-number" id="cardNumber">—</div>
         <div class="card-wallet" id="cardWallet"></div>
-        <div style="display:flex;gap:30px">
+        <div class="inline-style-6">
             <div><div class="card-label">Card Holder</div><div class="card-val" id="holderName">PI PIONEER</div></div>
             <div><div class="card-label">Expires</div><div class="card-val">12/30</div></div>
             <div><div class="card-label">CVV</div><div class="card-val">618</div></div>
@@ -275,13 +117,13 @@ h1{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient
         <div class="usd-label">Your Gold Card Balance at GCV</div>
         <div class="pi-amount" id="gcvPiBalance">0.00 π</div>
         <div class="usd-amount" id="gcvUsdBalance">$0.00</div>
-        <div class="usd-label" style="margin-top:6px">1 π = $314,159.00 — Withdraw & Exchange at this rate</div>
+        <div class="usd-label inline-style-7" >1 π = $314,159.00 — Withdraw & Exchange at this rate</div>
     </div>
 
     <!-- Cashback Rewards -->
     <div class="section">
         <h2><span>🎁</span> Cashback Rewards</h2>
-        <p style="font-size:.8rem;color:rgba(255,255,255,.4);margin-bottom:14px">Earn Pi back on every transaction with your Gold Card</p>
+        <p class="inline-style-8">Earn Pi back on every transaction with your Gold Card</p>
         <div class="rewards-box">
             <div class="reward-item"><div class="reward-icon">🛒</div><div class="reward-info"><h4>Shopping</h4><p>All merchant purchases</p></div><div class="reward-pct">2%</div></div>
             <div class="reward-item"><div class="reward-icon">🍽️</div><div class="reward-info"><h4>Dining</h4><p>Restaurants and food delivery</p></div><div class="reward-pct">3%</div></div>
@@ -294,16 +136,16 @@ h1{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient
     <!-- Savings Calculator -->
     <div class="section">
         <h2><span>🧮</span> Savings Calculator</h2>
-        <p style="font-size:.8rem;color:rgba(255,255,255,.4);margin-bottom:14px">See how much Pi you save with Gold rewards</p>
+        <p class="inline-style-8">See how much Pi you save with Gold rewards</p>
         <div class="calc-box">
             <div class="calc-row">
-                <div style="flex:1">
+                <div class="inline-style-9">
                     <label>Monthly Spending (π)</label>
                     <input type="number" id="calcSpend" placeholder="100" min="0" step="1">
                 </div>
-                <div style="flex:1">
+                <div class="inline-style-9">
                     <label>Category</label>
-                    <select id="calcCategory" style="background:rgba(255,255,255,.06);border:1px solid rgba(218,165,32,.15);color:#fff;padding:10px 14px;border-radius:10px;font-size:.9rem;width:100%">
+                    <select id="calcCategory" class="inline-style-10">
                         <option value="0.01">General (1%)</option>
                         <option value="0.015">Digital (1.5%)</option>
                         <option value="0.02" selected>Shopping (2%)</option>
@@ -312,11 +154,11 @@ h1{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient
                     </select>
                 </div>
             </div>
-            <button class="btn btn-gold" onclick="calcSavings()" style="width:100%">🧮 Calculate Savings</button>
+            <button class="btn btn-gold inline-style-11" onclick="calcSavings()" >🧮 Calculate Savings</button>
             <div class="calc-result" id="calcResult">
-                <div style="font-size:.7rem;color:rgba(255,255,255,.5)">Estimated annual cashback</div>
+                <div class="inline-style-4">Estimated annual cashback</div>
                 <div class="total" id="calcTotal">0.00 π</div>
-                <div style="font-size:.7rem;color:rgba(255,255,255,.4);margin-top:4px" id="calcMonthly">0.00 π / month</div>
+                <div class="inline-style-12" id="calcMonthly">0.00 π / month</div>
             </div>
         </div>
     </div>
@@ -324,12 +166,12 @@ h1{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient
     <!-- Loyalty Tiers -->
     <div class="section">
         <h2><span>🏆</span> Loyalty Tiers</h2>
-        <p style="font-size:.8rem;color:rgba(255,255,255,.4);margin-bottom:14px">Spend more, earn more — unlock higher reward tiers</p>
+        <p class="inline-style-8">Spend more, earn more — unlock higher reward tiers</p>
         <div class="tier-box">
-            <div class="tier current"><div class="tier-icon">⭐</div><div><strong>Gold Starter</strong><div style="font-size:.72rem;color:rgba(255,255,255,.5)">0 — 500 π spent • Base rewards</div></div></div>
-            <div class="tier locked"><div class="tier-icon">⭐⭐</div><div><strong>Gold Plus</strong><div style="font-size:.72rem;color:rgba(255,255,255,.5)">500 — 2,000 π spent • +0.5% bonus</div></div></div>
-            <div class="tier locked"><div class="tier-icon">⭐⭐⭐</div><div><strong>Gold Elite</strong><div style="font-size:.72rem;color:rgba(255,255,255,.5)">2,000 — 10,000 π spent • +1% bonus</div></div></div>
-            <div class="tier locked"><div class="tier-icon">👑</div><div><strong>Gold Crown</strong><div style="font-size:.72rem;color:rgba(255,255,255,.5)">10,000+ π spent • +2% bonus + VIP perks</div></div></div>
+            <div class="tier current"><div class="tier-icon">⭐</div><div><strong>Gold Starter</strong><div class="inline-style-13">0 — 500 π spent • Base rewards</div></div></div>
+            <div class="tier locked"><div class="tier-icon">⭐⭐</div><div><strong>Gold Plus</strong><div class="inline-style-13">500 — 2,000 π spent • +0.5% bonus</div></div></div>
+            <div class="tier locked"><div class="tier-icon">⭐⭐⭐</div><div><strong>Gold Elite</strong><div class="inline-style-13">2,000 — 10,000 π spent • +1% bonus</div></div></div>
+            <div class="tier locked"><div class="tier-icon">👑</div><div><strong>Gold Crown</strong><div class="inline-style-13">10,000+ π spent • +2% bonus + VIP perks</div></div></div>
         </div>
     </div>
 
@@ -349,7 +191,7 @@ h1{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient
     <!-- Withdraw & Exchange at GCV -->
     <div class="section">
         <h2><span>💱</span> Withdraw & Exchange at GCV</h2>
-        <p style="font-size:.8rem;color:rgba(255,255,255,.4);margin-bottom:14px">All Gold Card transactions use the stable GCV rate: <strong style="color:#daa520">1 π = $314,159.00</strong></p>
+        <p class="inline-style-8">All Gold Card transactions use the stable GCV rate: <strong class="inline-style-14">1 π = $314,159.00</strong></p>
         <div class="exchange-grid">
             <div class="exchange-btn" onclick="showConvert('withdraw')"><div class="ex-icon">🏧</div><div class="ex-label">Withdraw</div><div class="ex-rate">π → USD at GCV</div></div>
             <div class="exchange-btn" onclick="showConvert('deposit')"><div class="ex-icon">📥</div><div class="ex-label">Deposit</div><div class="ex-rate">USD → π at GCV</div></div>
@@ -358,13 +200,13 @@ h1{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient
             <div class="exchange-btn" onclick="showConvert('usdt')"><div class="ex-icon">💵</div><div class="ex-label">Exchange USDT</div><div class="ex-rate">π → USDT at GCV</div></div>
             <div class="exchange-btn" onclick="showConvert('card')"><div class="ex-icon">💳</div><div class="ex-label">Transfer Card</div><div class="ex-rate">To other Visual Pi Cards</div></div>
         </div>
-        <div class="convert-box" id="convertBox" style="display:none">
+        <div class="convert-box inline-style-15" id="convertBox" >
             <div class="convert-row">
-                <div style="flex:1">
+                <div class="inline-style-9">
                     <label>Amount (π)</label>
                     <input type="number" id="convertAmount" placeholder="1" min="0" step="0.01">
                 </div>
-                <div style="flex:1">
+                <div class="inline-style-9">
                     <label>Convert To</label>
                     <select id="convertTarget">
                         <option value="usd">USD ($)</option>
@@ -374,7 +216,7 @@ h1{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient
                     </select>
                 </div>
             </div>
-            <button class="btn btn-gold" onclick="calcConvert()" style="width:100%">💱 Convert at GCV Rate</button>
+            <button class="btn btn-gold inline-style-11" onclick="calcConvert()" >💱 Convert at GCV Rate</button>
             <div class="convert-result" id="convertResult">
                 <div class="cv-from" id="cvFrom">1.00 π</div>
                 <div class="cv-to" id="cvTo">$314,159.00</div>
@@ -386,14 +228,14 @@ h1{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient
     <!-- Fee Structure -->
     <div class="section">
         <h2><span>💰</span> Fee Structure</h2>
-        <table style="width:100%;font-size:.85rem;border-collapse:collapse">
-            <tr style="border-bottom:1px solid rgba(218,165,32,.06)"><td style="padding:10px;color:rgba(255,255,255,.5)">Activation Fee</td><td style="padding:10px;font-weight:600;color:#daa520">100 π (one-time)</td></tr>
-            <tr style="border-bottom:1px solid rgba(218,165,32,.06)"><td style="padding:10px;color:rgba(255,255,255,.5)">Annual Reward</td><td style="padding:10px;color:#27ae60">+1 π / year</td></tr>
-            <tr style="border-bottom:1px solid rgba(218,165,32,.06)"><td style="padding:10px;color:rgba(255,255,255,.5)">GCV Rate</td><td style="padding:10px;color:#daa520">1 π = $314,159.00 (stable)</td></tr>
-            <tr style="border-bottom:1px solid rgba(218,165,32,.06)"><td style="padding:10px;color:rgba(255,255,255,.5)">Cashback</td><td style="padding:10px;color:#27ae60">1% — 4%</td></tr>
-            <tr style="border-bottom:1px solid rgba(218,165,32,.06)"><td style="padding:10px;color:rgba(255,255,255,.5)">Send / Receive</td><td style="padding:10px">Free</td></tr>
-            <tr style="border-bottom:1px solid rgba(218,165,32,.06)"><td style="padding:10px;color:rgba(255,255,255,.5)">Cross-Border</td><td style="padding:10px">Free</td></tr>
-            <tr><td style="padding:10px;color:rgba(255,255,255,.5)">Loyalty Tiers</td><td style="padding:10px;color:#daa520">4 Tiers Available</td></tr>
+        <table class="inline-style-16">
+            <tr class="inline-style-17"><td class="inline-style-18">Activation Fee</td><td class="inline-style-19">100 π (one-time)</td></tr>
+            <tr class="inline-style-17"><td class="inline-style-18">Annual Reward</td><td class="inline-style-20">+1 π / year</td></tr>
+            <tr class="inline-style-17"><td class="inline-style-18">GCV Rate</td><td class="inline-style-21">1 π = $314,159.00 (stable)</td></tr>
+            <tr class="inline-style-17"><td class="inline-style-18">Cashback</td><td class="inline-style-20">1% — 4%</td></tr>
+            <tr class="inline-style-17"><td class="inline-style-18">Send / Receive</td><td class="inline-style-22">Free</td></tr>
+            <tr class="inline-style-17"><td class="inline-style-18">Cross-Border</td><td class="inline-style-22">Free</td></tr>
+            <tr><td class="inline-style-18">Loyalty Tiers</td><td class="inline-style-21">4 Tiers Available</td></tr>
         </table>
     </div>
 

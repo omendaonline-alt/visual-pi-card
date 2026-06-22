@@ -8,9 +8,7 @@
 <meta name="description" content="Visual Pi Card - Platinum card with scheduled payments, transaction insurance, multi-wallet.">
 <meta property="og:title" content="Platinum Card - Visual Pi Card">
 <meta property="og:url" content="https://omendapipaysglobel.online/card-platinum.html">
-<meta property="og:site_name" content="Visual Pi Card">
-<meta name="theme-color" content="#0d0221">
-<!-- Pi Network SDK -->
+<meta property="og:site_name" content="Visual Pi Card"><!-- Pi Network SDK -->
 <script src="https://sdk.minepi.com/pi-sdk.js"></script>
 <script src="pi-sdk-helper.js"></script>
 <script>
@@ -48,185 +46,26 @@ function piA2UPayment(amount,memo,metadata,onSuccess,onError){
     .catch(function(e){if(onError)onError(e.message);});
 }
 </script>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Segoe UI',system-ui,sans-serif;background:linear-gradient(135deg,#1a1a2e,#2d2d4e,#1a1a2e);color:#fff;min-height:100vh;padding:20px}
-.send-pi{background:rgba(160,160,192,.06);border:1px solid rgba(160,160,192,.1);border-radius:16px;padding:20px;margin-bottom:20px;text-align:center}
-.send-pi h3{font-size:.95rem;margin-bottom:6px;color:#c0c0e0}
-.send-pi .send-note{font-size:.72rem;color:rgba(255,255,255,.45);margin-bottom:14px;line-height:1.4}
-.send-pi .send-note b{color:rgba(255,255,255,.7)}
-.send-pi .send-row{display:flex;gap:10px;align-items:center;justify-content:center}
-.send-pi input{flex:1;max-width:160px;padding:10px 14px;border:1px solid rgba(160,160,192,.15);background:rgba(255,255,255,.06);color:#fff;border-radius:10px;font-size:.9rem;text-align:center;outline:none}
-.send-pi input:focus{border-color:#c0c0e0}
-.send-pi button{padding:10px 22px;border:none;background:linear-gradient(135deg,#5a5a7a,#a0a0c0);color:#fff;font-weight:700;border-radius:10px;font-size:.85rem;cursor:pointer;transition:transform .2s,box-shadow .2s}
-.send-pi button:hover{transform:scale(1.04);box-shadow:0 4px 16px rgba(136,136,168,.35)}
-.send-pi .send-dest{font-family:'Courier New',monospace;font-size:.65rem;color:rgba(255,255,255,.35);margin-top:10px;word-break:break-all}
-.send-pi .send-status{margin-top:10px;font-size:.8rem;display:none;padding:8px;border-radius:8px}
-.container{max-width:900px;margin:0 auto}
-h1{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient(90deg,#8888a8,#c0c0e0,#e0e0f0,#c0c0e0,#8888a8);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-.subtitle{text-align:center;color:rgba(255,255,255,.5);margin-bottom:30px;font-size:.9rem}
-.badge{display:inline-block;background:linear-gradient(135deg,#5a5a7a,#a0a0c0);color:#fff;padding:4px 14px;border-radius:20px;font-weight:700;font-size:.75rem;margin-bottom:20px}
 
-.card-preview{background:linear-gradient(135deg,#3d3d5c 0%,#5a5a7a 40%,#8888a8 100%);border-radius:20px;padding:30px;margin:0 auto 30px;max-width:420px;box-shadow:0 20px 50px rgba(136,136,168,.3),0 0 0 1px rgba(255,255,255,.12);position:relative;overflow:hidden}
-.card-preview::after{content:'';position:absolute;top:-40%;right:-40%;width:80%;height:80%;background:radial-gradient(circle,rgba(255,255,255,.06) 0%,transparent 70%);pointer-events:none}
-.card-number{font-family:'Courier New',monospace;font-size:1.3rem;letter-spacing:3px;margin:20px 0 4px;text-shadow:0 2px 4px rgba(0,0,0,.3)}
-.card-wallet{font-family:'Courier New',monospace;font-size:.7rem;color:rgba(255,255,255,.6);word-break:break-all;margin-bottom:10px;letter-spacing:.5px}
-.card-label{font-size:.65rem;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:1px}
-.card-val{font-size:.9rem;margin-bottom:12px}
-.net-badge{font-size:.6rem;color:rgba(255,255,255,.4);letter-spacing:2px;margin-top:15px}
-
-.section{background:rgba(160,160,192,.04);border:1px solid rgba(160,160,192,.08);border-radius:16px;padding:24px;margin-bottom:20px}
-.section h2{font-size:1.1rem;margin-bottom:14px;color:#c0c0e0}
-.section h2 span{margin-right:8px}
-
-.feature-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
-.feature-card{background:rgba(160,160,192,.04);border:1px solid rgba(160,160,192,.06);border-radius:12px;padding:16px;text-align:center;transition:transform .2s,border-color .2s}
-.feature-card:hover{transform:translateY(-3px);border-color:rgba(160,160,192,.3)}
-.feature-card .icon{font-size:1.8rem;margin-bottom:8px}
-.feature-card h3{font-size:.85rem;margin-bottom:4px}
-.feature-card p{font-size:.72rem;color:rgba(255,255,255,.5);line-height:1.4}
-.tag{display:inline-block;font-size:.6rem;padding:2px 8px;border-radius:8px;margin-top:6px}
-.tag-plat{background:rgba(160,160,192,.15);color:#c0c0e0;border:1px solid rgba(160,160,192,.25)}
-.tag-green{background:rgba(39,174,96,.15);color:#27ae60;border:1px solid rgba(39,174,96,.2)}
-
-/* Scheduled Payments */
-.schedule-box{background:rgba(160,160,192,.06);border:1px solid rgba(160,160,192,.1);border-radius:14px;padding:20px;margin-top:14px}
-.sched-item{display:flex;align-items:center;gap:12px;padding:12px;border-bottom:1px solid rgba(160,160,192,.06);font-size:.82rem}
-.sched-item:last-child{border-bottom:none}
-.sched-icon{font-size:1.2rem;width:36px;text-align:center}
-.sched-status{margin-left:auto;font-size:.7rem;padding:3px 8px;border-radius:6px}
-.sched-active{background:rgba(39,174,96,.15);color:#27ae60}
-.sched-pending{background:rgba(245,197,24,.15);color:#f5c518}
-
-.sched-form{margin-top:16px;display:flex;flex-wrap:wrap;gap:10px}
-.sched-form input,.sched-form select{background:rgba(255,255,255,.06);border:1px solid rgba(160,160,192,.12);color:#fff;padding:10px 14px;border-radius:10px;font-size:.85rem;flex:1;min-width:120px}
-.sched-form input:focus,.sched-form select:focus{outline:none;border-color:#a0a0c0}
-
-/* Insurance Widget */
-.insurance-box{background:rgba(160,160,192,.06);border:1px solid rgba(160,160,192,.1);border-radius:14px;padding:20px;margin-top:14px}
-.ins-plan{display:flex;align-items:center;gap:14px;padding:14px;border:1px solid rgba(160,160,192,.08);border-radius:12px;margin-bottom:10px;cursor:pointer;transition:all .2s}
-.ins-plan:hover,.ins-plan.selected{border-color:rgba(160,160,192,.3);background:rgba(160,160,192,.06)}
-.ins-plan .ins-icon{font-size:1.5rem}
-.ins-plan h4{font-size:.85rem;margin-bottom:2px}
-.ins-plan p{font-size:.72rem;color:rgba(255,255,255,.5)}
-.ins-plan .ins-price{margin-left:auto;font-weight:700;color:#c0c0e0}
-
-/* Multi-Wallet */
-.wallet-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:14px}
-.wallet-card{background:rgba(160,160,192,.04);border:1px solid rgba(160,160,192,.08);border-radius:12px;padding:14px;text-align:center}
-.wallet-card .w-icon{font-size:1.5rem;margin-bottom:6px}
-.wallet-card .w-name{font-size:.75rem;color:rgba(255,255,255,.6);margin-bottom:4px}
-.wallet-card .w-bal{font-size:1rem;font-weight:700;color:#c0c0e0}
-
-.btn{padding:12px 24px;border:none;border-radius:12px;font-size:.85rem;font-weight:600;cursor:pointer;transition:all .2s}
-.btn-plat{background:linear-gradient(135deg,#5a5a7a,#a0a0c0);color:#fff}
-.btn-plat:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(136,136,168,.4)}
-
-.back-link{display:block;text-align:center;margin-top:30px;color:rgba(255,255,255,.4);font-size:.85rem;text-decoration:none}
-.back-link:hover{color:#c0c0e0}
-.card-nav{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:20px;padding:0 10px}
-.card-nav a{display:inline-flex;align-items:center;gap:5px;padding:8px 14px;border-radius:10px;font-size:.75rem;font-weight:700;text-decoration:none;transition:all .2s;border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.6)}
-.card-nav a:hover{border-color:rgba(245,197,24,.4);color:#f5c518}
-.card-nav a.active{background:rgba(245,197,24,.15);border-color:rgba(245,197,24,.4);color:#f5c518}
-.card-nav .nav-shop{background:linear-gradient(135deg,rgba(192,57,43,.2),rgba(192,57,43,.1));border-color:rgba(192,57,43,.3);color:#e74c3c}
-.card-nav .nav-shop:hover{background:rgba(192,57,43,.3);color:#fff}
-/* Owner Identity */
-.owner-id{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:14px 18px;margin-bottom:20px;font-size:.78rem}
-.owner-id .oid-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04)}
-.owner-id .oid-row:last-child{border-bottom:none}
-.owner-id .oid-label{color:rgba(255,255,255,.35);min-width:90px;font-size:.7rem;text-transform:uppercase;letter-spacing:.5px}
-.owner-id .oid-val{color:#fff;font-weight:600;word-break:break-all}
-.owner-id .oid-val.mono{font-family:'Courier New',monospace;font-size:.72rem;color:rgba(255,255,255,.7)}
-.owner-id .oid-badge{display:inline-block;background:rgba(39,174,96,.12);color:#27ae60;border:1px solid rgba(39,174,96,.2);padding:2px 8px;border-radius:8px;font-size:.6rem;font-weight:600;margin-left:auto;letter-spacing:.5px}
-.oid-actions{display:flex;gap:8px;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.06)}
-.oid-btn{flex:1;padding:8px 0;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:rgba(255,255,255,.6);border-radius:10px;font-size:.7rem;font-weight:600;cursor:pointer;text-align:center;transition:all .2s}
-.oid-btn:hover{background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.2)}
-.oid-btn.copied{background:rgba(39,174,96,.12);color:#27ae60;border-color:rgba(39,174,96,.2)}
-/* Passphrase Unlock */
-.unlock-overlay{position:fixed;top:0;left:0;width:100%;height:100%;z-index:9999;background:#fff;display:flex;flex-direction:column;align-items:center}
-.unlock-header{width:100%;background:linear-gradient(135deg,#6b3fa0,#8b5cf6);padding:18px 20px;display:flex;align-items:center;justify-content:center;gap:10px}
-.unlock-header svg{width:28px;height:28px}
-.unlock-header span{color:#fff;font-size:1.1rem;font-weight:600}
-.unlock-body{width:100%;max-width:480px;padding:30px 20px;flex:1;display:flex;flex-direction:column;align-items:center}
-.unlock-body h2{font-size:1.4rem;color:#1a1a2e;margin-bottom:24px;font-weight:600}
-.unlock-body textarea{width:100%;min-height:160px;border:2px solid #8b5cf6;border-radius:16px;padding:16px;font-family:'Courier New',monospace;font-size:.95rem;resize:vertical;outline:none;color:#333;line-height:1.6}
-.unlock-body textarea::placeholder{color:#aaa;font-family:'Segoe UI',sans-serif;font-size:.9rem}
-.unlock-body textarea:focus{border-color:#6b3fa0;box-shadow:0 0 0 3px rgba(139,92,246,.15)}
-.btn-unlock{width:100%;padding:14px;border-radius:30px;border:2px solid #8b5cf6;background:#fff;color:#4a3580;font-size:.95rem;font-weight:600;cursor:pointer;margin-top:16px;transition:all .2s}
-.btn-unlock:hover{background:#f5f0ff}
-.btn-unlock-primary{width:100%;padding:14px;border-radius:30px;border:none;background:linear-gradient(135deg,#6b3fa0,#8b5cf6);color:#fff;font-size:.95rem;font-weight:600;cursor:pointer;margin-top:10px;transition:all .2s}
-.btn-unlock-primary:hover{opacity:.9}
-.unlock-info{margin-top:24px;font-size:.85rem;color:#666;line-height:1.6;text-align:center}
-.unlock-info a{color:#8b5cf6;text-decoration:none}
-.unlock-error{color:#e74c3c;font-size:.82rem;margin-top:8px;display:none}
-/* Platinum Stable Price */
-.pt-banner{background:linear-gradient(135deg,#2d2d4e,#3d3d5c,#5a5a7a);border:1px solid rgba(160,160,192,.15);border-radius:16px;padding:20px 24px;margin-bottom:20px;text-align:center;position:relative;overflow:hidden;box-shadow:0 8px 30px rgba(136,136,168,.2)}
-.pt-banner::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle,rgba(255,255,255,.04) 0%,transparent 60%);pointer-events:none}
-.pt-label{font-size:.7rem;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:2px;margin-bottom:4px}
-.pt-rate{font-size:1.8rem;font-weight:800;background:linear-gradient(90deg,#8888a8,#e0e0f0,#8888a8);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-.pt-sub{font-size:.75rem;color:rgba(255,255,255,.35);margin-top:4px}
-.pt-badge-tag{display:inline-block;background:rgba(160,160,192,.1);padding:4px 12px;border-radius:20px;font-size:.65rem;color:rgba(255,255,255,.6);margin-top:8px;letter-spacing:1px;border:1px solid rgba(160,160,192,.15)}
-.pt-balance{background:rgba(160,160,192,.04);border:1px solid rgba(160,160,192,.08);border-radius:14px;padding:18px;margin-bottom:20px;text-align:center}
-.pt-balance .pi-amount{font-size:1.3rem;font-weight:700;color:#c0c0e0}
-.pt-balance .usd-amount{font-size:1.6rem;font-weight:800;color:#27ae60;margin-top:4px}
-.pt-balance .usd-label{font-size:.7rem;color:rgba(255,255,255,.3)}
-/* Activation Gate */
-.activate-overlay{position:fixed;top:0;left:0;width:100%;height:100%;z-index:9998;background:linear-gradient(135deg,#1a1a2e,#2d2d4e,#3d3d5c);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}
-.activate-card{background:rgba(255,255,255,.04);border:1px solid rgba(160,160,192,.15);border-radius:24px;padding:40px 30px;max-width:440px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.4)}
-.activate-card .ac-icon{font-size:3.5rem;margin-bottom:16px}
-.activate-card h2{font-size:1.5rem;background:linear-gradient(90deg,#8888a8,#e0e0f0,#8888a8);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
-.activate-card .ac-desc{font-size:.85rem;color:rgba(255,255,255,.4);line-height:1.6;margin-bottom:20px}
-.activate-card .ac-price{font-size:2rem;font-weight:800;color:#c0c0e0;margin-bottom:4px}
-.activate-card .ac-price-sub{font-size:.75rem;color:rgba(255,255,255,.3);margin-bottom:20px}
-.activate-card .ac-perks{text-align:left;margin-bottom:24px}
-.activate-card .ac-perk{display:flex;align-items:center;gap:10px;padding:8px 0;font-size:.82rem;color:rgba(255,255,255,.6);border-bottom:1px solid rgba(255,255,255,.04)}
-.activate-card .ac-perk:last-child{border-bottom:none}
-.activate-card .ac-perk-icon{font-size:1.1rem;width:28px;text-align:center}
-.btn-activate{width:100%;padding:16px;border:none;border-radius:14px;background:linear-gradient(135deg,#5a5a7a,#a0a0c0);color:#fff;font-size:1rem;font-weight:700;cursor:pointer;transition:all .2s;margin-bottom:10px}
-.btn-activate:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(136,136,168,.5)}
-.btn-activate:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
-.ac-status{font-size:.8rem;color:rgba(255,255,255,.3);min-height:20px}
-.ac-testnet{display:inline-block;background:rgba(39,174,96,.12);color:#27ae60;border:1px solid rgba(39,174,96,.2);padding:3px 10px;border-radius:8px;font-size:.65rem;font-weight:600;letter-spacing:1px}
-/* Daily Reward */
-.daily-reward{background:rgba(39,174,96,.05);border:1px solid rgba(39,174,96,.1);border-radius:14px;padding:16px;margin-bottom:20px;text-align:center}
-.daily-reward .dr-title{font-size:.7rem;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:1px}
-.daily-reward .dr-amount{font-size:1.3rem;font-weight:700;color:#27ae60;margin-top:4px}
-.daily-reward .dr-sub{font-size:.72rem;color:rgba(255,255,255,.25);margin-top:4px}
-/* Exchange Grid */
-.exchange-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
-.exchange-btn{padding:14px;border:1px solid rgba(160,160,192,.08);border-radius:12px;background:rgba(160,160,192,.03);color:#fff;text-align:center;cursor:pointer;transition:all .2s;font-size:.82rem}
-.exchange-btn:hover{background:rgba(160,160,192,.08);border-color:rgba(160,160,192,.25);transform:translateY(-2px)}
-.exchange-btn .ex-icon{font-size:1.4rem;margin-bottom:6px}
-.exchange-btn .ex-label{font-weight:600}
-.exchange-btn .ex-rate{font-size:.68rem;color:rgba(255,255,255,.3);margin-top:4px}
-.convert-box{background:rgba(160,160,192,.04);border:1px solid rgba(160,160,192,.08);border-radius:14px;padding:20px;margin-top:14px}
-.convert-row{display:flex;gap:10px;align-items:end;flex-wrap:wrap;margin-bottom:12px}
-.convert-row label{font-size:.75rem;color:rgba(255,255,255,.4)}
-.convert-row input,.convert-row select{background:rgba(255,255,255,.06);border:1px solid rgba(160,160,192,.12);color:#fff;padding:10px 14px;border-radius:10px;font-size:.9rem;width:100%}
-.convert-row input:focus,.convert-row select:focus{outline:none;border-color:#a0a0c0}
-.convert-result{background:rgba(39,174,96,.06);border:1px solid rgba(39,174,96,.12);border-radius:10px;padding:14px;text-align:center;margin-top:10px;display:none}
-.convert-result .cv-from{font-size:.85rem;color:rgba(255,255,255,.4)}
-.convert-result .cv-to{font-size:1.4rem;font-weight:700;color:#27ae60;margin-top:4px}
-.convert-result .cv-rate{font-size:.7rem;color:rgba(255,255,255,.2);margin-top:4px}
-</style>
+    <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="page-card-platinum">
 <!-- Card Content -->
-<div class="container" id="cardContent" style="display:block">
+<div class="container inline-style-1" id="cardContent" >
     <h1>💎 Platinum Card</h1>
     <p class="subtitle">Scheduled Payments • Transaction Insurance • Multi-Wallet • Auto-Pay</p>
-    <div style="text-align:center"><span class="badge">PLATINUM</span> <span class="ac-testnet">TESTNET</span></div>
+    <div class="inline-style-2"><span class="badge">PLATINUM</span> <span class="ac-testnet">TESTNET</span></div>
 
     <!-- Card Preview -->
     <div class="card-preview">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-            <span style="font-size:.7rem;color:rgba(255,255,255,.5)">Visual Pi Card</span>
-            <span style="font-size:.65rem;background:rgba(255,255,255,.08);padding:3px 10px;border-radius:8px;color:#e0e0f0">PLATINUM</span>
+        <div class="inline-style-3">
+            <span class="inline-style-4">Visual Pi Card</span>
+            <span class="inline-style-5">PLATINUM</span>
         </div>
         <div class="card-label">Card Number</div>
         <div class="card-number" id="cardNumber">—</div>
         <div class="card-wallet" id="cardWallet"></div>
-        <div style="display:flex;gap:30px">
+        <div class="inline-style-6">
             <div><div class="card-label">Card Holder</div><div class="card-val" id="holderName">PI PIONEER</div></div>
             <div><div class="card-label">Expires</div><div class="card-val">12/30</div></div>
             <div><div class="card-label">CVV</div><div class="card-val">420</div></div>
@@ -270,7 +109,7 @@ h1{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient
         <div class="usd-label">Your Platinum Card Balance</div>
         <div class="pi-amount" id="ptPiBalance">0.00 π</div>
         <div class="usd-amount" id="ptUsdBalance">$0.00</div>
-        <div class="usd-label" style="margin-top:6px">1 π = $3.14 — Withdraw & Exchange at this rate</div>
+        <div class="usd-label inline-style-7" >1 π = $3.14 — Withdraw & Exchange at this rate</div>
     </div>
 
     <!-- Daily Reward -->
@@ -283,7 +122,7 @@ h1{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient
     <!-- Exchange at Platinum Rate -->
     <div class="section">
         <h2><span>💱</span> Exchange at Platinum Rate</h2>
-        <p style="font-size:.8rem;color:rgba(255,255,255,.4);margin-bottom:14px">All transactions use: <strong style="color:#c0c0e0">1 π = $3.14</strong></p>
+        <p class="inline-style-8">All transactions use: <strong class="inline-style-9">1 π = $3.14</strong></p>
         <div class="exchange-grid">
             <div class="exchange-btn" onclick="showPtConvert('withdraw')"><div class="ex-icon">🏧</div><div class="ex-label">Withdraw</div><div class="ex-rate">π → USD at Platinum Rate</div></div>
             <div class="exchange-btn" onclick="showPtConvert('deposit')"><div class="ex-icon">📥</div><div class="ex-label">Deposit</div><div class="ex-rate">Add π to Platinum Card</div></div>
@@ -292,13 +131,13 @@ h1{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient
             <div class="exchange-btn" onclick="showPtConvert('usdt')"><div class="ex-icon">💵</div><div class="ex-label">Buy USDT</div><div class="ex-rate">π → USDT at Platinum Rate</div></div>
             <div class="exchange-btn" onclick="showPtConvert('card')"><div class="ex-icon">💳</div><div class="ex-label">Exchange Cards</div><div class="ex-rate">Transfer to other Visual Pi Cards</div></div>
         </div>
-        <div class="convert-box" id="ptConvertBox" style="display:none">
+        <div class="convert-box inline-style-10" id="ptConvertBox" >
             <div class="convert-row">
-                <div style="flex:1">
+                <div class="inline-style-11">
                     <label>Amount (π)</label>
                     <input type="number" id="ptConvertAmt" placeholder="1" min="0" step="0.01">
                 </div>
-                <div style="flex:1">
+                <div class="inline-style-11">
                     <label>Convert To</label>
                     <select id="ptConvertTarget">
                         <option value="usd">USD ($)</option>
@@ -308,7 +147,7 @@ h1{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient
                     </select>
                 </div>
             </div>
-            <button class="btn btn-plat" onclick="calcPtConvert()" style="width:100%">💱 Convert at Platinum Rate</button>
+            <button class="btn btn-plat inline-style-12" onclick="calcPtConvert()" >💱 Convert at Platinum Rate</button>
             <div class="convert-result" id="ptConvertResult">
                 <div class="cv-from" id="ptCvFrom">1.00 π</div>
                 <div class="cv-to" id="ptCvTo">$3.14</div>
@@ -320,10 +159,10 @@ h1{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient
     <!-- Scheduled Payments -->
     <div class="section">
         <h2><span>📅</span> Scheduled Payments</h2>
-        <p style="font-size:.8rem;color:rgba(255,255,255,.4);margin-bottom:14px">Set up recurring auto-pay — exclusive to Platinum</p>
+        <p class="inline-style-8">Set up recurring auto-pay — exclusive to Platinum</p>
         <div class="schedule-box">
             <div id="schedList">
-                <div style="text-align:center;color:rgba(255,255,255,.3);padding:20px;font-size:.85rem">No scheduled payments yet</div>
+                <div class="inline-style-13">No scheduled payments yet</div>
             </div>
             <div class="sched-form">
                 <input type="text" id="schedRecipient" placeholder="@recipient">
@@ -341,7 +180,7 @@ h1{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient
     <!-- Transaction Insurance -->
     <div class="section">
         <h2><span>🛡️</span> Transaction Insurance</h2>
-        <p style="font-size:.8rem;color:rgba(255,255,255,.4);margin-bottom:14px">Protect your Pi transactions — Platinum exclusive</p>
+        <p class="inline-style-8">Protect your Pi transactions — Platinum exclusive</p>
         <div class="insurance-box">
             <div class="ins-plan" onclick="selectPlan(this,'basic')">
                 <div class="ins-icon">🛡️</div>
@@ -358,29 +197,29 @@ h1{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient
                 <div><h4>Premium Protection</h4><p>Unlimited coverage + 24/7 fraud monitoring + instant refunds</p></div>
                 <div class="ins-price">5 π/mo</div>
             </div>
-            <div id="planMsg" style="text-align:center;margin-top:10px;font-size:.8rem;color:rgba(255,255,255,.4);display:none"></div>
+            <div id="planMsg" class="inline-style-14"></div>
         </div>
     </div>
 
     <!-- Multi-Wallet -->
     <div class="section">
         <h2><span>💼</span> Multi-Wallet Manager</h2>
-        <p style="font-size:.8rem;color:rgba(255,255,255,.4);margin-bottom:14px">Organize your Pi across multiple purpose wallets</p>
+        <p class="inline-style-8">Organize your Pi across multiple purpose wallets</p>
         <div class="wallet-grid">
             <div class="wallet-card"><div class="w-icon">💳</div><div class="w-name">Main Wallet</div><div class="w-bal" id="walMain">0.00 π</div></div>
             <div class="wallet-card"><div class="w-icon">🏦</div><div class="w-name">Savings</div><div class="w-bal" id="walSave">0.00 π</div></div>
             <div class="wallet-card"><div class="w-icon">🛒</div><div class="w-name">Shopping</div><div class="w-bal" id="walShop">0.00 π</div></div>
             <div class="wallet-card"><div class="w-icon">🎯</div><div class="w-name">Goals</div><div class="w-bal" id="walGoal">0.00 π</div></div>
         </div>
-        <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
-            <select id="walFrom" style="flex:1;min-width:100px;background:rgba(255,255,255,.06);border:1px solid rgba(160,160,192,.12);color:#fff;padding:10px;border-radius:10px;font-size:.85rem">
+        <div class="inline-style-15">
+            <select id="walFrom" class="inline-style-16">
                 <option value="main">Main</option><option value="savings">Savings</option><option value="shopping">Shopping</option><option value="goals">Goals</option>
             </select>
-            <span style="padding:10px;color:rgba(255,255,255,.4)">→</span>
-            <select id="walTo" style="flex:1;min-width:100px;background:rgba(255,255,255,.06);border:1px solid rgba(160,160,192,.12);color:#fff;padding:10px;border-radius:10px;font-size:.85rem">
+            <span class="inline-style-17">→</span>
+            <select id="walTo" class="inline-style-16">
                 <option value="savings">Savings</option><option value="main">Main</option><option value="shopping">Shopping</option><option value="goals">Goals</option>
             </select>
-            <input type="number" id="walAmt" placeholder="Amount" min="0.01" step="0.01" style="flex:1;min-width:80px;background:rgba(255,255,255,.06);border:1px solid rgba(160,160,192,.12);color:#fff;padding:10px;border-radius:10px;font-size:.85rem">
+            <input type="number" id="walAmt" placeholder="Amount" min="0.01" step="0.01" class="inline-style-18">
             <button class="btn btn-plat" onclick="transferWallet()">Transfer</button>
         </div>
     </div>
@@ -401,14 +240,14 @@ h1{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient
     <!-- Fee Structure -->
     <div class="section">
         <h2><span>💰</span> Fee Structure</h2>
-        <table style="width:100%;font-size:.85rem;border-collapse:collapse">
-            <tr style="border-bottom:1px solid rgba(160,160,192,.06)"><td style="padding:10px;color:rgba(255,255,255,.5)">Activation Fee</td><td style="padding:10px;font-weight:600;color:#c0c0e0">10 π (one-time)</td></tr>
-            <tr style="border-bottom:1px solid rgba(160,160,192,.06)"><td style="padding:10px;color:rgba(255,255,255,.5)">Platinum Rate</td><td style="padding:10px;color:#c0c0e0">1 π = $3.14 (stable)</td></tr>
-            <tr style="border-bottom:1px solid rgba(160,160,192,.06)"><td style="padding:10px;color:rgba(255,255,255,.5)">Daily Reward</td><td style="padding:10px;color:#27ae60">+10 π / day</td></tr>
-            <tr style="border-bottom:1px solid rgba(160,160,192,.06)"><td style="padding:10px;color:rgba(255,255,255,.5)">Scheduled Payments</td><td style="padding:10px">Free</td></tr>
-            <tr style="border-bottom:1px solid rgba(160,160,192,.06)"><td style="padding:10px;color:rgba(255,255,255,.5)">Insurance</td><td style="padding:10px">0.5 — 5 π/month</td></tr>
-            <tr style="border-bottom:1px solid rgba(160,160,192,.06)"><td style="padding:10px;color:rgba(255,255,255,.5)">Multi-Wallet Transfer</td><td style="padding:10px">Free</td></tr>
-            <tr><td style="padding:10px;color:rgba(255,255,255,.5)">Cross-Border</td><td style="padding:10px">Free</td></tr>
+        <table class="inline-style-19">
+            <tr class="inline-style-20"><td class="inline-style-21">Activation Fee</td><td class="inline-style-22">10 π (one-time)</td></tr>
+            <tr class="inline-style-20"><td class="inline-style-21">Platinum Rate</td><td class="inline-style-23">1 π = $3.14 (stable)</td></tr>
+            <tr class="inline-style-20"><td class="inline-style-21">Daily Reward</td><td class="inline-style-24">+10 π / day</td></tr>
+            <tr class="inline-style-20"><td class="inline-style-21">Scheduled Payments</td><td class="inline-style-25">Free</td></tr>
+            <tr class="inline-style-20"><td class="inline-style-21">Insurance</td><td class="inline-style-25">0.5 — 5 π/month</td></tr>
+            <tr class="inline-style-20"><td class="inline-style-21">Multi-Wallet Transfer</td><td class="inline-style-25">Free</td></tr>
+            <tr><td class="inline-style-21">Cross-Border</td><td class="inline-style-25">Free</td></tr>
         </table>
     </div>
 
@@ -644,11 +483,11 @@ function addSchedule() {
 function renderSchedules() {
     var el = document.getElementById('schedList');
     if (schedules.length === 0) {
-        el.innerHTML = '<div style="text-align:center;color:rgba(255,255,255,.3);padding:20px;font-size:.85rem">No scheduled payments yet</div>';
+        el.innerHTML = '<div class="inline-style-13">No scheduled payments yet</div>';
         return;
     }
     el.innerHTML = schedules.map(function(s, i) {
-        return '<div class="sched-item"><div class="sched-icon">📅</div><div><strong>' + escHtml(s.recipient) + '</strong><br><span style="font-size:.7rem;color:rgba(255,255,255,.4)">' + s.amount.toFixed(2) + ' π • ' + s.freq + '</span></div><span class="sched-status ' + (s.active ? 'sched-active' : 'sched-pending') + '">' + (s.active ? '● Active' : '○ Paused') + '</span></div>';
+        return '<div class="sched-item"><div class="sched-icon">📅</div><div><strong>' + escHtml(s.recipient) + '</strong><br><span class="inline-style-26">' + s.amount.toFixed(2) + ' π • ' + s.freq + '</span></div><span class="sched-status ' + (s.active ? 'sched-active' : 'sched-pending') + '">' + (s.active ? '● Active' : '○ Paused') + '</span></div>';
     }).join('');
 }
 

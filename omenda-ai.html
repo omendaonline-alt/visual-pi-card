@@ -9,41 +9,19 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<style>
-:root{--bg:#050816;--panel:#0f172a;--panel-strong:#111827;--text:#f8fafc;--muted:#94a3b8;--accent:#f5c518;--accent-strong:#22c55e;--border:rgba(148,163,184,.16);--surface:rgba(255,255,255,.04);}
-*{box-sizing:border-box;}
-html,body{margin:0;padding:0;min-height:100%;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:linear-gradient(180deg,#020617 0%,#090d1e 100%);color:var(--text);}
-body{padding:24px;}
-a{color:inherit;text-decoration:none;}
-.container{max-width:1080px;margin:0 auto;}
-.header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;margin-bottom:24px;}
-.header h1{font-size:2rem;margin:0;letter-spacing:-.03em;}
-.header p{margin:0;color:var(--muted);max-width:640px;}
-.card-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin-bottom:28px;}
-.card{background:var(--panel);border:1px solid var(--border);border-radius:22px;padding:24px;transition:transform .2s,box-shadow .2s;}
-.card:hover{transform:translateY(-2px);box-shadow:0 18px 50px rgba(0,0,0,.25);}
-.card h2{margin:0 0 10px;font-size:1.1rem;color:var(--accent);}
-.card p{margin:0;color:var(--muted);line-height:1.7;}
-.ask-section{background:var(--panel);border:1px solid var(--border);border-radius:22px;padding:24px;}
-.ask-section h2{margin-top:0;color:#fff;}
-.ask-section textarea{width:100%;min-height:140px;padding:16px;border-radius:16px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);color:#fff;resize:vertical;outline:none;font-size:1rem;}
-.ask-section button{margin-top:16px;padding:14px 22px;border:none;border-radius:14px;background:linear-gradient(135deg,#f5c518,#d97706);color:#111;font-weight:700;cursor:pointer;transition:transform .2s;}
-.ask-section button:hover{transform:translateY(-1px);}
-.response{margin-top:20px;padding:18px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:#fff;white-space:pre-wrap;line-height:1.7;}
-.back-link{display:inline-flex;align-items:center;gap:8px;color:#f5c518;margin-top:16px;font-size:.95rem;}
-.note{margin-top:18px;color:var(--muted);font-size:.95rem;}
-</style>
+
+    <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="page-omenda-ai">
 <div class="container">
   <div class="header">
     <div>
       <h1 id="pageTitle">Omenda AI Knowledge</h1>
       <p id="pageDescription">Your local AI assistant for everything related to Omenda Pi Pays, GCV pricing, and the future of Pi.</p>
     </div>
-    <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
-      <label for="langSelect" style="color:var(--muted);font-size:.95rem;">Language</label>
-      <select id="langSelect" onchange="setLanguage(this.value)" style="border-radius:14px;padding:10px 12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:#fff;outline:none;">
+    <div class="inline-style-1">
+      <label for="langSelect" class="inline-style-2">Language</label>
+      <select id="langSelect" onchange="setLanguage(this.value)" class="inline-style-3">
         <option value="en">English</option>
         <option value="es">Español</option>
         <option value="fr">Français</option>
@@ -54,7 +32,7 @@ a{color:inherit;text-decoration:none;}
         <option value="ar">العربية</option>
       </select>
       <a href="shop.html" class="back-link" id="backLink">← Back to Marketplace</a>
-      <div id="google_translate_element" style="margin-left:16px;"></div>
+      <div id="google_translate_element" class="inline-style-4"></div>
     </div>
   </div>
 
@@ -76,9 +54,9 @@ a{color:inherit;text-decoration:none;}
   <div class="ask-section">
     <h2 id="askHeading">Ask Omenda AI</h2>
     <textarea id="aiQuery" placeholder="Ask about Omenda Pi Pays, GCV price, Pi future, products, or services..."></textarea>
-    <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;">
+    <div class="inline-style-5">
       <button id="askButton" type="button" onclick="answerQuery()">Get Answer</button>
-      <button id="searchButton" type="button" onclick="searchGoogle()" style="background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;border:none;border-radius:14px;padding:14px 22px;cursor:pointer;transition:transform .2s;">Search Google</button>
+      <button id="searchButton" type="button" onclick="searchGoogle()" class="inline-style-6">Search Google</button>
     </div>
     <div id="aiResponse" class="response">Type a question and click Get Answer to see curated Omenda AI knowledge.</div>
     <div class="note" id="noteText">This assistant uses curated Omenda Pi Pays knowledge for quick answers. It is a local knowledge engine for your dashboard.</div>

@@ -4,37 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Setup Check - Visual Pi Card</title>
-    <style>
-        *{box-sizing:border-box;margin:0;padding:0}
-        body{font-family:'Segoe UI',system-ui,sans-serif;background:linear-gradient(135deg,#0d0221,#150535,#1a0640);color:#e2daf0;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:40px 20px}
-        h1{font-size:1.8rem;background:linear-gradient(90deg,#f5c518,#ffdf6f);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
-        .sub{opacity:.6;font-size:.9rem;margin-bottom:36px}
-        .checks{width:100%;max-width:500px}
-        .check-item{display:flex;align-items:center;gap:14px;padding:16px 20px;margin-bottom:10px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}
-        .check-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
-        .check-icon.pass{background:rgba(39,174,96,.15);color:#27ae60}
-        .check-icon.fail{background:rgba(231,76,60,.15);color:#e74c3c}
-        .check-icon.warn{background:rgba(245,197,24,.15);color:#f5c518}
-        .check-icon.load{background:rgba(245,197,24,.15);color:#f5c518;animation:pulse 1s infinite}
-        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-        .check-info{flex:1}
-        .check-name{font-weight:600;font-size:.95rem}
-        .check-desc{font-size:.75rem;opacity:.5;margin-top:2px}
-        .summary{margin-top:30px;padding:20px 24px;border-radius:14px;text-align:center;font-size:.9rem;width:100%;max-width:500px}
-        .summary.good{background:rgba(39,174,96,.1);border:1px solid rgba(39,174,96,.3);color:#27ae60}
-        .summary.bad{background:rgba(231,76,60,.1);border:1px solid rgba(231,76,60,.3);color:#e74c3c}
-        .back-btn{display:inline-block;margin-top:24px;padding:12px 32px;border-radius:30px;background:linear-gradient(135deg,#f5c518,#d4a810);color:#1b0a3c;font-weight:700;text-decoration:none;font-size:.9rem;transition:all .2s}
-        .back-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(245,197,24,.3)}
-        .info-box{margin-top:20px;padding:16px 20px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);font-size:.78rem;line-height:1.7;opacity:.7;width:100%;max-width:500px}
-        .info-box strong{color:#f5c518;opacity:1}
-    </style>
+    
+    <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="page-setup">
     <h1>&#9881; Setup Verification</h1>
     <p class="sub">omendapipaysglobel.online &mdash; Auto-checking your setup</p>
 
     <div class="checks" id="checks"></div>
-    <div class="summary" id="summary" style="display:none"></div>
+    <div class="summary inline-style-1" id="summary" ></div>
 
     <div class="info-box" id="serverInfo">
         <strong>Server Details:</strong><br>

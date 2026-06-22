@@ -8,83 +8,9 @@
 <meta name="description" content="Visual Pi Card Whitepaper — Complete technical documentation for all 6 card tiers: Visa, Mastercard, Gold, Platinum, Black, and Amex. Pi Network testnet integration.">
 <meta property="og:title" content="Visual Pi Card — Whitepaper">
 <meta property="og:url" content="https://omendapipaysglobel.online/whitepaper.html">
-<meta property="og:site_name" content="Visual Pi Card">
-<meta name="theme-color" content="#0d0221">
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:linear-gradient(135deg,#0d0221 0%,#150530 40%,#1a0a3e 100%);color:#e0e0e0;min-height:100vh}
-.wp-header{background:linear-gradient(135deg,#1a0a3e,#2d1b69,#4a2c8a);padding:60px 20px 50px;text-align:center;border-bottom:1px solid rgba(139,92,246,.2)}
-.wp-header h1{font-size:2.4rem;font-weight:800;background:linear-gradient(90deg,#a78bfa,#c4b5fd,#e9d5ff,#c4b5fd,#a78bfa);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
-.wp-header .wp-sub{font-size:1rem;color:rgba(255,255,255,.5);margin-bottom:16px}
-.wp-header .wp-ver{display:inline-block;background:rgba(139,92,246,.15);border:1px solid rgba(139,92,246,.25);color:#a78bfa;padding:4px 14px;border-radius:20px;font-size:.75rem;font-weight:600;letter-spacing:1px}
-.wp-header .wp-date{font-size:.8rem;color:rgba(255,255,255,.3);margin-top:12px}
-.wp-nav{background:rgba(10,5,30,.8);border-bottom:1px solid rgba(139,92,246,.1);padding:14px 20px;position:sticky;top:0;z-index:100;backdrop-filter:blur(12px)}
-.wp-nav-inner{max-width:960px;margin:0 auto;display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
-.wp-nav a{color:rgba(255,255,255,.5);text-decoration:none;font-size:.78rem;padding:6px 14px;border-radius:8px;border:1px solid rgba(255,255,255,.06);transition:all .2s}
-.wp-nav a:hover,.wp-nav a:focus{color:#c4b5fd;border-color:rgba(139,92,246,.3);background:rgba(139,92,246,.08)}
-.container{max-width:960px;margin:0 auto;padding:40px 20px 60px}
-
-/* Table of Contents */
-.toc{background:rgba(139,92,246,.04);border:1px solid rgba(139,92,246,.1);border-radius:16px;padding:30px;margin-bottom:40px}
-.toc h2{font-size:1.1rem;color:#a78bfa;margin-bottom:16px}
-.toc ol{padding-left:24px}
-.toc li{padding:6px 0;font-size:.88rem}
-.toc a{color:rgba(255,255,255,.6);text-decoration:none;transition:color .2s}
-.toc a:hover{color:#c4b5fd}
-
-/* Sections */
-.wp-section{margin-bottom:50px}
-.wp-section h2{font-size:1.6rem;font-weight:700;margin-bottom:8px;padding-bottom:12px;border-bottom:1px solid rgba(139,92,246,.15)}
-.wp-section h3{font-size:1.15rem;color:#c4b5fd;margin:24px 0 10px;font-weight:600}
-.wp-section p{font-size:.9rem;line-height:1.8;color:rgba(255,255,255,.65);margin-bottom:14px}
-.wp-section ul,.wp-section ol{padding-left:24px;margin-bottom:14px}
-.wp-section li{font-size:.88rem;line-height:1.7;color:rgba(255,255,255,.6);margin-bottom:4px}
-.wp-section strong{color:#e0e0e0}
-
-/* Card Sections */
-.card-section{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:18px;padding:30px;margin-bottom:30px}
-.card-section .card-header{display:flex;align-items:center;gap:14px;margin-bottom:20px;flex-wrap:wrap}
-.card-section .card-icon{font-size:2.2rem}
-.card-section .card-title{font-size:1.4rem;font-weight:700}
-.card-section .card-badge{padding:4px 12px;border-radius:20px;font-size:.7rem;font-weight:700;letter-spacing:1px}
-
-/* Tables */
-.wp-table{width:100%;border-collapse:collapse;margin:16px 0 20px;font-size:.85rem}
-.wp-table th{text-align:left;padding:12px 14px;background:rgba(139,92,246,.08);color:#c4b5fd;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.5px}
-.wp-table td{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.04);color:rgba(255,255,255,.6)}
-.wp-table tr:hover td{background:rgba(139,92,246,.03)}
-
-/* Comparison Table */
-.compare-table{width:100%;border-collapse:collapse;font-size:.78rem;margin:20px 0}
-.compare-table th{padding:10px 8px;background:rgba(139,92,246,.1);color:#c4b5fd;font-weight:600;text-align:center;font-size:.72rem;text-transform:uppercase;letter-spacing:.5px}
-.compare-table td{padding:10px 8px;text-align:center;border-bottom:1px solid rgba(255,255,255,.04);color:rgba(255,255,255,.6)}
-.compare-table td:first-child{text-align:left;font-weight:600;color:#e0e0e0}
-.compare-table .yes{color:#27ae60}
-.compare-table .no{color:rgba(255,255,255,.2)}
-
-/* Highlights */
-.highlight-box{background:rgba(139,92,246,.06);border-left:3px solid #8b5cf6;border-radius:0 12px 12px 0;padding:16px 20px;margin:16px 0;font-size:.85rem;color:rgba(255,255,255,.6);line-height:1.7}
-.highlight-box strong{color:#c4b5fd}
-
-.testnet-tag{display:inline-block;background:rgba(39,174,96,.12);color:#27ae60;border:1px solid rgba(39,174,96,.2);padding:3px 10px;border-radius:8px;font-size:.65rem;font-weight:600;letter-spacing:1px}
-
-/* Footer */
-.wp-footer{text-align:center;padding:40px 20px;border-top:1px solid rgba(139,92,246,.1);color:rgba(255,255,255,.25);font-size:.8rem;line-height:1.8}
-.wp-footer a{color:#a78bfa;text-decoration:none}
-
-/* Back link */
-.back-link{display:block;text-align:center;margin-top:30px;color:rgba(255,255,255,.4);font-size:.85rem;text-decoration:none}
-.back-link:hover{color:#c4b5fd}
-
-@media(max-width:600px){
-    .wp-header h1{font-size:1.6rem}
-    .card-section{padding:20px 16px}
-    .compare-table{font-size:.68rem}
-    .compare-table th,.compare-table td{padding:6px 4px}
-}
-</style>
+<meta property="og:site_name" content="Visual Pi Card"><link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="page-whitepaper">
 
 <!-- Header -->
 <div class="wp-header">
@@ -194,14 +120,14 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:linear
     <!-- 3. Visa -->
     <div class="wp-section" id="visa">
         <h2>3. Visa Card</h2>
-        <div class="card-section" style="border-color:rgba(26,31,113,.3)">
+        <div class="card-section inline-style-1" >
             <div class="card-header">
                 <div class="card-icon">&#128179;</div>
                 <div>
-                    <div class="card-title" style="color:#4654b8">Visa &mdash; Worldwide</div>
-                    <div style="font-size:.8rem;color:rgba(255,255,255,.4)">Card Number: 4314 1592 6535 8979 &bull; CVV: 314</div>
+                    <div class="card-title inline-style-2" >Visa &mdash; Worldwide</div>
+                    <div class="inline-style-3">Card Number: 4314 1592 6535 8979 &bull; CVV: 314</div>
                 </div>
-                <span class="card-badge" style="background:rgba(26,31,113,.2);color:#4654b8;border:1px solid rgba(26,31,113,.3)">WORLDWIDE</span>
+                <span class="card-badge inline-style-4" >WORLDWIDE</span>
             </div>
 
             <h3>Pricing Model: Live Market Price</h3>
@@ -240,14 +166,14 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:linear
     <!-- 4. Mastercard -->
     <div class="wp-section" id="mastercard">
         <h2>4. Mastercard</h2>
-        <div class="card-section" style="border-color:rgba(235,87,87,.2)">
+        <div class="card-section inline-style-5" >
             <div class="card-header">
                 <div class="card-icon">&#127760;</div>
                 <div>
-                    <div class="card-title" style="color:#eb5757">Mastercard &mdash; Domestic Only</div>
-                    <div style="font-size:.8rem;color:rgba(255,255,255,.4)">Card Number: 5314 1592 6535 8979 &bull; CVV: 271</div>
+                    <div class="card-title inline-style-6" >Mastercard &mdash; Domestic Only</div>
+                    <div class="inline-style-3">Card Number: 5314 1592 6535 8979 &bull; CVV: 271</div>
                 </div>
-                <span class="card-badge" style="background:rgba(235,87,87,.15);color:#eb5757;border:1px solid rgba(235,87,87,.2)">DOMESTIC</span>
+                <span class="card-badge inline-style-7" >DOMESTIC</span>
             </div>
 
             <h3>Pricing Model: No Fixed Price / Free Tier</h3>
@@ -289,18 +215,18 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:linear
     <!-- 5. Gold (GCV) -->
     <div class="wp-section" id="gold">
         <h2>5. Gold Card (GCV)</h2>
-        <div class="card-section" style="border-color:rgba(218,165,32,.3)">
+        <div class="card-section inline-style-8" >
             <div class="card-header">
                 <div class="card-icon">&#127775;</div>
                 <div>
-                    <div class="card-title" style="color:#daa520">Gold Card &mdash; GCV Stable Price</div>
-                    <div style="font-size:.8rem;color:rgba(255,255,255,.4)">Card Number: 4714 1592 6535 8979 &bull; CVV: 618</div>
+                    <div class="card-title inline-style-9" >Gold Card &mdash; GCV Stable Price</div>
+                    <div class="inline-style-3">Card Number: 4714 1592 6535 8979 &bull; CVV: 618</div>
                 </div>
-                <span class="card-badge" style="background:rgba(218,165,32,.15);color:#daa520;border:1px solid rgba(218,165,32,.3)">GCV</span>
+                <span class="card-badge inline-style-10" >GCV</span>
             </div>
 
             <h3>Pricing Model: GCV Stable Price</h3>
-            <div class="highlight-box" style="border-color:#daa520">
+            <div class="highlight-box inline-style-11" >
                 <strong>1 &pi; = $314,159.00 (USD)</strong><br>
                 This is the <strong>Global Consensus Value (GCV)</strong> &mdash; a community-determined stable price that never fluctuates. All Gold Card transactions, withdrawals, and exchanges are calculated at this fixed rate.
             </div>
@@ -335,7 +261,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:linear
                 <tr><td>Cross-Border</td><td>Free</td></tr>
             </table>
 
-            <div class="highlight-box" style="border-color:#daa520">
+            <div class="highlight-box inline-style-11" >
                 <strong>Use Case:</strong> For believers in the Pi GCV movement. Savings card with long-term reward (1 &pi;/year) and the ability to exchange all assets at the $314,159 rate.
             </div>
         </div>
@@ -344,18 +270,18 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:linear
     <!-- 6. Platinum -->
     <div class="wp-section" id="platinum">
         <h2>6. Platinum Card</h2>
-        <div class="card-section" style="border-color:rgba(160,160,192,.3)">
+        <div class="card-section inline-style-12" >
             <div class="card-header">
                 <div class="card-icon">&#128142;</div>
                 <div>
-                    <div class="card-title" style="color:#a0a0c0">Platinum Card &mdash; Daily Reward</div>
-                    <div style="font-size:.8rem;color:rgba(255,255,255,.4)">Card Number: 5514 1592 6535 8979 &bull; CVV: 420</div>
+                    <div class="card-title inline-style-13" >Platinum Card &mdash; Daily Reward</div>
+                    <div class="inline-style-3">Card Number: 5514 1592 6535 8979 &bull; CVV: 420</div>
                 </div>
-                <span class="card-badge" style="background:rgba(160,160,192,.15);color:#a0a0c0;border:1px solid rgba(160,160,192,.25)">PLATINUM</span>
+                <span class="card-badge inline-style-14" >PLATINUM</span>
             </div>
 
             <h3>Pricing Model: $3.14 Stable Price</h3>
-            <div class="highlight-box" style="border-color:#a0a0c0">
+            <div class="highlight-box inline-style-15" >
                 <strong>1 &pi; = $3.14 (USD)</strong><br>
                 A simple, memorable stable price based on the first digits of &pi; (3.14). All Platinum Card transactions, exchanges, and balance displays use this fixed rate.
             </div>
@@ -396,7 +322,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:linear
                 <tr><td>Cross-Border</td><td>Free</td></tr>
             </table>
 
-            <div class="highlight-box" style="border-color:#a0a0c0">
+            <div class="highlight-box inline-style-15" >
                 <strong>Use Case:</strong> The &ldquo;everyday Pi card&rdquo; with aggressive daily rewards. Best for active users who want automated payments, wallet organization, and transaction insurance &mdash; all at a stable $3.14 rate.
             </div>
         </div>
@@ -405,18 +331,18 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:linear
     <!-- 7. Black -->
     <div class="wp-section" id="black">
         <h2>7. Black Card (Unlimited)</h2>
-        <div class="card-section" style="border-color:rgba(255,255,255,.15)">
+        <div class="card-section inline-style-16" >
             <div class="card-header">
                 <div class="card-icon">&#9830;</div>
                 <div>
-                    <div class="card-title" style="color:#ccc">Black Card &mdash; Unlimited</div>
-                    <div style="font-size:.8rem;color:rgba(255,255,255,.4)">Card Number: 6314 1592 6535 8979 &bull; CVV: 007</div>
+                    <div class="card-title inline-style-17" >Black Card &mdash; Unlimited</div>
+                    <div class="inline-style-3">Card Number: 6314 1592 6535 8979 &bull; CVV: 007</div>
                 </div>
-                <span class="card-badge" style="background:rgba(255,255,255,.08);color:#ccc;border:1px solid rgba(255,255,255,.15)">UNLIMITED</span>
+                <span class="card-badge inline-style-18" >UNLIMITED</span>
             </div>
 
             <h3>Pricing Model: $2,248,000 Stable Price</h3>
-            <div class="highlight-box" style="border-color:#888">
+            <div class="highlight-box inline-style-19" >
                 <strong>1 &pi; = $2,248,000.00 (USD)</strong><br>
                 The highest stable price in the Visual Pi Card ecosystem. Black Card exclusive. This rate is used for all withdrawals, exchanges, crypto purchases, and balance valuations.
             </div>
@@ -460,7 +386,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:linear
                 <tr><td>Global Access</td><td>All Countries</td></tr>
             </table>
 
-            <div class="highlight-box" style="border-color:#888">
+            <div class="highlight-box inline-style-19" >
                 <strong>Use Case:</strong> The ultimate premium tier. For Pi holders who want the highest valuation, unlimited features, VIP vault security, AI concierge, and priority processing. The Black Card is the &ldquo;Centurion&rdquo; of the Pi ecosystem.
             </div>
         </div>
@@ -469,14 +395,14 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:linear
     <!-- 8. Amex -->
     <div class="wp-section" id="amex">
         <h2>8. American Express (Amex)</h2>
-        <div class="card-section" style="border-color:rgba(0,111,207,.3)">
+        <div class="card-section inline-style-20" >
             <div class="card-header">
                 <div class="card-icon">&#11088;</div>
                 <div>
-                    <div class="card-title" style="color:#4da6ff">Amex &mdash; Membership Rewards</div>
-                    <div style="font-size:.8rem;color:rgba(255,255,255,.4)">Card Number: 3714 159265 35897 &bull; CID: 1618</div>
+                    <div class="card-title inline-style-21" >Amex &mdash; Membership Rewards</div>
+                    <div class="inline-style-3">Card Number: 3714 159265 35897 &bull; CID: 1618</div>
                 </div>
-                <span class="card-badge" style="background:rgba(0,111,207,.15);color:#4da6ff;border:1px solid rgba(0,111,207,.25)">AMEX</span>
+                <span class="card-badge inline-style-22" >AMEX</span>
             </div>
 
             <h3>Pricing Model: Points-Based Rewards</h3>
@@ -496,10 +422,10 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:linear
             <h3>Tier Milestones</h3>
             <table class="wp-table">
                 <tr><th>Tier</th><th>Points Required</th><th>Benefits</th></tr>
-                <tr><td style="color:#cd7f32">&#9679; Bronze</td><td>500 pts</td><td>Basic rewards access</td></tr>
-                <tr><td style="color:#c0c0c0">&#9679; Silver</td><td>2,000 pts</td><td>Enhanced earning rate</td></tr>
-                <tr><td style="color:#daa520">&#9679; Gold</td><td>5,000 pts</td><td>Priority support + bonus earning</td></tr>
-                <tr><td style="color:#b9f2ff">&#9679; Diamond</td><td>10,000+ pts</td><td>All perks + exclusive offers</td></tr>
+                <tr><td class="inline-style-23">&#9679; Bronze</td><td>500 pts</td><td>Basic rewards access</td></tr>
+                <tr><td class="inline-style-24">&#9679; Silver</td><td>2,000 pts</td><td>Enhanced earning rate</td></tr>
+                <tr><td class="inline-style-9">&#9679; Gold</td><td>5,000 pts</td><td>Priority support + bonus earning</td></tr>
+                <tr><td class="inline-style-25">&#9679; Diamond</td><td>10,000+ pts</td><td>All perks + exclusive offers</td></tr>
             </table>
 
             <h3>Points Redemption</h3>
@@ -529,7 +455,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:linear
                 <tr><td>Cross-Border</td><td>Free</td></tr>
             </table>
 
-            <div class="highlight-box" style="border-color:#006fcf">
+            <div class="highlight-box inline-style-26" >
                 <strong>Use Case:</strong> For travel enthusiasts and reward maximizers. Earn points on every spend, redeem for flights, hotels, and Pi. Best for users who want purchase protection, prestige, and a structured rewards program.
             </div>
         </div>
@@ -538,16 +464,16 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:linear
     <!-- 9. Comparison -->
     <div class="wp-section" id="comparison">
         <h2>9. Full Comparison Table</h2>
-        <div style="overflow-x:auto">
+        <div class="inline-style-27">
         <table class="compare-table">
             <tr>
                 <th>Feature</th>
-                <th style="color:#4654b8">Visa</th>
-                <th style="color:#eb5757">MC</th>
-                <th style="color:#daa520">Gold</th>
-                <th style="color:#a0a0c0">Platinum</th>
-                <th style="color:#ccc">Black</th>
-                <th style="color:#4da6ff">Amex</th>
+                <th class="inline-style-2">Visa</th>
+                <th class="inline-style-6">MC</th>
+                <th class="inline-style-9">Gold</th>
+                <th class="inline-style-13">Platinum</th>
+                <th class="inline-style-17">Black</th>
+                <th class="inline-style-21">Amex</th>
             </tr>
             <tr>
                 <td>Pi Price</td>

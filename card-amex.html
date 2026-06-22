@@ -10,9 +10,7 @@ GIT_EXEC_PATH=/home/hp/.local/git/usr/lib/git-core /home/hp/.local/git/usr/bin/g
 <meta name="description" content="Visual Pi Card - Amex travel rewards, membership points, purchase protection, airport lounges.">
 <meta property="og:title" content="Amex Card - Visual Pi Card">
 <meta property="og:url" content="https://omendapipaysglobel.online/card-amex.html">
-<meta property="og:site_name" content="Visual Pi Card">
-<meta name="theme-color" content="#0d0221">
-<!-- Pi Network SDK -->
+<meta property="og:site_name" content="Visual Pi Card"><!-- Pi Network SDK -->
 <script src="https://sdk.minepi.com/pi-sdk.js"></script>
 <script src="pi-sdk-helper.js"></script>
 <script>
@@ -50,143 +48,26 @@ function piA2UPayment(amount,memo,metadata,onSuccess,onError){
     .catch(function(e){if(onError)onError(e.message);});
 }
 </script>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Segoe UI',system-ui,sans-serif;background:linear-gradient(135deg,#000d1a,#001a33,#002040);color:#fff;min-height:100vh;padding:20px}
-.send-pi{background:rgba(0,111,207,.06);border:1px solid rgba(0,111,207,.1);border-radius:16px;padding:20px;margin-bottom:20px;text-align:center}
-.send-pi h3{font-size:.95rem;margin-bottom:6px;color:#4da6ff}
-.send-pi .send-note{font-size:.72rem;color:rgba(255,255,255,.45);margin-bottom:14px;line-height:1.4}
-.send-pi .send-note b{color:rgba(255,255,255,.7)}
-.send-pi .send-row{display:flex;gap:10px;align-items:center;justify-content:center}
-.send-pi input{flex:1;max-width:160px;padding:10px 14px;border:1px solid rgba(0,111,207,.15);background:rgba(255,255,255,.06);color:#fff;border-radius:10px;font-size:.9rem;text-align:center;outline:none}
-.send-pi input:focus{border-color:#4da6ff}
-.send-pi button{padding:10px 22px;border:none;background:linear-gradient(135deg,#006fcf,#4da6ff);color:#fff;font-weight:700;border-radius:10px;font-size:.85rem;cursor:pointer;transition:transform .2s,box-shadow .2s}
-.send-pi button:hover{transform:scale(1.04);box-shadow:0 4px 16px rgba(0,111,207,.35)}
-.send-pi .send-dest{font-family:'Courier New',monospace;font-size:.65rem;color:rgba(255,255,255,.35);margin-top:10px;word-break:break-all}
-.send-pi .send-status{margin-top:10px;font-size:.8rem;display:none;padding:8px;border-radius:8px}
-.container{max-width:900px;margin:0 auto}
-h1{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient(90deg,#4da6ff,#fff,#4da6ff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-.subtitle{text-align:center;color:rgba(255,255,255,.5);margin-bottom:30px;font-size:.9rem}
-.badge{display:inline-block;background:linear-gradient(135deg,#006fcf,#4da6ff);color:#fff;padding:4px 14px;border-radius:20px;font-weight:700;font-size:.75rem;margin-bottom:20px}
 
-.card-preview{background:linear-gradient(135deg,#006fcf 0%,#0080e8 50%,#4da6ff 100%);border-radius:20px;padding:30px;margin:0 auto 30px;max-width:420px;box-shadow:0 20px 50px rgba(0,111,207,.35),0 0 0 1px rgba(255,255,255,.08);position:relative;overflow:hidden}
-.card-preview::after{content:'';position:absolute;top:-30%;right:-30%;width:60%;height:60%;background:radial-gradient(circle,rgba(255,255,255,.08) 0%,transparent 70%);pointer-events:none}
-.card-number{font-family:'Courier New',monospace;font-size:1.3rem;letter-spacing:3px;margin:20px 0 4px;text-shadow:0 2px 4px rgba(0,0,0,.3)}
-.card-wallet{font-family:'Courier New',monospace;font-size:.7rem;color:rgba(255,255,255,.6);word-break:break-all;margin-bottom:10px;letter-spacing:.5px}
-.card-label{font-size:.65rem;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:1px}
-.card-val{font-size:.9rem;margin-bottom:12px}
-.net-badge{font-size:.6rem;color:rgba(255,255,255,.4);letter-spacing:2px;margin-top:15px}
-
-.section{background:rgba(0,111,207,.06);border:1px solid rgba(0,111,207,.1);border-radius:16px;padding:24px;margin-bottom:20px}
-.section h2{font-size:1.1rem;margin-bottom:14px;color:#4da6ff}
-.section h2 span{margin-right:8px}
-
-.feature-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
-.feature-card{background:rgba(0,111,207,.04);border:1px solid rgba(0,111,207,.08);border-radius:12px;padding:16px;text-align:center;transition:transform .2s,border-color .2s}
-.feature-card:hover{transform:translateY(-3px);border-color:rgba(0,111,207,.3)}
-.feature-card .icon{font-size:1.8rem;margin-bottom:8px}
-.feature-card h3{font-size:.85rem;margin-bottom:4px}
-.feature-card p{font-size:.72rem;color:rgba(255,255,255,.5);line-height:1.4}
-.tag{display:inline-block;font-size:.6rem;padding:2px 8px;border-radius:8px;margin-top:6px}
-.tag-amex{background:rgba(0,111,207,.15);color:#4da6ff;border:1px solid rgba(77,166,255,.25)}
-.tag-green{background:rgba(39,174,96,.15);color:#27ae60;border:1px solid rgba(39,174,96,.2)}
-
-/* Travel Hub */
-.travel-box{background:rgba(0,111,207,.06);border:1px solid rgba(0,111,207,.1);border-radius:14px;padding:20px;margin-top:14px}
-.travel-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
-.travel-item{background:rgba(0,111,207,.04);border:1px solid rgba(0,111,207,.08);border-radius:10px;padding:14px;text-align:center;cursor:pointer;transition:all .2s}
-.travel-item:hover{border-color:rgba(77,166,255,.3);transform:translateY(-2px)}
-.travel-item .t-icon{font-size:1.5rem;margin-bottom:6px}
-.travel-item .t-name{font-size:.75rem;color:rgba(255,255,255,.7)}
-.travel-item .t-pts{font-size:.65rem;color:#4da6ff;margin-top:4px}
-
-/* Points System */
-.points-box{background:rgba(0,111,207,.06);border:1px solid rgba(0,111,207,.1);border-radius:14px;padding:20px;margin-top:14px;text-align:center}
-.points-display{font-size:2.5rem;font-weight:700;color:#4da6ff;margin:10px 0}
-.points-label{font-size:.8rem;color:rgba(255,255,255,.5)}
-.points-bar{height:8px;background:rgba(0,111,207,.1);border-radius:4px;overflow:hidden;margin:14px 0}
-.points-fill{height:100%;background:linear-gradient(90deg,#006fcf,#4da6ff);border-radius:4px;transition:width .5s}
-.milestone{display:flex;justify-content:space-between;font-size:.7rem;color:rgba(255,255,255,.4)}
-
-/* Points Converter */
-.convert-box{background:rgba(0,111,207,.06);border:1px solid rgba(0,111,207,.1);border-radius:14px;padding:20px;margin-top:14px}
-.conv-row{display:flex;gap:10px;align-items:end;flex-wrap:wrap;margin-bottom:12px}
-.conv-row label{font-size:.75rem;color:rgba(255,255,255,.5)}
-.conv-row input,.conv-row select{background:rgba(255,255,255,.06);border:1px solid rgba(0,111,207,.15);color:#fff;padding:10px 14px;border-radius:10px;font-size:.9rem;width:100%}
-.conv-row input:focus,.conv-row select:focus{outline:none;border-color:#4da6ff}
-.conv-result{background:rgba(0,111,207,.08);border:1px solid rgba(0,111,207,.2);border-radius:10px;padding:14px;text-align:center;margin-top:10px;display:none}
-.conv-result .out{font-size:1.3rem;font-weight:700;color:#4da6ff}
-
-/* Purchase Guard */
-.guard-box{background:rgba(0,111,207,.06);border:1px solid rgba(0,111,207,.1);border-radius:14px;padding:20px;margin-top:14px}
-.guard-item{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid rgba(0,111,207,.06);font-size:.82rem}
-.guard-item:last-child{border-bottom:none}
-.guard-icon{font-size:1.3rem;width:36px;text-align:center}
-.guard-toggle{margin-left:auto;width:44px;height:24px;border-radius:12px;background:rgba(255,255,255,.1);position:relative;cursor:pointer;transition:background .2s}
-.guard-toggle.on{background:rgba(39,174,96,.4)}
-.guard-toggle::after{content:'';position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .2s}
-.guard-toggle.on::after{transform:translateX(20px)}
-
-.btn{padding:12px 24px;border:none;border-radius:12px;font-size:.85rem;font-weight:600;cursor:pointer;transition:all .2s}
-.btn-amex{background:linear-gradient(135deg,#006fcf,#4da6ff);color:#fff}
-.btn-amex:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,111,207,.4)}
-
-.back-link{display:block;text-align:center;margin-top:30px;color:rgba(255,255,255,.4);font-size:.85rem;text-decoration:none}
-.back-link:hover{color:#4da6ff}
-.card-nav{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:20px;padding:0 10px}
-.card-nav a{display:inline-flex;align-items:center;gap:5px;padding:8px 14px;border-radius:10px;font-size:.75rem;font-weight:700;text-decoration:none;transition:all .2s;border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.6)}
-.card-nav a:hover{border-color:rgba(245,197,24,.4);color:#f5c518}
-.card-nav a.active{background:rgba(245,197,24,.15);border-color:rgba(245,197,24,.4);color:#f5c518}
-.card-nav .nav-shop{background:linear-gradient(135deg,rgba(192,57,43,.2),rgba(192,57,43,.1));border-color:rgba(192,57,43,.3);color:#e74c3c}
-.card-nav .nav-shop:hover{background:rgba(192,57,43,.3);color:#fff}
-/* Owner Identity */
-.owner-id{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:14px 18px;margin-bottom:20px;font-size:.78rem}
-.owner-id .oid-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04)}
-.owner-id .oid-row:last-child{border-bottom:none}
-.owner-id .oid-label{color:rgba(255,255,255,.35);min-width:90px;font-size:.7rem;text-transform:uppercase;letter-spacing:.5px}
-.owner-id .oid-val{color:#fff;font-weight:600;word-break:break-all}
-.owner-id .oid-val.mono{font-family:'Courier New',monospace;font-size:.72rem;color:rgba(255,255,255,.7)}
-.owner-id .oid-badge{display:inline-block;background:rgba(39,174,96,.12);color:#27ae60;border:1px solid rgba(39,174,96,.2);padding:2px 8px;border-radius:8px;font-size:.6rem;font-weight:600;margin-left:auto;letter-spacing:.5px}
-.oid-actions{display:flex;gap:8px;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.06)}
-.oid-btn{flex:1;padding:8px 0;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:rgba(255,255,255,.6);border-radius:10px;font-size:.7rem;font-weight:600;cursor:pointer;text-align:center;transition:all .2s}
-.oid-btn:hover{background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.2)}
-.oid-btn.copied{background:rgba(39,174,96,.12);color:#27ae60;border-color:rgba(39,174,96,.2)}
-/* Passphrase Unlock */
-.unlock-overlay{position:fixed;top:0;left:0;width:100%;height:100%;z-index:9999;background:#fff;display:flex;flex-direction:column;align-items:center}
-.unlock-header{width:100%;background:linear-gradient(135deg,#6b3fa0,#8b5cf6);padding:18px 20px;display:flex;align-items:center;justify-content:center;gap:10px}
-.unlock-header svg{width:28px;height:28px}
-.unlock-header span{color:#fff;font-size:1.1rem;font-weight:600}
-.unlock-body{width:100%;max-width:480px;padding:30px 20px;flex:1;display:flex;flex-direction:column;align-items:center}
-.unlock-body h2{font-size:1.4rem;color:#1a1a2e;margin-bottom:24px;font-weight:600}
-.unlock-body textarea{width:100%;min-height:160px;border:2px solid #8b5cf6;border-radius:16px;padding:16px;font-family:'Courier New',monospace;font-size:.95rem;resize:vertical;outline:none;color:#333;line-height:1.6}
-.unlock-body textarea::placeholder{color:#aaa;font-family:'Segoe UI',sans-serif;font-size:.9rem}
-.unlock-body textarea:focus{border-color:#6b3fa0;box-shadow:0 0 0 3px rgba(139,92,246,.15)}
-.btn-unlock{width:100%;padding:14px;border-radius:30px;border:2px solid #8b5cf6;background:#fff;color:#4a3580;font-size:.95rem;font-weight:600;cursor:pointer;margin-top:16px;transition:all .2s}
-.btn-unlock:hover{background:#f5f0ff}
-.btn-unlock-primary{width:100%;padding:14px;border-radius:30px;border:none;background:linear-gradient(135deg,#6b3fa0,#8b5cf6);color:#fff;font-size:.95rem;font-weight:600;cursor:pointer;margin-top:10px;transition:all .2s}
-.btn-unlock-primary:hover{opacity:.9}
-.unlock-info{margin-top:24px;font-size:.85rem;color:#666;line-height:1.6;text-align:center}
-.unlock-info a{color:#8b5cf6;text-decoration:none}
-.unlock-error{color:#e74c3c;font-size:.82rem;margin-top:8px;display:none}
-</style>
+    <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="page-card-amex">
 <!-- Card Content -->
-<div class="container" id="cardContent" style="display:block">
+<div class="container inline-style-1" id="cardContent" >
     <h1>🌐 American Express</h1>
     <p class="subtitle">Travel Rewards • Membership Points • Purchase Protection • Airport Lounges</p>
-    <div style="text-align:center"><span class="badge">AMERICAN EXPRESS</span></div>
+    <div class="inline-style-2"><span class="badge">AMERICAN EXPRESS</span></div>
 
     <!-- Card Preview -->
     <div class="card-preview">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-            <span style="font-size:.7rem;color:rgba(255,255,255,.5)">Visual Pi Card</span>
-            <span style="font-size:.65rem;background:rgba(255,255,255,.1);padding:3px 10px;border-radius:8px;color:#fff">AMEX</span>
+        <div class="inline-style-3">
+            <span class="inline-style-4">Visual Pi Card</span>
+            <span class="inline-style-5">AMEX</span>
         </div>
         <div class="card-label">Card Number</div>
         <div class="card-number" id="cardNumber">—</div>
         <div class="card-wallet" id="cardWallet"></div>
-        <div style="display:flex;gap:30px">
+        <div class="inline-style-6">
             <div><div class="card-label">Card Holder</div><div class="card-val" id="holderName">PI PIONEER</div></div>
             <div><div class="card-label">Expires</div><div class="card-val">12/30</div></div>
             <div><div class="card-label">CID</div><div class="card-val">1618</div></div>
@@ -220,12 +101,12 @@ h1{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient
     <!-- Membership Points -->
     <div class="section">
         <h2><span>⭐</span> Membership Rewards Points</h2>
-        <p style="font-size:.8rem;color:rgba(255,255,255,.4);margin-bottom:14px">Earn 1 point per π spent — redeem for travel, shopping, and more</p>
+        <p class="inline-style-7">Earn 1 point per π spent — redeem for travel, shopping, and more</p>
         <div class="points-box">
             <div class="points-label">YOUR POINTS BALANCE</div>
             <div class="points-display" id="pointsDisplay">0</div>
             <div class="points-label">points</div>
-            <div class="points-bar"><div class="points-fill" id="pointsFill" style="width:0%"></div></div>
+            <div class="points-bar"><div class="points-fill inline-style-8" id="pointsFill" ></div></div>
             <div class="milestone"><span>0</span><span>Bronze 500</span><span>Silver 2K</span><span>Gold 5K</span><span>Diamond 10K+</span></div>
         </div>
     </div>
@@ -233,14 +114,14 @@ h1{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient
     <!-- Points Converter -->
     <div class="section">
         <h2><span>🔄</span> Points Converter</h2>
-        <p style="font-size:.8rem;color:rgba(255,255,255,.4);margin-bottom:14px">Convert your membership points to Pi or travel credits</p>
+        <p class="inline-style-7">Convert your membership points to Pi or travel credits</p>
         <div class="convert-box">
             <div class="conv-row">
-                <div style="flex:1">
+                <div class="inline-style-9">
                     <label>Points to Convert</label>
                     <input type="number" id="convPoints" placeholder="500" min="1" step="1">
                 </div>
-                <div style="flex:1">
+                <div class="inline-style-9">
                     <label>Convert To</label>
                     <select id="convTarget">
                         <option value="pi">Pi (π) — 100 pts = 1 π</option>
@@ -250,9 +131,9 @@ h1{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient
                     </select>
                 </div>
             </div>
-            <button class="btn btn-amex" onclick="convertPoints()" style="width:100%">🔄 Convert Points</button>
+            <button class="btn btn-amex inline-style-10" onclick="convertPoints()" >🔄 Convert Points</button>
             <div class="conv-result" id="convResult">
-                <div style="font-size:.7rem;color:rgba(255,255,255,.5)">You will receive</div>
+                <div class="inline-style-4">You will receive</div>
                 <div class="out" id="convOut">—</div>
             </div>
         </div>
@@ -261,7 +142,7 @@ h1{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient
     <!-- Travel Hub -->
     <div class="section">
         <h2><span>✈️</span> Travel Hub</h2>
-        <p style="font-size:.8rem;color:rgba(255,255,255,.4);margin-bottom:14px">Book travel and earn double points — Amex exclusive</p>
+        <p class="inline-style-7">Book travel and earn double points — Amex exclusive</p>
         <div class="travel-box">
             <div class="travel-grid">
                 <div class="travel-item" onclick="bookTravel('Flight')"><div class="t-icon">✈️</div><div class="t-name">Flights</div><div class="t-pts">3x points</div></div>
@@ -277,13 +158,13 @@ h1{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient
     <!-- Purchase Protection -->
     <div class="section">
         <h2><span>🛡️</span> Purchase Protection</h2>
-        <p style="font-size:.8rem;color:rgba(255,255,255,.4);margin-bottom:14px">Built-in protections on all Amex purchases</p>
+        <p class="inline-style-7">Built-in protections on all Amex purchases</p>
         <div class="guard-box">
-            <div class="guard-item"><div class="guard-icon">🔒</div><div><strong>Fraud Detection</strong><br><span style="font-size:.72rem;color:rgba(255,255,255,.5)">Real-time monitoring of all transactions</span></div><div class="guard-toggle on" onclick="toggleGuard(this)"></div></div>
-            <div class="guard-item"><div class="guard-icon">↩️</div><div><strong>Return Protection</strong><br><span style="font-size:.72rem;color:rgba(255,255,255,.5)">Full refund within 90 days on eligible purchases</span></div><div class="guard-toggle on" onclick="toggleGuard(this)"></div></div>
-            <div class="guard-item"><div class="guard-icon">📦</div><div><strong>Purchase Protection</strong><br><span style="font-size:.72rem;color:rgba(255,255,255,.5)">Covers theft or damage for 120 days up to 10,000 π</span></div><div class="guard-toggle on" onclick="toggleGuard(this)"></div></div>
-            <div class="guard-item"><div class="guard-icon">🔧</div><div><strong>Extended Warranty</strong><br><span style="font-size:.72rem;color:rgba(255,255,255,.5)">Extra year of warranty on eligible products</span></div><div class="guard-toggle on" onclick="toggleGuard(this)"></div></div>
-            <div class="guard-item"><div class="guard-icon">🌐</div><div><strong>Global Assist</strong><br><span style="font-size:.72rem;color:rgba(255,255,255,.5)">Emergency assistance hotline while traveling</span></div><div class="guard-toggle on" onclick="toggleGuard(this)"></div></div>
+            <div class="guard-item"><div class="guard-icon">🔒</div><div><strong>Fraud Detection</strong><br><span class="inline-style-11">Real-time monitoring of all transactions</span></div><div class="guard-toggle on" onclick="toggleGuard(this)"></div></div>
+            <div class="guard-item"><div class="guard-icon">↩️</div><div><strong>Return Protection</strong><br><span class="inline-style-11">Full refund within 90 days on eligible purchases</span></div><div class="guard-toggle on" onclick="toggleGuard(this)"></div></div>
+            <div class="guard-item"><div class="guard-icon">📦</div><div><strong>Purchase Protection</strong><br><span class="inline-style-11">Covers theft or damage for 120 days up to 10,000 π</span></div><div class="guard-toggle on" onclick="toggleGuard(this)"></div></div>
+            <div class="guard-item"><div class="guard-icon">🔧</div><div><strong>Extended Warranty</strong><br><span class="inline-style-11">Extra year of warranty on eligible products</span></div><div class="guard-toggle on" onclick="toggleGuard(this)"></div></div>
+            <div class="guard-item"><div class="guard-icon">🌐</div><div><strong>Global Assist</strong><br><span class="inline-style-11">Emergency assistance hotline while traveling</span></div><div class="guard-toggle on" onclick="toggleGuard(this)"></div></div>
         </div>
     </div>
 
@@ -303,12 +184,12 @@ h1{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient
     <!-- Fee Structure -->
     <div class="section">
         <h2><span>💰</span> Fee Structure</h2>
-        <table style="width:100%;font-size:.85rem;border-collapse:collapse">
-            <tr style="border-bottom:1px solid rgba(0,111,207,.06)"><td style="padding:10px;color:rgba(255,255,255,.5)">Registration</td><td style="padding:10px;font-weight:600;color:#4da6ff">Premium</td></tr>
-            <tr style="border-bottom:1px solid rgba(0,111,207,.06)"><td style="padding:10px;color:rgba(255,255,255,.5)">Points Rate</td><td style="padding:10px">1 pt per π spent (up to 3x travel)</td></tr>
-            <tr style="border-bottom:1px solid rgba(0,111,207,.06)"><td style="padding:10px;color:rgba(255,255,255,.5)">Airport Lounges</td><td style="padding:10px;color:#27ae60">Free Access</td></tr>
-            <tr style="border-bottom:1px solid rgba(0,111,207,.06)"><td style="padding:10px;color:rgba(255,255,255,.5)">Purchase Protection</td><td style="padding:10px;color:#27ae60">Included</td></tr>
-            <tr><td style="padding:10px;color:rgba(255,255,255,.5)">Cross-Border</td><td style="padding:10px">Free</td></tr>
+        <table class="inline-style-12">
+            <tr class="inline-style-13"><td class="inline-style-14">Registration</td><td class="inline-style-15">Premium</td></tr>
+            <tr class="inline-style-13"><td class="inline-style-14">Points Rate</td><td class="inline-style-16">1 pt per π spent (up to 3x travel)</td></tr>
+            <tr class="inline-style-13"><td class="inline-style-14">Airport Lounges</td><td class="inline-style-17">Free Access</td></tr>
+            <tr class="inline-style-13"><td class="inline-style-14">Purchase Protection</td><td class="inline-style-17">Included</td></tr>
+            <tr><td class="inline-style-14">Cross-Border</td><td class="inline-style-16">Free</td></tr>
         </table>
     </div>
 

@@ -1,4 +1,3 @@
-html+='<a class="hub-card" href="index.html"><div class="hub-icon" style="background:#d97706">🤖</div><div class="hub-title">Omenda Sport</div><div class="hub-sub">Sport Future</div></a>';
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,420 +21,10 @@ try { Pi.init({ version: "2.0", sandbox: false }); piSdkReady = true; } catch(e)
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons/css/flag-icons.min.css">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:#f5f5f5;color:#1a1a1a;min-height:100vh;-webkit-font-smoothing:antialiased;padding-bottom:64px}
-a{text-decoration:none;color:inherit}
-.hide-sb::-webkit-scrollbar{display:none}
-.hide-sb{-ms-overflow-style:none;scrollbar-width:none}
 
-/* ── Top Header ── */
-.top-header{background:linear-gradient(135deg,#1a103c 0%,#261654 50%,#1a103c 100%);text-align:center;padding:28px 16px 18px;color:#fff}
-.top-header img{width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,0.15);margin-bottom:8px}
-.top-header h1{font-size:1.3rem;font-weight:800;color:#a78bfa}
-.top-header .handle{font-size:.82rem;color:rgba(255,255,255,.6)}
-
-/* ── Nav Tabs ── */
-.nav-tabs{display:flex;align-items:center;gap:6px;padding:6px 8px;background:linear-gradient(135deg,#1e1245,#2a1760);overflow-x:auto}
-.nav-tabs a{color:rgba(255,255,255,.85);text-decoration:none;font-size:.82rem;font-weight:600;padding:8px 16px;white-space:nowrap;transition:all .2s;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:20px;cursor:pointer}
-.nav-tabs a:hover{color:#fff;background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.3)}
-.nav-tabs a.active{color:#fff;background:rgba(255,255,255,.22);border-color:rgba(255,255,255,.35)}
-.nav-tabs .spacer{flex:1}
-.lang-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(255,255,255,.08);border-radius:8px;padding:6px 10px;font-size:.78rem;color:#fff;font-weight:600;cursor:pointer}
-.lang-select{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:10px;color:#fff;padding:8px 10px;font-size:.9rem;font-weight:600;outline:none;cursor:pointer}
-.lang-select option{background:#0b1120;color:#000}
-.profile-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(245,166,35,.15);border:1px solid rgba(245,166,35,.3);border-radius:20px;padding:5px 12px 5px 6px;font-size:.78rem;color:#f5a623;font-weight:700;text-decoration:none;cursor:pointer}
-.profile-badge .dot{width:24px;height:24px;border-radius:50%;background:#f59e0b;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:800;color:#000}
-
-/* ── Search Bar ── */
-.search-header{background:#fff;padding:10px 12px;position:sticky;top:0;z-index:100}
-.search-bar{display:flex;align-items:center;border:2px solid #c0392b;border-radius:28px;overflow:hidden;background:#fff}
-.search-bar input{flex:1;border:none;outline:none;padding:10px 16px;font-size:.92rem;font-family:inherit;color:#1a1a1a;background:transparent}
-.search-bar input::placeholder{color:#bbb}
-.search-bar .cam-btn{width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:transparent;border:none;color:#888;cursor:pointer}
-.search-bar .search-btn{width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:#c0392b;border:none;color:#fff;cursor:pointer;border-radius:0 24px 24px 0}
-
-.dashboard-hub{display:grid;gap:12px;margin:12px 0}
-.hub-row{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-@media(min-width:640px){.hub-row{grid-template-columns:repeat(4,1fr)}}
-.hub-card{display:block;background:#fff;border:1px solid #f0f0f0;border-radius:18px;padding:16px;transition:transform .2s,box-shadow .2s;color:inherit;text-decoration:none}
-.hub-card:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(0,0,0,.08)}
-.hub-icon{width:40px;height:40px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;color:#fff;margin-bottom:12px}
-.hub-action{display:inline-flex;align-items:center;justify-content:center;padding:9px 14px;margin-top:10px;background:#d97706;color:#fff;border-radius:14px;font-size:.85rem;font-weight:700;cursor:pointer;border:1px solid transparent;transition:transform .2s,background .2s;}
-.hub-action:hover{transform:translateY(-1px);background:#fbbf24;}
-.hub-title{font-size:1rem;font-weight:800;color:#1a1a1a;margin-bottom:6px}
-.hub-sub{font-size:.82rem;color:#555;line-height:1.4}
-.hub-map-section{background:#fff;border:1px solid #f0f0f0;border-radius:18px;overflow:hidden}
-.hub-layout{display:grid;gap:12px}
-@media(min-width:900px){.hub-layout{grid-template-columns:2fr 1fr}}
-.hub-main{display:grid;gap:12px}
-.hub-sidebar{background:#fff;border:1px solid #f0f0f0;border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:14px}
-.hub-sidebar h3{margin:0;font-size:1rem;font-weight:800;color:#1a1a1a}
-.sports-dropdown{width:100%;border:1px solid #ddd;border-radius:14px;padding:12px 14px;font-size:.94rem;color:#1a1a1a;outline:none}
-.sports-list{list-style:none;margin:0;padding:0}
-.sports-list li{padding:12px 0;border-bottom:1px solid #f4f4f4;color:#555;font-size:.92rem}
-.sports-list li:last-child{border-bottom:none}
-.hub-map-header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid #f0f0f0}
-#dashboard-map{height:220px;width:100%}
-.wallet-panel{display:flex;justify-content:space-between;align-items:center;gap:12px;background:#fff;border:1px solid #f0f0f0;border-radius:18px;padding:16px}
-.wallet-panel h3{margin:0;font-size:1rem;font-weight:800;color:#1a1a1a}
-.wallet-panel p{margin:6px 0 0;color:#666;font-size:.88rem;line-height:1.4}
-.wallet-amount{font-size:1.5rem;font-weight:800;color:#c0392b}
-
-/* ── Category Tabs ── */
-.cat-tabs{display:flex;overflow-x:auto;background:#fff;border-bottom:1px solid #eee;padding:0 4px;gap:0}
-.cat-tabs button{background:none;border:none;border-bottom:3px solid transparent;padding:12px 16px;font-size:.84rem;font-weight:600;color:#777;cursor:pointer;white-space:nowrap;font-family:inherit;transition:all .15s}
-.cat-tabs button.active{color:#1a1a1a;border-bottom-color:#1a1a1a}
-.cat-tabs .more-btn{display:flex;align-items:center;gap:2px;padding:12px 10px;font-size:.82rem;color:#777;background:none;border:none;cursor:pointer;font-family:inherit;white-space:nowrap}
-
-/* ── Trust Badges Row ── */
-.trust-row{display:flex;gap:0;background:#fff;border-bottom:1px solid #f0f0f0}
-.trust-badge{flex:1;display:flex;align-items:center;gap:8px;padding:12px 14px}
-.trust-badge .icon-circle{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:800;flex-shrink:0}
-.trust-badge .icon-circle.audit{background:#fef3c7;color:#b45309}
-.trust-badge .icon-circle.secure{background:#dbeafe;color:#1d4ed8}
-.trust-badge .tb-title{font-size:.78rem;font-weight:700;color:#1a1a1a}
-.trust-badge .tb-sub{font-size:.65rem;color:#999}
-
-/* ── Quick Actions ── */
-.quick-actions{display:flex;justify-content:space-around;background:#fff;padding:14px 8px;border-bottom:1px solid #f0f0f0}
-.qa-item{display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer}
-.qa-item .qa-icon{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.3rem}
-.qa-item .qa-label{font-size:.72rem;font-weight:600;color:#555;text-align:center;line-height:1.2}
-
-/* ── Top Rankings Banner ── */
-.rankings-banner{background:linear-gradient(135deg,#fef2f2,#fce7e7);margin:6px 0;padding:16px 14px 10px;position:relative;overflow:hidden}
-.rankings-banner .rb-header{display:flex;align-items:center;justify-content:space-between}
-.rankings-banner h2{font-size:1.05rem;font-weight:800;color:#1a1a1a}
-.rankings-banner .rb-sub{font-size:.75rem;color:#888;margin-top:2px}
-.rankings-banner .trophy{width:60px;height:60px;position:absolute;right:16px;top:8px;font-size:3rem;opacity:.8}
-.rankings-row{display:flex;gap:10px;overflow-x:auto;padding:10px 0 4px;scroll-snap-type:x mandatory}
-.rank-card{min-width:140px;max-width:180px;flex-shrink:0;scroll-snap-align:start;cursor:pointer}
-.rank-card .rc-img{position:relative;height:130px;border-radius:10px;overflow:hidden;background:#f5f5f5}
-.rank-card .rc-img img{width:100%;height:100%;object-fit:cover;transition:opacity .6s ease}
-.rank-card .rc-img .swipe-dots{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);display:flex;gap:3px;z-index:2}
-.rank-card .rc-img .swipe-dots span{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.4);transition:background .3s}
-.rank-card .rc-img .swipe-dots span.active{background:#fff}
-.rank-card .rc-tag{position:absolute;bottom:0;left:0;right:0;padding:5px 10px;font-size:.7rem;font-weight:700;color:#fff}
-.rank-card .rc-price{font-size:.82rem;font-weight:700;color:#c0392b;margin-top:6px}
-.rank-card .rc-stat{font-size:.68rem;color:#999}
-
-/* ── Section ── */
-.section{background:#fff;margin-top:6px;padding:14px 12px}
-.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-.section-title{font-size:1rem;font-weight:800;color:#1a1a1a}
-.section-count{font-size:.72rem;color:#aaa;font-weight:400;margin-left:6px}
-.section-arrow{width:20px;height:20px;color:#ccc}
-
-/* ── Product Grid ── */
-.prod-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
-@media(min-width:480px){.prod-grid{grid-template-columns:repeat(3,1fr)}}
-@media(min-width:768px){.prod-grid{grid-template-columns:repeat(4,1fr)}}
-@media(min-width:1024px){.prod-grid{grid-template-columns:repeat(5,1fr)}}
-.prod-card{border-radius:10px;overflow:hidden;background:#fff;cursor:pointer;border:1px solid #f0f0f0;transition:box-shadow .2s}
-.prod-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.06)}
-.prod-card .pc-img{position:relative;height:130px;overflow:hidden;background:#fafafa}
-.prod-card .pc-img img{width:100%;height:100%;object-fit:cover;transition:opacity .4s ease}
-@keyframes cardShake{0%{transform:translateX(0)}15%{transform:translateX(-4px) rotate(-1deg)}30%{transform:translateX(3px) rotate(1deg)}45%{transform:translateX(-2px)}60%{transform:translateX(2px)}75%{transform:translateX(-1px)}100%{transform:translateX(0)}}
-.prod-card.shaking{animation:cardShake .4s ease}
-.prod-card .pc-img .swipe-dots{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);display:flex;gap:3px}
-.prod-card .pc-img .swipe-dots span{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.4);transition:background .3s}
-.prod-card .pc-img .swipe-dots span.active{background:#fff}
-.prod-card .pc-img .img-count{position:absolute;right:4px;top:4px;background:rgba(0,0,0,.5);color:#fff;font-size:.58rem;font-weight:700;padding:2px 6px;border-radius:4px}
-.prod-card .pc-img .tag-overlay{position:absolute;bottom:0;left:0;right:0;padding:4px 8px;font-size:.62rem;font-weight:700;color:#fff}
-.prod-card .pc-body{padding:8px 10px 10px}
-.prod-card .pc-brand{font-size:.68rem;font-weight:700;color:#333;margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.prod-card .pc-price{font-size:.88rem;font-weight:700;color:#c0392b}
-.prod-card .pc-price .high{font-size:.78rem;color:#aaa;font-weight:400}
-.prod-card .pc-stat{font-size:.68rem;color:#999;margin-top:2px}
-.prod-card .pc-name{font-size:.72rem;color:#555;margin-top:4px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.prod-card .pc-moq{font-size:.62rem;color:#888;margin-top:2px}
-.prod-card .pc-badges{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
-.prod-card .pc-badges .badge-a{display:inline-flex;align-items:center;gap:2px;font-size:.56rem;font-weight:700;color:#1a5276;padding:1px 5px;border-radius:3px}
-.prod-card .pc-badges .badge-a .ba-icon{font-size:.65rem}
-.prod-card .pc-badges .badge-s{display:inline-flex;align-items:center;gap:2px;font-size:.56rem;font-weight:700;color:#1e8449;background:#e8f8f5;padding:1px 5px;border-radius:3px}
-.prod-card .pc-badges .badge-s .bs-icon{font-size:.65rem}
-.prod-card .pc-response{font-size:.58rem;color:#888;margin-top:2px;display:flex;align-items:center;gap:3px}
-.prod-card .pc-yrs{font-size:.58rem;color:#aaa}
-.prod-card .pc-img .search-icon{position:absolute;left:6px;bottom:6px;width:26px;height:26px;border-radius:6px;background:rgba(255,255,255,.85);display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,.1)}
-.prod-card .pc-img .stock-badge{position:absolute;left:6px;top:6px;background:#fff;border:1px solid #eee;border-radius:4px;padding:2px 6px;font-size:.58rem;font-weight:700;color:#1a1a1a;display:flex;align-items:center;gap:3px}
-.prod-card .pc-img .stock-badge .sb-dot{width:6px;height:6px;border-radius:50%;background:#f59e0b}
-
-/* ── Star Rating ── */
-.pc-stars{display:flex;align-items:center;gap:2px;margin-top:3px}
-.pc-stars .star{width:12px;height:12px;fill:#ddd;flex-shrink:0}
-.pc-stars .star.filled{fill:#f59e0b}
-.pc-stars .star.half{fill:url(#halfStarGrad)}
-.pc-stars .star-count{font-size:.58rem;color:#888;margin-left:3px}
-
-/* ── Big Marketplace / Featured Mall Section ── */
-.big-market{background:#fff;margin-top:6px;padding:16px 12px}
-.big-market .bm-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-.big-market .bm-header h2{font-size:1.05rem;font-weight:800;color:#1a1a1a;display:flex;align-items:center;gap:6px}
-.big-market .bm-header .bm-see{font-size:.72rem;color:#c0392b;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:2px}
-.bm-cats{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;margin-bottom:10px}
-.bm-cats button{padding:6px 14px;border-radius:20px;border:1px solid #eee;background:#fafafa;font-size:.72rem;font-weight:600;color:#555;cursor:pointer;white-space:nowrap;font-family:inherit;transition:all .15s}
-.bm-cats button.active{background:#c0392b;color:#fff;border-color:#c0392b}
-.bm-scroll{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px}
-.bm-card{min-width:200px;max-width:260px;flex-shrink:0;scroll-snap-align:start;border:1px solid #f0f0f0;border-radius:12px;overflow:hidden;background:#fff;cursor:pointer;transition:box-shadow .2s}
-.bm-card:hover{box-shadow:0 4px 20px rgba(0,0,0,.08)}
-.bm-card .bmc-img{height:150px;overflow:hidden;position:relative;background:#fafafa}
-.bm-card .bmc-img img{width:100%;height:100%;object-fit:cover;transition:transform .3s}
-.bm-card:hover .bmc-img img{transform:scale(1.04)}
-.bm-card .bmc-rank{position:absolute;top:8px;left:8px;width:24px;height:24px;border-radius:50%;background:#c0392b;color:#fff;font-size:.68rem;font-weight:800;display:flex;align-items:center;justify-content:center}
-.bm-card .bmc-tag{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.5));padding:6px 10px;display:flex;align-items:center;gap:4px}
-.bm-card .bmc-tag span{background:rgba(255,255,255,.9);color:#c0392b;font-size:.56rem;font-weight:700;padding:2px 6px;border-radius:3px}
-.bm-card .bmc-body{padding:10px 12px}
-.bm-card .bmc-brand{font-size:.62rem;font-weight:700;color:#c0392b;margin-bottom:2px;text-transform:uppercase;letter-spacing:.3px}
-.bm-card .bmc-name{font-size:.78rem;font-weight:700;color:#1a1a1a;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.bm-card .bmc-price{font-size:.88rem;font-weight:800;color:#c0392b;margin-top:4px}
-.bm-card .bmc-price .hp{font-size:.72rem;color:#aaa;font-weight:400}
-.bm-card .bmc-meta{display:flex;align-items:center;gap:6px;margin-top:4px;flex-wrap:wrap}
-.bm-card .bmc-stars{display:flex;gap:1px}
-.bm-card .bmc-stars .star{width:11px;height:11px;fill:#ddd}
-.bm-card .bmc-stars .star.filled{fill:#f59e0b}
-.bm-card .bmc-badge{font-size:.56rem;font-weight:700;padding:2px 5px;border-radius:3px}
-.bm-card .bmc-badge.au{color:#1a5276;background:#ebf5fb}
-.bm-card .bmc-badge.sc{color:#1e8449;background:#e8f8f5}
-.bm-card .bmc-sold{font-size:.6rem;color:#888}
-
-/* ── Promo Banner Card (in grid) ── */
-.promo-card{grid-column:1/-1;border-radius:12px;overflow:hidden;cursor:pointer;position:relative;min-height:160px;display:flex;align-items:flex-end}
-@media(min-width:480px){.promo-card{grid-column:span 2}}
-.promo-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.promo-card .promo-overlay{position:relative;z-index:1;padding:16px 18px 14px;width:100%;background:linear-gradient(transparent,rgba(0,0,0,.6))}
-.promo-card .promo-tag{display:inline-block;background:#c0392b;color:#fff;font-size:.6rem;font-weight:800;padding:3px 10px;border-radius:12px;margin-bottom:6px}
-.promo-card h3{font-size:1.1rem;font-weight:800;color:#fff;line-height:1.2}
-.promo-card .promo-sub{font-size:.75rem;color:rgba(255,255,255,.8);margin-top:2px}
-.promo-card .promo-btn{display:inline-block;margin-top:10px;background:#fff;color:#c0392b;font-size:.75rem;font-weight:700;padding:8px 20px;border-radius:20px}
-
-/* ── Hot Searches ── */
-.hot-searches{background:#fff;margin-top:6px;padding:14px 12px}
-.hot-searches h3{font-size:.92rem;font-weight:800;color:#1a1a1a;margin-bottom:10px}
-.hs-list{display:flex;flex-direction:column;gap:6px}
-.hs-item{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:10px;border:1px solid #f0f0f0;cursor:pointer;transition:background .15s}
-.hs-item:hover{background:#fafafa}
-.hs-item .hs-imgs{display:flex;gap:4px;flex-shrink:0}
-.hs-item .hs-imgs img{width:34px;height:34px;border-radius:6px;object-fit:cover}
-.hs-item .hs-name{font-size:.82rem;font-weight:600;color:#333}
-
-/* ── Secured Trading Service ── */
-.secure-service{display:flex;align-items:center;justify-content:space-between;background:#fff;padding:16px 14px;margin-top:6px}
-.secure-service h3{font-size:1rem;font-weight:800}
-.secure-service p{font-size:.75rem;color:#888;margin-top:2px}
-
-/* ── Footprints Row ── */
-.footprints-row{display:flex;gap:8px;overflow-x:auto;padding:4px 0;scroll-snap-type:x mandatory}
-.fp-card{min-width:100px;max-width:130px;flex-shrink:0;scroll-snap-align:start;cursor:pointer}
-.fp-card .fp-img{height:85px;border-radius:8px;overflow:hidden;background:#f5f5f5}
-.fp-card .fp-img img{width:100%;height:100%;object-fit:cover}
-.fp-card .fp-price{font-size:.75rem;font-weight:700;color:#c0392b;margin-top:4px}
-
-/* ── Hotel / Transport / Property Cards ── */
-.h-scroll{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scroll-snap-type:x mandatory}
-.h-card{min-width:165px;max-width:220px;flex-shrink:0;border:1px solid #f0f0f0;border-radius:10px;overflow:hidden;background:#fff;scroll-snap-align:start}
-.h-card .hc-img{height:95px;overflow:hidden;position:relative}
-.h-card .hc-img img{width:100%;height:100%;object-fit:cover}
-.h-card .hc-body{padding:8px}
-.h-card .hc-name{font-size:.78rem;font-weight:700;color:#1a1a1a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.h-card .hc-loc{font-size:.65rem;color:#888}
-.h-card .hc-price{font-size:.84rem;font-weight:700;color:#c0392b;margin-top:4px}
-.h-card .hc-meta{display:flex;gap:8px;font-size:.62rem;color:#888;margin-top:2px}
-.badge-ov{position:absolute;padding:3px 8px;border-radius:12px;font-size:.6rem;font-weight:700}
-
-/* ── Transport Grid ── */
-.trans-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
-@media(min-width:480px){.trans-grid{grid-template-columns:repeat(3,1fr)}}
-@media(min-width:768px){.trans-grid{grid-template-columns:repeat(4,1fr)}}
-.trans-card{border:1px solid #f0f0f0;border-radius:10px;padding:10px;background:#fff}
-.trans-card .tc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
-.trans-card .tc-icon{font-size:1.2rem}
-.trans-card .tc-badge{font-size:.58rem;font-weight:700;padding:2px 8px;border-radius:12px}
-.trans-card .tc-name{font-size:.78rem;font-weight:700;color:#1a1a1a}
-.trans-card .tc-desc{font-size:.62rem;color:#888;line-height:1.3}
-.trans-card .tc-price{font-size:.78rem;font-weight:700;color:#c0392b;margin-top:4px}
-
-/* ── Flight Card ── */
-.fl-card{min-width:150px;max-width:200px;flex-shrink:0;border:1px solid #f0f0f0;border-radius:10px;padding:10px;background:#fff;scroll-snap-align:start}
-.fl-card .fl-air{display:flex;align-items:center;gap:6px;margin-bottom:4px}
-.fl-card .fl-icon{font-size:1rem}
-.fl-card .fl-name{font-size:.72rem;font-weight:700;color:#555}
-.fl-card .fl-route{font-size:.86rem;font-weight:800;color:#1a1a1a}
-.fl-card .fl-route .arr{color:#ccc}
-.fl-card .fl-dur{font-size:.62rem;color:#888}
-.fl-card .fl-price{font-size:.84rem;font-weight:700;color:#c0392b;margin-top:2px}
-
-/* ── Bills ── */
-.bill-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
-@media(min-width:480px){.bill-grid{grid-template-columns:repeat(3,1fr)}}
-.bill-card{display:flex;align-items:center;gap:8px;border:1px solid #f0f0f0;border-radius:10px;padding:10px;background:#fff}
-.bill-card .bi-icon{font-size:1.2rem}
-.bill-card .bi-name{font-size:.72rem;font-weight:700;color:#1a1a1a}
-.bill-card .bi-desc{font-size:.6rem;color:#888}
-
-/* ── Single Purchase Ease ── */
-.ease-row{display:flex;align-items:stretch;background:#fff;margin-top:6px;overflow:hidden}
-.ease-row .er-text{flex:1;padding:16px}
-.ease-row .er-text h2{font-size:1rem;font-weight:800;color:#1a1a1a}
-.ease-row .er-text ul{list-style:none;margin-top:8px}
-.ease-row .er-text li{font-size:.78rem;color:#555;display:flex;align-items:center;gap:6px;margin-bottom:5px}
-.ease-row .er-img{width:120px;flex-shrink:0;background:linear-gradient(135deg,#fef2f2,#fce7e7)}
-.ease-row .er-img img{width:100%;height:100%;object-fit:cover}
-
-/* ── Sell CTA ── */
-.sell-cta{background:#fff;margin-top:6px;padding:14px 12px}
-.sell-cta-inner{border-radius:16px;padding:20px;color:#fff;background:linear-gradient(135deg,#1a0533,#2d1065,#0d3f8f);position:relative;overflow:hidden}
-.sell-cta-inner .glow{position:absolute;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.04);top:-30px;right:-30px;filter:blur(40px)}
-.sell-cta-inner h2{font-size:1.1rem;font-weight:800;position:relative;z-index:1}
-.sell-cta-inner p{font-size:.78rem;color:rgba(255,255,255,.65);margin-top:6px;position:relative;z-index:1}
-.sell-cta-inner .cta-btns{display:flex;gap:10px;margin-top:14px;position:relative;z-index:1}
-.sell-cta-inner .btn-sell{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#f59e0b,#f97316);color:#000;font-weight:800;padding:10px 20px;border-radius:24px;font-size:.82rem;border:none;cursor:pointer;text-decoration:none}
-.sell-cta-inner .btn-verify{border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.8);padding:8px 16px;border-radius:24px;font-size:.72rem;font-weight:700;text-decoration:none}
-
-/* ── Bottom Nav ── */
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:1000;background:#fff;border-top:1px solid #eee;display:flex;align-items:center;justify-content:space-around;padding:6px 0 env(safe-area-inset-bottom,4px)}
-.bottom-nav a{display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;font-size:.62rem;font-weight:600;color:#bbb;position:relative}
-.bottom-nav a.active{color:#c0392b}
-.bottom-nav a svg{width:22px;height:22px}
-.bottom-nav .sell-btn{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#f97316,#f59e0b);display:flex;align-items:center;justify-content:center;margin-top:-18px;box-shadow:0 4px 16px rgba(249,115,22,.3);transition:transform .2s}
-.bottom-nav .sell-btn:hover{transform:scale(1.05)}
-.bottom-nav .sell-btn svg{width:26px;height:26px;color:#fff}
-.bottom-nav .msg-badge{position:absolute;top:-3px;right:-6px;background:#c0392b;color:#fff;min-width:16px;height:16px;border-radius:8px;font-size:.55rem;font-weight:800;display:flex;align-items:center;justify-content:center;padding:0 3px}
-
-/* ── KYC Modal ── */
-.kyc-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:3000;justify-content:center;align-items:center;padding:16px}
-.kyc-overlay.open{display:flex}
-.kyc-modal{background:#fff;border-radius:20px;width:100%;max-width:420px;padding:28px 20px;text-align:center;position:relative;animation:kycSlide .3s ease;max-height:90vh;overflow-y:auto}
-@keyframes kycSlide{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
-.kyc-modal .kyc-close{position:absolute;top:12px;right:14px;background:none;border:none;font-size:1.3rem;color:#999;cursor:pointer}
-.kyc-modal .kyc-icon{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#f59e0b,#f97316);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:1.6rem}
-.kyc-modal h3{font-size:1.1rem;font-weight:800;color:#1a1a1a;margin-bottom:6px}
-.kyc-modal .kyc-sub{font-size:.78rem;color:#888;margin-bottom:16px}
-.kyc-form{text-align:left}
-.kyc-form .kyc-field{margin-bottom:12px}
-.kyc-form label{display:block;font-size:.75rem;font-weight:700;color:#555;margin-bottom:4px;text-transform:uppercase;letter-spacing:.3px}
-.kyc-form input,.kyc-form select{width:100%;padding:10px 12px;border:1.5px solid #e0e0e0;border-radius:12px;font-size:.88rem;font-family:inherit;color:#1a1a1a;background:#fafafa;outline:none;transition:border .2s;box-sizing:border-box}
-.kyc-form input:focus,.kyc-form select:focus{border-color:#f59e0b;background:#fff}
-.kyc-form .kyc-row{display:flex;gap:10px}
-.kyc-form .kyc-row .kyc-field{flex:1}
-.kyc-form .phone-wrap{display:flex;align-items:center;border:1.5px solid #e0e0e0;border-radius:12px;background:#fafafa;overflow:hidden;transition:border .2s}
-.kyc-form .phone-wrap:focus-within{border-color:#f59e0b;background:#fff}
-.kyc-form .phone-wrap .flag-display{display:flex;align-items:center;gap:6px;padding:0 0 0 10px;cursor:pointer}
-.kyc-form .phone-wrap .flag-display .fi{font-size:1.2rem}
-.kyc-form .phone-wrap select{border:none;background:transparent;padding:10px 2px 10px 6px;font-size:.85rem;font-family:inherit;color:#1a1a1a;outline:none;width:auto;min-width:42px;cursor:pointer;-webkit-appearance:none;appearance:none;font-weight:700}
-.kyc-form .phone-wrap .phone-code{font-size:.85rem;font-weight:700;color:#333;padding:0 2px 0 0;white-space:nowrap}
-.kyc-form .phone-wrap input{border:none;background:transparent;flex:1;padding:10px 12px 10px 6px;font-size:.88rem;font-family:inherit;color:#1a1a1a;outline:none;min-width:0}
-.kyc-form .phone-wrap .divider{width:1px;background:#e0e0e0;margin:6px 0;align-self:stretch}
-.kyc-form .kyc-upload{border:2px dashed #ddd;border-radius:12px;padding:14px 10px;text-align:center;cursor:pointer;transition:border .2s;position:relative;flex:1}
-.kyc-form .kyc-upload:hover{border-color:#f59e0b}
-.kyc-form .kyc-upload input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer}
-.kyc-form .kyc-upload .upload-icon{font-size:1.3rem;margin-bottom:2px}
-.kyc-form .kyc-upload .upload-text{font-size:.72rem;color:#888}
-.kyc-form .kyc-upload .upload-name{font-size:.7rem;color:#f59e0b;font-weight:600;margin-top:3px;word-break:break-all}
-.kyc-form .kyc-upload .upload-preview{width:100%;max-height:80px;object-fit:cover;border-radius:8px;margin-top:6px;display:none}
-.kyc-form .upload-row{display:flex;gap:10px}
-.kyc-form .kyc-divider{border:none;border-top:1.5px solid #eee;margin:18px 0 14px}
-.kyc-form .kyc-section-title{display:flex;align-items:center;gap:8px;font-size:.85rem;font-weight:800;color:#1a1a1a;margin-bottom:12px}
-.kyc-form .kyc-section-title .sec-icon{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:.85rem}
-.kyc-form .kyc-toggle{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:.8rem;color:#555;cursor:pointer}
-.kyc-form .kyc-toggle input[type=checkbox]{accent-color:#6366f1;width:18px;height:18px}
-.kyc-form .biz-fields{display:none}
-.kyc-form .biz-fields.open{display:block}
-.kyc-form .biz-map-wrap{border-radius:12px;overflow:hidden;border:1.5px solid #e0e0e0;margin-top:4px;position:relative}
-.kyc-form .biz-map-wrap #kyc-biz-map{height:200px;width:100%;z-index:0}
-.kyc-form .biz-map-wrap .map-hint{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.65);color:#fff;font-size:.7rem;padding:4px 12px;border-radius:12px;z-index:500;pointer-events:none}
-.kyc-form .biz-coords{display:flex;gap:8px;margin-top:6px}
-.kyc-form .biz-coords input{flex:1;font-size:.78rem;padding:7px 10px;text-align:center;background:#f4f4f5;color:#555}
-.kyc-form .btn-use-loc{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;margin-top:8px;padding:10px;border:1.5px solid #6366f1;border-radius:12px;background:rgba(99,102,241,.08);color:#6366f1;font-size:.82rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s}
-.kyc-form .btn-use-loc:hover{background:rgba(99,102,241,.15)}
-.kyc-form .btn-use-loc:disabled{opacity:.5;cursor:not-allowed}
-.kyc-form textarea{width:100%;padding:10px 12px;border:1.5px solid #e0e0e0;border-radius:12px;font-size:.88rem;font-family:inherit;color:#1a1a1a;background:#fafafa;outline:none;transition:border .2s;box-sizing:border-box;resize:vertical;min-height:60px}
-.kyc-form textarea:focus{border-color:#f59e0b;background:#fff}
-.kyc-form .kyc-agree{display:flex;align-items:flex-start;gap:8px;margin:14px 0 16px;font-size:.75rem;color:#666;line-height:1.4}
-.kyc-form .kyc-agree input[type=checkbox]{margin-top:2px;accent-color:#f59e0b}
-.kyc-modal .btn-start-kyc{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#f59e0b,#f97316);color:#fff;font-weight:800;padding:12px 28px;border-radius:24px;font-size:.9rem;border:none;cursor:pointer;width:100%;justify-content:center;text-decoration:none}
-.kyc-modal .btn-start-kyc:hover{filter:brightness(1.05)}
-.kyc-modal .btn-start-kyc:disabled{opacity:.5;cursor:not-allowed}
-.kyc-modal .kyc-skip{display:block;margin-top:10px;font-size:.75rem;color:#999;cursor:pointer;background:none;border:none;width:100%}
-
-/* ── Modal ── */
-.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:2000;justify-content:center;align-items:flex-end}
-.modal-bg.open{display:flex}
-@media(min-width:640px){.modal-bg.open{align-items:center}}
-.modal-box{background:#fff;border-radius:16px 16px 0 0;max-height:92vh;width:100%;max-width:640px;overflow-y:auto;position:relative}
-@media(min-width:640px){.modal-box{border-radius:16px;margin:auto}}
-.modal-box .close-btn{position:absolute;right:12px;top:12px;z-index:10;width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,.4);border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
-.modal-box .carousel{position:relative;height:280px;overflow:hidden;background:#f5f5f5}
-@media(min-width:640px){.modal-box .carousel{height:340px}}
-.modal-box .carousel img{width:100%;height:100%;object-fit:cover}
-.modal-box .carousel .nav-arrow{position:absolute;top:50%;transform:translateY(-50%);width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,.4);border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
-.modal-box .carousel .nav-arrow.left{left:8px}
-.modal-box .carousel .nav-arrow.right{right:8px}
-.modal-box .carousel .counter{position:absolute;right:12px;top:12px;background:rgba(0,0,0,.5);color:#fff;padding:3px 10px;border-radius:12px;font-size:.72rem;font-weight:700}
-.modal-box .carousel .dots{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:5px}
-.modal-box .carousel .dots button{border:none;cursor:pointer;padding:0;border-radius:999px;height:6px;transition:all .2s}
-.modal-box .carousel .dots button.active{width:16px;background:#fff}
-.modal-box .carousel .dots button:not(.active){width:6px;background:rgba(255,255,255,.5)}
-.modal-box .thumbs{display:flex;gap:6px;padding:8px 12px;overflow-x:auto}
-.modal-box .thumbs button{width:52px;height:52px;border-radius:8px;overflow:hidden;flex-shrink:0;border:2px solid transparent;cursor:pointer;padding:0;opacity:.55;transition:all .2s}
-.modal-box .thumbs button.active{border-color:#c0392b;opacity:1}
-.modal-box .thumbs button img{width:100%;height:100%;object-fit:cover}
-.modal-box .detail{padding:12px 16px 24px}
-.modal-box .detail .tag-badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:.7rem;font-weight:700;background:#fef2f2;color:#c0392b;margin-bottom:8px}
-.modal-box .detail h2{font-size:1.1rem;font-weight:800;color:#1a1a1a}
-.modal-box .detail .meta-line{font-size:.82rem;color:#888;margin-top:4px}
-.modal-box .detail .price-row{margin-top:12px;display:flex;align-items:baseline;gap:8px}
-.modal-box .detail .price-row .price{font-size:1.5rem;font-weight:800;color:#c0392b}
-.modal-box .detail .price-row .high{font-size:.88rem;color:#aaa}
-.modal-box .detail .price-row .gcv{font-size:.72rem;color:#aaa}
-.modal-box .detail .desc{font-size:.82rem;color:#555;margin-top:12px;line-height:1.6}
-.modal-box .detail .trust-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px;text-align:center}
-.modal-box .detail .trust-grid div{background:#fafafa;border-radius:10px;padding:10px 4px}
-.modal-box .detail .trust-grid .tl{font-size:.72rem;font-weight:700;color:#333}
-.modal-box .detail .trust-grid .ts{font-size:.6rem;color:#aaa}
-.modal-box .detail .pay-msg{margin-top:12px;padding:10px;border-radius:10px;text-align:center;font-size:.88rem;font-weight:600}
-.modal-box .detail .pay-msg.ok{background:#e0f2fe;color:#0c4a6e}
-.modal-box .detail .pay-msg.err{background:#fef2f2;color:#dc2626}
-.modal-box .detail .pay-msg.processing{background:#eff6ff;color:#2563eb}
-.modal-box .detail .action-btns{display:flex;gap:8px;margin-top:16px}
-.modal-box .detail .action-btns button{flex:1;padding:14px;border-radius:12px;font-weight:700;font-size:.88rem;cursor:pointer;font-family:inherit;transition:all .15s}
-.modal-box .detail .action-btns .buy-btn{background:#c0392b;color:#fff;border:none}
-.modal-box .detail .action-btns .buy-btn:hover{background:#a93226}
-.modal-box .detail .action-btns .buy-btn:disabled{opacity:.6;cursor:not-allowed}
-.modal-box .detail .action-btns .cart-btn{background:#fff;color:#c0392b;border:2px solid #c0392b}
-.modal-box .detail .action-btns .cart-btn:hover{background:#fef2f2}
-.card-chooser{margin-top:14px}
-.card-chooser .chooser-label{font-size:.72rem;font-weight:700;color:#333;margin-bottom:8px;display:flex;align-items:center;gap:6px}
-.card-chooser .chooser-label svg{width:16px;height:16px}
-.card-scroll{display:flex;gap:8px;overflow-x:auto;padding:4px 0;-webkit-overflow-scrolling:touch;scrollbar-width:none}
-.card-scroll::-webkit-scrollbar{display:none}
-.card-chip{flex-shrink:0;width:110px;padding:10px;border-radius:12px;cursor:pointer;transition:all .2s;border:2px solid transparent;position:relative}
-.card-chip .chip-type{font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.5px;opacity:.85}
-.card-chip .chip-num{font-size:.62rem;font-family:'Courier New',monospace;margin-top:4px;letter-spacing:.5px}
-.card-chip .chip-holder{font-size:.55rem;margin-top:3px;opacity:.7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.card-chip.selected{border-color:#f5c518;box-shadow:0 0 0 1px #f5c518,0 4px 12px rgba(245,197,24,.3)}
-.card-chip.selected::after{content:'\2713';position:absolute;top:4px;right:6px;font-size:.65rem;color:#f5c518;font-weight:800}
-.card-chip.c-visa{background:linear-gradient(135deg,#1a1a6c,#2d2db5);color:#fff}
-.card-chip.c-mastercard{background:linear-gradient(135deg,#cc0000,#ff6600);color:#fff}
-.card-chip.c-amex{background:linear-gradient(135deg,#006fcf,#00aaff);color:#fff}
-.card-chip.c-gold{background:linear-gradient(135deg,#b8860b,#ffd700);color:#1a1a2e}
-.card-chip.c-platinum{background:linear-gradient(135deg,#667085,#e5e7eb);color:#1a1a2e}
-.card-chip.c-black{background:linear-gradient(135deg,#0a0a0a,#333);color:#fff}
-.card-selected-info{margin-top:8px;padding:10px 12px;border-radius:10px;background:linear-gradient(135deg,#1a1a2e,#16213e);color:#fff;display:flex;align-items:center;gap:10px;font-size:.78rem}
-.card-selected-info .csi-icon{width:38px;height:26px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:800;flex-shrink:0}
-.card-selected-info .csi-num{font-family:'Courier New',monospace;font-weight:700;letter-spacing:1px}
-.card-selected-info .csi-holder{font-size:.6rem;opacity:.7}
-.no-card-msg{margin-top:14px;padding:14px;border-radius:12px;background:#f9fafb;text-align:center;font-size:.82rem;color:#666;cursor:pointer;border:2px dashed #ddd;transition:all .2s}
-.no-card-msg:hover{border-color:#c0392b;color:#c0392b}
-.tx-progress{margin-top:10px;display:flex;gap:4px;align-items:center}
-.tx-progress .step{flex:1;text-align:center;font-size:.6rem;font-weight:600;padding:6px 2px;border-radius:8px;background:#f0f0f0;color:#999;transition:all .3s}
-.tx-progress .step.active{background:#eff6ff;color:#2563eb;animation:pulse-step .8s infinite alternate}
-.tx-progress .step.done{background:#e0f2fe;color:#0c4a6e}
-.tx-progress .step.fail{background:#fef2f2;color:#dc2626}
-@keyframes pulse-step{from{opacity:.7}to{opacity:1}}
-</style>
+    <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="page-shop">
 
 <!-- ── TOP HEADER ── -->
 <div class="top-header">
@@ -446,7 +35,7 @@ a{text-decoration:none;color:inherit}
 
 <!-- ── NAV TABS ── -->
 <div class="nav-tabs hide-sb">
-  <a href="index.html" style="background:linear-gradient(135deg,rgba(245,197,24,.25),rgba(212,168,16,.12));border-color:rgba(245,197,24,.4);color:#f5c518;font-weight:700;">💳 Pi Card</a>
+  <a href="index.html" class="inline-style-2">💳 Pi Card</a>
   <a href="map.html" id="navMapLink">Map</a>
   <a href="ride.html">🚀 City Rush</a>
   <a href="social.html">Social</a>
@@ -470,10 +59,10 @@ a{text-decoration:none;color:inherit}
 <div class="search-header">
   <div class="search-bar">
     <input type="text" id="searchInput" placeholder="Search services and Pi tools...">
-    <button class="cam-btn" title="Camera search">
+    <button class="cam-btn" title="Camera search" aria-label="Camera search">
       <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
     </button>
-    <button class="search-btn" onclick="doSearch()">
+    <button class="search-btn" onclick="doSearch()" aria-label="Search">
       <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
     </button>
   </div>
@@ -520,15 +109,15 @@ a{text-decoration:none;color:inherit}
     <p class="kyc-sub">Verify your identity to start selling on Omenda Pi Pays Global</p>
     <form class="kyc-form" id="kyc-form" onsubmit="submitKyc(event)">
       <div class="kyc-row">
-        <div class="kyc-field"><label>First Name</label><input type="text" id="kyc-fname" placeholder="John" required></div>
-        <div class="kyc-field"><label>Last Name</label><input type="text" id="kyc-lname" placeholder="Doe" required></div>
+        <div class="kyc-field"><label for="kyc-fname">First Name</label><input type="text" id="kyc-fname" placeholder="John" required></div>
+        <div class="kyc-field"><label for="kyc-lname">Last Name</label><input type="text" id="kyc-lname" placeholder="Doe" required></div>
       </div>
-      <div class="kyc-field"><label>Pi Username</label><input type="text" id="kyc-pi-user" placeholder="@username" required></div>
-      <div class="kyc-field"><label>Email</label><input type="email" id="kyc-email" placeholder="you@example.com" required></div>
-      <div class="kyc-field"><label>Phone Number</label>
+      <div class="kyc-field"><label for="kyc-pi-user">Pi Username</label><input type="text" id="kyc-pi-user" placeholder="@username" required></div>
+      <div class="kyc-field"><label for="kyc-email">Email</label><input type="email" id="kyc-email" placeholder="you@example.com" required></div>
+      <div class="kyc-field"><label for="kyc-phone">Phone Number</label>
         <div class="phone-wrap">
           <span class="flag-display"><span class="fi fi-ke" id="phone-flag"></span></span>
-          <select id="kyc-phone-code" onchange="updatePhoneCode()">
+          <select id="kyc-phone-code" onchange="updatePhoneCode()" aria-label="Phone country code">
             <option value="+254" data-flag="ke">+254</option>
             <option value="+1" data-flag="us">+1</option>
             <option value="+44" data-flag="gb">+44</option>
@@ -578,11 +167,11 @@ a{text-decoration:none;color:inherit}
         </div>
       </div>
       <div class="kyc-row">
-        <div class="kyc-field"><label>Country</label><input type="text" id="kyc-country" placeholder="Kenya" required></div>
-        <div class="kyc-field"><label>City</label><input type="text" id="kyc-city" placeholder="Nairobi" required></div>
+        <div class="kyc-field"><label for="kyc-country">Country</label><input type="text" id="kyc-country" placeholder="Kenya" required></div>
+        <div class="kyc-field"><label for="kyc-city">City</label><input type="text" id="kyc-city" placeholder="Nairobi" required></div>
       </div>
       <div class="kyc-field">
-        <label>ID Type</label>
+        <label for="kyc-id-type">ID Type</label>
         <select id="kyc-id-type" required>
           <option value="" disabled selected>Select ID type</option>
           <option value="national_id">National ID</option>
@@ -590,23 +179,23 @@ a{text-decoration:none;color:inherit}
           <option value="drivers_license">Driver's License</option>
         </select>
       </div>
-      <div class="kyc-field"><label>ID Number</label><input type="text" id="kyc-id-num" placeholder="ID number" required></div>
+      <div class="kyc-field"><label for="kyc-id-num">ID Number</label><input type="text" id="kyc-id-num" placeholder="ID number" required></div>
       <div class="kyc-field">
         <label>Upload ID Photo</label>
         <div class="upload-row">
           <div class="kyc-upload">
-            <input type="file" id="kyc-id-front" accept="image/*" onchange="showUpload(this,'front')">
+            <input type="file" id="kyc-id-front" accept="image/*" aria-label="Upload front side of ID" onchange="showUpload(this,'front')">
             <div class="upload-icon">🌟</div>
             <div class="upload-text">Front Side</div>
             <div class="upload-name" id="kyc-front-name"></div>
-            <img class="upload-preview" id="kyc-front-preview">
+            <img class="upload-preview" id="kyc-front-preview" alt="Front ID preview">
           </div>
           <div class="kyc-upload">
-            <input type="file" id="kyc-id-back" accept="image/*" onchange="showUpload(this,'back')">
+            <input type="file" id="kyc-id-back" accept="image/*" aria-label="Upload back side of ID" onchange="showUpload(this,'back')">
             <div class="upload-icon">🔄</div>
             <div class="upload-text">Back Side</div>
             <div class="upload-name" id="kyc-back-name"></div>
-            <img class="upload-preview" id="kyc-back-preview">
+            <img class="upload-preview" id="kyc-back-preview" alt="Back ID preview">
           </div>
         </div>
       </div>
@@ -616,9 +205,9 @@ a{text-decoration:none;color:inherit}
       <div class="kyc-section-title"><span class="sec-icon">🏢</span> Business Verification</div>
       <label class="kyc-toggle"><input type="checkbox" id="kyc-biz-toggle" onchange="toggleBizFields()"> I'm registering as a business seller</label>
       <div class="biz-fields" id="kyc-biz-fields">
-        <div class="kyc-field"><label>Business Name</label><input type="text" id="kyc-biz-name" placeholder="Omenda Enterprises"></div>
+        <div class="kyc-field"><label for="kyc-biz-name">Business Name</label><input type="text" id="kyc-biz-name" placeholder="Omenda Enterprises"></div>
         <div class="kyc-field">
-          <label>Business Type</label>
+          <label for="kyc-biz-type">Business Type</label>
           <select id="kyc-biz-type">
             <option value="" disabled selected>Select business type</option>
             <option value="sole_proprietor">Sole Proprietor</option>
@@ -630,16 +219,16 @@ a{text-decoration:none;color:inherit}
             <option value="freelancer">Freelancer</option>
           </select>
         </div>
-        <div class="kyc-field"><label>Registration Number</label><input type="text" id="kyc-biz-reg" placeholder="BN-000000"></div>
-        <div class="kyc-field"><label>Business Address</label><textarea id="kyc-biz-address" placeholder="Street, City, Country"></textarea></div>
+        <div class="kyc-field"><label for="kyc-biz-reg">Registration Number</label><input type="text" id="kyc-biz-reg" placeholder="BN-000000"></div>
+        <div class="kyc-field"><label for="kyc-biz-address">Business Address</label><textarea id="kyc-biz-address" placeholder="Street, City, Country"></textarea></div>
         <div class="kyc-field">
-          <label>Business Certificate / License</label>
+          <label for="kyc-biz-cert">Business Certificate / License</label>
           <div class="kyc-upload">
-            <input type="file" id="kyc-biz-cert" accept="image/*,.pdf" onchange="showUpload(this,'biz')">
+            <input type="file" id="kyc-biz-cert" accept="image/*,.pdf" aria-label="Upload business certificate" onchange="showUpload(this,'biz')">
             <div class="upload-icon">📜</div>
             <div class="upload-text">Upload certificate</div>
             <div class="upload-name" id="kyc-biz-name-file"></div>
-            <img class="upload-preview" id="kyc-biz-preview">
+            <img class="upload-preview" id="kyc-biz-preview" alt="Business certificate preview">
           </div>
         </div>
         <div class="kyc-field">
@@ -657,8 +246,7 @@ a{text-decoration:none;color:inherit}
       </div>
 
       <div class="kyc-agree">
-        <input type="checkbox" id="kyc-agree" required>
-        <span>I confirm the information is accurate and agree to the <strong>Terms of Service</strong> and <strong>Privacy Policy</strong>.</span>
+        <label for="kyc-agree"><input type="checkbox" id="kyc-agree" required> <span>I confirm the information is accurate and agree to the <strong>Terms of Service</strong> and <strong>Privacy Policy</strong>.</span></label>
       </div>
       <button type="submit" class="btn-start-kyc" id="kyc-submit-btn">✅ Submit Verification</button>
     </form>
@@ -871,7 +459,7 @@ function render(){
   if(activeTab==="All"&&!searchQuery){
     html+='<div class="trust-row">';
     html+='<div class="trust-badge"><div class="icon-circle audit">A</div><div><div class="tb-title">Audited Supplier</div><div class="tb-sub">On-site verified suppliers</div></div></div>';
-    html+='<div class="trust-badge" style="border-left:1px solid #f0f0f0"><div class="icon-circle secure">S</div><div><div class="tb-title">Secured Trading</div><div class="tb-sub">Escrow payment protection</div></div></div>';
+    html+='<div class="trust-badge inline-style-3" ><div class="icon-circle secure">S</div><div><div class="tb-title">Secured Trading</div><div class="tb-sub">Escrow payment protection</div></div></div>';
     html+='</div>';
 
     /* ── Dashboard Hub ── */
@@ -879,12 +467,12 @@ function render(){
     html+='<div class="hub-layout">';
     html+='<div class="hub-main">';
     html+='<div class="hub-row">';
-    html+='<a class="hub-card" href="map.html"><div class="hub-icon" style="background:#2563eb">🗺️</div><div class="hub-title">Worldwide Map</div><div class="hub-sub">Explore global business locations and markets.</div></a>';
-    html+='<a class="hub-card" href="omenda-ai.html"><div class="hub-icon" style="background:#2563eb">⚙️</div><div class="hub-title">Omenda AI</div><div class="hub-sub">Access all Omenda AI services, offers and tools.</div></a>';
-    html+='<a class="hub-card" href="index.html"><div class="hub-icon" style="background:#d97706">🤖</div><div class="hub-title">Omenda Sport</div><div class="hub-sub">Sport Future</div></a>';
-    html+='<a class="hub-card" href="social.html"><div class="hub-icon" style="background:#9333ea">👥</div><div class="hub-title">Community</div><div class="hub-sub">Connect with buyers, sellers, and Pi groups.</div></a>';
+    html+='<a class="hub-card" href="map.html"><div class="hub-icon inline-style-4" >🗺️</div><div class="hub-title">Worldwide Map</div><div class="hub-sub">Explore global business locations and markets.</div></a>';
+    html+='<a class="hub-card" href="omenda-ai.html"><div class="hub-icon inline-style-4" >⚙️</div><div class="hub-title">Omenda AI</div><div class="hub-sub">Access all Omenda AI services, offers and tools.</div></a>';
+    html+='<a class="hub-card" href="index.html"><div class="hub-icon inline-style-1" >🤖</div><div class="hub-title">Omenda Sport</div><div class="hub-sub">Sport Future</div></a>';
+    html+='<a class="hub-card" href="social.html"><div class="hub-icon inline-style-5" >👥</div><div class="hub-title">Community</div><div class="hub-sub">Connect with buyers, sellers, and Pi groups.</div></a>';
     html+='</div>';
-    html+='<div class="hub-map-section"><div class="hub-map-header"><h3>Global Business Map</h3><a href="map.html" style="font-size:.82rem;font-weight:700;color:#c0392b;text-decoration:none">Open full map</a></div><div id="dashboard-map"></div></div>';
+    html+='<div class="hub-map-section"><div class="hub-map-header"><h3>Global Business Map</h3><a href="map.html" class="inline-style-6">Open full map</a></div><div id="dashboard-map"></div></div>';
     html+='</div>';
     html+='<aside class="hub-sidebar">';
     html+='<h3>Sport Game List</h3>';
@@ -906,13 +494,13 @@ function render(){
 
     /* ── Quick Actions (Categories / RFQ / New User) ── */
     html+='<div class="quick-actions">';
-    html+='<div class="qa-item"><div class="qa-icon" style="background:#fef3c7">'+
+    html+='<div class="qa-item"><div class="qa-icon inline-style-7" >'+
       '<svg width="22" height="22" fill="none" stroke="#b45309" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>'+
       '</div><div class="qa-label">Categories</div></div>';
-    html+='<div class="qa-item"><div class="qa-icon" style="background:#fce7e7">'+
+    html+='<div class="qa-item"><div class="qa-icon inline-style-8" >'+
       '<svg width="22" height="22" fill="none" stroke="#c0392b" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 12h6m-3-3v6m-7 4h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>'+
       '</div><div class="qa-label">Request for<br>Quotation</div></div>';
-    html+='<div class="qa-item"><div class="qa-icon" style="background:#fef9c3">'+
+    html+='<div class="qa-item"><div class="qa-icon inline-style-9" >'+
       '<svg width="22" height="22" fill="none" stroke="#a16207" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 8v13m0-13V6a2 2 0 012-2h4a2 2 0 010 4h-4m-2 0V6a2 2 0 00-2-2H6a2 2 0 000 4h4m-2 8H5a2 2 0 00-2 2v2h18v-2a2 2 0 00-2-2h-3"/></svg>'+
       '</div><div class="qa-label">New User<br>Guide</div></div>';
     html+='</div>';
@@ -922,14 +510,14 @@ function render(){
   if(activeTab==="All"&&!searchQuery){
     var tagged=marketProducts.filter(function(p){return p.tag});
     html+='<div class="rankings-banner"><div class="rb-header"><div><h2>Top Rankings</h2><div class="rb-sub">Make your sourcing efficient</div></div>'+
-      '<svg class="section-arrow" style="position:relative;z-index:1" width="20" height="20" fill="none" stroke="#aaa" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></div>'+
+      '<svg class="section-arrow inline-style-10"  width="20" height="20" fill="none" stroke="#aaa" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></div>'+
       '<div class="trophy">\uD83C\uDFC6</div>'+
       '<div class="rankings-row hide-sb">';
     tagged.forEach(function(p){
       html+='<article class="rank-card" data-pid="'+p.id+'" onclick="openModal(\''+p.id+'\')">';
       html+='<div class="rc-img"><img src="'+p.images[0]+'" alt="'+esc(p.title)+'" loading="lazy">';
       if(p.images.length>1){html+='<div class="swipe-dots">';for(var di=0;di<p.images.length;di++){html+='<span'+(di===0?' class="active"':'')+'></span>'}html+='</div>'}
-      html+='<div class="rc-tag" style="background:'+p.tagColor+'">'+esc(p.tag)+'</div></div>';
+      html+='<div class="rc-tag inline-style-11" >'+esc(p.tag)+'</div></div>';
       html+='<div class="rc-price">'+esc(p.price)+(p.priceHigh?'-'+esc(p.priceHigh):'')+'</div>';
       html+='<div class="rc-stat">'+esc(p.stat)+'</div></article>';
     });
@@ -951,7 +539,7 @@ function render(){
       // Insert promo banner at specific positions
       if(promoPositions[idx]){
         var pb=promoPositions[idx];
-        html+='<div class="promo-card" style="background:'+pb.bgColor+'">';
+        html+='<div class="promo-card inline-style-12" >';
         html+='<div class="promo-content"><div class="promo-title">'+esc(pb.title)+'</div>';
         html+='<div class="promo-sub">'+esc(pb.subtitle)+'</div>';
         html+='<button class="promo-btn">'+esc(pb.btnText)+'</button></div></div>';
@@ -959,7 +547,7 @@ function render(){
       html+='<article class="prod-card" data-pid="'+item.id+'" onclick="openModal(\''+item.id+'\')">';
       html+='<div class="pc-img"><img src="'+item.images[0]+'" alt="'+esc(item.title)+'" loading="lazy">';
       if(item.images.length>1){html+='<span class="img-count">1/'+item.images.length+'</span>';html+='<div class="swipe-dots">';for(var di=0;di<item.images.length;di++){html+='<span'+(di===0?' class="active"':'')+'></span>'}html+='</div>'}
-      if(item.tag) html+='<div class="tag-overlay" style="background:'+item.tagColor+'">'+esc(item.tag)+'</div>';
+      if(item.tag) html+='<div class="tag-overlay inline-style-13" >'+esc(item.tag)+'</div>';
       if(item.inStock) html+='<div class="stock-badge"><span class="sb-dot"></span>In Stock</div>';
       html+='<div class="search-icon"><svg width="16" height="16" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></div>';
       html+='</div><div class="pc-body">';
@@ -1031,13 +619,13 @@ function render(){
       '<div class="h-scroll hide-sb">';
     fHotels.forEach(function(h){
       html+='<article class="h-card"><div class="hc-img"><img src="'+h.image+'" alt="'+esc(h.name)+'" loading="lazy">'+
-        '<span class="badge-ov" style="left:6px;top:6px;background:rgba(0,0,0,.6);color:#fff;text-transform:capitalize">'+esc(h.type)+'</span>'+
-        '<span class="badge-ov" style="right:6px;top:6px;background:#f59e0b;color:#000">\u2605 '+h.rating+'</span>'+
+        '<span class="badge-ov inline-style-14" >'+esc(h.type)+'</span>'+
+        '<span class="badge-ov inline-style-15" >\u2605 '+h.rating+'</span>'+
         '</div><div class="hc-body"><div class="hc-name">'+esc(h.name)+'</div>'+
         '<div class="hc-loc">\uD83D\uDCCD '+esc(h.location)+'</div>'+
-        '<div style="display:flex;align-items:center;justify-content:space-between;margin-top:6px">'+
+        '<div class="inline-style-16">'+
         '<span class="hc-price">'+h.pricePerNight+' \u03C0</span>'+
-        '<span style="background:#c0392b;color:#fff;padding:3px 10px;border-radius:6px;font-size:.62rem;font-weight:700;cursor:pointer">Book</span>'+
+        '<span class="inline-style-17">Book</span>'+
         '</div></div></article>';
     });
     html+='</div></div>';
@@ -1062,7 +650,7 @@ function render(){
       '<div class="h-scroll hide-sb">';
     fProps.forEach(function(pr){
       html+='<article class="h-card"><div class="hc-img"><img src="'+pr.image+'" alt="'+esc(pr.title)+'" loading="lazy">';
-      if(pr.featured) html+='<span class="badge-ov" style="left:6px;top:6px;background:#f59e0b;color:#000;font-weight:700">\u2B50 Featured</span>';
+      if(pr.featured) html+='<span class="badge-ov inline-style-18" >\u2B50 Featured</span>';
       html+='</div><div class="hc-body"><div class="hc-name">'+esc(pr.title)+'</div>'+
         '<div class="hc-loc">\uD83D\uDCCD '+esc(pr.location)+'</div>'+
         '<div class="hc-meta">';
@@ -1075,20 +663,20 @@ function render(){
 
   /* ── Transport & Delivery ── */
   if(showTrans){
-    html+='<div class="section"><div class="section-header"><div class="section-title">\uD83D\uDE97 Transport & Delivery</div><a href="ride.html" style="font-size:.72rem;font-weight:700;color:#fff;background:linear-gradient(135deg,#3b82f6,#06b6d4);padding:5px 12px;border-radius:14px;text-decoration:none">🚀 City Rush</a></div><div class="trans-grid">';
+    html+='<div class="section"><div class="section-header"><div class="section-title">\uD83D\uDE97 Transport & Delivery</div><a href="ride.html" class="inline-style-19">🚀 City Rush</a></div><div class="trans-grid">';
     transportServices.forEach(function(s){
       var bs="";
       if(s.badge==="Popular") bs="background:#fef3c7;color:#92400e";
       else if(s.badge==="Premium") bs="background:#ede9fe;color:#6d28d9";
       else if(s.badge) bs="background:#d1fae5;color:#065f46";
-      html+='<div class="trans-card" onclick="window.location.href=&quot;ride.html&quot;" style="cursor:pointer"><div class="tc-top"><span class="tc-icon">'+s.icon+'</span>'+
-        (s.badge?'<span class="tc-badge" style="'+bs+'">'+esc(s.badge)+'</span>':'')+
+      html+='<div class="trans-card inline-style-20" onclick="window.location.href=&quot;ride.html&quot;" ><div class="tc-top"><span class="tc-icon">'+s.icon+'</span>'+
+        (s.badge?'<span class="tc-badge inline-style-21" >'+esc(s.badge)+'</span>':'')+
         '</div><div class="tc-name">'+esc(s.name)+'</div><div class="tc-desc">'+esc(s.desc)+'</div><div class="tc-price">'+esc(s.price)+'</div></div>';
     });
     html+='</div>';
 
     /* Flights */
-    html+='<h3 style="font-size:.84rem;font-weight:700;color:#1a1a1a;margin:14px 0 8px">\u2708\uFE0F Flights</h3>'+
+    html+='<h3 class="inline-style-22">\u2708\uFE0F Flights</h3>'+
       '<div class="h-scroll hide-sb">';
     flights.forEach(function(f){
       html+='<div class="fl-card"><div class="fl-air"><span class="fl-icon">'+f.icon+'</span><span class="fl-name">'+esc(f.airline)+'</span></div>'+
@@ -1123,7 +711,7 @@ function render(){
     '<div class="cta-btns"><a href="#" class="btn-sell" id="sell-btn">\uD83D\uDE80 Sell Now</a><a href="form.html?redirect=post product.html" class="btn-verify">Get Verified</a></div>'+
     '</div></div>';
 
-  html+='<div style="height:20px"></div>';
+  html+='<div class="inline-style-23"></div>';
   document.getElementById("app").innerHTML=html;
 
   /* Re-bind search */
@@ -1314,7 +902,7 @@ function addToCardBalance(productId){
     localStorage.setItem('pivisualcard_data',JSON.stringify(state));
   }catch(e){}
   var msgEl=document.getElementById('modal-pay-msg');
-  if(msgEl) msgEl.innerHTML='<div class="pay-msg ok">\u2705 Added to '+esc(cardLabels[card.type]||card.type)+' card \u2014 <a href="index.html" style="color:#c0392b;text-decoration:underline">View Card</a></div>';
+  if(msgEl) msgEl.innerHTML='<div class="pay-msg ok">\u2705 Added to '+esc(cardLabels[card.type]||card.type)+' card \u2014 <a href="index.html" class="inline-style-24">View Card</a></div>';
 }
 
 /* ── Transaction Progress ── */
@@ -1421,7 +1009,7 @@ function handlePiBuy(productId){
     var payTimeout = setTimeout(function(){
       if(!paymentStarted){
         txStep(1,'fail');
-        if(msgEl) msgEl.innerHTML='<div class="pay-msg err">\u274C Payment timed out. Pi Network may be busy. <a href="javascript:void(0)" onclick="document.getElementById(\'modal-pay-msg\').innerHTML=\'\'" style="text-decoration:underline">Dismiss</a></div>';
+        if(msgEl) msgEl.innerHTML='<div class="pay-msg err">\u274C Payment timed out. Pi Network may be busy. <a href="javascript:void(0)" onclick="document.getElementById(\'modal-pay-msg\').innerHTML=\'\'" class="inline-style-25">Dismiss</a></div>';
         if(buyBtn){buyBtn.disabled=false;buyBtn.textContent='\u03C0 Pay with Card ('+esc(p.price)+')'}
       }
     }, 20000);
@@ -1484,7 +1072,7 @@ function handlePiBuy(productId){
           clearTimeout(payTimeout);
           txHide();
           fetch('/api/pi/cancel',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({paymentId:paymentId})}).catch(function(){});
-          if(msgEl) msgEl.innerHTML='<div class="pay-msg err">\u274C Payment cancelled. <a href="javascript:void(0)" onclick="document.getElementById(\'modal-pay-msg\').innerHTML=\'\'" style="text-decoration:underline">Dismiss</a></div>';
+          if(msgEl) msgEl.innerHTML='<div class="pay-msg err">\u274C Payment cancelled. <a href="javascript:void(0)" onclick="document.getElementById(\'modal-pay-msg\').innerHTML=\'\'" class="inline-style-25">Dismiss</a></div>';
           if(buyBtn){buyBtn.disabled=false;buyBtn.textContent='\u03C0 Pay with Card ('+esc(p.price)+')'}
         },
         onError:function(err,payment){
@@ -1493,14 +1081,14 @@ function handlePiBuy(productId){
           txHide();
           var errMsg = (err && err.message) ? err.message : String(err);
           fetch('/api/pi/error',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({paymentId:payment?payment.identifier:null,error:errMsg})}).catch(function(){});
-          if(msgEl) msgEl.innerHTML='<div class="pay-msg err">\u274C '+esc(errMsg)+' <a href="javascript:void(0)" onclick="document.getElementById(\'modal-pay-msg\').innerHTML=\'\'" style="text-decoration:underline">Dismiss</a></div>';
+          if(msgEl) msgEl.innerHTML='<div class="pay-msg err">\u274C '+esc(errMsg)+' <a href="javascript:void(0)" onclick="document.getElementById(\'modal-pay-msg\').innerHTML=\'\'" class="inline-style-25">Dismiss</a></div>';
           if(buyBtn){buyBtn.disabled=false;buyBtn.textContent='\u03C0 Pay with Card ('+esc(p.price)+')'}
         }
       });
     } catch(e) {
       clearTimeout(payTimeout);
       txStep(1,'fail');
-      if(msgEl) msgEl.innerHTML='<div class="pay-msg err">\u274C '+esc(e.message||'Payment creation failed')+' <a href="javascript:void(0)" onclick="document.getElementById(\'modal-pay-msg\').innerHTML=\'\'" style="text-decoration:underline">Dismiss</a></div>';
+      if(msgEl) msgEl.innerHTML='<div class="pay-msg err">\u274C '+esc(e.message||'Payment creation failed')+' <a href="javascript:void(0)" onclick="document.getElementById(\'modal-pay-msg\').innerHTML=\'\'" class="inline-style-25">Dismiss</a></div>';
       if(buyBtn){buyBtn.disabled=false;buyBtn.textContent='\u03C0 Pay with Card ('+esc(p.price)+')'}
     }
   }
@@ -1511,7 +1099,7 @@ function handlePiBuy(productId){
     startPayment();
   } else {
     piDebug('Authenticating on user click...');
-    if(msgEl) msgEl.innerHTML='<div class="pay-msg processing">\u23F3 Authenticating\u2026<br><small id="pi-debug-panel" style="font-size:10px;color:#aaa;white-space:pre;text-align:left;display:block;margin-top:8px"></small></div>';
+    if(msgEl) msgEl.innerHTML='<div class="pay-msg processing">\u23F3 Authenticating\u2026<br><small id="pi-debug-panel" class="inline-style-26"></small></div>';
     /* Scopes: match index.html exactly */
     var authScopes = ["username","payments","wallet_address"];
     piDebug('Scopes: '+authScopes.join(','));
@@ -1531,7 +1119,7 @@ function handlePiBuy(productId){
       piDebug('authenticate() called, waiting...');
     } catch(syncErr) {
       piDebug('authenticate() threw sync: '+syncErr.message);
-      if(msgEl) msgEl.innerHTML='<div class="pay-msg err">\u274C '+esc(syncErr.message)+' <a href="javascript:void(0)" onclick="document.getElementById(\'modal-pay-msg\').innerHTML=\'\'" style="text-decoration:underline">Dismiss</a></div>';
+      if(msgEl) msgEl.innerHTML='<div class="pay-msg err">\u274C '+esc(syncErr.message)+' <a href="javascript:void(0)" onclick="document.getElementById(\'modal-pay-msg\').innerHTML=\'\'" class="inline-style-25">Dismiss</a></div>';
       if(buyBtn){buyBtn.disabled=false;buyBtn.textContent='\u03C0 Pay with Card ('+esc(p.price)+')'}
       return;
     }
@@ -1548,7 +1136,7 @@ function handlePiBuy(productId){
       var errMsg = '';
       try { errMsg = typeof e === 'object' ? JSON.stringify(e, Object.getOwnPropertyNames(e)) : String(e); } catch(j){ errMsg = String(e); }
       piDebug('Auth FAILED type='+(typeof e)+' msg='+(e&&e.message||'none')+' full='+errMsg);
-      if(msgEl) msgEl.innerHTML='<div class="pay-msg err">\u274C Authentication failed<br><br><b>Debug log:</b><pre style="font-size:10px;color:#666;text-align:left;margin-top:4px;max-height:200px;overflow:auto">'+esc(piDebugLog.join('\n'))+'</pre><br><a href="javascript:void(0)" onclick="document.getElementById(\'modal-pay-msg\').innerHTML=\'\'" style="text-decoration:underline">Dismiss</a></div>';
+      if(msgEl) msgEl.innerHTML='<div class="pay-msg err">\u274C Authentication failed<br><br><b>Debug log:</b><pre class="inline-style-27">'+esc(piDebugLog.join('\n'))+'</pre><br><a href="javascript:void(0)" onclick="document.getElementById(\'modal-pay-msg\').innerHTML=\'\'" class="inline-style-25">Dismiss</a></div>';
       if(buyBtn){buyBtn.disabled=false;buyBtn.textContent='\u03C0 Pay with Card ('+esc(p.price)+')'}
     });
   }

@@ -11,118 +11,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:#0a0a1a;color:#fff;min-height:100vh;-webkit-font-smoothing:antialiased;padding-bottom:80px}
 
-/* ── Nav link bar ── */
-.nav-link-bar{display:flex;gap:6px;padding:6px 12px;background:linear-gradient(135deg,#1e1245,#2a1760);overflow-x:auto}
-.nav-link-bar::-webkit-scrollbar{display:none}
-.nav-link-bar{-ms-overflow-style:none;scrollbar-width:none}
-.nav-link-bar a{color:rgba(255,255,255,.85);font-size:.78rem;font-weight:600;padding:7px 14px;white-space:nowrap;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:20px;transition:all .2s;text-decoration:none}
-.nav-link-bar a:hover{color:#fff;background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.3)}
-.nav-link-bar a.nav-active{color:#fff;background:rgba(255,255,255,.22);border-color:rgba(255,255,255,.35)}
-
-/* ── Top Bar ── */
-.top-bar{background:linear-gradient(135deg,#12122e,#1a1a3e);padding:14px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid rgba(255,255,255,.06)}
-.top-bar .back-btn{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.08);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.top-bar h1{font-size:1.05rem;font-weight:800;color:#fff;flex:1}
-.top-bar .export-btn{padding:7px 14px;border-radius:20px;background:linear-gradient(135deg,#f97316,#f59e0b);border:none;color:#fff;font-size:.72rem;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap}
-
-/* ── Summary Cards ── */
-.summary-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:12px 14px}
-.summary-card{background:linear-gradient(135deg,rgba(255,255,255,.06),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:14px 12px;text-align:center}
-.summary-card .sc-label{font-size:.62rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:rgba(255,255,255,.45);margin-bottom:4px}
-.summary-card .sc-value{font-size:1.1rem;font-weight:800}
-.sc-income{color:#4ade80}
-.sc-expense{color:#f87171}
-.sc-net{color:#facc15}
-
-/* ── Filter Bar ── */
-.filter-bar{display:flex;gap:6px;padding:8px 14px;overflow-x:auto;border-bottom:1px solid rgba(255,255,255,.06)}
-.filter-bar::-webkit-scrollbar{display:none}
-.filter-bar{-ms-overflow-style:none;scrollbar-width:none}
-.filter-bar button{padding:6px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);font-size:.72rem;font-weight:600;color:rgba(255,255,255,.6);cursor:pointer;white-space:nowrap;font-family:inherit;transition:all .15s}
-.filter-bar button.active{background:linear-gradient(135deg,#f97316,#f59e0b);color:#fff;border-color:transparent}
-.filter-bar button:hover:not(.active){background:rgba(255,255,255,.08)}
-
-/* ── Search ── */
-.search-bar{padding:8px 14px}
-.search-input{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:24px;padding:4px 6px 4px 14px}
-.search-input input{flex:1;border:none;background:transparent;outline:none;font-size:.82rem;padding:8px 0;font-family:inherit;color:#fff}
-.search-input input::placeholder{color:rgba(255,255,255,.35)}
-.search-input .search-icon{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.08);border:none;color:rgba(255,255,255,.5);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-
-/* ── Date Range ── */
-.date-range{display:flex;gap:8px;padding:0 14px 10px;align-items:center}
-.date-range label{font-size:.68rem;color:rgba(255,255,255,.4);font-weight:600}
-.date-range input[type="date"]{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:6px 10px;font-size:.72rem;color:#fff;font-family:inherit;outline:none}
-.date-range input[type="date"]::-webkit-calendar-picker-indicator{filter:invert(1) brightness(.7)}
-
-/* ── Transaction List ── */
-.tx-section{padding:0 14px}
-.tx-date-group{margin-bottom:16px}
-.tx-date-header{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:rgba(255,255,255,.35);padding:8px 0 6px;border-bottom:1px solid rgba(255,255,255,.05);margin-bottom:6px}
-.tx-card{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:14px 16px;margin-bottom:8px;transition:all .2s;cursor:pointer}
-.tx-card:hover{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.12)}
-.tx-card .tx-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.15rem;flex-shrink:0}
-.tx-icon.sent{background:rgba(231,76,60,.15);color:#e74c3c}
-.tx-icon.recv{background:rgba(39,174,96,.15);color:#27ae60}
-.tx-icon.shop{background:rgba(245,197,24,.15);color:#f5c518}
-.tx-card .tx-info{flex:1;min-width:0}
-.tx-card .tx-name{font-weight:700;font-size:.82rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.tx-card .tx-meta{display:flex;align-items:center;gap:8px;margin-top:3px}
-.tx-card .tx-time{font-size:.65rem;color:rgba(255,255,255,.4)}
-.tx-card .tx-type-badge{font-size:.58rem;font-weight:700;padding:2px 7px;border-radius:6px;text-transform:uppercase;letter-spacing:.3px}
-.badge-sent{background:rgba(231,76,60,.12);color:#f87171}
-.badge-recv{background:rgba(39,174,96,.12);color:#4ade80}
-.badge-shop{background:rgba(245,197,24,.12);color:#fbbf24}
-.tx-card .tx-amount{font-weight:800;font-size:.92rem;text-align:right;flex-shrink:0}
-.tx-amount.positive{color:#4ade80}
-.tx-amount.negative{color:#f87171}
-.tx-card .tx-txid{font-size:.58rem;color:rgba(255,255,255,.25);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-
-/* ── Detail Modal ── */
-.tx-modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:2000;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);align-items:flex-end;justify-content:center}
-.tx-modal-overlay.open{display:flex}
-.tx-modal{background:linear-gradient(135deg,#1a1a3e,#12122e);border-radius:24px 24px 0 0;padding:20px 18px 30px;width:100%;max-width:440px;max-height:80vh;overflow-y:auto;animation:slideUp .25s ease}
-@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-.tx-modal .modal-handle{width:40px;height:4px;border-radius:4px;background:rgba(255,255,255,.2);margin:0 auto 16px}
-.tx-modal .detail-row{display:flex;justify-content:space-between;align-items:flex-start;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06)}
-.tx-modal .detail-row:last-child{border-bottom:none}
-.tx-modal .detail-label{font-size:.72rem;font-weight:600;color:rgba(255,255,255,.45);flex-shrink:0;min-width:80px}
-.tx-modal .detail-value{font-size:.82rem;font-weight:700;text-align:right;word-break:break-all}
-.tx-modal .detail-amount{font-size:1.4rem;font-weight:800;text-align:center;padding:14px 0}
-.tx-modal .modal-close{width:100%;padding:12px;border-radius:14px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:#fff;font-size:.82rem;font-weight:700;cursor:pointer;font-family:inherit;margin-top:12px}
-.tx-modal .modal-close:hover{background:rgba(255,255,255,.14)}
-
-/* ── Empty State ── */
-.empty-state{text-align:center;padding:60px 20px;color:rgba(255,255,255,.35)}
-.empty-state .empty-icon{font-size:3rem;margin-bottom:12px}
-.empty-state .empty-text{font-size:.85rem;font-weight:600}
-.empty-state .empty-sub{font-size:.72rem;margin-top:4px}
-
-/* ── Card Type Badge ── */
-.card-badge{display:inline-flex;align-items:center;gap:3px;font-size:.58rem;font-weight:700;padding:2px 7px;border-radius:6px;letter-spacing:.3px}
-.card-visa{background:rgba(31,83,165,.2);color:#60a5fa}
-.card-mastercard{background:rgba(235,120,0,.2);color:#fb923c}
-.card-amex{background:rgba(0,111,207,.2);color:#38bdf8}
-.card-gold{background:rgba(245,197,24,.2);color:#fbbf24}
-.card-platinum{background:rgba(168,162,158,.2);color:#d6d3d1}
-.card-black{background:rgba(255,255,255,.08);color:#e5e5e5}
-
-/* ── Bottom Nav ── */
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:1000;background:linear-gradient(135deg,#12122e,#1a1a3e);border-top:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:space-around;padding:6px 0 env(safe-area-inset-bottom,4px)}
-.bottom-nav a{display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;font-size:.6rem;font-weight:600;color:rgba(255,255,255,.4);position:relative}
-.bottom-nav a.active{color:#f97316}
-.bottom-nav a svg{width:22px;height:22px}
-</style>
+    <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="page-records">
 
 <!-- ── CROSS-NAV BAR ── -->
 <div class="nav-link-bar">
-  <a href="index.html" style="background:linear-gradient(135deg,rgba(245,197,24,.25),rgba(212,168,16,.12));border-color:rgba(245,197,24,.4);color:#f5c518;font-weight:700;">&#128179; Pi Card</a>
+  <a href="index.html" class="inline-style-1">&#128179; Pi Card</a>
   <a href="shop.html">&#128722; Marketplace</a>
   <a href="map.html">&#128205; Map</a>
   <a href="records.html" class="nav-active">&#128196; Records</a>
@@ -394,13 +290,13 @@ function openTxDetail(txJson) {
   html += '<div class="detail-row"><span class="detail-label">Name</span><span class="detail-value">' + sanitize(tx.name || 'N/A') + '</span></div>';
   html += '<div class="detail-row"><span class="detail-label">Date</span><span class="detail-value">' + dateStr + '</span></div>';
   if (tx.txid) {
-    html += '<div class="detail-row"><span class="detail-label">TxID</span><span class="detail-value" style="font-size:.68rem;color:rgba(255,255,255,.6)">' + sanitize(tx.txid) + '</span></div>';
+    html += '<div class="detail-row"><span class="detail-label">TxID</span><span class="detail-value inline-style-2" >' + sanitize(tx.txid) + '</span></div>';
   }
   if (tx.cardType || tx._src) {
     html += '<div class="detail-row"><span class="detail-label">Card</span><span class="detail-value">' + sanitize((tx.cardType || tx._src || '').toUpperCase()) + '</span></div>';
   }
   if (tx.status) {
-    html += '<div class="detail-row"><span class="detail-label">Status</span><span class="detail-value" style="color:#4ade80">' + sanitize(tx.status) + '</span></div>';
+    html += '<div class="detail-row"><span class="detail-label">Status</span><span class="detail-value inline-style-3" >' + sanitize(tx.status) + '</span></div>';
   }
 
   document.getElementById('txModalContent').innerHTML = html;

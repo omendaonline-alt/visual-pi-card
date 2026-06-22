@@ -19,9 +19,7 @@
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Visual Pi Card">
 
-    <!-- PWA / Mobile -->
-    <meta name="theme-color" content="#0d0221">
-    <meta name="apple-mobile-web-app-capable" content="yes">
+    <!-- PWA / Mobile --><meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Visual Pi Card">
     <link rel="manifest" href="manifest.json">
@@ -50,954 +48,13 @@
         }
     </script>
 
-    <style>
-        /* ===== RESET & BASE ===== */
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: linear-gradient(135deg, #0d0221 0%, #150535 40%, #1a0640 100%);
-            color: #e2daf0;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 24px 16px 48px;
-        }
-
-        /* ===== HEADER ===== */
-        .header {
-            text-align: center;
-            margin-bottom: 32px;
-        }
-        .header h1 {
-            font-size: 2rem;
-            background: linear-gradient(90deg, #f5c518, #ffdf6f);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: 1px;
-        }
-        .header p {
-            font-size: 0.95rem;
-            opacity: 0.7;
-            margin-top: 4px;
-        }
-
-        /* ===== CARD ===== */
-        .card-container {
-            perspective: 1200px;
-            width: 380px;
-            height: 240px;
-            margin-bottom: 36px;
-            cursor: pointer;
-        }
-        .card-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            transition: transform 0.7s cubic-bezier(.4,.2,.2,1);
-            transform-style: preserve-3d;
-        }
-        .card-container.flipped .card-inner {
-            transform: rotateY(180deg);
-        }
-        .card-front, .card-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 18px;
-            backface-visibility: hidden;
-            overflow: hidden;
-            box-shadow: 0 20px 50px rgba(245, 197, 24, .25), 0 0 0 1px rgba(255,255,255,.08);
-        }
-
-        /* -- Front -- */
-        .card-front {
-            background: linear-gradient(135deg, #1b0a3c 0%, #2d1266 50%, #461d8a 100%);
-            padding: 28px 28px 22px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-        .card-front::before {
-            content: '';
-            position: absolute;
-            top: -60px; right: -60px;
-            width: 200px; height: 200px;
-            background: radial-gradient(circle, rgba(245,197,24,.15) 0%, transparent 70%);
-            border-radius: 50%;
-        }
-        .card-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .card-brand {
-            font-weight: 700;
-            font-size: 1.1rem;
-            color: #f5c518;
-            letter-spacing: 2px;
-        }
-        .pi-logo {
-            width: 44px;
-            height: 44px;
-            background: radial-gradient(circle, #f5c518 40%, #d4a810 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 900;
-            font-size: 1.4rem;
-            color: #1b0a3c;
-            box-shadow: 0 0 18px rgba(245,197,24,.4);
-        }
-        .card-chip {
-            width: 46px;
-            height: 34px;
-            background: linear-gradient(135deg, #d4a810, #f5c518, #d4a810);
-            border-radius: 6px;
-            margin-top: 4px;
-            position: relative;
-            overflow: hidden;
-        }
-        .card-chip::after {
-            content: '';
-            position: absolute;
-            top: 50%; left: 50%;
-            width: 28px; height: 22px;
-            transform: translate(-50%,-50%);
-            border: 1.5px solid rgba(27,10,60,.3);
-            border-radius: 3px;
-        }
-        .card-number {
-            font-size: 1.25rem;
-            letter-spacing: 3.5px;
-            font-family: 'Consolas', 'Courier New', monospace;
-            color: #fff;
-            text-shadow: 0 1px 4px rgba(0,0,0,.3);
-        }
-        .card-bottom {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-        }
-        .card-holder-label, .card-expiry-label {
-            font-size: 0.6rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            opacity: 0.55;
-        }
-        .card-holder-name {
-            font-size: 0.9rem;
-            font-weight: 600;
-            letter-spacing: 1.5px;
-            color: #fff;
-        }
-        .card-expiry-value {
-            font-size: 0.9rem;
-            color: #fff;
-        }
-        .card-network {
-            font-size: 0.65rem;
-            letter-spacing: 1px;
-            color: #f5c518;
-            text-align: right;
-            opacity: 0.8;
-        }
-
-        /* -- Back -- */
-        .card-back {
-            background: linear-gradient(135deg, #2d1266 0%, #1b0a3c 100%);
-            transform: rotateY(180deg);
-            display: flex;
-            flex-direction: column;
-        }
-        .mag-stripe {
-            width: 100%;
-            height: 48px;
-            background: #0a0014;
-            margin-top: 26px;
-        }
-        .sig-strip {
-            width: 70%;
-            height: 36px;
-            background: #e8e0d0;
-            margin: 18px auto 0 28px;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            padding-right: 12px;
-        }
-        .cvv {
-            font-family: 'Consolas', monospace;
-            font-size: 0.95rem;
-            color: #1b0a3c;
-            font-weight: 700;
-            letter-spacing: 2px;
-        }
-        .card-back-info {
-            padding: 14px 28px;
-            font-size: 0.6rem;
-            line-height: 1.5;
-            opacity: 0.55;
-        }
-        .card-back-brand {
-            text-align: right;
-            padding: 0 28px 18px;
-            margin-top: auto;
-            font-weight: 700;
-            color: #f5c518;
-            letter-spacing: 2px;
-            font-size: 0.85rem;
-        }
-
-        /* Click hint */
-        .card-hint {
-            font-size: 0.75rem;
-            opacity: 0.4;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-        .card-details-link {
-            display: block;
-            text-align: center;
-            margin-bottom: 28px;
-            font-size: 0.82rem;
-            color: #f5c518;
-            text-decoration: none;
-            opacity: 0.8;
-            transition: opacity 0.2s;
-        }
-        .card-details-link:hover {
-            opacity: 1;
-            text-decoration: underline;
-        }
-
-        /* ===== BALANCE ===== */
-        .balance-section {
-            text-align: center;
-            margin-bottom: 32px;
-        }
-        .balance-label {
-            font-size: 0.85rem;
-            opacity: 0.6;
-            margin-bottom: 4px;
-        }
-        .balance-amount {
-            font-size: 2.5rem;
-            font-weight: 700;
-            background: linear-gradient(90deg, #f5c518, #ffdf6f);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .balance-amount span {
-            font-size: 1.1rem;
-            opacity: 0.8;
-        }
-
-        /* ===== QUICK ACTIONS ===== */
-        .actions {
-            display: flex;
-            gap: 16px;
-            margin-bottom: 36px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        .action-btn {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            background: rgba(255,255,255,.06);
-            border: 1px solid rgba(245,197,24,.15);
-            border-radius: 16px;
-            padding: 18px 22px;
-            min-width: 95px;
-            cursor: pointer;
-            transition: all .25s;
-            color: #e2daf0;
-            font-size: 0.78rem;
-        }
-        .action-btn:hover {
-            background: rgba(245,197,24,.12);
-            border-color: rgba(245,197,24,.4);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(245,197,24,.15);
-        }
-        .action-icon {
-            font-size: 1.5rem;
-        }
-
-        /* ===== PAYMENT MODAL ===== */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,.65);
-            z-index: 100;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(4px);
-        }
-        .modal-overlay.active { display: flex; }
-        .modal {
-            background: linear-gradient(160deg, #1b0a3c, #2d1266);
-            border: 1px solid rgba(245,197,24,.2);
-            border-radius: 20px;
-            padding: 32px 28px;
-            width: 360px;
-            max-width: 92vw;
-            box-shadow: 0 24px 60px rgba(0,0,0,.5);
-        }
-        .modal h2 {
-            color: #f5c518;
-            font-size: 1.2rem;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        .modal label {
-            font-size: 0.78rem;
-            opacity: 0.7;
-            display: block;
-            margin-bottom: 4px;
-            margin-top: 14px;
-        }
-        .modal input, .modal select {
-            width: 100%;
-            padding: 12px 14px;
-            border-radius: 10px;
-            border: 1px solid rgba(245,197,24,.2);
-            background: rgba(255,255,255,.06);
-            color: #fff;
-            font-size: 0.95rem;
-            outline: none;
-            transition: border-color .2s;
-        }
-        .modal input:focus, .modal select:focus {
-            border-color: #f5c518;
-        }
-        .modal select option {
-            background: #1b0a3c;
-            color: #e2daf0;
-        }
-        .modal-actions {
-            display: flex;
-            gap: 12px;
-            margin-top: 24px;
-        }
-        .btn-primary {
-            flex: 1;
-            padding: 13px;
-            border: none;
-            border-radius: 12px;
-            background: linear-gradient(135deg, #f5c518, #d4a810);
-            color: #1b0a3c;
-            font-weight: 700;
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: all .2s;
-        }
-        .btn-primary:hover { box-shadow: 0 6px 20px rgba(245,197,24,.35); transform: translateY(-1px); }
-        .btn-secondary {
-            flex: 1;
-            padding: 13px;
-            border: 1px solid rgba(245,197,24,.3);
-            border-radius: 12px;
-            background: transparent;
-            color: #e2daf0;
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: all .2s;
-        }
-        .btn-secondary:hover { background: rgba(255,255,255,.06); }
-
-        /* ===== TOP-UP ENHANCEMENTS ===== */
-        .topup-card-info {
-            display: none;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 14px;
-            border-radius: 12px;
-            background: rgba(245,197,24,.08);
-            border: 1px solid rgba(245,197,24,.18);
-            margin-bottom: 10px;
-        }
-        .topup-card-chip {
-            width: 38px; height: 26px;
-            border-radius: 6px;
-            display: flex; align-items: center; justify-content: center;
-            font-weight: 800; font-size: .55rem; color: #fff; letter-spacing: .5px;
-        }
-        .topup-card-chip.tc-visa      { background: linear-gradient(135deg,#1a1f71,#f5c518); }
-        .topup-card-chip.tc-mastercard { background: linear-gradient(135deg,#eb001b,#f79e1b); }
-        .topup-card-chip.tc-amex       { background: linear-gradient(135deg,#006fcf,#4da6ff); }
-        .topup-card-chip.tc-gold       { background: linear-gradient(135deg,#b8860b,#daa520); }
-        .topup-card-chip.tc-platinum   { background: linear-gradient(135deg,#6a6a8f,#c0c0e0); }
-        .topup-card-chip.tc-black      { background: linear-gradient(135deg,#1a1a2e,#333); border:1px solid rgba(255,255,255,.15); }
-        .topup-card-name {
-            font-size: .82rem; font-weight: 600; color: #e2daf0;
-        }
-        .topup-card-bal {
-            margin-left: auto;
-            font-size: .85rem; font-weight: 700; color: #f5c518;
-        }
-        /* Card type selector for topup */
-        .topup-card-select {
-            display: none;
-            gap: 6px;
-            margin-bottom: 12px;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            padding-bottom: 4px;
-        }
-        .topup-card-select::-webkit-scrollbar { height: 0; }
-        .tc-pick {
-            flex: 0 0 auto;
-            display: flex; flex-direction: column; align-items: center; gap: 4px;
-            padding: 8px 10px;
-            border-radius: 10px;
-            border: 2px solid rgba(255,255,255,.08);
-            background: rgba(255,255,255,.03);
-            cursor: pointer;
-            transition: all .2s;
-            min-width: 52px;
-        }
-        .tc-pick:hover { border-color: rgba(245,197,24,.3); background: rgba(245,197,24,.06); }
-        .tc-pick.selected { border-color: #f5c518; background: rgba(245,197,24,.12); box-shadow: 0 4px 16px rgba(245,197,24,.18); }
-        .tc-pick .tc-chip-mini {
-            width: 34px; height: 22px;
-            border-radius: 5px;
-            display: flex; align-items: center; justify-content: center;
-            font-weight: 800; font-size: .48rem; color: #fff; letter-spacing: .3px;
-        }
-        .tc-pick .tc-label { font-size: .6rem; color: rgba(255,255,255,.5); font-weight: 600; white-space: nowrap; }
-        .tc-pick.selected .tc-label { color: #f5c518; }
-        .topup-quick {
-            display: none;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 6px;
-        }
-        .topup-quick-label {
-            display: none;
-            font-size: .72rem; opacity: .5; margin-bottom: 6px;
-        }
-        .tq-chip {
-            padding: 8px 16px;
-            border-radius: 20px;
-            border: 1px solid rgba(245,197,24,.25);
-            background: rgba(245,197,24,.06);
-            color: #f5c518;
-            font-weight: 700;
-            font-size: .88rem;
-            cursor: pointer;
-            transition: all .2s;
-        }
-        .tq-chip:hover, .tq-chip.active {
-            background: rgba(245,197,24,.2);
-            border-color: #f5c518;
-            box-shadow: 0 4px 14px rgba(245,197,24,.2);
-        }
-
-        /* ===== SUCCESS TOAST ===== */
-        .toast {
-            position: fixed;
-            bottom: -80px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(135deg, #1e8a3c, #27ae60);
-            color: #fff;
-            padding: 14px 28px;
-            border-radius: 12px;
-            font-weight: 600;
-            box-shadow: 0 8px 30px rgba(39,174,96,.35);
-            transition: bottom .4s cubic-bezier(.4,.2,.2,1);
-            z-index: 200;
-            white-space: nowrap;
-        }
-        .toast.show { bottom: 32px; }
-
-        /* ===== TRANSACTIONS ===== */
-        .transactions {
-            width: 100%;
-            max-width: 420px;
-        }
-        .transactions h3 {
-            font-size: 1rem;
-            margin-bottom: 14px;
-            opacity: 0.8;
-        }
-        .tx-item {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            background: rgba(255,255,255,.04);
-            border: 1px solid rgba(255,255,255,.06);
-            border-radius: 14px;
-            padding: 14px 18px;
-            margin-bottom: 10px;
-            transition: background .2s;
-        }
-        .tx-item:hover { background: rgba(255,255,255,.07); }
-        .tx-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            flex-shrink: 0;
-        }
-        .tx-icon.sent  { background: rgba(231,76,60,.15); color: #e74c3c; }
-        .tx-icon.recv  { background: rgba(39,174,96,.15); color: #27ae60; }
-        .tx-icon.shop  { background: rgba(245,197,24,.15); color: #f5c518; }
-        .tx-details { flex: 1; }
-        .tx-name { font-weight: 600; font-size: 0.9rem; }
-        .tx-date { font-size: 0.72rem; opacity: 0.5; margin-top: 2px; }
-        .tx-amount { font-weight: 700; font-size: 0.95rem; }
-        .tx-amount.negative { color: #e74c3c; }
-        .tx-amount.positive { color: #27ae60; }
-
-        /* ===== SUPPORTED PAYMENTS ===== */
-        .supported {
-            margin-top: 36px;
-            text-align: center;
-            max-width: 420px;
-            width: 100%;
-        }
-        .supported h3 {
-            font-size: 1rem;
-            margin-bottom: 16px;
-            opacity: 0.8;
-        }
-        .payment-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-        }
-        .payment-type {
-            background: rgba(255,255,255,.05);
-            border: 1px solid rgba(245,197,24,.1);
-            border-radius: 14px;
-            padding: 16px 8px;
-            text-align: center;
-            transition: all .25s;
-        }
-        .payment-type:hover {
-            border-color: rgba(245,197,24,.35);
-            background: rgba(245,197,24,.08);
-            transform: translateY(-2px);
-        }
-        .payment-type .icon { font-size: 1.6rem; margin-bottom: 6px; }
-        .payment-type .label { font-size: 0.72rem; opacity: 0.7; }
-
-        /* ===== SERVER STATUS BAR ===== */
-        .server-bar {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 14px;
-            padding: 8px 20px;
-            border-radius: 30px;
-            background: rgba(255,255,255,.04);
-            border: 1px solid rgba(255,255,255,.08);
-            font-size: 0.75rem;
-        }
-        .status-dot {
-            width: 9px; height: 9px;
-            border-radius: 50%;
-            background: #888;
-            flex-shrink: 0;
-            transition: background .3s;
-        }
-        .status-dot.online  { background: #27ae60; box-shadow: 0 0 8px rgba(39,174,96,.5); }
-        .status-dot.offline { background: #e74c3c; box-shadow: 0 0 8px rgba(231,76,60,.5); }
-        .status-dot.loading { background: #f5c518; box-shadow: 0 0 8px rgba(245,197,24,.5); animation: pulse 1s infinite; }
-        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
-        .status-text { opacity: 0.7; }
-        .status-network { opacity: 0.45; font-size: 0.65rem; }
-
-        /* ===== FOOTER ===== */
-        .footer {
-            margin-top: 40px;
-            text-align: center;
-            font-size: 0.7rem;
-            opacity: 0.35;
-            line-height: 1.6;
-        }
-
-        /* ===== CARD TYPE SELECTOR ===== */
-        .card-selector {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-bottom: 24px;
-            max-width: 480px;
-        }
-        .card-type-btn {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 18px;
-            border-radius: 30px;
-            border: 1.5px solid rgba(255,255,255,.1);
-            background: rgba(255,255,255,.04);
-            color: #c4b8d9;
-            font-size: 0.82rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all .3s;
-            letter-spacing: 0.5px;
-        }
-        .card-type-btn:hover {
-            background: rgba(255,255,255,.08);
-            border-color: rgba(255,255,255,.2);
-        }
-        .card-type-btn.active {
-            border-color: #f5c518;
-            background: rgba(245,197,24,.12);
-            color: #f5c518;
-            box-shadow: 0 4px 18px rgba(245,197,24,.18);
-        }
-        .card-type-btn .ctype-icon {
-            font-size: 1.1rem;
-            line-height: 1;
-        }
-        .card-level-badge {
-            position: absolute;
-            top: 14px;
-            right: 70px;
-            font-size: 0.55rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            padding: 3px 10px;
-            border-radius: 20px;
-            border: 1px solid rgba(255,255,255,.2);
-            color: rgba(255,255,255,.7);
-            backdrop-filter: blur(4px);
-        }
-        .card-network-logo {
-            position: absolute;
-            bottom: 18px;
-            right: 24px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .card-network-logo .net-circles {
-            display: flex;
-        }
-        .card-network-logo .net-circle {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            opacity: 0.85;
-        }
-        .card-network-logo .net-circle:nth-child(2) {
-            margin-left: -10px;
-        }
-        .card-network-logo .net-name {
-            font-size: 0.6rem;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            margin-left: 6px;
-        }
-
-        /* Card theme transitions */
-        .card-front, .card-back {
-            transition: background .5s, box-shadow .5s;
-        }
-
-        /* ===== LIVE PRICE TICKER ===== */
-        .price-ticker {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 14px;
-            flex-wrap: wrap;
-            width: 100%;
-            max-width: 480px;
-            margin-bottom: 20px;
-            padding: 14px 20px;
-            border-radius: 16px;
-            background: rgba(255,255,255,.04);
-            border: 1px solid rgba(245,197,24,.12);
-        }
-        .price-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.82rem;
-        }
-        .price-value {
-            font-weight: 700;
-            color: #f5c518;
-        }
-        .price-change {
-            font-size: 0.72rem;
-            padding: 2px 7px;
-            border-radius: 8px;
-            font-weight: 600;
-        }
-        .price-change.up { background: rgba(39,174,96,.15); color: #27ae60; }
-        .price-change.down { background: rgba(231,76,60,.15); color: #e74c3c; }
-        .price-label { opacity: 0.5; font-size: 0.7rem; }
-        .price-refresh {
-            cursor: pointer;
-            opacity: 0.4;
-            font-size: 0.85rem;
-            transition: opacity .2s;
-        }
-        .price-refresh:hover { opacity: 1; }
-        .price-refresh.spinning { animation: spin 1s linear infinite; }
-        @keyframes spin { from { transform: rotate(0); } to { transform: rotate(360deg); } }
-
-        /* ===== VISA FEATURE BADGES ===== */
-        .visa-features {
-            display: none;
-            flex-wrap: wrap;
-            gap: 8px;
-            justify-content: center;
-            margin-bottom: 20px;
-            max-width: 480px;
-        }
-        .visa-features.show { display: flex; }
-        .visa-badge {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.72rem;
-            font-weight: 600;
-            letter-spacing: 0.3px;
-        }
-        .visa-badge.worldwide { background: rgba(26,31,113,.2); border: 1px solid rgba(70,84,184,.3); color: #8a9af5; }
-        .visa-badge.atm       { background: rgba(39,174,96,.12); border: 1px solid rgba(39,174,96,.25); color: #27ae60; }
-        .visa-badge.swap      { background: rgba(245,197,24,.1); border: 1px solid rgba(245,197,24,.2); color: #f5c518; }
-        .visa-badge.live      { background: rgba(155,89,182,.12); border: 1px solid rgba(155,89,182,.25); color: #bb6bd9; }
-
-        /* ===== SWAP MODAL EXTRAS ===== */
-        .swap-rate-display {
-            text-align: center;
-            padding: 12px;
-            margin-top: 10px;
-            border-radius: 10px;
-            background: rgba(245,197,24,.06);
-            border: 1px solid rgba(245,197,24,.12);
-            font-size: 0.85rem;
-        }
-        .swap-rate-display .rate-big {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: #f5c518;
-        }
-        .swap-from-to {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 10px;
-        }
-        .swap-from-to .swap-arrow {
-            font-size: 1.2rem;
-            color: #f5c518;
-        }
-        .swap-from-to select, .swap-from-to input {
-            flex: 1;
-        }
-
-        /* ===== REGISTRATION FORM ===== */
-        .register-screen {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-            max-width: 440px;
-            animation: fadeIn .5s ease;
-        }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
-        .register-card {
-            width: 100%;
-            background: rgba(255,255,255,.04);
-            border: 1px solid rgba(245,197,24,.15);
-            border-radius: 22px;
-            padding: 36px 28px 32px;
-            backdrop-filter: blur(8px);
-        }
-        .register-card h2 {
-            text-align: center;
-            font-size: 1.4rem;
-            color: #f5c518;
-            margin-bottom: 6px;
-        }
-        .register-card .reg-sub {
-            text-align: center;
-            font-size: 0.82rem;
-            opacity: 0.55;
-            margin-bottom: 28px;
-        }
-        .form-group {
-            margin-bottom: 18px;
-        }
-        .form-group label {
-            display: block;
-            font-size: 0.78rem;
-            opacity: 0.7;
-            margin-bottom: 6px;
-            letter-spacing: 0.3px;
-        }
-        .form-group input, .form-group select {
-            width: 100%;
-            padding: 13px 16px;
-            border-radius: 12px;
-            border: 1px solid rgba(245,197,24,.15);
-            background: rgba(255,255,255,.06);
-            color: #fff;
-            font-size: 0.95rem;
-            outline: none;
-            transition: border-color .25s, box-shadow .25s;
-        }
-        .form-group input:focus, .form-group select:focus {
-            border-color: #f5c518;
-            box-shadow: 0 0 0 3px rgba(245,197,24,.1);
-        }
-        .form-group input.error {
-            border-color: #e74c3c;
-            box-shadow: 0 0 0 3px rgba(231,76,60,.1);
-        }
-        .form-group select option {
-            background: #1b0a3c;
-            color: #e2daf0;
-        }
-        .form-row {
-            display: flex;
-            gap: 14px;
-        }
-        .form-row .form-group {
-            flex: 1;
-        }
-        .form-error {
-            color: #e74c3c;
-            font-size: 0.75rem;
-            margin-top: 4px;
-            display: none;
-        }
-        /* Join with Pi button */
-        .btn-join-pi {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #7b2ff2;
-            border-radius: 14px;
-            background: linear-gradient(135deg, #7b2ff2, #5b1db8);
-            color: #fff;
-            font-weight: 700;
-            font-size: 1.05rem;
-            cursor: pointer;
-            margin-bottom: 18px;
-            transition: all .25s;
-            letter-spacing: 0.5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-        .btn-join-pi:hover {
-            box-shadow: 0 8px 28px rgba(123,47,242,.45);
-            transform: translateY(-2px);
-        }
-        .btn-join-pi:disabled {
-            opacity: .55;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-        .btn-join-pi .pi-logo {
-            width: 22px; height: 22px;
-            background: #fff;
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-weight: 900; font-size: .9rem; color: #7b2ff2;
-        }
-        .btn-join-pi.connected {
-            background: linear-gradient(135deg, #27ae60, #1e8c4c);
-            border-color: #27ae60;
-        }
-        .btn-join-pi.connected .pi-logo { color: #27ae60; }
-        .pi-or-divider {
-            display: flex; align-items: center; gap: 12px;
-            margin-bottom: 16px; opacity: .45; font-size: .78rem;
-        }
-        .pi-or-divider::before, .pi-or-divider::after {
-            content: ''; flex: 1; height: 1px; background: rgba(255,255,255,.3);
-        }
-        .btn-register {
-            width: 100%;
-            padding: 15px;
-            border: none;
-            border-radius: 14px;
-            background: linear-gradient(135deg, #f5c518, #d4a810);
-            color: #1b0a3c;
-            font-weight: 700;
-            font-size: 1.05rem;
-            cursor: pointer;
-            margin-top: 8px;
-            transition: all .25s;
-            letter-spacing: 0.5px;
-        }
-        .btn-register:hover {
-            box-shadow: 0 8px 28px rgba(245,197,24,.4);
-            transform: translateY(-2px);
-        }
-        .btn-register:disabled {
-            opacity: .5;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-        .reg-terms {
-            text-align: center;
-            font-size: 0.7rem;
-            opacity: 0.4;
-            margin-top: 18px;
-            line-height: 1.5;
-        }
-        .reg-login-link {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 0.82rem;
-        }
-        .reg-login-link a {
-            color: #f5c518;
-            text-decoration: none;
-            font-weight: 600;
-        }
-        .reg-login-link a:hover { text-decoration: underline; }
-
-        /* Hide app sections when registration is showing */
-        .app-content.hidden { display: none; }
-
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 420px) {
-            .card-container { width: 100%; height: 220px; }
-            .card-number { font-size: 1.05rem; letter-spacing: 2.5px; }
-            .balance-amount { font-size: 2rem; }
-            .payment-grid { grid-template-columns: repeat(2, 1fr); }
-            .card-selector { gap: 6px; }
-            .card-type-btn { padding: 8px 12px; font-size: 0.74rem; }
-            .form-row { flex-direction: column; gap: 0; }
-            .register-card { padding: 28px 20px 24px; }
-        }
-    </style>
+    
+    <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="page-index">
 
     <!-- ===== REGISTRATION SCREEN ===== -->
-    <div class="register-screen" id="registerScreen" style="display:none;">
+    <div class="register-screen inline-style-1" id="registerScreen" >
         <header class="header">
             <h1>VISUAL PI CARD</h1>
             <p>Get Your Pi Network Payment Card</p>
@@ -1006,10 +63,10 @@
         <div class="register-card">
             <h2>&#128179; Register for a Card</h2>
             <p class="reg-sub">Fill in your details to get your Visual Pi Card</p>
-            <div style="text-align:center; margin-bottom:20px; padding:10px 16px; border-radius:12px; background:rgba(39,174,96,.1); border:1px solid rgba(39,174,96,.25); font-size:0.82rem; color:#27ae60;">
+            <div class="inline-style-2">
                 &#9903; <strong>Mastercard — FREE</strong> — Register now, no fee required!
             </div>
-            <div style="text-align:center; margin-bottom:20px; padding:10px 16px; border-radius:12px; background:rgba(245,197,24,.1); border:1px solid rgba(245,197,24,.25); font-size:0.82rem; color:#f5c518;">
+            <div class="inline-style-3">
                 &#127380; <strong>Visa — 5 &pi;</strong> — Worldwide payments, ATM &amp; Crypto Swap!
             </div>
 
@@ -1041,8 +98,8 @@
 
                 <div class="form-group">
                     <label for="regPiAddress">Pi Wallet Address</label>
-                    <input type="text" id="regPiAddress" placeholder="GABC...XYZ" style="font-family:'Courier New',monospace;font-size:.8rem" autocomplete="off">
-                    <div style="margin-top:4px;font-size:.68rem;color:rgba(255,255,255,.35)">Auto-filled from Pi Browser — or paste your public address</div>
+                    <input type="text" id="regPiAddress" placeholder="GABC...XYZ" class="inline-style-4" autocomplete="off">
+                    <div class="inline-style-5">Auto-filled from Pi Browser — or paste your public address</div>
                 </div>
 
                 <div class="form-group">
@@ -1095,7 +152,7 @@
                             <option value="black">Black Card</option>
                             <option value="amex">Amex</option>
                         </select>
-                        <div id="cardPriceNote" style="margin-top:6px; font-size:0.75rem; color:#27ae60; line-height:1.3;">
+                        <div id="cardPriceNote" class="inline-style-6">
                             &#9989; Free registration — domestic payments only
                         </div>
                     </div>
@@ -1126,11 +183,11 @@
     </div>
 
     <!-- CONNECTION INFO BANNER (shows on first visit) -->
-    <div id="setupBanner" style="display:none; width:100%; max-width:480px; margin-bottom:18px; padding:16px 20px; border-radius:14px; background:rgba(39,174,96,.12); border:1px solid rgba(39,174,96,.3); font-size:0.82rem; line-height:1.5; text-align:center;">
-        <strong style="color:#27ae60;">&#10003; Domain Connected Successfully</strong><br>
-        <span style="opacity:0.7;">omendapipaysglobel.online &bull; 198.54.116.227 &bull; SSL Active</span>
-        <div style="margin-top:8px;">
-            <button onclick="document.getElementById('setupBanner').style.display='none'; try{localStorage.setItem('pvc_setup_seen','1')}catch(e){}" style="padding:6px 18px; border-radius:20px; border:1px solid rgba(39,174,96,.4); background:rgba(39,174,96,.15); color:#27ae60; cursor:pointer; font-size:0.78rem;">Got it</button>
+    <div id="setupBanner" class="inline-style-7">
+        <strong class="inline-style-8">&#10003; Domain Connected Successfully</strong><br>
+        <span class="inline-style-9">omendapipaysglobel.online &bull; 198.54.116.227 &bull; SSL Active</span>
+        <div class="inline-style-10">
+            <button onclick="document.getElementById('setupBanner').style.display='none'; try{localStorage.setItem('pvc_setup_seen','1')}catch(e){}" class="inline-style-11">Got it</button>
         </div>
     </div>
 
@@ -1138,16 +195,16 @@
     <header class="header">
         <h1>VISUAL PI CARD</h1>
         <p>omendapipaysglobel.online &mdash; Pi Network Payment Card</p>
-        <p style="font-size:0.85rem; opacity:0.65; margin-top:10px;">The main dashboard is available in <a href="shop.html" style="color:#f5c518; text-decoration:underline;">shop.html</a>.</p>
+        <p class="inline-style-12">The main dashboard is available in <a href="shop.html" class="inline-style-13">shop.html</a>.</p>
     </header>
 
     <!-- CARD TYPE SELECTOR -->
     <div class="card-selector" id="cardSelector">
         <button class="card-type-btn active" data-type="visa" onclick="switchCard('visa')">
-            <span class="ctype-icon">&#127380;</span> Visa <span style="font-size:0.6rem; background:#f5c518; color:#1b0a3c; padding:2px 6px; border-radius:8px; margin-left:2px;">5 &pi;</span>
+            <span class="ctype-icon">&#127380;</span> Visa <span class="inline-style-14">5 &pi;</span>
         </button>
         <button class="card-type-btn" data-type="mastercard" onclick="switchCard('mastercard')">
-            <span class="ctype-icon">&#9903;</span> Mastercard <span style="font-size:0.6rem; background:#27ae60; color:#fff; padding:2px 6px; border-radius:8px; margin-left:2px;">FREE</span>
+            <span class="ctype-icon">&#9903;</span> Mastercard <span class="inline-style-15">FREE</span>
         </button>
         <button class="card-type-btn" data-type="black" onclick="switchCard('black')">
             <span class="ctype-icon">&#9830;</span> Black Card
@@ -1182,7 +239,7 @@
                         <div class="card-holder-label">Card Holder</div>
                         <div class="card-holder-name" id="cardHolder">PI PIONEER</div>
                     </div>
-                    <div style="text-align:right">
+                    <div class="inline-style-16">
                         <div class="card-expiry-label">Expires</div>
                         <div class="card-expiry-value" id="cardExpiry">03/29</div>
                         <div class="card-network" id="cardNetworkText">PI NETWORK &bull; VISA</div>
@@ -1191,8 +248,8 @@
                 <!-- Network logo overlay -->
                 <div class="card-network-logo" id="cardNetLogo">
                     <div class="net-circles">
-                        <div class="net-circle" id="netCircle1" style="background:#1a1f71;"></div>
-                        <div class="net-circle" id="netCircle2" style="background:#f5c518;"></div>
+                        <div class="net-circle inline-style-17" id="netCircle1" ></div>
+                        <div class="net-circle inline-style-18" id="netCircle2" ></div>
                     </div>
                     <span class="net-name" id="netName">VISA</span>
                 </div>
@@ -1213,16 +270,16 @@
         </div>
     </div>
     <div class="card-hint">&#8635; Click card to flip &nbsp;&middot;&nbsp; Choose card type above</div>
-    <div class="card-actions" style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-bottom:24px;">
+    <div class="card-actions inline-style-19" >
         <a class="card-details-link" id="cardDetailsLink" href="card-visa.html">View Card Details &rarr;</a>
-        <button class="card-details-link" id="walletOverviewBtn" type="button" style="border:none;background:transparent;color:#f5c518;cursor:pointer;opacity:.85;transition:opacity .2s;text-decoration:underline;">Open Pi Wallet Overview</button>
+        <button class="card-details-link inline-style-20" id="walletOverviewBtn" type="button" >Open Pi Wallet Overview</button>
     </div>
 
     <!-- BALANCE -->
     <section class="balance-section">
         <div class="balance-label">Available Balance</div>
         <div class="balance-amount" id="balanceDisplay"><span>&pi;</span> 1,247.83</div>
-        <div id="balanceFiat" style="font-size:0.8rem; opacity:0.5; margin-top:4px;">&asymp; fetching live price...</div>
+        <div id="balanceFiat" class="inline-style-21">&asymp; fetching live price...</div>
     </section>
 
     <!-- LIVE PI PRICE TICKER -->
@@ -1269,11 +326,11 @@
             <span class="action-icon">&#43;</span>
             Top Up
         </button>
-        <button class="action-btn" id="btnAtm" onclick="openModal('atm')" style="display:none;">
+        <button class="action-btn inline-style-1" id="btnAtm" onclick="openModal('atm')" >
             <span class="action-icon">&#127974;</span>
             ATM
         </button>
-        <button class="action-btn" id="btnSwap" onclick="openModal('swap')" style="display:none;">
+        <button class="action-btn inline-style-1" id="btnSwap" onclick="openModal('swap')" >
             <span class="action-icon">&#128260;</span>
             Swap
         </button>
@@ -1281,15 +338,15 @@
             <span class="action-icon">&#127873;</span>
             Claim Reward
         </button>
-        <button class="action-btn" onclick="window.location.href='shop.html'" style="background:linear-gradient(135deg,rgba(245,197,24,.15),rgba(212,168,16,.08));border-color:rgba(245,197,24,.3);">
+        <button class="action-btn inline-style-22" onclick="window.location.href='shop.html'" >
             <span class="action-icon">&#128722;</span>
             Dashboard
         </button>
-        <button class="action-btn" onclick="window.location.href='map.html'" style="background:linear-gradient(135deg,rgba(249,115,22,.15),rgba(249,115,22,.08));border-color:rgba(249,115,22,.3);">
+        <button class="action-btn inline-style-23" onclick="window.location.href='map.html'" >
             <span class="action-icon">&#128205;</span>
             Map
         </button>
-        <button class="action-btn" onclick="window.location.href='records.html'" style="background:linear-gradient(135deg,rgba(139,92,246,.15),rgba(139,92,246,.08));border-color:rgba(139,92,246,.3);">
+        <button class="action-btn inline-style-24" onclick="window.location.href='records.html'" >
             <span class="action-icon">&#128196;</span>
             Records
         </button>
@@ -1303,7 +360,7 @@
                 <div class="icon">&#128101;</div>
                 <div class="label">Peer-to-Peer</div>
             </div>
-            <div class="payment-type" onclick="window.location.href='shop.html'" style="cursor:pointer;">
+            <div class="payment-type inline-style-25" onclick="window.location.href='shop.html'" >
                 <div class="icon">&#128722;</div>
                 <div class="label">Online Shopping</div>
             </div>
@@ -1335,15 +392,15 @@
                 <div class="icon">&#128218;</div>
                 <div class="label">Subscriptions</div>
             </div>
-            <div class="payment-type" id="atmPayment" style="display:none;">
+            <div class="payment-type inline-style-1" id="atmPayment" >
                 <div class="icon">&#127974;</div>
                 <div class="label">ATM Worldwide</div>
             </div>
-            <div class="payment-type" id="swapPayment" style="display:none;">
+            <div class="payment-type inline-style-1" id="swapPayment" >
                 <div class="icon">&#128260;</div>
                 <div class="label">Crypto Swap</div>
             </div>
-            <div class="payment-type" id="fiatPayment" style="display:none;">
+            <div class="payment-type inline-style-1" id="fiatPayment" >
                 <div class="icon">&#128181;</div>
                 <div class="label">Pi to Fiat</div>
             </div>
@@ -1351,7 +408,7 @@
     </section>
 
     <!-- RECENT TRANSACTIONS -->
-    <section class="transactions" style="margin-top: 36px;">
+    <section class="transactions inline-style-26" >
         <h3>Recent Transactions</h3>
         <div id="txList">
             <div class="tx-item">
@@ -1406,7 +463,7 @@
 
             <label for="modalRecipient" id="recipientLabel">Recipient Pi Username</label>
             <input type="text" id="modalRecipient" placeholder="@username" autocomplete="off">
-            <div id="resolvedWallet" style="display:none; margin-top:6px; padding:8px 12px; border-radius:8px; background:rgba(39,174,96,.1); border:1px solid rgba(39,174,96,.2); font-size:.72rem; color:#27ae60; word-break:break-all;"></div>
+            <div id="resolvedWallet" class="inline-style-27"></div>
 
             <div class="topup-card-select" id="topupCardSelect">
                 <div class="tc-pick" data-card="visa" onclick="pickTopupCard('visa')">
@@ -1457,7 +514,7 @@
             <label for="modalNote">Note (optional)</label>
             <input type="text" id="modalNote" placeholder="What's this for?" autocomplete="off">
 
-            <div id="domesticNotice" style="display:none; margin-top:14px; padding:10px 14px; border-radius:10px; background:rgba(235,87,87,.1); border:1px solid rgba(235,87,87,.25); font-size:0.78rem; line-height:1.4; color:#f2994a; text-align:center;">
+            <div id="domesticNotice" class="inline-style-28">
                 &#127758; <strong>Mastercard — Domestic Only</strong><br>
                 <span id="domesticCountryText">Transactions limited to your registered country.</span>
             </div>
@@ -1466,14 +523,14 @@
                 <button class="btn-secondary" onclick="closeModal()">Cancel</button>
                 <button class="btn-primary" id="modalConfirm" onclick="confirmAction()">Confirm</button>
             </div>
-            <div id="txProgress" style="display:none; margin-top:14px; padding:12px 14px; border-radius:10px; background:rgba(245,197,24,.06); border:1px solid rgba(245,197,24,.15); font-size:0.78rem; line-height:1.7; text-align:left;">
-                <div style="font-weight:700;color:#f5c518;margin-bottom:6px;text-align:center;">Transaction Progress</div>
-                <div id="txStep1" style="color:rgba(255,255,255,.35);">&#9711; Initiating payment...</div>
-                <div id="txStep2" style="color:rgba(255,255,255,.35);">&#9711; Server approval...</div>
-                <div id="txStep3" style="color:rgba(255,255,255,.35);">&#9711; Blockchain confirmation...</div>
-                <div id="txStep4" style="color:rgba(255,255,255,.35);">&#9711; Transaction complete</div>
+            <div id="txProgress" class="inline-style-29">
+                <div class="inline-style-30">Transaction Progress</div>
+                <div id="txStep1" class="inline-style-31">&#9711; Initiating payment...</div>
+                <div id="txStep2" class="inline-style-31">&#9711; Server approval...</div>
+                <div id="txStep3" class="inline-style-31">&#9711; Blockchain confirmation...</div>
+                <div id="txStep4" class="inline-style-31">&#9711; Transaction complete</div>
             </div>
-            <div id="a2uStatus" style="display:none; margin-top:12px; padding:10px 14px; border-radius:10px; font-size:0.8rem; text-align:center; word-break:break-all;"></div>
+            <div id="a2uStatus" class="inline-style-32"></div>
         </div>
     </div>
 
@@ -1486,9 +543,9 @@
             <h2>&#128260; Swap Crypto to Fiat</h2>
 
             <div class="swap-rate-display">
-                <div style="opacity:.6; font-size:.72rem;">Current Pi Market Price</div>
+                <div class="inline-style-33">Current Pi Market Price</div>
                 <div class="rate-big" id="swapRateDisplay">$0.00</div>
-                <div style="opacity:.5; font-size:.7rem; margin-top:2px;">Live from market data</div>
+                <div class="inline-style-34">Live from market data</div>
             </div>
 
             <label>From</label>
@@ -1520,7 +577,7 @@
             <label for="swapAmount">Amount</label>
             <input type="number" id="swapAmount" placeholder="0.00" min="0.01" step="0.01" oninput="updateSwapEstimate()">
 
-            <div id="swapEstimate" style="text-align:center; margin-top:8px; font-size:0.85rem; opacity:.7;">
+            <div id="swapEstimate" class="inline-style-35">
                 Enter amount to see estimate
             </div>
 
@@ -1535,19 +592,19 @@
     <div class="modal-overlay" id="atmOverlay">
         <div class="modal">
             <h2>&#127974; ATM Withdrawal</h2>
-            <div style="text-align:center; padding:10px; margin-bottom:12px; border-radius:10px; background:rgba(39,174,96,.08); border:1px solid rgba(39,174,96,.2); font-size:0.78rem; color:#27ae60;">
+            <div class="inline-style-36">
                 &#127760; Worldwide ATM access &bull; Visual Pi Card required
             </div>
 
-            <div class="swap-rate-display" style="margin-bottom:12px;">
-                <div style="opacity:.6; font-size:.72rem;">Current Pi Value</div>
+            <div class="swap-rate-display inline-style-37" >
+                <div class="inline-style-33">Current Pi Value</div>
                 <div class="rate-big" id="atmRateDisplay">$0.00</div>
             </div>
 
             <label for="atmAmount">Withdraw Amount (&pi;)</label>
             <input type="number" id="atmAmount" placeholder="0.00" min="1" step="0.01" oninput="updateAtmEstimate()">
 
-            <div id="atmEstimate" style="text-align:center; margin-top:8px; font-size:0.85rem; opacity:.7;">
+            <div id="atmEstimate" class="inline-style-35">
                 Enter amount to see fiat estimate
             </div>
 
@@ -2498,7 +1555,7 @@
             var net = fiatValue - fee;
 
             est.innerHTML = '\u2248 <strong>' + net.toFixed(2) + ' ' + sanitize(currency) + '</strong>' +
-                '<br><span style="font-size:0.7rem; opacity:.5;">Fee: ' + fee.toFixed(2) + ' ' + sanitize(currency) + ' (1.5%)</span>';
+                '<br><span class="inline-style-38">Fee: ' + fee.toFixed(2) + ' ' + sanitize(currency) + ' (1.5%)</span>';
         }
 
         function confirmAtm() {
