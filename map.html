@@ -11,8 +11,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="lib/leaflet.min.css">
-<script src="lib/leaflet.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:#f4f4f5;color:#18181b;min-height:100vh;-webkit-font-smoothing:antialiased}
@@ -112,6 +112,10 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .nav-link-bar a{color:rgba(255,255,255,.85);font-size:.78rem;font-weight:600;padding:7px 14px;white-space:nowrap;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:20px;transition:all .2s;text-decoration:none}
 .nav-link-bar a:hover{color:#fff;background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.3)}
 .nav-link-bar a.nav-active{color:#fff;background:rgba(255,255,255,.22);border-color:rgba(255,255,255,.35)}
+
+.route-info{background:#fffdf5;color:#0f172a;border:1px solid #fde68a;border-radius:18px;padding:14px 18px;margin:8px 12px 0;display:none;max-width:calc(100% - 24px);}
+.route-info strong{display:block;font-size:.95rem;margin-bottom:5px;}
+.route-info span{display:block;font-size:.92rem;color:#6b7280;line-height:1.5;}
 </style>
 </head>
 <body>
@@ -133,6 +137,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2v2m0 16v2M2 12h2m16 0h2m-5 0a5 5 0 11-10 0 5 5 0 0110 0z"/><circle cx="12" cy="12" r="2" fill="currentColor"/></svg>
   </button>
 </div>
+<div id="routeInfo" class="route-info"></div>
 
 <!-- ── SEARCH ── -->
 <div class="map-search">
@@ -161,7 +166,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 
 <!-- ── STATS BAR ── -->
 <div class="stats-bar">
-  <span>Showing <span class="count" id="bizCount">0</span> businesses nearby</span>
+  <span>Showing <span class="count" id="bizCount">0</span> businesses worldwide</span>
   <button class="list-toggle" onclick="toggleList()">
     <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
     List View
@@ -217,6 +222,10 @@ var businesses = [
   { id:"s4", name:"Pi Auto Parts", category:"shop", icon:"\ud83d\udecd\ufe0f", lat:0.3476, lng:32.5825, address:"Kampala Road, Kampala, Uganda", rating:4.1, price:"\u03C00.001\u20130.1", image:"https://images.unsplash.com/photo-1486006920555-c77dcf18193c?w=400&auto=format&fit=crop", badge:"", desc:"Car parts, accessories & maintenance tools." },
   { id:"s5", name:"Digital World Pi", category:"shop", icon:"\ud83d\udecd\ufe0f", lat:-1.9536, lng:30.0606, address:"KN 3 Ave, Kigali, Rwanda", rating:4.6, price:"\u03C00.0005\u20130.02", image:"https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=400&auto=format&fit=crop", badge:"Top Rated", badgeColor:"#f0fdf4", badgeText:"#16a34a", desc:"Gadgets, smart devices, gaming & tech accessories." },
   { id:"s6", name:"Pi Grocery Mart", category:"shop", icon:"\ud83d\udecd\ufe0f", lat:-3.3869, lng:36.6830, address:"Arusha Town, Tanzania", rating:4.2, price:"\u03C00.00001\u20130.001", image:"https://images.unsplash.com/photo-1604719312566-8912e9227c6a?w=400&auto=format&fit=crop", badge:"New", badgeColor:"#fff7ed", badgeText:"#ea580c", desc:"Fresh food, groceries & daily essentials at Pi prices." },
+  { id:"s7", name:"Pi Tech Hub NYC", category:"shop", icon:"\ud83d\udecd\ufe0f", lat:40.7128, lng:-74.0060, address:"Manhattan, New York, USA", rating:4.7, price:"\u03C00.0002\u20130.01", image:"https://images.unsplash.com/photo-1515165562835-c5c9e9bdccc9?w=400&auto=format&fit=crop", badge:"Global", badgeColor:"#eff6ff", badgeText:"#2563eb", desc:"Electronics, gadgets and Pi-powered tech shopping in NYC." },
+  { id:"s8", name:"Pi Seoul Electronics", category:"shop", icon:"\ud83d\udecd\ufe0f", lat:37.5665, lng:126.9780, address:"Jongno-gu, Seoul, South Korea", rating:4.6, price:"\u03C00.0003\u20130.02", image:"https://images.unsplash.com/photo-1503602642458-232111445657?w=400&auto=format&fit=crop", badge:"Asia Hub", badgeColor:"#fdf4ff", badgeText:"#a855f7", desc:"Smart devices, mobile accessories and Pi-friendly payments." },
+  { id:"s9", name:"Pi London Market", category:"shop", icon:"\ud83d\udecd\ufe0f", lat:51.5074, lng:-0.1278, address:"Soho, London, UK", rating:4.5, price:"\u03C00.0005\u20130.025", image:"https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=400&auto=format&fit=crop", badge:"UK Store", badgeColor:"#fef3ce", badgeText:"#b45309", desc:"Fashion, tech and Pi payments in the heart of London." },
+  { id:"s10", name:"Pi Sydney Retail", category:"shop", icon:"\ud83d\udecd\ufe0f", lat:-33.8688, lng:151.2093, address:"Sydney CBD, Australia", rating:4.3, price:"\u03C00.0004\u20130.03", image:"https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=400&auto=format&fit=crop", badge:"Australia", badgeColor:"#dbeafe", badgeText:"#1d4ed8", desc:"Retail and lifestyle products accepting Pi across Sydney." },
 
   // Sellers (individuals)
   { id:"se1", name:"John M. \u2013 Phone Dealer", category:"seller", icon:"\ud83d\udc64", lat:-6.7750, lng:39.2400, address:"Mwenge, Dar es Salaam", rating:4.8, price:"\u03C00.002\u20130.008", image:"https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400&auto=format&fit=crop", badge:"Trusted Seller", badgeColor:"#f0fdf4", badgeText:"#16a34a", desc:"Selling brand new & used smartphones. 500+ sales on Pi." },
@@ -279,7 +288,7 @@ try {
 if (typeof L === 'undefined') {
   throw new Error('Map library failed to load. Please check your internet connection and reload.');
 }
-map = L.map('map',{ zoomControl:false }).setView([-6.7924, 39.2083], 14);
+map = L.map('map',{ zoomControl:false }).setView([20, 0], 2);
 
 L.control.zoom({ position:'bottomright' }).addTo(map);
 
@@ -461,11 +470,44 @@ function addMarkers(list) {
 
 // Initial load
 addMarkers(businesses);
+applyMapQueryParams();
 
 // Force map to recalculate size after DOM settles
 setTimeout(function(){ if(map) map.invalidateSize(); }, 300);
 setTimeout(function(){ if(map) map.invalidateSize(); }, 1000);
 setTimeout(function(){ if(map) map.invalidateSize(); }, 3000);
+
+function getUrlParams() {
+  var params = {};
+  var query = window.location.search.substring(1);
+  if (!query) return params;
+  query.split('&').forEach(function(part) {
+    var pair = part.split('=');
+    if (!pair[0]) return;
+    params[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '');
+  });
+  return params;
+}
+
+function applyMapQueryParams() {
+  var params = getUrlParams();
+  var route = [];
+  if (params.pickup) route.push('Pickup: ' + params.pickup);
+  if (params.dropoff) route.push('Dropoff: ' + params.dropoff);
+  if (route.length) {
+    var info = document.getElementById('routeInfo');
+    info.innerHTML = '<strong>Ride route from City Rush</strong><span>' + route.join('<br>') + '</span>';
+    info.style.display = 'block';
+  }
+  if (params.search) {
+    document.getElementById('mapSearch').value = params.search;
+    searchBusiness();
+  }
+  if (params.category) {
+    var button = document.querySelector('.cat-filter button[data-cat="' + params.category + '"]');
+    if (button) filterCategory(params.category, button);
+  }
+}
 
 // ── Category Filter ──
 function filterCategory(cat, btn) {

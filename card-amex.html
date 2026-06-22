@@ -14,9 +14,17 @@ GIT_EXEC_PATH=/home/hp/.local/git/usr/lib/git-core /home/hp/.local/git/usr/bin/g
 <meta name="theme-color" content="#0d0221">
 <!-- Pi Network SDK -->
 <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+<script src="pi-sdk-helper.js"></script>
 <script>
 var piSdkReady=false,piUser=null,piAccessToken=null;
-try{Pi.init({version:"2.0",sandbox:false});piSdkReady=true;}catch(e){console.warn('Pi SDK not available');}
+try {
+    if (window.Pi && typeof Pi.init === 'function') {
+        Pi.init({version:"2.0",sandbox:false});
+        piSdkReady=true;
+    }
+} catch(e) {
+    console.warn('Pi SDK not available:', e);
+}
 function piAuthenticate(cb){
     if(!piSdkReady){if(cb)cb(null);return;}
     Pi.authenticate(['username','payments','wallet_address'],function(payment){

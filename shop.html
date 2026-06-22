@@ -1,10 +1,11 @@
+html+='<a class="hub-card" href="index.html"><div class="hub-icon" style="background:#d97706">🤖</div><div class="hub-title">Omenda Sport</div><div class="hub-sub">Sport Future</div></a>';
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Omenda Pi Pays – Marketplace</title>
-<meta name="description" content="Omenda Pi Pays - Buy, sell, and trade with Pi cryptocurrency. Electronics, Fashion, Cars, Hotels, Transport and more.">
+<title>Omenda Pi Pays Global – Marketplace</title>
+<meta name="description" content="Omenda Pi Pays Global marketplace. Access services, map, wallets, and Pi business tools from one central hub.">
 <meta name="robots" content="index, follow">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <link rel="icon" type="image/jpeg" href="logo.jpg">
@@ -12,6 +13,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+<script src="pi-sdk-helper.js"></script>
 <script>
 /* Pi SDK init — must match index.html exactly */
 var piSdkReady = false;
@@ -40,6 +42,8 @@ a{text-decoration:none;color:inherit}
 .nav-tabs a.active{color:#fff;background:rgba(255,255,255,.22);border-color:rgba(255,255,255,.35)}
 .nav-tabs .spacer{flex:1}
 .lang-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(255,255,255,.08);border-radius:8px;padding:6px 10px;font-size:.78rem;color:#fff;font-weight:600;cursor:pointer}
+.lang-select{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:10px;color:#fff;padding:8px 10px;font-size:.9rem;font-weight:600;outline:none;cursor:pointer}
+.lang-select option{background:#0b1120;color:#000}
 .profile-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(245,166,35,.15);border:1px solid rgba(245,166,35,.3);border-radius:20px;padding:5px 12px 5px 6px;font-size:.78rem;color:#f5a623;font-weight:700;text-decoration:none;cursor:pointer}
 .profile-badge .dot{width:24px;height:24px;border-radius:50%;background:#f59e0b;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:800;color:#000}
 
@@ -50,6 +54,33 @@ a{text-decoration:none;color:inherit}
 .search-bar input::placeholder{color:#bbb}
 .search-bar .cam-btn{width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:transparent;border:none;color:#888;cursor:pointer}
 .search-bar .search-btn{width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:#c0392b;border:none;color:#fff;cursor:pointer;border-radius:0 24px 24px 0}
+
+.dashboard-hub{display:grid;gap:12px;margin:12px 0}
+.hub-row{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+@media(min-width:640px){.hub-row{grid-template-columns:repeat(4,1fr)}}
+.hub-card{display:block;background:#fff;border:1px solid #f0f0f0;border-radius:18px;padding:16px;transition:transform .2s,box-shadow .2s;color:inherit;text-decoration:none}
+.hub-card:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(0,0,0,.08)}
+.hub-icon{width:40px;height:40px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;color:#fff;margin-bottom:12px}
+.hub-action{display:inline-flex;align-items:center;justify-content:center;padding:9px 14px;margin-top:10px;background:#d97706;color:#fff;border-radius:14px;font-size:.85rem;font-weight:700;cursor:pointer;border:1px solid transparent;transition:transform .2s,background .2s;}
+.hub-action:hover{transform:translateY(-1px);background:#fbbf24;}
+.hub-title{font-size:1rem;font-weight:800;color:#1a1a1a;margin-bottom:6px}
+.hub-sub{font-size:.82rem;color:#555;line-height:1.4}
+.hub-map-section{background:#fff;border:1px solid #f0f0f0;border-radius:18px;overflow:hidden}
+.hub-layout{display:grid;gap:12px}
+@media(min-width:900px){.hub-layout{grid-template-columns:2fr 1fr}}
+.hub-main{display:grid;gap:12px}
+.hub-sidebar{background:#fff;border:1px solid #f0f0f0;border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:14px}
+.hub-sidebar h3{margin:0;font-size:1rem;font-weight:800;color:#1a1a1a}
+.sports-dropdown{width:100%;border:1px solid #ddd;border-radius:14px;padding:12px 14px;font-size:.94rem;color:#1a1a1a;outline:none}
+.sports-list{list-style:none;margin:0;padding:0}
+.sports-list li{padding:12px 0;border-bottom:1px solid #f4f4f4;color:#555;font-size:.92rem}
+.sports-list li:last-child{border-bottom:none}
+.hub-map-header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid #f0f0f0}
+#dashboard-map{height:220px;width:100%}
+.wallet-panel{display:flex;justify-content:space-between;align-items:center;gap:12px;background:#fff;border:1px solid #f0f0f0;border-radius:18px;padding:16px}
+.wallet-panel h3{margin:0;font-size:1rem;font-weight:800;color:#1a1a1a}
+.wallet-panel p{margin:6px 0 0;color:#666;font-size:.88rem;line-height:1.4}
+.wallet-amount{font-size:1.5rem;font-weight:800;color:#c0392b}
 
 /* ── Category Tabs ── */
 .cat-tabs{display:flex;overflow-x:auto;background:#fff;border-bottom:1px solid #eee;padding:0 4px;gap:0}
@@ -62,7 +93,7 @@ a{text-decoration:none;color:inherit}
 .trust-badge{flex:1;display:flex;align-items:center;gap:8px;padding:12px 14px}
 .trust-badge .icon-circle{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:800;flex-shrink:0}
 .trust-badge .icon-circle.audit{background:#fef3c7;color:#b45309}
-.trust-badge .icon-circle.secure{background:#dcfce7;color:#16a34a}
+.trust-badge .icon-circle.secure{background:#dbeafe;color:#1d4ed8}
 .trust-badge .tb-title{font-size:.78rem;font-weight:700;color:#1a1a1a}
 .trust-badge .tb-sub{font-size:.65rem;color:#999}
 
@@ -128,7 +159,7 @@ a{text-decoration:none;color:inherit}
 .prod-card .pc-yrs{font-size:.58rem;color:#aaa}
 .prod-card .pc-img .search-icon{position:absolute;left:6px;bottom:6px;width:26px;height:26px;border-radius:6px;background:rgba(255,255,255,.85);display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,.1)}
 .prod-card .pc-img .stock-badge{position:absolute;left:6px;top:6px;background:#fff;border:1px solid #eee;border-radius:4px;padding:2px 6px;font-size:.58rem;font-weight:700;color:#1a1a1a;display:flex;align-items:center;gap:3px}
-.prod-card .pc-img .stock-badge .sb-dot{width:6px;height:6px;border-radius:50%;background:#22c55e}
+.prod-card .pc-img .stock-badge .sb-dot{width:6px;height:6px;border-radius:50%;background:#f59e0b}
 
 /* ── Star Rating ── */
 .pc-stars{display:flex;align-items:center;gap:2px;margin-top:3px}
@@ -363,7 +394,7 @@ a{text-decoration:none;color:inherit}
 .modal-box .detail .trust-grid .tl{font-size:.72rem;font-weight:700;color:#333}
 .modal-box .detail .trust-grid .ts{font-size:.6rem;color:#aaa}
 .modal-box .detail .pay-msg{margin-top:12px;padding:10px;border-radius:10px;text-align:center;font-size:.88rem;font-weight:600}
-.modal-box .detail .pay-msg.ok{background:#f0fdf4;color:#16a34a}
+.modal-box .detail .pay-msg.ok{background:#e0f2fe;color:#0c4a6e}
 .modal-box .detail .pay-msg.err{background:#fef2f2;color:#dc2626}
 .modal-box .detail .pay-msg.processing{background:#eff6ff;color:#2563eb}
 .modal-box .detail .action-btns{display:flex;gap:8px;margin-top:16px}
@@ -399,7 +430,7 @@ a{text-decoration:none;color:inherit}
 .tx-progress{margin-top:10px;display:flex;gap:4px;align-items:center}
 .tx-progress .step{flex:1;text-align:center;font-size:.6rem;font-weight:600;padding:6px 2px;border-radius:8px;background:#f0f0f0;color:#999;transition:all .3s}
 .tx-progress .step.active{background:#eff6ff;color:#2563eb;animation:pulse-step .8s infinite alternate}
-.tx-progress .step.done{background:#f0fdf4;color:#16a34a}
+.tx-progress .step.done{background:#e0f2fe;color:#0c4a6e}
 .tx-progress .step.fail{background:#fef2f2;color:#dc2626}
 @keyframes pulse-step{from{opacity:.7}to{opacity:1}}
 </style>
@@ -408,28 +439,37 @@ a{text-decoration:none;color:inherit}
 
 <!-- ── TOP HEADER ── -->
 <div class="top-header">
-  <img src="logo.jpg" alt="Omenda Pi Pays Logo" onerror="this.style.background='#7c3aed';this.alt='π'">
-  <h1>Omenda Pi Pays</h1>
+  <img src="logo.jpg" alt="Omenda Pi Pays Global Logo" onerror="this.style.background='#7c3aed';this.alt='π'">
+  <h1>Omenda Pi Pays Global</h1>
   <p class="handle" id="pi-handle">@Omfidxx</p>
 </div>
 
 <!-- ── NAV TABS ── -->
 <div class="nav-tabs hide-sb">
   <a href="index.html" style="background:linear-gradient(135deg,rgba(245,197,24,.25),rgba(212,168,16,.12));border-color:rgba(245,197,24,.4);color:#f5c518;font-weight:700;">💳 Pi Card</a>
-  <a href="test 1.html">Home</a>
-  <a href="newpage.html" class="active">Services</a>
-  <a href="map.html">Map</a>
+  <a href="map.html" id="navMapLink">Map</a>
   <a href="ride.html">🚀 City Rush</a>
   <a href="social.html">Social</a>
   <span class="spacer"></span>
-  <span class="lang-badge">🇬🇧 EN ▾</span>
+  <select id="langSelect" class="lang-select" onchange="setLanguage(this.value)" aria-label="Select language">
+    <option value="EN">🇬🇧 EN</option>
+    <option value="FR">🇫🇷 FR</option>
+    <option value="ES">🇪🇸 ES</option>
+    <option value="SW">🇹🇿 SW</option>
+    <option value="PT">🇵🇹 PT</option>
+    <option value="DE">🇩🇪 DE</option>
+    <option value="ZH">🇨🇳 ZH</option>
+    <option value="JA">🇯🇵 JA</option>
+    <option value="AR">🇸🇦 AR</option>
+    <option value="HI">🇮🇳 HI</option>
+  </select>
   <a href="about.html" class="profile-badge"><span class="dot">O</span> <span id="pi-username-display">@Omfidxx</span></a>
 </div>
 
 <!-- ── SEARCH HEADER ── -->
 <div class="search-header">
   <div class="search-bar">
-    <input type="text" id="searchInput" placeholder="Search products & services...">
+    <input type="text" id="searchInput" placeholder="Search services and Pi tools...">
     <button class="cam-btn" title="Camera search">
       <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
     </button>
@@ -447,13 +487,13 @@ a{text-decoration:none;color:inherit}
 
 <!-- ── BOTTOM NAVIGATION ── -->
 <nav class="bottom-nav">
-  <a href="test 1.html">
+  <a href="index.html">
     <svg fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg>
-    Home
+    Pi Card
   </a>
-  <a href="newpage.html" class="active">
+  <a href="shop.html" class="active">
     <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"/></svg>
-    Buy Now
+    Marketplace
   </a>
   <a href="#" onclick="handleSellClick(event)">
     <div class="sell-btn">
@@ -461,18 +501,13 @@ a{text-decoration:none;color:inherit}
     </div>
     Sell
   </a>
-  <a href="social.html">
-    <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z"/></svg>
-    <span class="msg-badge">3</span>
-    Messages
-  </a>
-  <a href="index.html" style="color:#f59e0b;">
-    <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
-    Pi Card
+  <a href="map.html">
+    <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
+    Map
   </a>
   <a href="about.html">
     <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
-    My Account
+    Account
   </a>
 </nav>
 
@@ -482,7 +517,7 @@ a{text-decoration:none;color:inherit}
     <button class="kyc-close" onclick="closeKycModal()">&times;</button>
     <div class="kyc-icon">🛡️</div>
     <h3>KYC Verification</h3>
-    <p class="kyc-sub">Verify your identity to start selling on Omenda Pi Pays</p>
+    <p class="kyc-sub">Verify your identity to start selling on Omenda Pi Pays Global</p>
     <form class="kyc-form" id="kyc-form" onsubmit="submitKyc(event)">
       <div class="kyc-row">
         <div class="kyc-field"><label>First Name</label><input type="text" id="kyc-fname" placeholder="John" required></div>
@@ -839,6 +874,36 @@ function render(){
     html+='<div class="trust-badge" style="border-left:1px solid #f0f0f0"><div class="icon-circle secure">S</div><div><div class="tb-title">Secured Trading</div><div class="tb-sub">Escrow payment protection</div></div></div>';
     html+='</div>';
 
+    /* ── Dashboard Hub ── */
+    html+='<div class="dashboard-hub">';
+    html+='<div class="hub-layout">';
+    html+='<div class="hub-main">';
+    html+='<div class="hub-row">';
+    html+='<a class="hub-card" href="map.html"><div class="hub-icon" style="background:#2563eb">🗺️</div><div class="hub-title">Worldwide Map</div><div class="hub-sub">Explore global business locations and markets.</div></a>';
+    html+='<a class="hub-card" href="omenda-ai.html"><div class="hub-icon" style="background:#2563eb">⚙️</div><div class="hub-title">Omenda AI</div><div class="hub-sub">Access all Omenda AI services, offers and tools.</div></a>';
+    html+='<a class="hub-card" href="index.html"><div class="hub-icon" style="background:#d97706">🤖</div><div class="hub-title">Omenda Sport</div><div class="hub-sub">Sport Future</div></a>';
+    html+='<a class="hub-card" href="social.html"><div class="hub-icon" style="background:#9333ea">👥</div><div class="hub-title">Community</div><div class="hub-sub">Connect with buyers, sellers, and Pi groups.</div></a>';
+    html+='</div>';
+    html+='<div class="hub-map-section"><div class="hub-map-header"><h3>Global Business Map</h3><a href="map.html" style="font-size:.82rem;font-weight:700;color:#c0392b;text-decoration:none">Open full map</a></div><div id="dashboard-map"></div></div>';
+    html+='</div>';
+    html+='<aside class="hub-sidebar">';
+    html+='<h3>Sport Game List</h3>';
+    html+='<select class="sports-dropdown">';
+    html+='<option>Football Betting</option>';
+    html+='<option>Aviéta Crush</option>';
+    html+='<option>Hot Games</option>';
+    html+='<option>Trading</option>';
+    html+='</select>';
+    html+='<ul class="sports-list">';
+    html+='<li>Football Betting</li>';
+    html+='<li>Aviéta Crush</li>';
+    html+='<li>Hot Games</li>';
+    html+='<li>Trading</li>';
+    html+='</ul>';
+    html+='</aside>';
+    html+='</div>';
+    html+='</div>';
+
     /* ── Quick Actions (Categories / RFQ / New User) ── */
     html+='<div class="quick-actions">';
     html+='<div class="qa-item"><div class="qa-icon" style="background:#fef3c7">'+
@@ -927,7 +992,7 @@ function render(){
 
     /* ── Big Marketplace Section ── */
     var bmFiltered=bmActiveCat==='All'?marketProducts:marketProducts.filter(function(p){return p.category===bmActiveCat});
-    html+='<div class="big-market"><div class="bm-header"><h2>\uD83C\uDFEA Featured Marketplace</h2><span class="bm-see">See All <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></span></div>';
+    html+='<div class="big-market"><div class="bm-header"><h2>\uD83C\uDFEA Highlights</h2><span class="bm-see">See All <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></span></div>';
     html+='<div class="bm-cats hide-sb">';
     ['All','Electronics','Fashion','Home & Garden','Cars','Real Estate'].forEach(function(c){
       html+='<button class="'+(bmActiveCat===c?'active':'')+'" onclick="setBmCat(\''+c.replace(/'/g,"\\'")+'\')">'+esc(c)+'</button>';
@@ -1045,7 +1110,7 @@ function render(){
 
   /* ── Single Purchase Ease ── */
   if(activeTab==="All"&&!searchQuery){
-    var ck='<svg width="14" height="14" fill="#22c55e" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>';
+    var ck='<svg width="14" height="14" fill="#f59e0b" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 01-1.414 0l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>';
     html+='<div class="ease-row"><div class="er-text"><h2>Single Purchase Ease</h2><ul>'+
       '<li>'+ck+'Bulk Flexibility</li><li>'+ck+'Certified Sellers</li><li>'+ck+'Secure Pi Trading</li>'+
       '</ul></div><div class="er-img"><img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=400&auto=format&fit=crop" alt="Secure" loading="lazy"></div></div>';
@@ -1065,11 +1130,24 @@ function render(){
   var si=document.getElementById("searchInput");
   if(si){si.value=searchQuery;si.oninput=function(){searchQuery=this.value;render()}}
 
+  renderDashboardMap();
+
   /* Sell button KYC redirect */
   var sb=document.getElementById("sell-btn");
   if(sb){sb.onclick=function(e){e.preventDefault();handleSellClick(e);}}
 
   startAutoSwipe();
+}
+
+function renderDashboardMap(){
+  var mapEl=document.getElementById('dashboard-map');
+  if(!mapEl||typeof L==='undefined')return;
+  if(window.dashboardMap){try{window.dashboardMap.remove();}catch(e){}window.dashboardMap=null;}
+  window.dashboardMap=L.map(mapEl,{zoomControl:false}).setView([20,0],2);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'&copy; OpenStreetMap contributors'}).addTo(window.dashboardMap);
+  [{lat:37.8,lng:-122.4,label:'Americas'},{lat:51.5,lng:-0.1,label:'Europe'},{lat:-33.9,lng:151.2,label:'Australia'},{lat:1.29,lng:103.85,label:'Asia'},{lat:6.52,lng:3.38,label:'Africa'}].forEach(function(m){
+    L.circleMarker([m.lat,m.lng],{radius:5,color:'#c0392b',fillColor:'#c0392b',fillOpacity:0.9}).addTo(window.dashboardMap).bindPopup(m.label);
+  });
 }
 
 function setTab(t){activeTab=t;render()}
@@ -1236,7 +1314,7 @@ function addToCardBalance(productId){
     localStorage.setItem('pivisualcard_data',JSON.stringify(state));
   }catch(e){}
   var msgEl=document.getElementById('modal-pay-msg');
-  if(msgEl) msgEl.innerHTML='<div class="pay-msg ok">\u2705 Added to '+esc(cardLabels[card.type]||card.type)+' card \u2014 <a href="index.html" style="color:#16a34a;text-decoration:underline">View Card</a></div>';
+  if(msgEl) msgEl.innerHTML='<div class="pay-msg ok">\u2705 Added to '+esc(cardLabels[card.type]||card.type)+' card \u2014 <a href="index.html" style="color:#c0392b;text-decoration:underline">View Card</a></div>';
 }
 
 /* ── Transaction Progress ── */
@@ -1351,7 +1429,7 @@ function handlePiBuy(productId){
     try {
       Pi.createPayment({
         amount:amount,
-        memo:"Buy "+p.title+" \u2013 Omenda Pi Pays",
+        memo:"Buy "+p.title+" \u2013 Omenda Pi Pays Global",
         metadata:meta
       },{
         onReadyForServerApproval:function(paymentId){
@@ -1461,7 +1539,7 @@ function handlePiBuy(productId){
       piDebug('Auth OK: user='+(auth.user?auth.user.username:'unknown')+' token='+(auth.accessToken?'yes':'no'));
       piAuthReady = true;
       piAuthUser = auth.user;
-      sessionStorage.setItem("piUser",JSON.stringify(auth.user));
+      try { localStorage.setItem("piUser",JSON.stringify(auth.user)); } catch(e) {}
       if(auth.user&&auth.user.username) updateUsernameUI(auth.user.username);
       startPayment();
     }).catch(function(e){
@@ -1621,7 +1699,7 @@ function submitKyc(e){
   setTimeout(function(){
     localStorage.setItem("kyc_completed","true");
     btn.textContent="✅ Verified!";
-    btn.style.background="linear-gradient(135deg,#22c55e,#16a34a)";
+    btn.style.background="linear-gradient(135deg,#f59e0b,#f97316)";
     setTimeout(function(){
       closeKycModal();
       window.location.href="post product.html";
@@ -1633,7 +1711,7 @@ var isPiBrowser=/PiBrowser/i.test(navigator.userAgent)||typeof window.Pi!=="unde
 (function(){
   /* Restore saved user from previous auth */
   try {
-    var saved = sessionStorage.getItem("piUser");
+    var saved = localStorage.getItem("piUser") || sessionStorage.getItem("piUser");
     if (saved) {
       var u = JSON.parse(saved);
       if (u && u.username) updateUsernameUI(u.username);
@@ -1722,7 +1800,63 @@ setTab=function(t){
   scheduleCatSweep();
 };
 
+var LANGUAGE_KEY = 'omendaLanguage';
+var languageMap = {
+  EN: { label:'🇬🇧 EN ▾', aria:'Change language', home:'Omenda Pi Pays Global', map:'Map', search:'Search services and Pi tools...' },
+  FR: { label:'🇫🇷 FR ▾', aria:'Langue française', home:'Accueil', map:'Carte', search:'Rechercher des services et outils Pi...' },
+  ES: { label:'🇪🇸 ES ▾', aria:'Idioma español', home:'Home', map:'Map', search:'Buscar servicios y herramientas Pi...' },
+  SW: { label:'🇹🇿 SW ▾', aria:'Kiswahili Tanzania', home:'Nyumbani', map:'Ramani', search:'Tafuta huduma na zana za Pi...' },
+  PT: { label:'🇵🇹 PT ▾', aria:'Idioma português', home:'Home', map:'Map', search:'Buscar serviços e ferramentas Pi...' },
+  DE: { label:'🇩🇪 DE ▾', aria:'Deutsche Sprache', home:'Home', map:'Map', search:'Suche nach Diensten und Pi-Tools...' },
+  ZH: { label:'🇨🇳 ZH ▾', aria:'中文语言', home:'Home', map:'Map', search:'搜索服务和 Pi 工具...' },
+  JA: { label:'🇯🇵 JA ▾', aria:'日本語', home:'Home', map:'Map', search:'サービスと Pi ツールを検索...' },
+  AR: { label:'🇸🇦 AR ▾', aria:'اللغة العربية', home:'Home', map:'Map', search:'ابحث عن خدمات وأدوات Pi...' },
+  HI: { label:'🇮🇳 HI ▾', aria:'हिन्दी भाषा', home:'Home', map:'Map', search:'Pi सेवाएं और उपकरण खोजें...' }
+};
+var languageOrder = ['EN', 'FR', 'ES', 'SW', 'PT', 'DE', 'ZH', 'JA', 'AR', 'HI'];
+var selectedLanguage = 'EN';
+
+function setLanguage(lang, save) {
+  if (!languageMap[lang]) lang = 'EN';
+  var settings = languageMap[lang];
+  var select = document.getElementById('langSelect');
+  if (select) {
+    select.value = lang;
+  }
+  var home = document.getElementById('navHomeLink');
+  if (home) home.textContent = settings.home;
+  var map = document.getElementById('navMapLink');
+  if (map) map.textContent = settings.map;
+  var search = document.getElementById('searchInput');
+  if (search) search.placeholder = settings.search;
+  document.documentElement.lang = lang.toLowerCase();
+  selectedLanguage = lang;
+  if (save !== false) {
+    try { localStorage.setItem(LANGUAGE_KEY, lang); } catch(e) {}
+  }
+}
+
+function toggleLanguage() {
+  var current = selectedLanguage || loadLanguage();
+  var idx = languageOrder.indexOf(current);
+  var next = languageOrder[(idx + 1) % languageOrder.length];
+  setLanguage(next);
+}
+
+function loadLanguage() {
+  try {
+    var saved = localStorage.getItem(LANGUAGE_KEY);
+    if (saved && languageMap[saved]) {
+      setLanguage(saved, false);
+      return saved;
+    }
+  } catch(e) {}
+  setLanguage('EN', false);
+  return 'EN';
+}
+
 /* ── INIT ── */
+loadLanguage();
 render();
 startAutoSwipe();
 startCatSweep();

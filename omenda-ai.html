@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Omenda AI Knowledge — Omenda Pi Pays Global</title>
+<meta name="description" content="Omenda AI Knowledge Center for Omenda Pi Pays, GCV price insights, and Pi future predictions.">
+<link rel="icon" type="image/jpeg" href="logo.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#050816;--panel:#0f172a;--panel-strong:#111827;--text:#f8fafc;--muted:#94a3b8;--accent:#f5c518;--accent-strong:#22c55e;--border:rgba(148,163,184,.16);--surface:rgba(255,255,255,.04);}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;min-height:100%;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:linear-gradient(180deg,#020617 0%,#090d1e 100%);color:var(--text);}
+body{padding:24px;}
+a{color:inherit;text-decoration:none;}
+.container{max-width:1080px;margin:0 auto;}
+.header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;margin-bottom:24px;}
+.header h1{font-size:2rem;margin:0;letter-spacing:-.03em;}
+.header p{margin:0;color:var(--muted);max-width:640px;}
+.card-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin-bottom:28px;}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:22px;padding:24px;transition:transform .2s,box-shadow .2s;}
+.card:hover{transform:translateY(-2px);box-shadow:0 18px 50px rgba(0,0,0,.25);}
+.card h2{margin:0 0 10px;font-size:1.1rem;color:var(--accent);}
+.card p{margin:0;color:var(--muted);line-height:1.7;}
+.ask-section{background:var(--panel);border:1px solid var(--border);border-radius:22px;padding:24px;}
+.ask-section h2{margin-top:0;color:#fff;}
+.ask-section textarea{width:100%;min-height:140px;padding:16px;border-radius:16px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);color:#fff;resize:vertical;outline:none;font-size:1rem;}
+.ask-section button{margin-top:16px;padding:14px 22px;border:none;border-radius:14px;background:linear-gradient(135deg,#f5c518,#d97706);color:#111;font-weight:700;cursor:pointer;transition:transform .2s;}
+.ask-section button:hover{transform:translateY(-1px);}
+.response{margin-top:20px;padding:18px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:#fff;white-space:pre-wrap;line-height:1.7;}
+.back-link{display:inline-flex;align-items:center;gap:8px;color:#f5c518;margin-top:16px;font-size:.95rem;}
+.note{margin-top:18px;color:var(--muted);font-size:.95rem;}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div>
+      <h1 id="pageTitle">Omenda AI Knowledge</h1>
+      <p id="pageDescription">Your local AI assistant for everything related to Omenda Pi Pays, GCV pricing, and the future of Pi.</p>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+      <label for="langSelect" style="color:var(--muted);font-size:.95rem;">Language</label>
+      <select id="langSelect" onchange="setLanguage(this.value)" style="border-radius:14px;padding:10px 12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:#fff;outline:none;">
+        <option value="en">English</option>
+        <option value="es">Español</option>
+        <option value="fr">Français</option>
+        <option value="pt">Português</option>
+        <option value="sw">Kiswahili</option>
+        <option value="af">Afrikaans</option>
+        <option value="zh">中文</option>
+        <option value="ar">العربية</option>
+      </select>
+      <a href="shop.html" class="back-link" id="backLink">← Back to Marketplace</a>
+      <div id="google_translate_element" style="margin-left:16px;"></div>
+    </div>
+  </div>
+
+  <div class="card-row">
+    <div class="card">
+      <h2 id="cardTitle1">Omenda Pi Pays Overview</h2>
+      <p id="cardText1">Omenda Pi Pays brings Pi Network payments, digital cards, and business services together in one hub. It enables wallet access, merchant payments, and global marketplace discovery.</p>
+    </div>
+    <div class="card">
+      <h2 id="cardTitle2">GCV Price Intelligence</h2>
+      <p id="cardText2">GCV is the Global Commerce Value index for Omenda Pi Pays. It reflects marketplace demand, Pi adoption, and service usage across the ecosystem.</p>
+    </div>
+    <div class="card">
+      <h2 id="cardTitle3">Pi Future Vision</h2>
+      <p id="cardText3">Pi is building toward worldwide payments, merchant adoption, cross-border transfers, and decentralized commerce. Omenda AI tracks this future through product, price, and ecosystem signals.</p>
+    </div>
+  </div>
+
+  <div class="ask-section">
+    <h2 id="askHeading">Ask Omenda AI</h2>
+    <textarea id="aiQuery" placeholder="Ask about Omenda Pi Pays, GCV price, Pi future, products, or services..."></textarea>
+    <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;">
+      <button id="askButton" type="button" onclick="answerQuery()">Get Answer</button>
+      <button id="searchButton" type="button" onclick="searchGoogle()" style="background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;border:none;border-radius:14px;padding:14px 22px;cursor:pointer;transition:transform .2s;">Search Google</button>
+    </div>
+    <div id="aiResponse" class="response">Type a question and click Get Answer to see curated Omenda AI knowledge.</div>
+    <div class="note" id="noteText">This assistant uses curated Omenda Pi Pays knowledge for quick answers. It is a local knowledge engine for your dashboard.</div>
+  </div>
+</div>
+<script>
+var LANGUAGE_KEY = 'omendaLanguage';
+var currentLang = 'en';
+var translations = {
+  en: {
+    title: 'Omenda AI Knowledge',
+    description: 'Your local AI assistant for everything related to Omenda Pi Pays, GCV pricing, and the future of Pi.',
+    back: '← Back to Marketplace',
+    card1Title: 'Omenda Pi Pays Overview',
+    card1Text: 'Omenda Pi Pays brings Pi Network payments, digital cards, and business services together in one hub. It enables wallet access, merchant payments, and global marketplace discovery.',
+    card2Title: 'GCV Price Intelligence',
+    card2Text: 'GCV is the Global Commerce Value index for Omenda Pi Pays. It reflects marketplace demand, Pi adoption, and service usage across the ecosystem.',
+    card3Title: 'Pi Future Vision',
+    card3Text: 'Pi is building toward worldwide payments, merchant adoption, cross-border transfers, and decentralized commerce. Omenda AI tracks this future through product, price, and ecosystem signals.',
+    askHeading: 'Ask Omenda AI',
+    placeholder: 'Ask about Omenda Pi Pays, GCV price, Pi future, products, or services...',
+    button: 'Get Answer',
+    responseDefault: 'Type a question and click Get Answer to see curated Omenda AI knowledge.',
+    responseEmpty: 'Please enter a question about Omenda Pi Pays, GCV price, or Pi future.',
+    responseNotFound: 'Omenda AI is learning. For now, here is what we know: Omenda Pi Pays is the Pi services platform, GCV price reflects commerce value, and Pi future centers on adoption, payments, and global merchant support.',
+    note: 'This assistant uses curated Omenda Pi Pays knowledge for quick answers. It is a local knowledge engine for your dashboard.'
+  },
+  es: {
+    title: 'Conocimiento Omenda AI',
+    description: 'Tu asistente local para todo lo relacionado con Omenda Pi Pays, precios GCV y el futuro de Pi.',
+    back: '← Volver al Mercado',
+    card1Title: 'Resumen de Omenda Pi Pays',
+    card1Text: 'Omenda Pi Pays integra pagos Pi Network, tarjetas digitales y servicios empresariales en un solo centro. Permite acceso a la billetera, pagos a comerciantes y descubrimiento de mercado.',
+    card2Title: 'Inteligencia de Precio GCV',
+    card2Text: 'GCV es el índice de Valor Global de Comercio para Omenda Pi Pays. Refleja la demanda del mercado, la adopción de Pi y el uso de servicios en el ecosistema.',
+    card3Title: 'Visión del Futuro de Pi',
+    card3Text: 'Pi avanza hacia pagos globales, adopción comercial, transferencias transfronterizas y comercio descentralizado. Omenda AI sigue esta evolución mediante señales de producto, precio y ecosistema.',
+    askHeading: 'Pregunta a Omenda AI',
+    placeholder: 'Pregunta sobre Omenda Pi Pays, precio GCV, futuro de Pi, productos o servicios...',
+    button: 'Obtener respuesta',
+    responseDefault: 'Escribe una pregunta y haz clic en Obtener respuesta para ver el conocimiento de Omenda AI.',
+    responseEmpty: 'Por favor, ingresa una pregunta sobre Omenda Pi Pays, precio GCV o el futuro de Pi.',
+    responseNotFound: 'Omenda AI está aprendiendo. Por ahora, esto es lo que sabemos: Omenda Pi Pays es la plataforma de servicios Pi, el precio GCV refleja el valor comercial y el futuro de Pi se centra en adopción, pagos y comercio global.',
+    note: 'Este asistente usa conocimiento curado de Omenda Pi Pays para respuestas rápidas. Es un motor de conocimiento local para tu panel.'
+  },
+  fr: {
+    title: 'Connaissance Omenda AI',
+    description: 'Votre assistant local pour tout ce qui concerne Omenda Pi Pays, les prix GCV et l\'avenir de Pi.',
+    back: '← Retour au Marché',
+    card1Title: 'Aperçu Omenda Pi Pays',
+    card1Text: 'Omenda Pi Pays réunit les paiements Pi Network, les cartes numériques et les services d\'entreprise en un seul hub. Il permet l\'accès au portefeuille, les paiements marchands et la découverte de marché.',
+    card2Title: 'Intelligence des Prix GCV',
+    card2Text: 'GCV est l\'indice de Valeur Globale du Commerce pour Omenda Pi Pays. Il reflète la demande du marché, l\'adoption de Pi et l\'utilisation des services dans l\'écosystème.',
+    card3Title: 'Vision du Futur de Pi',
+    card3Text: 'Pi construit des paiements mondiaux, l\'adoption marchande, les transferts transfrontaliers et le commerce décentralisé. Omenda AI suit cet avenir via les signaux de produit, prix et écosystème.',
+    askHeading: 'Demandez à Omenda AI',
+    placeholder: 'Posez une question sur Omenda Pi Pays, le prix GCV, le futur de Pi, les produits ou les services...',
+    button: 'Obtenir une réponse',
+    responseDefault: 'Tapez une question et cliquez sur Obtenir une réponse pour voir les connaissances Omenda AI.',
+    responseEmpty: 'Veuillez saisir une question sur Omenda Pi Pays, le prix GCV ou le futur de Pi.',
+    responseNotFound: 'Omenda AI apprend. Pour l\'instant, voici ce que nous savons : Omenda Pi Pays est la plateforme de services Pi, le prix GCV reflète la valeur commerciale et l\'avenir de Pi se concentre sur l\'adoption, les paiements et le commerce mondial.',
+    note: 'Cet assistant utilise des connaissances sélectionnées sur Omenda Pi Pays pour des réponses rapides. Il s\'agit d\'un moteur de connaissances local pour votre tableau de bord.'
+  },
+  pt: {
+    title: 'Conhecimento Omenda AI',
+    description: 'Seu assistente local para tudo sobre Omenda Pi Pays, preços GCV e o futuro do Pi.',
+    back: '← Voltar ao Mercado',
+    card1Title: 'Visão Geral Omenda Pi Pays',
+    card1Text: 'Omenda Pi Pays reúne pagamentos Pi Network, cartões digitais e serviços empresariais em um só hub. Ele permite acesso à carteira, pagamentos a comerciantes e descoberta de mercado.',
+    card2Title: 'Inteligência de Preço GCV',
+    card2Text: 'GCV é o índice de Valor Global de Comércio para Omenda Pi Pays. Ele reflete a demanda do mercado, adoção do Pi e uso de serviços no ecossistema.',
+    card3Title: 'Visão do Futuro do Pi',
+    card3Text: 'Pi está avançando para pagamentos mundiais, adoção comercial, transferências transfronteiriças e comércio descentralizado. Omenda AI acompanha esse futuro por meio de sinais de produto, preço e ecossistema.',
+    askHeading: 'Pergunte ao Omenda AI',
+    placeholder: 'Pergunte sobre Omenda Pi Pays, preço GCV, futuro do Pi, produtos ou serviços...',
+    button: 'Obter resposta',
+    responseDefault: 'Digite uma pergunta e clique em Obter resposta para ver o conhecimento Omenda AI.',
+    responseEmpty: 'Por favor, insira uma pergunta sobre Omenda Pi Pays, preço GCV ou futuro do Pi.',
+    responseNotFound: 'Omenda AI está aprendendo. Por enquanto, aqui está o que sabemos: Omenda Pi Pays é a plataforma de serviços Pi, o preço GCV reflete valor comercial e o futuro do Pi se concentra em adoção, pagamentos e comércio global.',
+    note: 'Este assistente usa conhecimento curado do Omenda Pi Pays para respostas rápidas. É um mecanismo de conhecimento local para seu painel.'
+  },
+  zh: {
+    title: 'Omenda AI 知识',
+    description: '您的本地 AI 助手，帮助了解 Omenda Pi Pays、GCV 价格和 Pi 的未来。',
+    back: '← 返回市场',
+    card1Title: 'Omenda Pi Pays 概览',
+    card1Text: 'Omenda Pi Pays 将 Pi Network 支付、数字卡和商业服务整合到一个中心。它支持钱包访问、商家支付和全球市场发现。',
+    card2Title: 'GCV 价格情报',
+    card2Text: 'GCV 是 Omenda Pi Pays 的全球商业价值指数。它反映了市场需求、Pi 采用率和生态系统内服务使用情况。',
+    card3Title: 'Pi 未来愿景',
+    card3Text: 'Pi 正朝着全球支付、商家采用、跨境转账和去中心化商业发展。Omenda AI 通过产品、价格和生态信号追踪这一未来。',
+    askHeading: '询问 Omenda AI',
+    placeholder: '询问有关 Omenda Pi Pays、GCV 价格、Pi 未来、产品或服务的问题...',
+    button: '获取答案',
+    responseDefault: '输入问题并点击获取答案，以查看 Omenda AI 的精选知识。',
+    responseEmpty: '请输入有关 Omenda Pi Pays、GCV 价格或 Pi 未来的问题。',
+    responseNotFound: 'Omenda AI 正在学习。当前我们知道：Omenda Pi Pays 是 Pi 服务平台，GCV 价格反映商业价值，Pi 的未来集中在采用、支付和全球商业。',
+    note: '该助手使用 Omenda Pi Pays 的精选知识提供快速回答。它是您的本地仪表板知识引擎。'
+  },
+  sw: {
+    title: 'Maarifa ya Omenda AI',
+    description: 'Msaidizi wako wa AI wa ndani kwa kila kitu kinachohusiana na Omenda Pi Pays, bei ya GCV, na mustakabali wa Pi.',
+    back: '← Rudi Sokoni',
+    card1Title: 'Muhtasari wa Omenda Pi Pays',
+    card1Text: 'Omenda Pi Pays inaunganisha malipo ya Pi Network, kadi za dijiti, na huduma za biashara katika kituo kimoja. Inaruhusu ufikiaji wa mkoba, malipo kwa wauzaji, na ugunduzi wa soko la kimataifa.',
+    card2Title: 'Ujasusi wa Bei ya GCV',
+    card2Text: 'GCV ni faharasa ya Thamani ya Biashara ya Ulimwengu kwa Omenda Pi Pays. Inaonyesha mahitaji ya soko, matumizi ya Pi, na matumizi ya huduma ndani ya mfumo.',
+    card3Title: 'Maono ya Mustakabali wa Pi',
+    card3Text: 'Pi inaelekea kwenye mtandao wazi wa malipo wenye kukubalika kubwa zaidi kwa wauzaji, uhamisho wa mipakani, na biashara inayotegemea mkoba. Omenda AI inatazama ishara za bei, uzinduzi wa huduma, na upanuzi wa biashara kubashiri mustakabali wa Pi.',
+    askHeading: 'Muulize Omenda AI',
+    placeholder: 'Uliza kuhusu Omenda Pi Pays, bei ya GCV, mustakabali wa Pi, bidhaa, au huduma...',
+    button: 'Pata Jibu',
+    responseDefault: 'Andika swali na bonyeza Pata Jibu kuona maarifa ya Omenda AI yaliyopangwa.',
+    responseEmpty: 'Tafadhali ingiza swali kuhusu Omenda Pi Pays, bei ya GCV, au mustakabali wa Pi.',
+    responseNotFound: 'Omenda AI inajifunza. Kwa sasa, tunajua: Omenda Pi Pays ni jukwaa la huduma za Pi, bei ya GCV inaonyesha thamani ya biashara, na mustakabali wa Pi unaangazia matumizi, malipo, na biashara ya ulimwengu.',
+    note: 'Msaidizi huyu hutumia maarifa yaliyopangwa ya Omenda Pi Pays kwa majibu ya haraka. Ni injini ya maarifa ya ndani kwa dashibodi yako.'
+  },
+  af: {
+    title: 'Omenda AI Kennis',
+    description: 'Jou plaaslike AI-assistent vir alles wat verband hou met Omenda Pi Pays, GCV-pryse en die toekoms van Pi.',
+    back: '← Terug na Markplek',
+    card1Title: 'Omenda Pi Pays Oorsig',
+    card1Text: 'Omenda Pi Pays bring Pi Network-betalings, digitale kaarte en besigheidsdienste bymekaar in een sentrum. Dit maak beursietoegang, handelaarbetalings en wêreldmarkontdekking moontlik.',
+    card2Title: 'GCV Prysintelligensie',
+    card2Text: 'GCV is die Globale Handelwaarde-indeks vir Omenda Pi Pays. Dit weerspieël markvraag, Pi-aanvaarding en diensgebruik in die ekosisteem.',
+    card3Title: 'Pi Toekomsvisie',
+    card3Text: 'Pi bou na wêreldwye betalings, handelaaraanvaarding, grensoverschrijdende oordraginge en gedesentraliseerde handel. Omenda AI volg hierdie toekoms deur produk-, prys- en ekosisteemseine.',
+    askHeading: 'Vra Omenda AI',
+    placeholder: 'Vra oor Omenda Pi Pays, GCV-prys, Pi-toekoms, produkte of dienste...',
+    button: 'Kry Antwoord',
+    responseDefault: 'Tik ’n vraag in en klik op Kry Antwoord om gekureerde Omenda AI-kennis te sien.',
+    responseEmpty: 'Voer asseblief ’n vraag in oor Omenda Pi Pays, GCV-prys of Pi-toekoms.',
+    responseNotFound: 'Omenda AI leer. Vir nou weet ons: Omenda Pi Pays is die Pi-diensplatform, GCV-prys weerspieël handelswaarde, en Pi-toekoms fokus op aanvaarding, betalings en wêreldhandel.',
+    note: 'Hierdie assistent gebruik gekureerde Omenda Pi Pays-kennis vir vinnige antwoorde. Dit is ’n plaaslike kennis-enjin vir jou paneelbord.'
+  },
+  ar: {
+    title: 'معرفة Omenda AI',
+    description: 'مساعدك المحلي لكل ما يتعلق بـ Omenda Pi Pays، وسعر GCV، ومستقبل Pi.',
+    back: '← العودة إلى السوق',
+    card1Title: 'نظرة عامة على Omenda Pi Pays',
+    card1Text: 'يجمع Omenda Pi Pays بين مدفوعات Pi Network، البطاقات الرقمية، وخدمات الأعمال في مكان واحد. يتيح الوصول إلى المحفظة، مدفوعات التجار، واكتشاف السوق العالمي.',
+    card2Title: 'ذكاء سعر GCV',
+    card2Text: 'GCV هو مؤشر القيمة التجارية العالمية لـ Omenda Pi Pays. يعكس طلب السوق، تبني Pi، واستخدام الخدمات في النظام البيئي.',
+    card3Title: 'رؤية مستقبل Pi',
+    card3Text: 'تتجه Pi نحو المدفوعات العالمية، تبني التجار، التحويلات عبر الحدود، والتجارة اللامركزية. يتتبع Omenda AI هذا المستقبل من خلال إشارات المنتج والسعر والنظام البيئي.',
+    askHeading: 'اسأل Omenda AI',
+    placeholder: 'اسأل عن Omenda Pi Pays، سعر GCV، مستقبل Pi، المنتجات، أو الخدمات...',
+    button: 'الحصول على إجابة',
+    responseDefault: 'اكتب سؤالاً وانقر على الحصول على إجابة لعرض معرفة Omenda AI.',
+    responseEmpty: 'يرجى إدخال سؤال حول Omenda Pi Pays أو سعر GCV أو مستقبل Pi.',
+    responseNotFound: 'Omenda AI يتعلم. في الوقت الحالي، هذا ما نعرفه: Omenda Pi Pays هو منصة خدمات Pi، وسعر GCV يعكس القيمة التجارية، ومستقبل Pi يركز على التبني والمدفوعات والتجارة العالمية.',
+    note: 'يستخدم هذا المساعد معرفة Omenda Pi Pays المنسقة للحصول على إجابات سريعة. إنه محرك معرفة محلي للوحة التحكم الخاصة بك.'
+  }
+};
+
+function loadTranslations(lang) {
+  return fetch('/api/i18n?lang=' + encodeURIComponent(lang || 'en'))
+    .then(function(response) {
+      if (!response.ok) throw new Error('Translation API not available');
+      return response.json();
+    })
+    .then(function(data) {
+      if (data && data.translations) {
+        translations[data.lang] = data.translations;
+      }
+    })
+    .catch(function() {
+      return Promise.resolve();
+    });
+}
+
+var aiKnowledge = [
+  {keys:['omenda pi pays','omenda','pi pays','omenda pi','ecosistema','pagos pi','tarjetas digitales','servicios de mercado','économie','serviços de pi','bei','huduma','dienste'], answers:{
+    en:'Omenda Pi Pays is the ecosystem for Pi Network payments, cards, business tools, and marketplace services. It combines wallet access, merchant payments, and Omenda AI insights into one experience.',
+    es:'Omenda Pi Pays es el ecosistema para pagos Pi Network, tarjetas, herramientas comerciales y servicios de mercado. Combina acceso a la billetera, pagos a comerciantes e información de Omenda AI en una experiencia única.',
+    fr:'Omenda Pi Pays est l\'écosystème pour les paiements Pi Network, les cartes, les outils commerciaux et les services de marché. Il combine l\'accès au portefeuille, les paiements marchands et les informations Omenda AI en une seule expérience.',
+    pt:'Omenda Pi Pays é o ecossistema para pagamentos Pi Network, cartões, ferramentas empresariais e serviços de marketplace. Ele combina acesso à carteira, pagamentos a comerciantes e insights Omenda AI em uma experiência única.',
+    zh:'Omenda Pi Pays 是 Pi 网络支付、卡片、商业工具和市场服务的生态系统。它将钱包访问、商家支付和 Omenda AI 洞察力整合到一个体验中。',
+    ar:'Omenda Pi Pays هو النظام البيئي لمدفوعات Pi Network والبطاقات والأدوات التجارية وخدمات السوق. يجمع بين الوصول إلى المحفظة ومدفوعات التجار ورؤى Omenda AI في تجربة واحدة.'
+  }},
+  {keys:['gcv','gcv price','global commerce value','precio gcv','valor global','valeur commerciale globale','valor global de comércio','bei gcv','thamani ya biashara ya kimataifa','gcv prys'], answers:{
+    en:'GCV stands for Global Commerce Value. In Omenda Pi Pays, it is used to represent the economic value of marketplace activity, payment demand, and Pi adoption across supported services.',
+    es:'GCV significa Valor Global de Comercio. En Omenda Pi Pays, se usa para representar el valor económico de la actividad del mercado, la demanda de pagos y la adopción de Pi en los servicios compatibles.',
+    fr:'GCV signifie Valeur Globale du Commerce. Dans Omenda Pi Pays, il est utilisé pour représenter la valeur économique de l\'activité du marché, la demande de paiement et l\'adoption de Pi dans les services pris en charge.',
+    pt:'GCV significa Valor Global de Comércio. No Omenda Pi Pays, é usado para representar o valor econômico da atividade do mercado, a demanda de pagamentos e a adoção do Pi nos serviços suportados.',
+    zh:'GCV 代表全球商业价值。在 Omenda Pi Pays 中，它用于表示市场活动、支付需求和 Pi 在受支持服务中的采用程度的经济价值。',
+    ar:'GCV تعني القيمة التجارية العالمية. في Omenda Pi Pays، تُستخدم لتمثيل القيمة الاقتصادية لنشاط السوق وطلب الدفع وتبني Pi عبر الخدمات المدعومة.'
+  }},
+  {keys:['pi future','future of pi','pi roadmap','pi next','futuro de pi','avenir de pi','futuro do pi','mustakabali wa pi','toekoms van pi'], answers:{
+    en:'Pi is moving toward an open payment network with wider merchant acceptance, cross-border transfers, and wallet-based commerce. Omenda AI watches price signals, service launches, and business expansion to anticipate the Pi future.',
+    es:'Pi avanza hacia una red de pagos abierta con mayor aceptación comercial, transferencias transfronterizas y comercio basado en billeteras. Omenda AI observa señales de precio, lanzamientos de servicios y expansión comercial para anticipar el futuro de Pi.',
+    fr:'Pi évolue vers un réseau de paiement ouvert avec une acceptation marchande plus large, des transferts transfrontaliers et un commerce basé sur les portefeuilles. Omenda AI surveille les signaux de prix, les lancements de services et l\'expansion commerciale pour anticiper l\'avenir de Pi.',
+    pt:'Pi está caminhando para uma rede de pagamentos aberta com maior aceitação de comerciantes, transferências transfronteiriças e comércio baseado em carteiras. Omenda AI observa sinais de preço, lançamentos de serviços e expansão comercial para antecipar o futuro do Pi.',
+    zh:'Pi 正在朝着更广泛的商家接受、跨境转账和基于钱包的支付网络发展。Omenda AI 通过观察价格信号、服务发布和业务扩展来预测 Pi 的未来。',
+    ar:'تتجه Pi نحو شبكة دفع مفتوحة مع قبول تجار أوسع وتحويلات عبر الحدود وتجارية قائمة على المحفظة. يراقب Omenda AI إشارات الأسعار وإطلاق الخدمات وتوسع الأعمال لتوقع مستقبل Pi.'
+  }},
+  {keys:['services','offers','tools','wallet management','payment cards','global business mapping','marketplace sourcing','servicios','ofertas','herramientas','serviços','fasilidades','dienste'], answers:{
+    en:'Omenda AI surfaces all Pi services, offers, and tools including wallet management, payment cards, global business mapping, and marketplace sourcing.',
+    es:'Omenda AI destaca todos los servicios, ofertas y herramientas de Pi, incluida la gestión de billeteras, tarjetas de pago, mapas comerciales globales y abastecimiento del mercado.',
+    fr:'Omenda AI met en avant tous les services, offres et outils Pi, y compris la gestion de portefeuille, les cartes de paiement, la cartographie commerciale mondiale et l\'approvisionnement sur le marché.',
+    pt:'Omenda AI destaca todos os serviços, ofertas e ferramentas Pi, incluindo gerenciamento de carteira, cartões de pagamento, mapeamento comercial global e sourcing de marketplace.',
+    zh:'Omenda AI 汇总所有 Pi 服务、优惠和工具，包括钱包管理、支付卡、全球业务地图和市场采购。',
+    ar:'يعرض Omenda AI جميع خدمات Pi والعروض والأدوات بما في ذلك إدارة المحفظة وبطاقات الدفع ورسم خرائط الأعمال العالمية وتوريد السوق.'
+  }},
+  {keys:['free ai code','free ai tools','ai code','open source ai','free artificial intelligence','free ai','code ai','ai source code','ai resources','open source ai code'], answers:{
+    en:'Many free AI code resources are available for web, mobile, and Pi platform apps. Look for open-source projects, free SDK examples, and community code in many languages like JavaScript, Python, and HTML/CSS.',
+    es:'Hay muchos recursos de código AI gratuitos disponibles para aplicaciones web, móviles y de la plataforma Pi. Busca proyectos de código abierto, ejemplos de SDK gratuitos y código comunitario en muchos idiomas como JavaScript, Python y HTML/CSS.',
+    fr:'De nombreuses ressources de code IA gratuites sont disponibles pour des applications web, mobiles et sur la plateforme Pi. Recherchez des projets open-source, des exemples de SDK gratuits et du code communautaire dans de nombreuses langues comme JavaScript, Python et HTML/CSS.',
+    pt:'Muitos recursos de código de IA gratuitos estão disponíveis para aplicativos web, móveis e para a plataforma Pi. Procure projetos de código aberto, exemplos de SDK gratuitos e código da comunidade em muitas linguagens como JavaScript, Python e HTML/CSS.',
+    zh:'有许多免费的 AI 代码资源可用于 Web、移动和 Pi 平台应用。查找开源项目、免费 SDK 示例和社区代码，支持多种语言，如 JavaScript、Python 和 HTML/CSS。',
+    sw:'Kuna rasilimali nyingi za msimbo wa AI bure zinazopatikana kwa programu za wavuti, simu za mkononi, na kwa jukwaa la Pi. Tafuta miradi ya chanzo wazi, mifano ya SDK ya bure, na msimbo wa jamii kwa lugha nyingi kama JavaScript, Python na HTML/CSS.',
+    af:'Daar is baie gratis AI-kodebronne beskikbaar vir web-, mobiele en Pi-platformtoepassings. Soek open source-projekte, gratis SDK-voorbeelde en gemeenskapskode in baie tale soos JavaScript, Python en HTML/CSS.',
+    ar:'تتوفر العديد من موارد كود AI المجانية لتطبيقات الويب والجوال ومنصة Pi. ابحث عن مشاريع مفتوحة المصدر، أمثلة SDK مجانية، وكود المجتمع بعدة لغات مثل JavaScript وPython وHTML/CSS.'
+  }},
+  {keys:['spiking ai','spiking','spiking artificial intelligence','spike ai','ai spiking','spiking ai code'], answers:{
+    en:'Spiking AI refers to models and networks that use event-driven spikes, often for efficient brain-inspired computing or realtime signal processing. For free tools and examples, look for spiking neural network frameworks and open-source AI libraries.',
+    es:'Spiking AI se refiere a modelos y redes que utilizan picos dirigidos por eventos, a menudo para computación inspirada en el cerebro o procesamiento de señales en tiempo real. Para herramientas gratuitas y ejemplos, busca frameworks de redes neuronales espiking y bibliotecas de IA de código abierto.',
+    fr:'Spiking AI désigne des modèles et réseaux utilisant des pics pilotés par des événements, souvent pour une informatique inspirée du cerveau ou un traitement de signal en temps réel. Pour des outils gratuits et des exemples, recherchez des frameworks de réseaux neuronaux à spikes et des bibliothèques d\'IA open-source.',
+    pt:'Spiking AI refere-se a modelos e redes que usam picos orientados por eventos, frequentemente para computação inspirada no cérebro ou processamento de sinal em tempo real. Para ferramentas gratuitas e exemplos, procure frameworks de redes neurais de spiking e bibliotecas de IA de código aberto.',
+    zh:'Spiking AI 指使用事件驱动脉冲的模型和网络，通常用于高效的类脑计算或实时信号处理。有关免费工具和示例，请查找脉冲神经网络框架和开源 AI 库。',
+    sw:'Spiking AI inahusu mifano na mitandao inayotumia milipuko inayosababishwa na matukio, mara nyingi kwa kompyuta inayotokana na ubongo au usindikaji wa ishara kwa wakati halisi. Kwa zana za bure na mifano, tazama fremu za mtandao wa neva wa spiking na maktaba za AI za chanzo wazi.',
+    af:'Spiking AI verwys na modelle en netwerke wat gebeurtenisgedrewe pieke gebruik, dikwels vir breininspireerde rekenaarkunde of real-time seinverwerking. Vir gratis gereedskap en voorbeelde, soek spiking neurale netwerk-raamwerke en open source AI-biblioteke.',
+    ar:'تشير Spiking AI إلى النماذج والشبكات التي تستخدم النبضات المدفوعة بالأحداث، وغالبًا ما تكون للحوسبة المستوحاة من الدماغ أو معالجة الإشارة في الوقت الفعلي. للحصول على أدوات مجانية وأمثلة، ابحث عن أطر الشبكات العصبية النابضة ومكتبات AI مفتوحة المصدر.'
+  }},
+  {keys:['city rush','ride booking','transport','delivery','airport transfer','flights','vehicle booking','ride service'], answers:{
+    en:'Omenda Pi Pays City Rush is the transport and delivery hub for Pi payments. It supports route planning, airport transfer, cargo delivery, and flights with secure Pi wallet checkout.',
+    es:'Omenda Pi Pays City Rush es el centro de transporte y entrega para pagos Pi. Admite planificación de rutas, traslados al aeropuerto, entrega de carga y vuelos con pago seguro desde la billetera Pi.',
+    fr:'Omenda Pi Pays City Rush est le hub de transport et de livraison pour les paiements Pi. Il prend en charge la planification d\'itinéraires, les transferts aéroport, la livraison de cargaisons et les vols avec paiement sécurisé via portefeuille Pi.',
+    pt:'Omenda Pi Pays City Rush é o hub de transporte e entrega para pagamentos em Pi. Suporta planejamento de rotas, traslado de aeroporto, entrega de carga e voos com checkout seguro de carteira Pi.',
+    zh:'Omenda Pi Pays City Rush 是用于 Pi 支付的运输和交付中心。它支持路线规划、机场接送、货运交付和航班，并通过 Pi 钱包进行安全结算。',
+    sw:'Omenda Pi Pays City Rush ni kituo cha usafiri na uwasilishaji kwa malipo ya Pi. Inasaidia upangaji wa njia, uhamisho wa uwanja wa ndege, usafirishaji wa mizigo, na ndege kwa malipo salama ya mkoba wa Pi.',
+    af:'Omenda Pi Pays City Rush is die vervoer- en afleweringsentrum vir Pi-betalings. Dit ondersteun roetebeplanning, lughaweoordrag, vragaflewering en vlugte met veilige Pi-beursuitklok.',
+    ar:'Omenda Pi Pays City Rush هو مركز النقل والتوصيل لمدفوعات Pi. يدعم تخطيط المسار، النقل من المطار، تسليم الشحنات، والرحلات الجوية مع دفع آمن عبر محفظة Pi.'
+  }},
+  {keys:['business map','map','shops','restaurants','hotels','accept pi','business directory','local businesses'], answers:{
+    en:'The Omenda Pi Pays Business Map helps users find shops, restaurants, hotels, and businesses that accept Pi. It provides local search and category filtering for Pi-friendly merchants.',
+    es:'El Mapa de Negocios de Omenda Pi Pays ayuda a los usuarios a encontrar tiendas, restaurantes, hoteles y empresas que aceptan Pi. Proporciona búsqueda local y filtrado por categoría para comerciantes que aceptan Pi.',
+    fr:'La carte commerciale Omenda Pi Pays aide les utilisateurs à trouver des magasins, restaurants, hôtels et entreprises acceptant Pi. Elle propose une recherche locale et un filtrage par catégorie pour les commerçants Pi-friendly.',
+    pt:'O Mapa de Negócios Omenda Pi Pays ajuda os usuários a encontrar lojas, restaurantes, hotéis e empresas que aceitam Pi. Oferece pesquisa local e filtro por categoria para comerciantes que aceitam Pi.',
+    zh:'Omenda Pi Pays 商业地图可帮助用户查找接受 Pi 的商店、餐厅、酒店和企业。它提供本地搜索和按类别筛选的 Pi 商家。',
+    sw:'Ramani ya Biashara ya Omenda Pi Pays husaidia watumiaji kupata maduka, mikahawa, hoteli, na biashara zinazokubali Pi. Inatoa utafutaji wa ndani na kuchuja kwa aina ya biashara zinazokubali Pi.',
+    af:'Die Omenda Pi Pays-sakemekaart help gebruikers om winkels, restaurante, hotelle en besighede wat Pi aanvaar te vind. Dit bied plaaslike soektog en kategoriefilters vir Pi-vriendelike handelaars.',
+    ar:'تساعد خريطة الأعمال في Omenda Pi Pays المستخدمين في العثور على المتاجر والمطاعم والفنادق والأعمال التي تقبل Pi. توفر البحث المحلي وتصفية الفئات للتجار الذين يقبلون Pi.'
+  }},
+  {keys:['visual pi card','card tiers','visa','mastercard','amex','gold card','platinum card','black card','gcv stable price','gcv rate','pwa','testnet'], answers:{
+    en:'Visual Pi Card is the card platform inside Omenda Pi Pays. It offers six card tiers including Visa, Mastercard, Amex, Gold, Platinum, and Black with GCV pricing, Pi SDK integration, and PWA support in testnet mode.',
+    es:'Visual Pi Card es la plataforma de tarjetas dentro de Omenda Pi Pays. Ofrece seis niveles de tarjeta, incluidas Visa, Mastercard, Amex, Gold, Platinum y Black con precios GCV, integración Pi SDK y soporte PWA en modo testnet.',
+    fr:'Visual Pi Card est la plateforme de cartes à l\'intérieur d\'Omenda Pi Pays. Elle propose six niveaux de cartes, dont Visa, Mastercard, Amex, Gold, Platinum et Black avec des prix GCV, une intégration du SDK Pi et un support PWA en mode testnet.',
+    pt:'Visual Pi Card é a plataforma de cartões dentro do Omenda Pi Pays. Ela oferece seis níveis de cartão, incluindo Visa, Mastercard, Amex, Gold, Platinum e Black com preços GCV, integração Pi SDK e suporte PWA em modo testnet.',
+    zh:'Visual Pi Card 是 Omenda Pi Pays 内的卡片平台。它提供六个卡级，包括 Visa、Mastercard、Amex、Gold、Platinum 和 Black，具有 GCV 定价、Pi SDK 集成和测试网 PWA 支持。',
+    sw:'Visual Pi Card ni jukwaa la kadi ndani ya Omenda Pi Pays. Inatoa ngazi sita za kadi ikiwa ni pamoja na Visa, Mastercard, Amex, Gold, Platinum, na Black pamoja na bei ya GCV, ujumuishaji wa Pi SDK, na msaada wa PWA kwa mode ya testnet.',
+    af:'Visual Pi Card is die kaartplatform binne Omenda Pi Pays. Dit bied ses kaartvlakke, insluitend Visa, Mastercard, Amex, Gold, Platinum en Black met GCV-pryse, Pi SDK-integrasie en PWA-ondersteuning in testnet-modus.',
+    ar:'Visual Pi Card هو منصة البطاقات داخل Omenda Pi Pays. يقدم ست فئات من البطاقات بما في ذلك Visa وMastercard وAmex وGold وPlatinum وBlack بأسعار GCV وتكامل Pi SDK ودعم PWA في وضع الاختبار.',
+  }},
+  {keys:['whitepaper','white paper','testnet mode','testnet','pi sdk','node js backend','letsencrypt','pwa installable'], answers:{
+    en:'The Omenda Pi Pays whitepaper explains the Visual Pi Card platform, Pi SDK integration, testnet operation, stable GCV pricing, PWA installation, and backend architecture.',
+    es:'El whitepaper de Omenda Pi Pays explica la plataforma Visual Pi Card, la integración del SDK de Pi, el funcionamiento en testnet, los precios estables de GCV, la instalación PWA y la arquitectura de backend.',
+    fr:'Le livre blanc Omenda Pi Pays explique la plateforme Visual Pi Card, l\'intégration du SDK Pi, le fonctionnement en testnet, les prix GCV stables, l\'installation PWA et l\'architecture du backend.',
+    pt:'O whitepaper do Omenda Pi Pays explica a plataforma Visual Pi Card, integração do SDK Pi, operação em testnet, preços estáveis de GCV, instalação PWA e arquitetura de backend.',
+    zh:'Omenda Pi Pays 白皮书解释了 Visual Pi Card 平台、Pi SDK 集成、测试网运行、稳定的 GCV 定价、PWA 安装和后端架构。',
+    sw:'Whitepaper ya Omenda Pi Pays inaelezea jukwaa la Visual Pi Card, ujumuishaji wa Pi SDK, uendeshaji wa testnet, bei thabiti za GCV, usakinishaji wa PWA, na usanifu wa backend.',
+    af:'Die Omenda Pi Pays-witpapier verduidelik die Visual Pi Card-platform, Pi SDK-integrasie, testnet-bedryf, stabiele GCV-pryse, PWA-installasie en backend-argitektuur.',
+    ar:'تشرح الورقة البيضاء لـ Omenda Pi Pays منصة Visual Pi Card وتكامل Pi SDK وتشغيل testnet وتسعير GCV المستقر وتثبيت PWA والهندسة الخلفية.',
+  }},
+  {keys:['all','everything','make it all','full overview','all topics','all information','everything about','everything about omenda','omenda ai all'], answers:{
+    en:'Omenda Pi Pays is the full Pi ecosystem for payments, digital cards, business tools, marketplace services, and AI knowledge. It combines wallet access, merchant payments, GCV price intelligence, global business mapping, free AI code resources, and spiking AI information in one experience.',
+    es:'Omenda Pi Pays es el ecosistema completo de Pi para pagos, tarjetas digitales, herramientas empresariales, servicios de mercado y conocimiento de IA. Combina acceso a la billetera, pagos a comerciantes, inteligencia de precios GCV, mapeo empresarial global, recursos de código AI gratuitos e información de Spiking AI en una sola experiencia.',
+    fr:'Omenda Pi Pays est l\'écosystème complet de Pi pour les paiements, les cartes numériques, les outils commerciaux, les services de marché et les connaissances en IA. Il combine l\'accès au portefeuille, les paiements marchands, l\'intelligence des prix GCV, la cartographie commerciale mondiale, les ressources de code IA gratuites et les informations sur Spiking AI en une seule expérience.',
+    pt:'Omenda Pi Pays é o ecossistema completo do Pi para pagamentos, cartões digitais, ferramentas de negócios, serviços de marketplace e conhecimento de IA. Ele combina acesso à carteira, pagamentos a comerciantes, inteligência de preços GCV, mapeamento empresarial global, recursos gratuitos de código AI e informações sobre Spiking AI em uma só experiência.',
+    zh:'Omenda Pi Pays 是完整的 Pi 生态系统，涵盖支付、数字卡、商业工具、市场服务和 AI 知识。它将钱包访问、商家支付、GCV 价格情报、全球业务地图、免费 AI 代码资源和 Spiking AI 信息整合到一个体验中。',
+    sw:'Omenda Pi Pays ni ekosistimu kamili ya Pi kwa malipo, kadi za dijiti, zana za biashara, huduma za soko, na maarifa ya AI. Inachanganya ufikiaji wa mkoba, malipo kwa wauzaji, maarifa ya bei ya GCV, ramani ya biashara ya ulimwengu, rasilimali za msimbo wa AI wa bure, na taarifa za Spiking AI kwa uzoefu mmoja.',
+    af:'Omenda Pi Pays is die volle Pi-ekosisteem vir betalings, digitale kaarte, besigheidshulpmiddels, markplekdiens en AI-kennis. Dit kombineer beursietoegang, handelaarbetalings, GCV-prysintelligensie, wêreldwye besigheidskaarte, gratis AI-kodehulpbronne en Spiking AI-inligting in een ervaring.',
+    ar:'Omenda Pi Pays هو النظام البيئي الكامل لـ Pi للمدفوعات والبطاقات الرقمية وأدوات الأعمال وخدمات السوق ومعرفة الذكاء الاصطناعي. إنه يجمع بين الوصول إلى المحفظة ومدفوعات التجار وذكاء أسعار GCV ورسم خرائط الأعمال العالمية وموارد كود AI المجانية ومعلومات Spiking AI في تجربة واحدة.'
+  }},
+  {keys:['how to use','getting started','start','how do i use','cómo usar','comenzar','comment utiliser','commencer','como usar','como começar','jinsi ya kutumia','hoe om te gebruik'], answers:{
+    en:'Use Omenda AI to explore Pi services, ask about GCV price trends, and learn how Omenda Pi Pays supports payments, cards, and merchant commerce.',
+    es:'Usa Omenda AI para explorar los servicios Pi, preguntar sobre tendencias de precios GCV y aprender cómo Omenda Pi Pays admite pagos, tarjetas y comercio con comerciantes.',
+    fr:'Utilisez Omenda AI pour explorer les services Pi, poser des questions sur les tendances des prix GCV et découvrir comment Omenda Pi Pays prend en charge les paiements, les cartes et le commerce marchand.',
+    pt:'Use Omenda AI para explorar serviços Pi, perguntar sobre tendências de preços GCV e aprender como Omenda Pi Pays suporta pagamentos, cartões e comércio com comerciantes.',
+    zh:'使用 Omenda AI 探索 Pi 服务，询问 GCV 价格趋势，并了解 Omenda Pi Pays 如何支持支付、卡片和商家商务。',
+    sw:'Tumia Omenda AI kuchunguza huduma za Pi, uliza kuhusu mwenendo wa bei ya GCV, na ujifunze jinsi Omenda Pi Pays inavyounga mkono malipo, kadi, na biashara ya wauzaji.',
+    af:'Gebruik Omenda AI om Pi-dienste te verken, vra oor GCV-prystrends, en leer hoe Omenda Pi Pays betalings, kaarte en handelaarbesigheid ondersteun.',
+    ar:'استخدم Omenda AI لاستكشاف خدمات Pi، واسأل عن اتجاهات سعر GCV، وتعرف على كيفية دعم Omenda Pi Pays للمدفوعات والبطاقات والتجارة مع التجار.'
+  }}
+];
+
+function setLanguage(lang) {
+  if (!translations[lang]) lang = 'en';
+  currentLang = lang;
+  document.documentElement.lang = lang;
+  document.getElementById('pageTitle').textContent = translations[lang].title;
+  document.getElementById('pageDescription').textContent = translations[lang].description;
+  document.getElementById('backLink').textContent = translations[lang].back;
+  document.getElementById('cardTitle1').textContent = translations[lang].card1Title;
+  document.getElementById('cardText1').textContent = translations[lang].card1Text;
+  document.getElementById('cardTitle2').textContent = translations[lang].card2Title;
+  document.getElementById('cardText2').textContent = translations[lang].card2Text;
+  document.getElementById('cardTitle3').textContent = translations[lang].card3Title;
+  document.getElementById('cardText3').textContent = translations[lang].card3Text;
+  document.getElementById('askHeading').textContent = translations[lang].askHeading;
+  document.getElementById('aiQuery').placeholder = translations[lang].placeholder;
+  document.getElementById('askButton').textContent = translations[lang].button;
+  document.getElementById('aiResponse').textContent = translations[lang].responseDefault;
+  document.getElementById('noteText').textContent = translations[lang].note;
+  document.getElementById('langSelect').value = lang;
+  document.body.dir = lang === 'ar' ? 'rtl' : 'ltr';
+  try { localStorage.setItem(LANGUAGE_KEY, lang); } catch (e) {}
+}
+
+function detectBrowserLanguage() {
+  var lang = (navigator.language || navigator.userLanguage || 'en').toLowerCase().split('-')[0];
+  if (translations[lang]) return lang;
+  return 'en';
+}
+
+function detectQueryLanguage(query) {
+  if (/\p{Script=Arabic}/u.test(query)) return 'ar';
+  if (/\p{Script=Han}/u.test(query)) return 'zh';
+  if (/\b(?:habari|sasa|tafadhali|asante|kuna|omenda|pi|bei|kadi|huduma|bure|ai|msimbo)\b/i.test(query)) return 'sw';
+  if (/\b(?:hoe|wat|prys|kaart|dankie|vir|jou|ons|ek|dienste|betaling|gratis|ai|kode)\b/i.test(query)) return 'af';
+  if (/\b(?:cómo|qué|por qué|gracias|hola|precio|futuro|servicios|pago|tarjeta|omenda|gratis|código|ai)\b/i.test(query)) return 'es';
+  if (/\b(?:comment|quoi|prix|avenir|merci|bonjour|s'il|est-ce|marché|paiement|omenda|gratuit|code|ia)\b/i.test(query)) return 'fr';
+  if (/\b(?:como|o que|preço|futuro|obrigado|por favor|serviços|pagamento|carteira|omenda|gratuito|código|ia)\b/i.test(query)) return 'pt';
+  if (/\b(?:what|how|is|do|use|price|future|services|wallet|merchant|omenda|pi|gcv|free|ai|code)\b/i.test(query)) return 'en';
+  return 'en';
+}
+
+function detectRequestedLanguage(query) {
+  var mappings = [
+    {pattern:/\b(in spanish|en español|responde en español|español)\b/i, lang:'es'},
+    {pattern:/\b(in french|en français|répondre en français|français)\b/i, lang:'fr'},
+    {pattern:/\b(in portuguese|em português|responda em português|português)\b/i, lang:'pt'},
+    {pattern:/\b(in kiswahili|kwa kiswahili|jibu kwa kiswahili|swahili)\b/i, lang:'sw'},
+    {pattern:/\b(in afrikaans|antwoord in afrikaans|afrikaans)\b/i, lang:'af'},
+    {pattern:/\b(in chinese|在中文|中文|用中文|chinese)\b/i, lang:'zh'},
+    {pattern:/\b(in arabic|بالعربية|عربي|باللغة العربية|arabic)\b/i, lang:'ar'}
+  ];
+  for (var i = 0; i < mappings.length; i++) {
+    if (mappings[i].pattern.test(query)) return mappings[i].lang;
+  }
+  return null;
+}
+
+function answerQuery() {
+  var query = document.getElementById('aiQuery').value.trim();
+  var normalized = query.toLowerCase();
+  var response = document.getElementById('aiResponse');
+  if (!normalized) {
+    response.textContent = translations[currentLang].responseEmpty;
+    return;
+  }
+
+  var requested = detectRequestedLanguage(normalized);
+  var detected = detectQueryLanguage(normalized);
+  var lang = requested || detected || currentLang;
+
+  if (requested || detected) {
+    setLanguage(lang);
+  }
+
+  for (var i = 0; i < aiKnowledge.length; i++) {
+    for (var j = 0; j < aiKnowledge[i].keys.length; j++) {
+      if (normalized.indexOf(aiKnowledge[i].keys[j]) !== -1) {
+        response.textContent = aiKnowledge[i].answers[lang] || aiKnowledge[i].answers.en;
+        return;
+      }
+    }
+  }
+  response.textContent = translations[lang].responseNotFound;
+}
+
+function searchGoogle() {
+  var query = document.getElementById('aiQuery').value.trim();
+  if (!query) {
+    document.getElementById('aiResponse').textContent = translations[currentLang].responseEmpty;
+    return;
+  }
+  var searchUrl = 'https://www.google.com/search?q=' + encodeURIComponent(query + ' Omenda Pi Pays');
+  window.open(searchUrl, '_blank');
+}
+
+function loadLanguagePreference() {
+  var saved = localStorage.getItem(LANGUAGE_KEY);
+  if (saved && translations[saved]) return saved;
+  return detectBrowserLanguage();
+}
+
+window.onload = function() {
+  var lang = loadLanguagePreference();
+  loadTranslations(lang).finally(function() {
+    setLanguage(lang);
+  });
+};
+
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    pageLanguage: 'en',
+    layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+    autoDisplay: false
+  }, 'google_translate_element');
+}
+</script>
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</body>
+</html>

@@ -36,6 +36,7 @@
 
     <!-- Pi Network SDK (must load before Pi.init) -->
     <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+    <script src="pi-sdk-helper.js"></script>
     <script>
         // Initialize Pi SDK — works inside Pi Browser; gracefully degrades elsewhere
         var piSdkReady = false;
@@ -1137,6 +1138,7 @@
     <header class="header">
         <h1>VISUAL PI CARD</h1>
         <p>omendapipaysglobel.online &mdash; Pi Network Payment Card</p>
+        <p style="font-size:0.85rem; opacity:0.65; margin-top:10px;">The main dashboard is available in <a href="shop.html" style="color:#f5c518; text-decoration:underline;">shop.html</a>.</p>
     </header>
 
     <!-- CARD TYPE SELECTOR -->
@@ -1211,7 +1213,10 @@
         </div>
     </div>
     <div class="card-hint">&#8635; Click card to flip &nbsp;&middot;&nbsp; Choose card type above</div>
-    <a class="card-details-link" id="cardDetailsLink" href="card-visa.html">View Card Details &rarr;</a>
+    <div class="card-actions" style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-bottom:24px;">
+        <a class="card-details-link" id="cardDetailsLink" href="card-visa.html">View Card Details &rarr;</a>
+        <button class="card-details-link" id="walletOverviewBtn" type="button" style="border:none;background:transparent;color:#f5c518;cursor:pointer;opacity:.85;transition:opacity .2s;text-decoration:underline;">Open Pi Wallet Overview</button>
+    </div>
 
     <!-- BALANCE -->
     <section class="balance-section">
@@ -1278,7 +1283,7 @@
         </button>
         <button class="action-btn" onclick="window.location.href='shop.html'" style="background:linear-gradient(135deg,rgba(245,197,24,.15),rgba(212,168,16,.08));border-color:rgba(245,197,24,.3);">
             <span class="action-icon">&#128722;</span>
-            Marketplace
+            Dashboard
         </button>
         <button class="action-btn" onclick="window.location.href='map.html'" style="background:linear-gradient(135deg,rgba(249,115,22,.15),rgba(249,115,22,.08));border-color:rgba(249,115,22,.3);">
             <span class="action-icon">&#128205;</span>
@@ -1391,12 +1396,6 @@
             </div>
         </div>
     </section>
-
-    <!-- FOOTER -->
-    <footer class="footer">
-        Visual Pi Card &copy; 2026 &mdash; omendapipaysglobel.online<br>
-        Powered by Pi Blockchain &bull; All transactions in &pi; &bull; 198.54.116.227
-    </footer>
 
     </div><!-- end .app-content -->
 
@@ -3039,6 +3038,23 @@
                         }
                         // Show connected status
                         showToast('\u03C0 Connected: @' + auth.user.username);
+                    }
+                });
+            }
+
+            // Wallet overview button
+            var walletBtn = document.getElementById('walletOverviewBtn');
+            if (walletBtn) {
+                walletBtn.addEventListener('click', function() {
+                    if (window.piOpenWalletOverview) {
+                        window.piOpenWalletOverview(function(url) {
+                            console.log('Opening Pi Wallet overview:', url);
+                        }, function(err) {
+                            console.warn('Unable to open Pi Wallet overview:', err);
+                            window.open('https://minepi.com', '_blank');
+                        });
+                    } else {
+                        window.open('https://minepi.com', '_blank');
                     }
                 });
             }

@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Omenda Pi Pays – City Rush</title>
+  <link rel="preconnect" href="https://sdk.minepi.com">
+  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+  <script src="pi-sdk-helper.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+  <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <style>
+    :root{--bg:#050816;--panel:#0f172a;--panel-strong:#111827;--text:#f8fafc;--text-muted:#94a3b8;--accent:#22c55e;--accent-strong:#38bdf8;--border:rgba(148,163,184,.16);--danger:#ef4444;}
+    *{box-sizing:border-box;}
+    html,body{margin:0;padding:0;min-height:100%;}
+    body{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:linear-gradient(180deg,#020617 0%,#090d1e 100%);color:var(--text);min-height:100vh;}
+    a{color:inherit;text-decoration:none;}
+    button{font:inherit;}
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 26px;background:rgba(15,23,42,.95);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,.08);position:sticky;top:0;z-index:10;}
+    .topbar img{width:54px;height:54px;border-radius:16px;object-fit:cover;background:#22c55e;box-shadow:0 10px 30px rgba(34,197,94,.2);}
+    .topbar-title{display:flex;flex-direction:column;gap:4px;}
+    .topbar-title strong{font-size:1.15rem;letter-spacing:.02em;}
+    .topbar-title span{font-size:.92rem;color:var(--text-muted);}
+    .topbar-nav{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+    .topbar-nav a{font-size:.92rem;font-weight:600;color:rgba(255,255,255,.82);padding:10px 14px;border-radius:16px;border:1px solid transparent;transition:background .2s,border-color .2s,color .2s;}
+    .topbar-nav a:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.14);color:#fff;}
+    .topbar-nav a.active{background:rgba(34,197,94,.16);border-color:rgba(34,197,94,.3);color:#fff;}
+    .page-shell{display:grid;grid-template-columns:1.6fr 1fr;gap:24px;max-width:1240px;margin:28px auto 40px;padding:0 20px;}
+    .hero, .summary, .ride-panel{background:var(--panel);border:1px solid var(--border);border-radius:28px;box-shadow:0 40px 120px rgba(0,0,0,.25);}
+    .hero{padding:30px 32px;}
+    .hero h1{margin:0;font-size:2.65rem;line-height:1.02;letter-spacing:-.03em;}
+    .hero p{max-width:640px;margin:18px 0 0;font-size:1rem;line-height:1.75;color:var(--text-muted);}
+    .hero-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:28px;}
+    .hero-card{padding:20px 22px;border-radius:24px;border:1px solid rgba(34,197,94,.12);background:rgba(34,197,94,.06);box-shadow:0 24px 60px rgba(6,12,29,.18);}
+    .hero-card strong{display:block;font-size:.95rem;margin-bottom:10px;color:#fff;}
+    .hero-card small{color:var(--text-muted);font-size:.9rem;line-height:1.7;}
+    .hero-badges{margin-top:24px;display:flex;flex-wrap:wrap;gap:10px;}
+    .hero-badges span{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);font-size:.84rem;color:var(--text);}
+    .main-panel{padding:26px;display:grid;grid-template-rows:min-content auto;gap:24px;}
+    .panel-block{background:var(--panel-strong);border:1px solid rgba(255,255,255,.06);border-radius:22px;padding:20px;}
+    .panel-block h2{margin:0 0 18px;font-size:1.2rem;}
+    .route-fields{display:grid;gap:16px;}
+    .field{display:flex;flex-direction:column;gap:10px;}
+    .field label{font-size:.85rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;}
+    .field input{border-radius:16px;border:1px solid rgba(255,255,255,.08);background:rgba(15,23,42,.95);color:var(--text);padding:14px 16px;font-size:1rem;outline:none;transition:border .2s ease;}
+    .field input:focus{border-color:rgba(56,189,248,.7);}
+    .options{display:grid;gap:14px;}
+    .ride-map-block{margin-top:24px;}
+    .map-caption{margin-bottom:12px;color:var(--text-muted);font-size:.92rem;}
+    #rideMap{width:100%;height:300px;border-radius:22px;border:1px solid rgba(255,255,255,.08);overflow:hidden;background:#0f172a;}
+    .ride-card{display:grid;grid-template-columns:72px auto 112px;align-items:center;gap:16px;padding:18px;cursor:pointer;border-radius:22px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.02);transition:transform .2s ease,border-color .2s ease,background .2s ease;}
+    .ride-card:hover{transform:translateY(-1px);border-color:rgba(56,189,248,.45);background:rgba(56,189,248,.08);}
+    .ride-card.active{border-color:var(--accent);background:rgba(34,197,94,.15);}
+    .ride-icon{width:60px;height:60px;border-radius:20px;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;font-size:1.6rem;}
+    .ride-meta{display:flex;flex-direction:column;gap:6px;}
+    .ride-meta strong{font-size:1rem;color:#fff;}
+    .ride-meta small{color:var(--text-muted);font-size:.94rem;}
+    .ride-badge{display:inline-flex;margin-top:6px;padding:4px 10px;border-radius:999px;background:rgba(251,191,36,.12);color:#fbbf24;font-size:.75rem;}
+    .ride-rate{text-align:right;}
+    .ride-rate strong{display:block;font-size:1.1rem;color:#fff;}
+    .ride-rate span{font-size:.83rem;color:var(--text-muted);}    
+    .flight-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;}
+    .flight-card{padding:18px 20px;border-radius:22px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);display:flex;flex-direction:column;justify-content:space-between;gap:14px;}
+    .flight-meta{display:flex;align-items:center;gap:14px;}
+    .flight-icon{width:48px;height:48px;border-radius:16px;background:rgba(56,189,248,.12);display:flex;align-items:center;justify-content:center;font-size:1.4rem;}
+    .flight-card strong{font-size:.98rem;color:#fff;}
+    .flight-card small{display:block;color:var(--text-muted);margin-top:4px;}
+    .flight-details{display:flex;justify-content:space-between;align-items:center;font-size:.94rem;color:var(--text-muted);}
+    .flight-details strong{color:#fff;}
+    .summary{padding:26px;display:flex;flex-direction:column;gap:22px;}
+    .summary h2{margin:0;font-size:1.25rem;}
+    .estimate{padding:20px;border-radius:22px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);}
+    .estimate p{margin:0;color:var(--text-muted);line-height:1.7;}
+    .estimate strong{display:block;margin-bottom:8px;font-size:1.2rem;color:#fff;}
+    .payment-status{padding:16px;border-radius:18px;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2);color:#dbeafe;}
+    .details{display:grid;grid-template-columns:1fr 1fr;gap:14px;font-size:.95rem;color:var(--text-muted);line-height:1.7;}
+    .details strong{color:#fff;display:block;margin-bottom:4px;}
+    .details div{padding:14px 16px;border-radius:18px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);}
+    .payment-method{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:18px;border-radius:20px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);}
+    .payment-method span{font-size:.95rem;color:#fff;display:block;margin-bottom:10px;}
+    .payment-method small{color:var(--text-muted);display:block;margin-top:6px;}
+    .payment-method-toggle{display:flex;gap:8px;margin-top:8px;}
+    .pm-btn{border:1px solid rgba(255,255,255,.15);border-radius:16px;padding:10px 14px;background:rgba(255,255,255,.06);color:#fff;cursor:pointer;transition:background .2s,border-color .2s;}
+    .pm-btn.active{background:rgba(56,189,248,.18);border-color:rgba(56,189,248,.4);}
+    .pm-btn:hover{background:rgba(255,255,255,.1);}
+    .card-form{display:grid;gap:12px;padding:16px 18px 0;border-radius:18px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);margin-top:12px;}
+    .card-form.hidden{display:none;}
+    .card-row{display:flex;flex-direction:column;}
+    .card-row.split{grid-template-columns:1fr 1fr;display:grid;gap:12px;}
+    .card-form input{border-radius:16px;border:1px solid rgba(255,255,255,.08);background:rgba(15,23,42,.95);color:var(--text);padding:14px 16px;font-size:1rem;outline:none;}
+    .card-form input::placeholder{color:rgba(255,255,255,.55);}
+    .payment-method{align-items:flex-start;}
+    .cta{display:flex;flex-direction:column;gap:12px;}
+    .cta button{border:none;border-radius:18px;padding:16px 20px;font-size:1rem;font-weight:700;color:#030712;background:linear-gradient(135deg,var(--accent),#4ade80);cursor:pointer;transition:transform .2s ease,box-shadow .2s ease;}
+    .cta button:hover{transform:translateY(-1px);box-shadow:0 18px 52px rgba(34,197,94,.25);}
+    .cta button.secondary{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.12);}
+    .notice{padding:16px;border-radius:18px;background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.16);color:#dbeafe;}
+    .route-actions{margin:18px 0 0;}
+    .route-actions button{padding:12px 14px;border-radius:16px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.08);color:#fff;cursor:pointer;transition:transform .2s ease;}
+    .route-actions button:hover{transform:translateY(-1px);background:rgba(255,255,255,.12);}
+    .bottom-links{display:flex;gap:12px;flex-wrap:wrap;}
+    .bottom-links a{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:var(--text);font-size:.93rem;}
+    .toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);padding:14px 20px;border-radius:18px;color:#fff;font-weight:700;z-index:999;box-shadow:0 18px 48px rgba(0,0,0,.24);}
+    @media(max-width:980px){.page-shell{grid-template-columns:1fr;}.hero-grid{grid-template-columns:1fr;}}    
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <img src="logo.jpg" alt="Omenda Pi Pays Logo">
+    <div class="topbar-title">
+      <strong>City Rush</strong>
+      <span>Ride booking with Pi pay — fast, safe, low-fee transport.</span>
+    </div>
+    <nav class="topbar-nav">
+      <a href="shop.html">Dashboard</a>
+      <a href="map.html">Business Map</a>
+      <a href="shop.html#services" class="active">Book Ride</a>
+    </nav>
+  </header>
+
+  <section class="page-shell">
+    <article class="hero">
+      <h1>City Rush — Worldwide Transport & Delivery</h1>
+      <p>Omenda Pi Pays City Rush brings transport, delivery, airport transfer, and air travel into one Pi-powered booking hub. Enter your route, choose the right service, and pay quickly with Pi.</p>
+      <div class="hero-grid">
+        <div class="hero-card"><strong>Global routing</strong><small>Plan trips anywhere with route previews, airport pickup, cargo delivery, and city rides.</small></div>
+        <div class="hero-card"><strong>Flexible services</strong><small>Economy, premium, cargo, private driver, flights and same-day delivery — all in one platform.</small></div>
+        <div class="hero-card"><strong>Pi checkout</strong><small>Secure wallet payment for every booking type, from rides to flights and delivery orders.</small></div>
+      </div>
+      <div class="hero-badges">
+        <span>🌍 Worldwide service</span>
+        <span>🚚 Transport & delivery</span>
+        <span>✈️ Airport transfer</span>
+      </div>
+    </article>
+
+    <aside class="summary">
+      <h2>Ride overview</h2>
+      <div class="estimate">
+        <strong id="estimateTitle">Select a ride to view estimate</strong>
+        <p id="estimateText">Choose a route and service to preview fare, distance, duration, and payment details.</p>
+      </div>
+      <div class="payment-method">
+        <div>
+          <span>Payment method</span>
+          <div class="payment-method-toggle">
+            <button type="button" class="pm-btn active" data-method="pi">Pi Wallet</button>
+            <button type="button" class="pm-btn" data-method="card">Card</button>
+          </div>
+          <small id="paymentMethodLabel">Pi Wallet</small>
+        </div>
+        <button id="authButton" class="secondary">Connect Pi</button>
+      </div>
+      <div class="card-form hidden" id="cardForm">
+        <div class="card-row"><input id="cardName" type="text" placeholder="Name on card"></div>
+        <div class="card-row"><input id="cardNumber" type="text" placeholder="Card number"></div>
+        <div class="card-row split"><input id="cardExpiry" type="text" placeholder="MM/YY"><input id="cardCvv" type="text" placeholder="CVV"></div>
+      </div>
+      <div class="details">
+        <div><strong>Current location</strong> <span id="currentLocationLabel">Not detected</span></div>
+        <div><strong>Movement</strong> <span id="movementLabel">-</span></div>
+        <div><strong>Duration</strong> <span id="durationLabel">-</span></div>
+        <div><strong>Estimated distance</strong> <span id="distanceLabel">-</span></div>
+        <div><strong>Selected service</strong> <span id="serviceLabel">None</span></div>
+        <div><strong>Estimated fare</strong> <span id="fareLabel">- π</span></div>
+        <div><strong>Route</strong> <span id="routeLabel">No route selected</span></div>
+      </div>
+      <div class="payment-status" id="paymentStatus">Ready to connect Pi wallet.</div>
+      <div class="cta">
+        <button id="payButton" disabled>Choose a ride to pay</button>
+        <button id="routeButton" class="secondary">Open route in Map</button>
+      </div>
+      <div class="notice">City Rush is built for Pi pay users. Your ride itinerary, driver details, and booking confirmation will display here after payment.</div>
+      <div class="bottom-links">
+        <a href="shop.html">Back to Dashboard</a>
+        <a href="map.html">Explore Business Map</a>
+      </div>
+    </aside>
+
+    <main class="main-panel">
+      <div class="panel-block">
+        <h2>Enter your route</h2>
+        <div class="route-fields">
+          <div class="field"><label>Pickup location</label><input id="pickupInput" type="text" placeholder="e.g. New York, Tokyo, or Lat 40.7128, Lng -74.0060"></div>
+          <div class="field"><label>Dropoff location</label><input id="dropoffInput" type="text" placeholder="e.g. London, Nairobi, or Lat -1.2921, Lng 36.8219"></div>
+          <div class="field"><label>Ride note</label><input id="noteInput" type="text" placeholder="Add special instructions for the driver or charter crew"></div>
+        </div>
+        <div class="route-actions"><button type="button" id="locateBtn" class="secondary">Use my current location</button></div>
+        <div class="ride-map-block">
+          <div class="map-caption">Tap the map to place pickup and dropoff points in the city.</div>
+          <div id="rideMap"></div>
+        </div>
+      </div>
+
+      <div class="panel-block">
+        <h2>Choose a ride</h2>
+        <div class="options" id="rideOptions"></div>
+      </div>
+      <div class="panel-block">
+        <h2>Featured flights</h2>
+        <div class="flight-grid" id="flightOptions"></div>
+      </div>
+    </main>
+  </section>
+
+  <script>
+    var piSdkReady = false;
+    var piUser = null;
+    var piAccessToken = null;
+    var savedPiUser = null;
+
+    function savePiUser(user) {
+      try { localStorage.setItem('pivisualcard_pi_user', JSON.stringify(user || {})); } catch (e) {}
+    }
+    function restorePiUser() {
+      try {
+        var raw = localStorage.getItem('pivisualcard_pi_user');
+        if (!raw) return null;
+        var parsed = JSON.parse(raw);
+        return parsed && parsed.username ? parsed : null;
+      } catch (e) { return null; }
+    }
+
+    try {
+      if (window.Pi && Pi.init) {
+        Pi.init({ version: '2.0', sandbox: false });
+        piSdkReady = true;
+      }
+    } catch (e) {
+      console.warn('Pi SDK not available:', e);
+    }
+    savedPiUser = restorePiUser();
+    if (savedPiUser) {
+      piUser = savedPiUser;
+    }
+
+    function piAuthenticate(cb) {
+      if (!piSdkReady) {
+        if (cb) cb(null);
+        return;
+      }
+      Pi.authenticate(['username', 'payments', 'wallet_address'], function(payment) {
+        fetch('/api/pi/complete', {
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({ paymentId: payment.identifier, txid: payment.transaction && payment.transaction.txid })
+        }).catch(function() {});
+      }).then(function(auth) {
+        piUser = auth.user;
+        piAccessToken = auth.accessToken;
+        savePiUser(piUser);
+        if (cb) cb(auth);
+      }).catch(function(e) {
+        console.warn('Pi authenticate failed', e);
+        if (cb) cb(null);
+      });
+    }
+
+    function piCreatePayment(amount, memo, metadata, onSuccess, onError) {
+      if (!piSdkReady) { if (onError) onError('Pi SDK not available'); return; }
+      Pi.createPayment({ amount: amount, memo: memo, metadata: metadata || {} }, {
+        onReadyForServerApproval: function(paymentId) {
+          fetch('/api/pi/approve', {
+            method: 'POST',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({ paymentId: paymentId })
+          }).catch(function(err){ console.error('approval error', err); });
+        },
+        onReadyForServerCompletion: function(paymentId, txid) {
+          fetch('/api/pi/complete', {
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({ paymentId: paymentId, txid: txid })
+          }).then(function(r){return r.json();}).then(function(data){
+            if (data.success && onSuccess) onSuccess(paymentId, txid);
+            else if (onError) onError('Completion failed');
+          }).catch(function(err){ if (onError) onError(err); });
+        },
+        onCancel: function(){ if (onError) onError('Payment cancelled'); },
+        onError: function(e){ if (onError) onError(e); }
+      });
+    }
+
+    var rideServices = [
+      {id:'tr1',icon:'🚗',name:'Economy Ride',price:'0.00001-0.00003 π',desc:'Affordable everyday rides',badge:'Popular'},
+      {id:'tr2',icon:'🚙',name:'Comfort Plus',price:'0.00003-0.00005 π',desc:'Spacious SUVs, premium interiors'},
+      {id:'tr3',icon:'🏎️',name:'Premium',price:'0.00005-0.0001 π',desc:'Luxury executive transport',badge:'Premium'},
+      {id:'tr4',icon:'🚕',name:'City Taxi',price:'0.00001-0.00003 π',desc:'Licensed metered taxis',badge:'Popular'},
+      {id:'tr5',icon:'✈️🚕',name:'Airport Transfer',price:'0.00003-0.00007 π',desc:'Reliable airport pickup & drop'},
+      {id:'tr6',icon:'🏍️',name:'Boda / Motorbike',price:'0.000003-0.00001 π',desc:'Quick motorcycle rides'},
+      {id:'tr7',icon:'🛺',name:'Tuk-Tuk',price:'0.000006-0.00002 π',desc:'Short city trips',badge:'New'},
+      {id:'tr8',icon:'👨‍✈️',name:'Daily Driver',price:'0.00006-0.0001 π/day',desc:'Personal driver for the day'},
+      {id:'tr9',icon:'📦',name:'Express Delivery',price:'0.000006-0.00002 π',desc:'Same-day delivery, under 2 hrs',badge:'Popular'},
+      {id:'tr10',icon:'🚛',name:'Heavy Cargo',price:'0.00003-0.0001 π',desc:'Furniture & large item transport'}
+    ];
+
+    var selectedService = null;
+    var pickupInput = document.getElementById('pickupInput');
+    var dropoffInput = document.getElementById('dropoffInput');
+    var noteInput = document.getElementById('noteInput');
+    var rideOptions = document.getElementById('rideOptions');
+    var flightOptionsList = document.getElementById('flightOptions');
+    var paymentMethod = 'pi';
+    var cardForm = document.getElementById('cardForm');
+    var cardNumberInput = document.getElementById('cardNumber');
+    var cardExpiryInput = document.getElementById('cardExpiry');
+    var cardCvvInput = document.getElementById('cardCvv');
+    var cardNameInput = document.getElementById('cardName');
+    var paymentMethodLabel = document.getElementById('paymentMethodLabel');
+    var distanceLabel = document.getElementById('distanceLabel');
+    var serviceLabel = document.getElementById('serviceLabel');
+    var fareLabel = document.getElementById('fareLabel');
+    var routeLabel = document.getElementById('routeLabel');
+    var currentLocationLabel = document.getElementById('currentLocationLabel');
+    var movementLabel = document.getElementById('movementLabel');
+    var durationLabel = document.getElementById('durationLabel');
+    var estimateTitle = document.getElementById('estimateTitle');
+    var estimateText = document.getElementById('estimateText');
+    var payButton = document.getElementById('payButton');
+    var authButton = document.getElementById('authButton');
+    var paymentStatus = document.getElementById('paymentStatus');
+    var routeButton = document.getElementById('routeButton');
+    var locateBtn = document.getElementById('locateBtn');
+    var rideMap = null;
+    var rideMapMarkers = [];
+    var rideMapMode = 'pickup';
+    var currentLocationMarker = null;
+    var currentLocationCircle = null;
+    var watchId = null;
+    var routeLine = null;
+
+    var flightServices = [
+      {icon:'🇰🇪',airline:'Kenya Airways',route:'NBO → DXB',duration:'5h 20m',price:'0.002 π'},
+      {icon:'🇪🇹',airline:'Ethiopian Airlines',route:'ADD → LHR',duration:'8h 15m',price:'0.003 π'},
+      {icon:'🇦🇪',airline:'Emirates',route:'DXB → JFK',duration:'13h 40m',price:'0.004 π'}
+    ];
+
+    function createRideCards() {
+      rideServices.forEach(function(service) {
+        var card = document.createElement('button');
+        card.type = 'button';
+        card.className = 'ride-card';
+        card.id = service.id;
+        card.innerHTML = '<div class="ride-icon">'+service.icon+'</div>' +
+          '<div class="ride-meta"><strong>'+service.name+'</strong><small>'+service.desc+'</small>'+ (service.badge ? '<small class="ride-badge">'+service.badge+'</small>' : '') + '</div>' +
+          '<div class="ride-rate"><strong>'+service.price+'</strong><span>Est. fare</span></div>';
+        card.addEventListener('click', function() { selectRide(service.id); });
+        rideOptions.appendChild(card);
+      });
+    }
+
+    function createFlightCards() {
+      if (!flightOptionsList) return;
+      flightServices.forEach(function(flight) {
+        var card = document.createElement('div');
+        card.className = 'flight-card';
+        card.innerHTML = '<div class="flight-meta"><div class="flight-icon">'+flight.icon+'</div><div><strong>'+flight.airline+'</strong><small>'+flight.route+'</small></div></div>' +
+          '<div class="flight-details"><span>'+flight.duration+'</span><strong>'+flight.price+'</strong></div>';
+        flightOptionsList.appendChild(card);
+      });
+    }
+
+    function parsePriceRange(value) {
+      var cleaned = value.replace(/[^0-9.\-]/g, '');
+      var parts = cleaned.split('-');
+      return { min: parseFloat(parts[0]) || 0, max: parseFloat(parts[1] || parts[0]) || parseFloat(parts[0]) || 0 };
+    }
+
+    function parseLatLng(text) {
+      if (!text) return null;
+      var match = text.match(/Lat\s*([0-9\.-]+),\s*Lng\s*([0-9\.-]+)/i);
+      if (match) {
+        return { lat: parseFloat(match[1]), lng: parseFloat(match[2]) };
+      }
+      return null;
+    }
+
+    function getRouteCoordinates() {
+      var pickup = parseLatLng(pickupInput.value.trim());
+      var dropoff = parseLatLng(dropoffInput.value.trim());
+      return { pickup: pickup, dropoff: dropoff };
+    }
+
+    function haversineDistance(lat1, lon1, lat2, lon2) {
+      var toRad = Math.PI / 180;
+      var dLat = (lat2 - lat1) * toRad;
+      var dLon = (lon2 - lon1) * toRad;
+      var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat1*toRad) * Math.cos(lat2*toRad) * Math.sin(dLon/2) * Math.sin(dLon/2);
+      var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      return 6371 * c;
+    }
+
+    function estimateDuration(distance) {
+      if (!distance) return null;
+      var mins = Math.max(4, Math.round(distance * 3 + 5));
+      return mins;
+    }
+
+    function calculateDistance() {
+      var coords = getRouteCoordinates();
+      if (coords.pickup && coords.dropoff) {
+        return Math.max(0.5, parseFloat(haversineDistance(coords.pickup.lat, coords.pickup.lng, coords.dropoff.lat, coords.dropoff.lng).toFixed(2)));
+      }
+      var pickup = pickupInput.value.trim();
+      var dropoff = dropoffInput.value.trim();
+      if (!pickup || !dropoff) return null;
+      var score = pickup.length + dropoff.length;
+      var km = Math.max(2, Math.min(16, Math.round(score / 10 * 1.5)));
+      return km;
+    }
+
+    function estimateFare(service) {
+      var range = parsePriceRange(service.price);
+      var distance = calculateDistance() || 4;
+      var factor = Math.min(1.5, Math.max(0.8, distance / 6));
+      return {
+        distance: distance,
+        fare: (range.min + (range.max - range.min) * factor * 0.6).toFixed(6),
+        rangeMin: range.min.toFixed(6),
+        rangeMax: range.max.toFixed(6)
+      };
+    }
+
+    function selectRide(id) {
+      selectedService = rideServices.find(function(item){return item.id===id;});
+      document.querySelectorAll('.ride-card').forEach(function(card){card.classList.toggle('active', card.id===id);});
+      updateSummary();
+    }
+
+    function getRouteLabel() {
+      var pickup = pickupInput.value.trim();
+      var dropoff = dropoffInput.value.trim();
+      if (!pickup && !dropoff) return 'No route selected';
+      if (!pickup) return 'Dropoff: ' + dropoff;
+      if (!dropoff) return 'Pickup: ' + pickup;
+      return pickup + ' → ' + dropoff;
+    }
+
+    function isCardFormValid() {
+      return cardNameInput.value.trim().length > 2 && /(\d{12,19})/.test(cardNumberInput.value.replace(/\s+/g, '')) && /^(0[1-9]|1[0-2])\/(\d{2})$/.test(cardExpiryInput.value.trim()) && /^(\d{3,4})$/.test(cardCvvInput.value.trim());
+    }
+
+    function setPaymentMethod(method) {
+      paymentMethod = method;
+      paymentMethodLabel.textContent = method === 'card' ? 'Card payment' : 'Pi Wallet';
+      cardForm.classList.toggle('hidden', method !== 'card');
+      document.querySelectorAll('.pm-btn').forEach(function(btn){btn.classList.toggle('active', btn.dataset.method === method);});
+      authButton.style.display = method === 'card' ? 'none' : 'inline-flex';
+      updatePaymentStatus();
+      updateSummary();
+    }
+
+    function updateSummary() {
+      updateRideMapMarkers();
+      routeLabel.textContent = getRouteLabel();
+      var coords = getRouteCoordinates();
+      var distance = calculateDistance();
+      var duration = estimateDuration(distance);
+      movementLabel.textContent = distance ? distance + ' km route' : 'No route calculated';
+      durationLabel.textContent = duration ? duration + ' min' : '-';
+      if (!selectedService) {
+        estimateTitle.textContent = 'Select a ride to view estimate';
+        estimateText.textContent = 'Pickup and dropoff details will update the fare estimate. Card or Pi pay available on checkout.';
+        serviceLabel.textContent = 'None';
+        fareLabel.textContent = '- π';
+        distanceLabel.textContent = distance ? distance + ' km' : '- km';
+        payButton.disabled = true;
+        payButton.textContent = 'Choose a ride to pay';
+        authButton.disabled = paymentMethod !== 'pi' || !piSdkReady;
+        return;
+      }
+      var estimate = estimateFare(selectedService);
+      selectedService.estimate = estimate;
+      serviceLabel.textContent = selectedService.name;
+      distanceLabel.textContent = estimate.distance + ' km';
+      fareLabel.textContent = estimate.fare + ' π';
+      estimateTitle.textContent = 'Ready to book ' + selectedService.name;
+      estimateText.textContent = 'Estimated fare based on route and selected service: ' + estimate.rangeMin + '–' + estimate.rangeMax + ' π. Final price confirms with driver.';
+      if (paymentMethod === 'card') {
+        payButton.disabled = !isCardFormValid();
+        payButton.textContent = 'Pay with Card';
+      } else {
+        payButton.disabled = !piSdkReady;
+        payButton.textContent = piSdkReady ? ('Pay ' + estimate.fare + ' π with Pi') : 'Connect Pi to pay';
+      }
+      authButton.disabled = paymentMethod !== 'pi' || !piSdkReady;
+    }
+
+    function updatePaymentStatus() {
+      if (paymentMethod === 'card') {
+        paymentStatus.textContent = 'Card payment selected. Enter card details and confirm.';
+        return;
+      }
+      if (!piSdkReady) {
+        paymentStatus.textContent = 'Pi SDK unavailable — open in Pi Browser or connect Pi wallet.';
+        return;
+      }
+      if (piUser) {
+        paymentStatus.textContent = 'Pi wallet connected as ' + (piUser.username || 'authenticated user');
+        return;
+      }
+      if (savedPiUser) {
+        paymentStatus.textContent = 'Pi wallet remembered from previous login. Tap Connect Pi to resume.';
+        return;
+      }
+      paymentStatus.textContent = 'Pi wallet ready. Tap Connect Pi to sign in.';
+    }
+
+    function initRideMap() {
+      if (typeof L === 'undefined') return;
+      rideMap = L.map('rideMap', { zoomControl:false }).setView([20, 0], 2);
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom:19, attribution:'&copy; OpenStreetMap contributors' }).addTo(rideMap);
+      rideMap.on('click', function(e) {
+        if (!pickupInput.value || rideMapMode === 'pickup') {
+          pickupInput.value = 'Lat ' + e.latlng.lat.toFixed(5) + ', Lng ' + e.latlng.lng.toFixed(5);
+          rideMapMode = 'dropoff';
+        } else {
+          dropoffInput.value = 'Lat ' + e.latlng.lat.toFixed(5) + ', Lng ' + e.latlng.lng.toFixed(5);
+          rideMapMode = 'pickup';
+        }
+        updateSummary();
+      });
+      updateRideMapMarkers();
+      watchCurrentLocation();
+    }
+
+    function updateRideMapMarkers() {
+      if (!rideMap) return;
+      rideMapMarkers.forEach(function(marker){ rideMap.removeLayer(marker); });
+      rideMapMarkers = [];
+      var pickup = pickupInput.value.trim();
+      var dropoff = dropoffInput.value.trim();
+      var bounds = [];
+      if (pickup) {
+        var parts = pickup.match(/Lat\s*([0-9\.-]+),\s*Lng\s*([0-9\.-]+)/);
+        if (parts) {
+          var marker = L.marker([parseFloat(parts[1]), parseFloat(parts[2])], { title:'Pickup' }).addTo(rideMap).bindPopup('<strong>Pickup</strong><br>' + pickup);
+          rideMapMarkers.push(marker);
+          bounds.push(marker.getLatLng());
+        }
+      }
+      if (dropoff) {
+        var parts2 = dropoff.match(/Lat\s*([0-9\.-]+),\s*Lng\s*([0-9\.-]+)/);
+        if (parts2) {
+          var marker = L.marker([parseFloat(parts2[1]), parseFloat(parts2[2])], { title:'Dropoff' }).addTo(rideMap).bindPopup('<strong>Dropoff</strong><br>' + dropoff);
+          rideMapMarkers.push(marker);
+          bounds.push(marker.getLatLng());
+        }
+      }
+      if (routeLine) {
+        rideMap.removeLayer(routeLine);
+        routeLine = null;
+      }
+      if (bounds.length === 2) {
+        routeLine = L.polyline(bounds, { color:'#22c55e', weight:4, opacity:0.9, dashArray:'8 6' }).addTo(rideMap);
+        rideMap.fitBounds(bounds, { padding:[60,60] });
+      } else if (bounds.length === 1) {
+        rideMap.setView(bounds[0], 14);
+      }
+    }
+
+    function setCurrentLocation(lat, lng) {
+      if (!rideMap) return;
+      var coords = L.latLng(lat, lng);
+      if (!currentLocationMarker) {
+        currentLocationMarker = L.circleMarker(coords, {
+          radius: 8,
+          color: '#38bdf8',
+          fillColor: '#38bdf8',
+          fillOpacity: 0.9,
+          weight: 3
+        }).addTo(rideMap).bindPopup('<strong>Current Location</strong>');
+      } else {
+        currentLocationMarker.setLatLng(coords);
+      }
+      if (!currentLocationCircle) {
+        currentLocationCircle = L.circle(coords, {
+          radius: 80,
+          color: '#38bdf8',
+          fillColor: '#38bdf8',
+          fillOpacity: 0.08
+        }).addTo(rideMap);
+      } else {
+        currentLocationCircle.setLatLng(coords);
+      }
+      currentLocationLabel.textContent = 'Lat ' + lat.toFixed(5) + ', Lng ' + lng.toFixed(5);
+    }
+
+    function watchCurrentLocation() {
+      if (!navigator.geolocation) {
+        currentLocationLabel.textContent = 'Geolocation unsupported';
+        return;
+      }
+      watchId = navigator.geolocation.watchPosition(function(pos) {
+        setCurrentLocation(pos.coords.latitude, pos.coords.longitude);
+      }, function() {
+        currentLocationLabel.textContent = 'Location permission denied';
+      }, { enableHighAccuracy:true, maximumAge:5000, timeout:15000 });
+    }
+
+    function buildRouteQuery() {
+      var pickup = encodeURIComponent(pickupInput.value.trim());
+      var dropoff = encodeURIComponent(dropoffInput.value.trim());
+      var query = 'category=transport';
+      if (pickup) query += '&pickup=' + pickup;
+      if (dropoff) query += '&dropoff=' + dropoff;
+      return query;
+    }
+
+    function openRideMapPage() {
+      window.location.href = 'map.html?' + buildRouteQuery();
+    }
+
+    function showToast(message, success) {
+      var toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.textContent = message;
+      toast.style.background = success ? 'rgba(34,197,94,.95)' : 'rgba(239,68,68,.95)';
+      document.body.appendChild(toast);
+      setTimeout(function(){ toast.remove(); }, 4200);
+    }
+
+    function processCardPayment() {
+      if (!selectedService) {
+        showToast('Please choose a ride option first.', false);
+        return;
+      }
+      var pickup = pickupInput.value.trim();
+      var dropoff = dropoffInput.value.trim();
+      if (!pickup || !dropoff) {
+        showToast('Please enter both pickup and dropoff locations.', false);
+        return;
+      }
+      if (!isCardFormValid()) {
+        showToast('Please fill in valid card details.', false);
+        return;
+      }
+      var amount = selectedService.estimate ? selectedService.estimate.fare : '0.00001';
+      payButton.textContent = 'Processing card payment...';
+      payButton.disabled = true;
+      fetch('/api/card-pay', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({
+          amount: amount,
+          merchant: 'City Rush',
+          note: selectedService.name + ' ride',
+          cardNumber: cardNumberInput.value.trim(),
+          expiry: cardExpiryInput.value.trim(),
+          cvv: cardCvvInput.value.trim(),
+          name: cardNameInput.value.trim(),
+          metadata: { rideType: selectedService.name, pickup: pickup, dropoff: dropoff }
+        })
+      }).then(function(res){return res.json();}).then(function(data){
+        if (data.success) {
+          showToast('Card payment approved! Ride confirmed.', true);
+          paymentStatus.textContent = 'Ride booked with card payment. Driver arriving shortly.';
+          payButton.textContent = 'Ride confirmed';
+          payButton.disabled = true;
+        } else {
+          throw new Error(data.error || 'Card payment failed');
+        }
+      }).catch(function(err){
+        console.error('Card payment error', err);
+        payButton.textContent = 'Pay with Card';
+        payButton.disabled = false;
+        showToast(err.message || 'Card payment failed. Try again.', false);
+      });
+    }
+
+    function processPayment() {
+      if (paymentMethod === 'card') {
+        processCardPayment();
+        return;
+      }
+      if (!selectedService) {
+        showToast('Please choose a ride option first.', false);
+        return;
+      }
+      var pickup = pickupInput.value.trim();
+      var dropoff = dropoffInput.value.trim();
+      if (!pickup || !dropoff) {
+        showToast('Please enter both pickup and dropoff locations.', false);
+        return;
+      }
+      if (!piSdkReady) {
+        showToast('Pi SDK not available. Open this page in Pi Browser.', false);
+        return;
+      }
+      if (!piUser) {
+        piAuthenticate(function(auth) {
+          if (!auth) {
+            showToast('Pi authentication failed. Please try again.', false);
+            updatePaymentStatus();
+            return;
+          }
+          updatePaymentStatus();
+          processPayment();
+        });
+        return;
+      }
+      var amount = selectedService.estimate ? selectedService.estimate.fare : '0.00001';
+      var memo = 'City Rush Ride: ' + selectedService.name + ' from ' + pickup + ' to ' + dropoff;
+      payButton.textContent = 'Opening Pi pay...';
+      payButton.disabled = true;
+      piCreatePayment(amount, memo, { rideType: selectedService.name, pickup: pickup, dropoff: dropoff }, function(paymentId, txid) {
+        showToast('Ride confirmed! Payment complete: ' + amount + ' π', true);
+        paymentStatus.textContent = 'Ride booked and paid with Pi. Driver arriving shortly.';
+        payButton.textContent = 'Ride confirmed';
+        payButton.disabled = true;
+      }, function(error) {
+        console.error('Pi payment error', error);
+        payButton.textContent = 'Pay ' + (selectedService.estimate ? selectedService.estimate.fare : '0.00001') + ' π with Pi';
+        payButton.disabled = false;
+        showToast(typeof error === 'string' ? error : 'Payment failed. Please try again.', false);
+      });
+    }
+
+    document.querySelectorAll('.pm-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        setPaymentMethod(btn.dataset.method);
+      });
+    });
+
+    authButton.addEventListener('click', function() {
+      if (!piSdkReady) {
+        showToast('Pi SDK not available. Open in Pi Browser.', false);
+        return;
+      }
+      authButton.disabled = true;
+      piAuthenticate(function(auth) {
+        authButton.disabled = false;
+        authButton.textContent = 'Connect Pi';
+        updatePaymentStatus();
+        if (auth) showToast('Pi wallet connected!', true);
+        else showToast('Pi login failed.', false);
+      });
+    });
+
+    locateBtn.addEventListener('click', function() {
+      if (!navigator.geolocation) {
+        showToast('Geolocation not supported.', false);
+        return;
+      }
+      navigator.geolocation.getCurrentPosition(function(pos) {
+        setCurrentLocation(pos.coords.latitude, pos.coords.longitude);
+        if (!pickupInput.value.trim()) {
+          pickupInput.value = 'Lat ' + pos.coords.latitude.toFixed(5) + ', Lng ' + pos.coords.longitude.toFixed(5);
+        }
+        updateSummary();
+        showToast('Current location loaded.', true);
+      }, function() {
+        showToast('Unable to access location.', false);
+      }, { enableHighAccuracy:true, maximumAge:5000, timeout:15000 });
+    });
+
+    payButton.addEventListener('click', processPayment);
+    routeButton.addEventListener('click', function() { openRideMapPage(); });
+    pickupInput.addEventListener('input', updateSummary);
+    dropoffInput.addEventListener('input', updateSummary);
+    noteInput.addEventListener('input', updateSummary);
+
+    createRideCards();
+    createFlightCards();
+    initRideMap();
+    setPaymentMethod(piSdkReady ? 'pi' : 'card');
+    updatePaymentStatus();
+    updateSummary();
+  </script>
+</body>
+</html>
