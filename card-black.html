@@ -267,25 +267,86 @@ h1{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient
 .unlock-info{margin-top:24px;font-size:.85rem;color:#666;line-height:1.6;text-align:center}
 .unlock-info a{color:#8b5cf6;text-decoration:none}
 .unlock-error{color:#e74c3c;font-size:.82rem;margin-top:8px;display:none}
+
+.card-content{display:block}
+.text-center{text-align:center}
+.card-meta-row{display:flex;justify-content:space-between;align-items:center}
+.card-meta-label{font-size:.7rem;color:rgba(255,255,255,.4)}
+.card-meta-pill{font-size:.65rem;background:rgba(255,255,255,.06);padding:3px 10px;border-radius:8px;color:rgba(255,255,255,.5)}
+.row-gap-30{display:flex;gap:30px}
+.usd-label-spaced{margin-top:6px}
+.section-note{font-size:.8rem;color:rgba(255,255,255,.4);margin-bottom:14px}
+.center-row{display:flex;justify-content:space-around;margin-top:10px}
+.metric-card{flex:1;min-width:120px;background:rgba(255,255,255,.03);border-radius:10px;padding:12px;text-align:center}
+.metric-title{font-size:.65rem;color:rgba(255,255,255,.4)}
+.metric-value{font-size:1.1rem;font-weight:700;color:#ccc}
+.full-width{width:100%}
+.hidden{display:none!important}
+.command-chip{font-size:.7rem;background:rgba(255,255,255,.06);padding:2px 6px;border-radius:4px}
+.concierge-panel{max-height:350px;overflow-y:auto}
+.center-note{text-align:center;margin-bottom:14px}
+.sec-status{font-size:.7rem;color:rgba(255,255,255,.3);margin-top:6px}
+.small-muted{font-size:.72rem;color:rgba(255,255,255,.4)}
+.security-heading{margin-top:16px;font-size:.85rem;color:rgba(255,255,255,.5)}
+.status-success{color:#27ae60;font-weight:600;margin-bottom:6px}
+.vault-earned{color:#27ae60}
+.vault-empty{text-align:center;color:rgba(255,255,255,.25);padding:20px;font-size:.82rem}
+.info-row{display:flex;justify-content:space-between;margin-bottom:4px}
+.metric-box{text-align:center}
+.metric-icon{font-size:1.5rem;color:rgba(255,255,255,.6)}
+.flex-1{flex:1}
+.flex-2{flex:2}
+.table-full{width:100%;font-size:.85rem;border-collapse:collapse}
+.table-row{border-bottom:1px solid rgba(255,255,255,.04)}
+.table-cell{padding:10px;color:rgba(255,255,255,.5)}
+.table-cell--strong{padding:10px;font-weight:600;color:#ccc}
+.table-cell--positive{padding:10px;color:#27ae60}
+.table-cell--highlight{padding:10px;color:#ccc}
+
+.text-muted{color:#ccc}
+.concierge-note{margin-bottom:12px}
+.concierge-title{color:rgba(255,255,255,.3);font-size:.7rem;margin-bottom:4px}
+
+.metric-caption{font-size:.65rem;color:rgba(255,255,255,.3)}
+.flex-between{display:flex;justify-content:space-between}
+.note-muted{margin-top:4px;color:rgba(255,255,255,.3);font-size:.72rem}
+.positive-note{font-size:.72rem;color:#27ae60}
+.legend-row{display:flex;align-items:center;gap:6px;font-size:.72rem}
+.timestamp{font-size:.65rem;color:rgba(255,255,255,.2)}
+.chat-user{margin-top:12px;text-align:right}
+.chat-bubble{background:rgba(255,255,255,.06);display:inline-block;padding:8px 14px;border-radius:10px;font-size:.82rem}
+.chat-response{margin-top:12px}
+.tx-icon{font-size:1.1rem}
+.tx-note-title{font-weight:600;font-size:.82rem}
+.tx-meta{font-size:.7rem;color:rgba(255,255,255,.3)}
+
+.tx-result{font-weight:700;}
+
+.legend-text{color:rgba(255,255,255,.5)}
+.tx-main{flex:1}
+
+.priority-badge{color:#27ae60}
+.no-transactions{display:flex;justify-content:center;color:rgba(255,255,255,.25);padding:20px;font-size:.82rem}
+.chat-user-label{color:rgba(255,255,255,.3);font-size:.7rem;margin-bottom:4px}
 </style>
 </head>
 <body>
 <!-- Card Content -->
-<div class="container" id="cardContent" style="display:block">
+<div class="container card-content" id="cardContent">
     <h1>♦ Black Card</h1>
     <p class="subtitle">Unlimited Service • Priority Processing • Concierge • No Limits</p>
-    <div style="text-align:center"><span class="badge">BLACK UNLIMITED</span> <span class="ac-testnet">TESTNET</span></div>
+    <div class="text-center"><span class="badge">BLACK UNLIMITED</span> <span class="ac-testnet">TESTNET</span></div>
 
     <!-- Card Preview -->
     <div class="card-preview">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-            <span style="font-size:.7rem;color:rgba(255,255,255,.4)">Visual Pi Card</span>
-            <span style="font-size:.65rem;background:rgba(255,255,255,.06);padding:3px 10px;border-radius:8px;color:rgba(255,255,255,.5)">UNLIMITED</span>
+        <div class="card-meta-row">
+            <span class="card-meta-label">Visual Pi Card</span>
+            <span class="card-meta-pill">UNLIMITED</span>
         </div>
         <div class="card-label">Card Number</div>
         <div class="card-number" id="cardNumber">—</div>
         <div class="card-wallet" id="cardWallet"></div>
-        <div style="display:flex;gap:30px">
+        <div class="row-gap-30">
             <div><div class="card-label">Card Holder</div><div class="card-val" id="holderName">PI PIONEER</div></div>
             <div><div class="card-label">Expires</div><div class="card-val">12/30</div></div>
             <div><div class="card-label">CVV</div><div class="card-val">007</div></div>
@@ -329,7 +390,7 @@ h1{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient
         <div class="usd-label">Your Black Card Balance</div>
         <div class="pi-amount" id="bkPiBalance">0.00 π</div>
         <div class="usd-amount" id="bkUsdBalance">$0.00</div>
-        <div class="usd-label" style="margin-top:6px">1 π = $2,248,000.00 — Withdraw & Exchange at this rate</div>
+        <div class="usd-label usd-label-spaced">1 π = $2,248,000.00 — Withdraw & Exchange at this rate</div>
     </div>
 
     <!-- 5-Year Reward -->
@@ -385,14 +446,14 @@ h1{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient
     <!-- Spending Tracker -->
     <div class="section">
         <h2><span>📊</span> Spending Power</h2>
-        <p style="font-size:.8rem;color:rgba(255,255,255,.4);margin-bottom:14px">No limits — your full balance is always available</p>
+        <p class="section-note">No limits — your full balance is always available</p>
         <div class="limit-box">
             <div class="limit-label"><span>Balance: <strong id="balanceAmt">0.00</strong> π</span><span>Limit: <strong>∞ UNLIMITED</strong></span></div>
-            <div class="limit-bar"><div class="limit-fill" id="limitFill" style="width:0%"></div></div>
-            <div style="display:flex;justify-content:space-around;margin-top:10px">
-                <div style="text-align:center"><span style="font-size:1.5rem;color:rgba(255,255,255,.6)">∞</span><div style="font-size:.65rem;color:rgba(255,255,255,.3)">No daily limit</div></div>
-                <div style="text-align:center"><span style="font-size:1.5rem;color:rgba(255,255,255,.6)" id="totalSpent">0</span><div style="font-size:.65rem;color:rgba(255,255,255,.3)">Total spent (π)</div></div>
-                <div style="text-align:center"><span style="font-size:1.5rem;color:rgba(255,255,255,.6)" id="totalReceived">0</span><div style="font-size:.65rem;color:rgba(255,255,255,.3)">Total received (π)</div></div>
+            <div class="limit-bar"><div class="limit-fill" id="limitFill" ></div></div>
+            <div class="center-row">
+                <div class="text-center"><span class="metric-icon">∞</span><div class="metric-caption">No daily limit</div></div>
+                <div class="text-center"><span class="metric-icon" id="totalSpent">0</span><div class="metric-caption">Total spent (π)</div></div>
+                <div class="text-center"><span class="metric-icon" id="totalReceived">0</span><div class="metric-caption">Total received (π)</div></div>
             </div>
         </div>
     </div>
@@ -400,7 +461,7 @@ h1{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient
     <!-- Instant Priority Transfer -->
     <div class="section">
         <h2><span>⚡</span> Instant Priority Transfer</h2>
-        <p style="font-size:.8rem;color:rgba(255,255,255,.4);margin-bottom:14px">Send or receive Pi instantly — zero wait, zero limits, priority queue</p>
+        <p class="section-note">Send or receive Pi instantly — zero wait, zero limits, priority queue</p>
         <div class="transfer-box">
             <div class="transfer-row">
                 <select id="txType">
@@ -412,11 +473,11 @@ h1{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient
                 <input type="number" id="txAmount" placeholder="Amount (π)" min="0.01" step="0.01">
             </div>
             <div class="transfer-row">
-                <input type="text" id="txNote" placeholder="Note (optional)" style="flex:2">
-                <button class="btn btn-black" onclick="executeTransfer()" style="flex:1">⚡ Execute</button>
+                <input type="text" id="txNote" placeholder="Note (optional)" class="flex-2">
+                <button class="btn btn-black" onclick="executeTransfer()" class="flex-1">⚡ Execute</button>
             </div>
             <div class="transfer-receipt" id="txReceipt">
-                <div style="color:#27ae60;font-weight:600;margin-bottom:6px">✓ Transaction Complete</div>
+                <div class="status-success">✓ Transaction Complete</div>
                 <div id="txReceiptDetails"></div>
                 <div class="tx-id" id="txReceiptId"></div>
             </div>
@@ -426,11 +487,11 @@ h1{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient
     <!-- VIP Vault -->
     <div class="section">
         <h2><span>🔐</span> VIP Vault — Earn While You Hold</h2>
-        <p style="font-size:.8rem;color:rgba(255,255,255,.4);margin-bottom:14px">Lock Pi in the vault for guaranteed returns — Black Card exclusive</p>
+        <p class="section-note">Lock Pi in the vault for guaranteed returns — Black Card exclusive</p>
         <div class="vault-box">
             <div class="vault-summary">
                 <div class="vault-stat"><div class="v-label">Locked Pi</div><div class="v-val" id="vaultLocked">0.00</div></div>
-                <div class="vault-stat"><div class="v-label">Earned Interest</div><div class="v-val" id="vaultEarned" style="color:#27ae60">0.00</div></div>
+                <div class="vault-stat"><div class="v-label">Earned Interest</div><div class="v-val" id="vaultEarned" class="vault-earned">0.00</div></div>
                 <div class="vault-stat"><div class="v-label">Active Locks</div><div class="v-val" id="vaultCount">0</div></div>
             </div>
             <div class="transfer-row">
@@ -444,7 +505,7 @@ h1{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient
                 <button class="btn btn-black" onclick="lockVault()">🔐 Lock</button>
             </div>
             <div class="vault-entries" id="vaultEntries">
-                <div style="text-align:center;color:rgba(255,255,255,.25);padding:20px;font-size:.82rem">No vault entries yet</div>
+                <div class="vault-empty">No vault entries yet</div>
             </div>
         </div>
     </div>
@@ -452,7 +513,7 @@ h1{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient
     <!-- Spending Analytics -->
     <div class="section">
         <h2><span>📈</span> Spending Analytics</h2>
-        <p style="font-size:.8rem;color:rgba(255,255,255,.4);margin-bottom:14px">Real-time breakdown of your Black Card activity</p>
+        <p class="section-note">Real-time breakdown of your Black Card activity</p>
         <div class="analytics-box">
             <div class="chart-row">
                 <div class="chart-card">
@@ -467,18 +528,18 @@ h1{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient
                     </div>
                 </div>
             </div>
-            <div style="display:flex;gap:10px;flex-wrap:wrap">
-                <div style="flex:1;min-width:120px;background:rgba(255,255,255,.03);border-radius:10px;padding:12px;text-align:center">
-                    <div style="font-size:.65rem;color:rgba(255,255,255,.4)">AVG TRANSACTION</div>
-                    <div style="font-size:1.1rem;font-weight:700;color:#ccc" id="avgTx">0.00 π</div>
+            <div class="metrics-row">
+                <div class="metric-card">
+                    <div class="metric-title">AVG TRANSACTION</div>
+                    <div class="metric-value" id="avgTx">0.00 π</div>
                 </div>
-                <div style="flex:1;min-width:120px;background:rgba(255,255,255,.03);border-radius:10px;padding:12px;text-align:center">
-                    <div style="font-size:.65rem;color:rgba(255,255,255,.4)">LARGEST TX</div>
-                    <div style="font-size:1.1rem;font-weight:700;color:#ccc" id="maxTx">0.00 π</div>
+                <div class="metric-card">
+                    <div class="metric-title">LARGEST TX</div>
+                    <div class="metric-value" id="maxTx">0.00 π</div>
                 </div>
-                <div style="flex:1;min-width:120px;background:rgba(255,255,255,.03);border-radius:10px;padding:12px;text-align:center">
-                    <div style="font-size:.65rem;color:rgba(255,255,255,.4)">TOTAL TXS</div>
-                    <div style="font-size:1.1rem;font-weight:700;color:#ccc" id="totalTxCount">0</div>
+                <div class="metric-card">
+                    <div class="metric-title">TOTAL TXS</div>
+                    <div class="metric-value" id="totalTxCount">0</div>
                 </div>
             </div>
         </div>
@@ -487,17 +548,17 @@ h1{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient
     <!-- Security Center -->
     <div class="section">
         <h2><span>🛡️</span> Security Center</h2>
-        <p style="font-size:.8rem;color:rgba(255,255,255,.4);margin-bottom:14px">Real-time fraud monitoring, card freeze, and security controls</p>
+        <p class="section-note">Real-time fraud monitoring, card freeze, and security controls</p>
         <div class="security-box">
-            <div style="text-align:center;margin-bottom:14px">
+            <div class="center-note">
                 <button class="freeze-btn" id="freezeBtn" onclick="toggleFreeze()">🔒 Freeze Card</button>
-                <div style="font-size:.7rem;color:rgba(255,255,255,.3);margin-top:6px" id="freezeStatus">Card is active</div>
+                <div class="sec-status" id="freezeStatus">Card is active</div>
             </div>
-            <div class="sec-row"><div class="sec-icon">🔔</div><div><strong>Transaction Alerts</strong><br><span style="font-size:.72rem;color:rgba(255,255,255,.4)">Get notified on every transaction</span></div><div class="sec-toggle on" onclick="this.classList.toggle('on')"></div></div>
-            <div class="sec-row"><div class="sec-icon">🌍</div><div><strong>Geo-Lock</strong><br><span style="font-size:.72rem;color:rgba(255,255,255,.4)">Restrict to specific countries</span></div><div class="sec-toggle" onclick="this.classList.toggle('on')"></div></div>
-            <div class="sec-row"><div class="sec-icon">🔢</div><div><strong>2FA on Large Transfers</strong><br><span style="font-size:.72rem;color:rgba(255,255,255,.4)">Require 2FA for transactions &gt; 1000 π</span></div><div class="sec-toggle on" onclick="this.classList.toggle('on')"></div></div>
-            <div class="sec-row"><div class="sec-icon">👤</div><div><strong>Biometric Auth</strong><br><span style="font-size:.72rem;color:rgba(255,255,255,.4)">Fingerprint/Face ID for payments</span></div><div class="sec-toggle on" onclick="this.classList.toggle('on')"></div></div>
-            <h4 style="margin-top:16px;font-size:.85rem;color:rgba(255,255,255,.5)">🔍 Security Alerts</h4>
+            <div class="sec-row"><div class="sec-icon">🔔</div><div><strong>Transaction Alerts</strong><br><span class="small-muted">Get notified on every transaction</span></div><div class="sec-toggle on" onclick="this.classList.toggle('on')"></div></div>
+            <div class="sec-row"><div class="sec-icon">🌍</div><div><strong>Geo-Lock</strong><br><span class="small-muted">Restrict to specific countries</span></div><div class="sec-toggle" onclick="this.classList.toggle('on')"></div></div>
+            <div class="sec-row"><div class="sec-icon">🔢</div><div><strong>2FA on Large Transfers</strong><br><span class="small-muted">Require 2FA for transactions &gt; 1000 π</span></div><div class="sec-toggle on" onclick="this.classList.toggle('on')"></div></div>
+            <div class="sec-row"><div class="sec-icon">👤</div><div><strong>Biometric Auth</strong><br><span class="small-muted">Fingerprint/Face ID for payments</span></div><div class="sec-toggle on" onclick="this.classList.toggle('on')"></div></div>
+            <h4 class="security-heading">🔍 Security Alerts</h4>
             <div class="alert-log" id="alertLog">
                 <div class="alert-item safe"><span>🟢</span><span>System secure — no threats detected</span></div>
             </div>
@@ -507,10 +568,10 @@ h1{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient
     <!-- Concierge Service -->
     <div class="section">
         <h2><span>🛎️</span> Black Card Concierge</h2>
-        <p style="font-size:.8rem;color:rgba(255,255,255,.4);margin-bottom:14px">24/7 AI assistant — type commands: <code style="font-size:.7rem;background:rgba(255,255,255,.06);padding:2px 6px;border-radius:4px">send</code> <code style="font-size:.7rem;background:rgba(255,255,255,.06);padding:2px 6px;border-radius:4px">balance</code> <code style="font-size:.7rem;background:rgba(255,255,255,.06);padding:2px 6px;border-radius:4px">vault</code> <code style="font-size:.7rem;background:rgba(255,255,255,.06);padding:2px 6px;border-radius:4px">freeze</code> <code style="font-size:.7rem;background:rgba(255,255,255,.06);padding:2px 6px;border-radius:4px">help</code></p>
-        <div class="concierge" style="max-height:350px;overflow-y:auto">
+        <p class="section-note">24/7 AI assistant — type commands: <code class="command-chip">send</code> <code class="command-chip">balance</code> <code class="command-chip">vault</code> <code class="command-chip">freeze</code> <code class="command-chip">help</code></p>
+        <div class="concierge" class="concierge-panel">
             <div id="conciergeChat">
-                <div style="margin-bottom:12px"><div style="color:rgba(255,255,255,.3);font-size:.7rem;margin-bottom:4px">🛎️ Concierge</div><div class="concierge-msg">Welcome to Black Card Concierge. I can execute commands for you:<br>• <strong>send [amount] [user]</strong> — instant priority transfer<br>• <strong>balance</strong> — check your balance<br>• <strong>vault [amount]</strong> — lock Pi in VIP vault<br>• <strong>freeze / unfreeze</strong> — card security<br>• <strong>stats</strong> — spending analytics<br>• Or ask me anything!</div></div>
+                <div class="concierge-note"><div class="concierge-title">🛎️ Concierge</div><div class="concierge-msg">Welcome to Black Card Concierge. I can execute commands for you:<br>• <strong>send [amount] [user]</strong> — instant priority transfer<br>• <strong>balance</strong> — check your balance<br>• <strong>vault [amount]</strong> — lock Pi in VIP vault<br>• <strong>freeze / unfreeze</strong> — card security<br>• <strong>stats</strong> — spending analytics<br>• Or ask me anything!</div></div>
             </div>
             <div class="concierge-input">
                 <input type="text" id="conciergeInput" placeholder="Type a command or ask anything..." onkeydown="if(event.key==='Enter')sendConcierge()">
@@ -522,16 +583,16 @@ h1{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient
     <!-- Priority Queue -->
     <div class="section">
         <h2><span>⚡</span> Priority Transaction Queue</h2>
-        <p style="font-size:.8rem;color:rgba(255,255,255,.4);margin-bottom:14px">Live queue — your transactions always process first</p>
+        <p class="section-note">Live queue — your transactions always process first</p>
         <div class="priority-list" id="priorityList"></div>
     </div>
 
     <!-- Transaction History -->
     <div class="section">
         <h2><span>📋</span> Transaction History</h2>
-        <p style="font-size:.8rem;color:rgba(255,255,255,.4);margin-bottom:14px">Full log with priority tags</p>
+        <p class="section-note">Full log with priority tags</p>
         <div class="tx-history" id="txHistory">
-            <div style="text-align:center;color:rgba(255,255,255,.25);padding:20px;font-size:.82rem">No transactions yet — use Instant Transfer above</div>
+            <div class="vault-empty">No transactions yet — use Instant Transfer above</div>
         </div>
     </div>
 
@@ -551,7 +612,7 @@ h1{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient
     <!-- Exchange & Buy Crypto at Black Rate -->
     <div class="section">
         <h2><span>💱</span> Exchange & Buy Crypto at Black Rate</h2>
-        <p style="font-size:.8rem;color:rgba(255,255,255,.4);margin-bottom:14px">All Black Card transactions use: <strong style="color:#ccc">1 π = $2,248,000.00</strong></p>
+        <p class="section-note">All Black Card transactions use: <strong class="text-muted">1 π = $2,248,000.00</strong></p>
         <div class="exchange-grid">
             <div class="exchange-btn" onclick="showBkConvert('withdraw')"><div class="ex-icon">🏧</div><div class="ex-label">Withdraw</div><div class="ex-rate">π → USD at Black Rate</div></div>
             <div class="exchange-btn" onclick="showBkConvert('btc')"><div class="ex-icon">₿</div><div class="ex-label">Buy BTC</div><div class="ex-rate">π → BTC at Black Rate</div></div>
@@ -560,13 +621,13 @@ h1{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient
             <div class="exchange-btn" onclick="showBkConvert('card')"><div class="ex-icon">💳</div><div class="ex-label">Exchange Cards</div><div class="ex-rate">Transfer to other Visual Pi Cards</div></div>
             <div class="exchange-btn" onclick="showBkConvert('ext')"><div class="ex-icon">🌐</div><div class="ex-label">External Exchange</div><div class="ex-rate">Binance, Coinbase, etc.</div></div>
         </div>
-        <div class="convert-box" id="bkConvertBox" style="display:none">
+        <div class="convert-box" id="bkConvertBox" class="hidden">
             <div class="convert-row">
-                <div style="flex:1">
+                <div class="flex-1">
                     <label>Amount (π)</label>
                     <input type="number" id="bkConvertAmt" placeholder="1" min="0" step="0.01">
                 </div>
-                <div style="flex:1">
+                <div class="flex-1">
                     <label>Convert To</label>
                     <select id="bkConvertTarget">
                         <option value="usd">USD ($)</option>
@@ -576,7 +637,7 @@ h1{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient
                     </select>
                 </div>
             </div>
-            <button class="btn btn-black" onclick="calcBkConvert()" style="width:100%">💱 Convert at Black Rate</button>
+            <button class="btn btn-black" onclick="calcBkConvert()" class="full-width">💱 Convert at Black Rate</button>
             <div class="convert-result" id="bkConvertResult">
                 <div class="cv-from" id="bkCvFrom">1.00 π</div>
                 <div class="cv-to" id="bkCvTo">$2,248,000.00</div>
@@ -588,14 +649,14 @@ h1{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient
     <!-- Fee Structure -->
     <div class="section">
         <h2><span>💰</span> Fee Structure</h2>
-        <table style="width:100%;font-size:.85rem;border-collapse:collapse">
-            <tr style="border-bottom:1px solid rgba(255,255,255,.04)"><td style="padding:10px;color:rgba(255,255,255,.5)">Activation Fee</td><td style="padding:10px;font-weight:600;color:#ccc">120 π (one-time)</td></tr>
-            <tr style="border-bottom:1px solid rgba(255,255,255,.04)"><td style="padding:10px;color:rgba(255,255,255,.5)">Black Card Rate</td><td style="padding:10px;color:#ccc">1 π = $2,248,000.00 (stable)</td></tr>
-            <tr style="border-bottom:1px solid rgba(255,255,255,.04)"><td style="padding:10px;color:rgba(255,255,255,.5)">Loyalty Reward</td><td style="padding:10px;color:#27ae60">+1 π / 5 years</td></tr>
-            <tr style="border-bottom:1px solid rgba(255,255,255,.04)"><td style="padding:10px;color:rgba(255,255,255,.5)">Transaction Limit</td><td style="padding:10px;color:#ccc">Unlimited</td></tr>
-            <tr style="border-bottom:1px solid rgba(255,255,255,.04)"><td style="padding:10px;color:rgba(255,255,255,.5)">Processing</td><td style="padding:10px;color:#ccc">Priority Queue</td></tr>
-            <tr style="border-bottom:1px solid rgba(255,255,255,.04)"><td style="padding:10px;color:rgba(255,255,255,.5)">Concierge</td><td style="padding:10px;color:#ccc">24/7 Included</td></tr>
-            <tr><td style="padding:10px;color:rgba(255,255,255,.5)">Global Access</td><td style="padding:10px;color:#ccc">All Countries</td></tr>
+        <table class="table-full">
+            <tr class="table-row"><td class="table-cell">Activation Fee</td><td class="table-cell table-cell--strong">120 π (one-time)</td></tr>
+            <tr class="table-row"><td class="table-cell">Black Card Rate</td><td class="table-cell table-cell--highlight">1 π = $2,248,000.00 (stable)</td></tr>
+            <tr class="table-row"><td class="table-cell">Loyalty Reward</td><td class="table-cell table-cell--positive">+1 π / 5 years</td></tr>
+            <tr class="table-row"><td class="table-cell">Transaction Limit</td><td class="table-cell table-cell--highlight">Unlimited</td></tr>
+            <tr class="table-row"><td class="table-cell">Processing</td><td class="table-cell table-cell--highlight">Priority Queue</td></tr>
+            <tr class="table-row"><td class="table-cell">Concierge</td><td class="table-cell table-cell--highlight">24/7 Included</td></tr>
+            <tr><td class="table-cell">Global Access</td><td class="table-cell table-cell--highlight">All Countries</td></tr>
         </table>
     </div>
 
@@ -883,10 +944,10 @@ function executeTransfer() {
     const receipt = $('txReceipt');
     const typeLabels = { send: '📤 Sent', receive: '📥 Received', pay: '🛒 Paid' };
     $('txReceiptDetails').innerHTML = `
-        <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span>${typeLabels[type]}</span><span style="font-weight:700;color:${type==='receive'?'#27ae60':'#e74c3c'}">${type==='receive'?'+':'-'}${amount.toFixed(2)} π</span></div>
-        <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span>To/From:</span><span>${escHtml(recipient)}</span></div>
-        <div style="display:flex;justify-content:space-between"><span>New Balance:</span><span>${balance.toFixed(2)} π</span></div>
-        ${note ? '<div style="margin-top:4px;color:rgba(255,255,255,.3);font-size:.72rem">Note: '+escHtml(note)+'</div>' : ''}
+        <div class="info-row"><span>${typeLabels[type]}</span><span class="tx-result">${type==='receive'?'+':'-'}${amount.toFixed(2)} π</span></div>
+        <div class="info-row"><span>To/From:</span><span>${escHtml(recipient)}</span></div>
+        <div class="flex-between"><span>New Balance:</span><span>${balance.toFixed(2)} π</span></div>
+        ${note ? '<div class="note-muted">Note: '+escHtml(note)+'</div>' : ''}
     `;
     $('txReceiptId').textContent = 'TX ID: ' + tx.id;
     receipt.style.display = 'block';
@@ -980,7 +1041,7 @@ function renderVault() {
     $('vaultCount').textContent = active.length;
 
     const el = $('vaultEntries');
-    if (vaultEntries.length === 0) { el.innerHTML = '<div style="text-align:center;color:rgba(255,255,255,.25);padding:20px;font-size:.82rem">No vault entries yet</div>'; return; }
+    if (vaultEntries.length === 0) { el.innerHTML = '<div class="vault-empty">No vault entries yet</div>'; return; }
 
     el.innerHTML = vaultEntries.slice(0, 10).map(v => {
         const matured = Date.now() >= v.maturesAt;
@@ -989,9 +1050,9 @@ function renderVault() {
         const remaining = v.unlocked ? '' : (matured ? 'Ready to claim' : Math.ceil((v.maturesAt - Date.now()) / 86400000) + ' days left');
         return `<div class="vault-entry">
             <div>
-                <strong>${v.amount.toFixed(2)} π</strong> <span style="font-size:.72rem;color:rgba(255,255,255,.4)">@ ${(v.rate*100)}% / ${v.days}d</span>
-                ${badge ? '<span class="vault-badge '+badge+'">'+status+'</span>' : '<span style="font-size:.72rem;color:#27ae60">'+status+'</span>'}
-                <div style="font-size:.7rem;color:rgba(255,255,255,.3)">${remaining} ${v.unlocked ? '' : '• Reward: +'+v.reward.toFixed(4)+' π'}</div>
+                <strong>${v.amount.toFixed(2)} π</strong> <span class="small-muted">@ ${(v.rate*100)}% / ${v.days}d</span>
+                ${badge ? '<span class="vault-badge '+badge+'">'+status+'</span>' : '<span class="positive-note">'+status+'</span>'}
+                <div class="tx-meta">${remaining} ${v.unlocked ? '' : '• Reward: +'+v.reward.toFixed(4)+' π'}</div>
             </div>
             ${!v.unlocked ? '<button class="btn btn-sm" onclick="unlockVault(\''+v.id+'\')">🔓 Unlock</button>' : ''}
         </div>`;
@@ -1021,7 +1082,8 @@ function renderBarChart() {
         bars.push({ label: days[dayStart.getDay()], value: spent });
     }
     const maxVal = Math.max(...bars.map(b=>b.value), 1);
-    $('weekChart').innerHTML = bars.map(b => `<div><div class="bar" style="height:${Math.max((b.value/maxVal)*100, 4)}%"></div><div class="bar-label">${b.label}</div></div>`).join('');
+    $('weekChart').innerHTML = bars.map(b => `<div><div class="bar" data-height="${Math.max((b.value/maxVal)*100, 4)}%"></div><div class="bar-label">${b.label}</div></div>`).join('');
+    document.querySelectorAll('#weekChart .bar').forEach(bar => { bar.style.height = bar.dataset.height; });
 }
 
 function renderDonutChart() {
@@ -1035,7 +1097,7 @@ function renderDonutChart() {
     if (entries.length === 0) {
         ctx.clearRect(0,0,80,80);
         ctx.beginPath(); ctx.arc(40,40,35,0,Math.PI*2); ctx.strokeStyle='rgba(255,255,255,.1)'; ctx.lineWidth=8; ctx.stroke();
-        $('donutLegend').innerHTML = '<div style="font-size:.72rem;color:rgba(255,255,255,.3)">No data yet</div>';
+        $('donutLegend').innerHTML = '<div class="note-muted">No data yet</div>';
         return;
     }
     const total = entries.reduce((s,e) => s+e[1], 0);
@@ -1046,7 +1108,8 @@ function renderDonutChart() {
         ctx.beginPath(); ctx.arc(40,40,35, start, start+sweep); ctx.strokeStyle=colors[cat]||'#ccc'; ctx.lineWidth=8; ctx.stroke();
         start += sweep;
     });
-    $('donutLegend').innerHTML = entries.map(([cat, val]) => `<div style="display:flex;align-items:center;gap:6px;font-size:.72rem"><span class="legend-dot" style="background:${colors[cat]||'#ccc'}"></span><span style="color:rgba(255,255,255,.5)">${cat}</span><span style="color:#ccc">${val.toFixed(2)} π</span></div>`).join('');
+    $('donutLegend').innerHTML = entries.map(([cat, val]) => `<div class="legend-row"><span class="legend-dot" data-color="${colors[cat]||'#ccc'}"></span><span class="legend-text">${cat}</span><span class="text-muted">${val.toFixed(2)} π</span></div>`).join('');
+    document.querySelectorAll('#donutLegend .legend-dot').forEach(el => { el.style.background = el.dataset.color; });
 }
 
 /* ===== SECURITY ===== */
@@ -1086,7 +1149,7 @@ function addAlert(type, msg) {
     const log = $('alertLog');
     const el = document.createElement('div');
     el.className = 'alert-item ' + type;
-    el.innerHTML = `<span>${icons[type]||'⚪'}</span><span>${escHtml(msg)}</span><span style="font-size:.65rem;color:rgba(255,255,255,.2)">${new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})}</span>`;
+    el.innerHTML = `<span>${icons[type]||'⚪'}</span><span>${escHtml(msg)}</span><span class="timestamp">${new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})}</span>`;
     log.prepend(el);
     // Keep max 20 alerts
     while (log.children.length > 20) log.removeChild(log.lastChild);
@@ -1100,7 +1163,7 @@ function sendConcierge() {
     const chat = $('conciergeChat');
 
     // User message
-    chat.innerHTML += `<div style="margin-top:12px;text-align:right"><div style="color:rgba(255,255,255,.3);font-size:.7rem;margin-bottom:4px">You</div><div style="background:rgba(255,255,255,.06);display:inline-block;padding:8px 14px;border-radius:10px;font-size:.82rem">${escHtml(msg)}</div></div>`;
+    chat.innerHTML += `<div class="chat-user"><div class="concierge-title">You</div><div class="chat-bubble">${escHtml(msg)}</div></div>`;
     input.value = '';
 
     setTimeout(() => {
@@ -1151,7 +1214,7 @@ function sendConcierge() {
             resp = responses[rnd(0, responses.length - 1)];
         }
 
-        chat.innerHTML += `<div style="margin-top:12px"><div style="color:rgba(255,255,255,.3);font-size:.7rem;margin-bottom:4px">🛎️ Concierge</div><div class="concierge-msg">${resp}</div></div>`;
+        chat.innerHTML += `<div class="chat-response"><div class="concierge-title">🛎️ Concierge</div><div class="concierge-msg">${resp}</div></div>`;
         chat.parentElement.scrollTop = chat.parentElement.scrollHeight;
     }, 600);
 }
@@ -1162,30 +1225,32 @@ function renderPriorityQueue() {
     const recentTx = transactions.slice(0, 3);
     let html = '';
     recentTx.forEach((tx, i) => {
-        html += `<div class="priority-item"><div class="priority-num">${i+1}</div><div>${escHtml(tx.note)} <span style="color:#27ae60">⚡ Priority</span> <span style="font-size:.7rem;color:rgba(255,255,255,.3)">${fmtDate(tx.ts)}</span></div></div>`;
+        html += `<div class="priority-item"><div class="priority-num">${i+1}</div><div>${escHtml(tx.note)} <span class="vault-earned">⚡ Priority</span> <span class="tx-meta">${fmtDate(tx.ts)}</span></div></div>`;
     });
     // Fill remaining slots with simulated standard queue
     const standards = ['Standard card transaction','Visual Pi Card payment','Gold card transfer','Platinum scheduled payment','Free tier transaction'];
     for (let i = recentTx.length; i < 8; i++) {
         const opacity = Math.max(0.1, 0.5 - (i - recentTx.length) * 0.08);
-        html += `<div class="priority-item" style="opacity:${opacity}"><div class="priority-num">${i+1}</div><div>${standards[rnd(0,standards.length-1)]}</div></div>`;
+        html += `<div class="priority-item" data-opacity="${opacity}"><div class="priority-num">${i+1}</div><div>${standards[rnd(0,standards.length-1)]}</div></div>`;
     }
     el.innerHTML = html;
+    el.querySelectorAll('.priority-item[data-opacity]').forEach(item => { item.style.opacity = item.dataset.opacity; });
+    el.querySelectorAll('.priority-item[data-opacity]').forEach(item => { item.style.opacity = item.dataset.opacity; });
 }
 
 /* ===== TX HISTORY ===== */
 function renderTxHistory() {
     const el = $('txHistory');
-    if (transactions.length === 0) { el.innerHTML = '<div style="text-align:center;color:rgba(255,255,255,.25);padding:20px;font-size:.82rem">No transactions yet — use Instant Transfer above</div>'; return; }
+    if (transactions.length === 0) { el.innerHTML = '<div class="vault-empty">No transactions yet — use Instant Transfer above</div>'; return; }
 
     el.innerHTML = transactions.slice(0, 30).map(tx => {
         const isNeg = tx.amount < 0;
         const icons = { send: '📤', receive: '📥', pay: '🛒', 'vault-lock': '🔐', 'vault-unlock': '🔓' };
         return `<div class="tx-row">
-            <div style="font-size:1.1rem">${icons[tx.type]||'💳'}</div>
-            <div style="flex:1">
-                <div style="font-weight:600;font-size:.82rem">${escHtml(tx.note)}</div>
-                <div style="font-size:.7rem;color:rgba(255,255,255,.3)">${escHtml(tx.recipient)} • ${fmtDate(tx.ts)}</div>
+            <div class="tx-icon">${icons[tx.type]||'💳'}</div>
+            <div class="flex-1">
+                <div class="tx-note-title">${escHtml(tx.note)}</div>
+                <div class="tx-meta">${escHtml(tx.recipient)} • ${fmtDate(tx.ts)}</div>
             </div>
             <div>
                 <div class="tx-amt ${isNeg?'neg':'pos'}">${isNeg?'':'+'}${tx.amount.toFixed(2)} π</div>
