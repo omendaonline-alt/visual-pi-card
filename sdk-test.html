@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pi SDK Test Suite</title>
+    <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #1a1a1a;
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container { max-width: 900px; margin: 0 auto; }
+        h1 { margin-bottom: 20px; color: #7c3aed; }
+        .test-section {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(124,58,237,0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .test-section h2 { font-size: 18px; margin-bottom: 15px; color: #a78bfa; }
+        .test-row { display: flex; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
+        button {
+            background: #7c3aed;
+            color: #fff;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        button:hover { background: #9333ea; }
+        button:disabled { background: #4b5563; cursor: not-allowed; }
+        .btn-secondary { background: rgba(255,255,255,0.1); }
+        .btn-secondary:hover { background: rgba(255,255,255,0.15); }
+        .status {
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        .status.success { background: rgba(39,174,96,0.2); color: #27ae60; border-left: 3px solid #27ae60; }
+        .status.error { background: rgba(231,76,60,0.2); color: #e74c3c; border-left: 3px solid #e74c3c; }
+        .status.info { background: rgba(52,152,219,0.2); color: #3498db; border-left: 3px solid #3498db; }
+        .status.pending { background: rgba(245,197,24,0.2); color: #f5c518; border-left: 3px solid #f5c518; }
+        .log {
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 10px;
+        }
+        .log-entry { margin-bottom: 8px; opacity: 0.8; }
+        .log-entry.success { color: #27ae60; }
+        .log-entry.error { color: #e74c3c; }
+        .log-entry.info { color: #3498db; }
+        input {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        input::placeholder { color: rgba(255,255,255,0.4); }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+        .stat-box {
+            background: rgba(124,58,237,0.1);
+            border: 1px solid rgba(124,58,237,0.3);
+            padding: 12px;
+            border-radius: 8px;
+        }
+        .stat-label { font-size: 12px; opacity: 0.7; margin-bottom: 4px; }
+        .stat-value { font-size: 18px; font-weight: 700; color: #a78bfa; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Pi SDK Test Suite</h1>
+
+        <!-- SDK Status -->
+        <div class="test-section">
+            <h2>SDK Status</h2>
+            <div class="grid">
+                <div class="stat-box">
+                    <div class="stat-label">SDK Loaded</div>
+                    <div class="stat-value" id="sdkStatus">—</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Pi Browser</div>
+                    <div class="stat-value" id="browserStatus">—</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">SDK Ready</div>
+                    <div class="stat-value" id="readyStatus">—</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Auth State</div>
+                    <div class="stat-value" id="authStatus">—</div>
+                </div>
+            </div>
+            <div id="statusLog" class="status info"></div>
+        </div>
+
+        <!-- Pi Init Test -->
+        <div class="test-section">
+            <h2>1. Initialize Pi SDK</h2>
+            <div class="test-row">
+                <button onclick="testInit()">Init SDK</button>
+                <button onclick="testCheckReady()">Check Status</button>
+                <button onclick="clearLogs()">Clear Logs</button>
+            </div>
+            <div id="initLog" class="log"></div>
+        </div>
+
+        <!-- Authentication Test -->
+        <div class="test-section">
+            <h2>2. Authentication</h2>
+            <div class="test-row">
+                <button onclick="testAuth()">Authenticate</button>
+                <button onclick="testAuthWithPayments()">Auth + Payments</button>
+                <button onclick="testAuthWithWallet()">Auth + Wallet</button>
+            </div>
+            <div id="authLog" class="log"></div>
+        </div>
+
+        <!-- Payment Test -->
+        <div class="test-section">
+            <h2>3. Payment Creation</h2>
+            <div class="test-row">
+                <input type="number" id="paymentAmount" placeholder="Amount (π)" min="0.01" step="0.01" value="1.5">
+                <input type="text" id="paymentMemo" placeholder="Memo" value="Test Payment">
+                <button onclick="testPayment()">Create Payment</button>
+            </div>
+            <div id="paymentLog" class="log"></div>
+        </div>
+
+        <!-- Wallet Test -->
+        <div class="test-section">
+            <h2>4. Wallet Info</h2>
+            <div class="test-row">
+                <button onclick="testWallet()">Get Wallet Address</button>
+                <button onclick="testMigratedWallet()">Get Migrated Wallet</button>
+            </div>
+            <div id="walletLog" class="log"></div>
+        </div>
+
+        <!-- User Info -->
+        <div class="test-section">
+            <h2>5. User Data</h2>
+            <button onclick="getUserData()">Get User Info</button>
+            <div id="userLog" class="log"></div>
+        </div>
+
+        <!-- Raw Response -->
+        <div class="test-section">
+            <h2>Raw Response Data</h2>
+            <div id="responseLog" class="log"></div>
+        </div>
+    </div>
+
+    <script>
+        const logs = {};
+        const responses = [];
+
+        function log(section, message, type = 'info') {
+            if (!logs[section]) logs[section] = [];
+            const entry = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logs[section].push({ msg: entry, type });
+            responses.push({ section, message, type, time: new Date() });
+            renderLog(section);
+        }
+
+        function renderLog(section) {
+            const el = document.getElementById(section + 'Log');
+            if (!el) return;
+            el.innerHTML = (logs[section] || []).map(e =>
+                `<div class="log-entry ${e.type}">${e.msg}</div>`
+            ).join('');
+            el.scrollTop = el.scrollHeight;
+        }
+
+        function clearLogs() {
+            Object.keys(logs).forEach(k => { logs[k] = []; renderLog(k); });
+            responses.length = 0;
+            document.getElementById('responseLog').innerHTML = '';
+        }
+
+        function updateStatus() {
+            document.getElementById('sdkStatus').textContent = (typeof window.Pi !== 'undefined') ? '✓' : '✗';
+            document.getElementById('browserStatus').textContent = /PiBrowser/i.test(navigator.userAgent) ? '✓' : '✗';
+            document.getElementById('readyStatus').textContent = window.piSdkReady ? '✓' : '✗';
+            document.getElementById('authStatus').textContent = (window.piAuthReady && window.piAuthUser) ? '✓' : '✗';
+        }
+
+        async function testInit() {
+            log('init', 'Starting Pi.init()...', 'pending');
+            try {
+                if (typeof Pi === 'undefined') {
+                    log('init', '✗ Pi SDK not loaded', 'error');
+                    return;
+                }
+                Pi.init({ version: '2.0', sandbox: false });
+                window.piSdkReady = true;
+                log('init', '✓ Pi SDK initialized successfully', 'success');
+                log('init', 'Version: 2.0, Sandbox: false', 'info');
+                updateStatus();
+            } catch (e) {
+                log('init', '✗ Init failed: ' + (e.message || e), 'error');
+                window.piSdkReady = false;
+            }
+        }
+
+        function testCheckReady() {
+            log('init', 'Checking SDK ready state...', 'pending');
+            const ready = typeof Pi !== 'undefined' && typeof Pi.init === 'function';
+            log('init', ready ? '✓ SDK is ready' : '✗ SDK not ready', ready ? 'success' : 'error');
+            updateStatus();
+        }
+
+        async function testAuth() {
+            if (!window.piSdkReady) {
+                log('auth', '✗ SDK not initialized. Run "Init SDK" first.', 'error');
+                return;
+            }
+            log('auth', 'Starting Pi.authenticate(["username"])...', 'pending');
+            try {
+                const auth = await Pi.authenticate(['username'], function(payment) {
+                    log('auth', 'Incomplete payment found: ' + payment.identifier, 'info');
+                });
+                window.piAuthReady = true;
+                window.piAuthUser = auth.user;
+                log('auth', '✓ Authentication successful', 'success');
+                log('auth', `User: @${auth.user.username} (UID: ${auth.user.uid})`, 'info');
+                responses.push({ data: auth, type: 'AUTH' });
+                showResponse(auth);
+                updateStatus();
+            } catch (e) {
+                log('auth', '✗ Auth failed: ' + (e.message || e), 'error');
+                window.piAuthReady = false;
+            }
+        }
+
+        async function testAuthWithPayments() {
+            if (!window.piSdkReady) {
+                log('auth', '✗ SDK not initialized', 'error');
+                return;
+            }
+            log('auth', 'Starting Pi.authenticate(["username","payments"])...', 'pending');
+            try {
+                const auth = await Pi.authenticate(['username', 'payments'], function(p) {
+                    log('auth', 'Incomplete: ' + p.identifier, 'info');
+                });
+                log('auth', '✓ Auth with payments successful', 'success');
+                log('auth', `Scopes: username + payments`, 'info');
+                showResponse(auth);
+                updateStatus();
+            } catch (e) {
+                log('auth', '✗ Failed: ' + e.message, 'error');
+            }
+        }
+
+        async function testAuthWithWallet() {
+            if (!window.piSdkReady) {
+                log('auth', '✗ SDK not initialized', 'error');
+                return;
+            }
+            log('auth', 'Starting Pi.authenticate(["username","wallet_address"])...', 'pending');
+            try {
+                const auth = await Pi.authenticate(['username', 'wallet_address'], function(p) {
+                    log('auth', 'Incomplete: ' + p.identifier, 'info');
+                });
+                log('auth', '✓ Auth with wallet successful', 'success');
+                log('auth', `Wallet: ${auth.user.wallet_address || 'N/A'}`, 'info');
+                showResponse(auth);
+                updateStatus();
+            } catch (e) {
+                log('auth', '✗ Failed: ' + e.message, 'error');
+            }
+        }
+
+        async function testPayment() {
+            if (!window.piSdkReady) {
+                log('payment', '✗ SDK not initialized', 'error');
+                return;
+            }
+            const amt = parseFloat(document.getElementById('paymentAmount').value);
+            const memo = document.getElementById('paymentMemo').value;
+            if (isNaN(amt) || amt <= 0) {
+                log('payment', '✗ Invalid amount', 'error');
+                return;
+            }
+            log('payment', `Creating payment: ${amt}π, "${memo}"...`, 'pending');
+            try {
+                Pi.createPayment({
+                    amount: amt,
+                    memo: memo,
+                    metadata: { test: true }
+                }, {
+                    onReadyForServerApproval: function(pid) {
+                        log('payment', `Ready for approval: ${pid}`, 'info');
+                    },
+                    onReadyForServerCompletion: function(pid, txid) {
+                        log('payment', `Ready for completion: ${pid}, txid=${txid}`, 'info');
+                    },
+                    onCancel: function() {
+                        log('payment', 'Payment cancelled by user', 'info');
+                    },
+                    onError: function(err) {
+                        log('payment', '✗ Payment error: ' + (err.message || err), 'error');
+                        showResponse(err);
+                    }
+                });
+                log('payment', '✓ Payment creation initiated', 'success');
+            } catch (e) {
+                log('payment', '✗ Failed: ' + e.message, 'error');
+            }
+        }
+
+        async function testWallet() {
+            if (!window.piSdkReady) {
+                log('wallet', '✗ SDK not initialized', 'error');
+                return;
+            }
+            if (!window.Pi.Wallet) {
+                log('wallet', '✗ Pi.Wallet not available', 'error');
+                return;
+            }
+            log('wallet', 'Getting wallet address...', 'pending');
+            try {
+                const addr = await Pi.Wallet.getWalletAddress();
+                log('wallet', '✓ Wallet address obtained', 'success');
+                log('wallet', `Address: ${addr || 'N/A'}`, 'info');
+                showResponse({ address: addr });
+            } catch (e) {
+                log('wallet', '✗ Failed: ' + e.message, 'error');
+            }
+        }
+
+        async function testMigratedWallet() {
+            if (!window.piSdkReady) {
+                log('wallet', '✗ SDK not initialized', 'error');
+                return;
+            }
+            if (!window.Pi.Wallet || !window.Pi.Wallet.getUserMigratedWalletAddresses) {
+                log('wallet', '✗ getUserMigratedWalletAddresses not available', 'error');
+                return;
+            }
+            log('wallet', 'Getting migrated wallet addresses...', 'pending');
+            try {
+                const addrs = await Pi.Wallet.getUserMigratedWalletAddresses();
+                log('wallet', '✓ Migrated addresses obtained', 'success');
+                log('wallet', `Found ${addrs.length} address(es)`, 'info');
+                if (addrs.length > 0) log('wallet', `Primary: ${addrs[0]}`, 'info');
+                showResponse({ migratedAddresses: addrs });
+            } catch (e) {
+                log('wallet', '✗ Failed: ' + e.message, 'error');
+            }
+        }
+
+        function getUserData() {
+            log('user', 'Retrieving stored user data...', 'pending');
+            try {
+                const stored = localStorage.getItem('piUser') || sessionStorage.getItem('piUser');
+                if (stored) {
+                    const u = JSON.parse(stored);
+                    log('user', '✓ User data found', 'success');
+                    log('user', `User: @${u.username} (UID: ${u.uid})`, 'info');
+                    showResponse(u);
+                } else {
+                    log('user', '⚠ No stored user data', 'info');
+                }
+            } catch (e) {
+                log('user', '✗ Error: ' + e.message, 'error');
+            }
+        }
+
+        function showResponse(data) {
+            const el = document.getElementById('responseLog');
+            el.innerHTML += `<div style="margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                <strong>[${new Date().toLocaleTimeString()}]</strong><br>
+                <code>${JSON.stringify(data, null, 2)}</code>
+            </div>`;
+            el.scrollTop = el.scrollHeight;
+        }
+
+        // Initialize on load
+        window.addEventListener('load', function() {
+            log('init', 'Page loaded in ' + (typeof Pi !== 'undefined' ? 'Pi Browser' : 'regular browser'), 'info');
+            updateStatus();
+        });
+    </script>
+</body>
+</html>

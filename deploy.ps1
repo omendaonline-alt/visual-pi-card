@@ -16,7 +16,8 @@ Write-Host ""
 
 # ===== CONFIGURATION =====
 $DOMAIN = "omendapipaysglobel.online"
-$SERVER_IP = "198.54.116.227"
+$SERVER_IP = "198.54.116.227"cd '/home/hp/omendapipaysglobal/visual pi card'
+git push origin omendaonline-alt
 $FTP_HOST = "ftp.$DOMAIN"
 $REMOTE_DIR = "/public_html"
 

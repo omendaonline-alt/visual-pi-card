@@ -1,0 +1,1872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Omenda Emoji AI System</title>
+ <meta name="description" content="Omenda Emoji AI System for Pi-powered emoji gifts, country flag support, and smart gift recommendations.">
+ <link rel="icon" type="image/jpeg" href="logo.jpg">
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+ <link rel="stylesheet" href="styles.css">
+ <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+ <script src="pi-sdk-helper.js"></script>
+ <style>
+ body { margin: 0; font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f5f7fb; color: #0f172a; }
+ .page-wrap { max-width: 1180px; margin: 0 auto; padding: 24px 24px 60px; }
+ .top-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; background: #fff; border-radius: 24px; padding: 22px 24px; box-shadow: 0 20px 50px rgba(15,23,42,.08); margin-bottom: 24px; }
+ .logo { font-size: 1.75rem; font-weight: 800; letter-spacing: -0.04em; }
+ .tagline { color: #475569; font-size: 0.95rem; max-width: 520px; }
+ .nav-links { display: flex; flex-wrap: wrap; gap: 10px; }
+ .nav-links a { text-decoration: none; color: #334155; font-weight: 600; padding: 10px 14px; border-radius: 14px; background: #f8fafc; border: 1px solid rgba(148, 163, 184, .25); transition: all .18s ease; }
+ .nav-links a:hover, .nav-links a.active { background: #eff6ff; border-color: rgba(59, 130, 246, .35); color: #1d4ed8; }
+ .hero { background: #fff; border-radius: 24px; padding: 32px 30px; box-shadow: 0 20px 50px rgba(15,23,42,.05); display: grid; gap: 18px; margin-bottom: 22px; }
+ .hero h1 { margin: 0; font-size: clamp(2rem, 2.5vw, 2.8rem); }
+ .hero p { margin: 0; color: #475569; line-height: 1.75; max-width: 860px; }
+ .info-grid { display: grid; gap: 18px; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-bottom: 28px; }
+ .card { background: #fff; border-radius: 24px; padding: 24px; border: 1px solid rgba(15,23,42,.08); box-shadow: 0 18px 38px rgba(15,23,42,.04); }
+ .card h2 { margin: 0 0 10px; font-size: 1.1rem; }
+ .card p { margin: 0; color: #475569; line-height: 1.75; }
+ .grid-two { display: grid; gap: 20px; grid-template-columns: 1.6fr 1fr; }
+ .panel { background: #fff; border-radius: 24px; border: 1px solid rgba(15,23,42,.08); box-shadow: 0 18px 38px rgba(15,23,42,.04); overflow: hidden; }
+ .panel-header { padding: 22px 24px; border-bottom: 1px solid rgba(148,163,184,.15); display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+ .panel-title { margin: 0; font-size: 1.15rem; }
+ .panel-body { padding: 22px 24px; display: grid; gap: 18px; }
+ .input-group { display: grid; gap: 10px; }
+ .input-group label { color: #334155; font-weight: 600; }
+ .input-group input, .input-group textarea, .input-group select { width: 100%; border: 1px solid rgba(148,163,184,.35); border-radius: 16px; padding: 14px 16px; background: #f8fafc; color: #0f172a; font-size: 0.95rem; }
+ .input-group textarea { min-height: 120px; resize: vertical; }
+ .button-row { display: flex; flex-wrap: wrap; gap: 12px; }
+ .button { border: none; border-radius: 16px; padding: 14px 20px; cursor: pointer; font-weight: 700; transition: background .18s ease; }
+ .button.primary { background: #2563eb; color: #fff; }
+ .button.secondary { background: #e2e8f0; color: #0f172a; }
+ .button.primary:hover { background: #1d4ed8; }
+ .button.secondary:hover { background: #cbd5e1; }
+ .supply-grid { display: grid; gap: 18px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+ .supply-card { display: grid; grid-template-columns: 76px 1fr 96px; gap: 14px; align-items: center; background: #f8fafc; border-radius: 20px; padding: 18px; }
+ .supply-icon { width: 56px; height: 56px; border-radius: 18px; display: grid; place-items: center; background: #eff6ff; font-size: 1.8rem; }
+ .supply-meta { display: grid; gap: 6px; }
+ .supply-meta strong { font-size: 1rem; }
+ .supply-meta span { color: #475569; font-size: 0.92rem; }
+ .supply-price { text-align: right; }
+ .supply-price strong { display: block; font-size: 1rem; color: #0f172a; }
+ .history-list { display: grid; gap: 14px; }
+ .history-item { background: #fff; border-radius: 20px; border: 1px solid rgba(15,23,42,.08); padding: 18px; display: grid; gap: 10px; }
+ .history-item span { color: #475569; font-size: 0.92rem; }
+ .history-item p { margin: 0; font-weight: 700; }
+ .badge { display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px; border-radius: 999px; background: #eff6ff; color: #1d4ed8; font-weight: 700; }
+ .history-panel { background: #fff; border-radius: 24px; padding: 24px 26px; border: 1px solid rgba(15,23,42,.08); box-shadow: 0 18px 38px rgba(15,23,42,.04); margin-top: 28px; }
+ .history-panel h2 { margin: 0 0 16px; font-size: 1.15rem; }
+ .history-card-amount { color: #1d4ed8; font-weight: 800; }
+ .supply-price button { margin-top: 6px; padding: 8px 12px; font-size: 0.85rem; }
+ .usage-feed { display: grid; gap: 10px; }
+ .usage-bubble { display: grid; grid-template-columns: 56px 1fr auto; gap: 14px; align-items: center; background: linear-gradient(135deg,#eff6ff,#f0fdf4); border-radius: 18px; padding: 14px 18px; border: 1px solid rgba(59,130,246,.18); }
+ .usage-bubble .ue { font-size: 1.9rem; line-height: 1; }
+ .usage-bubble .ut { font-weight: 700; color: #0f172a; }
+ .usage-bubble .uc { color: #475569; font-size: 0.85rem; margin-top: 2px; }
+ .usage-bubble .uv { text-align: right; font-weight: 800; color: #1d4ed8; }
+ .usage-bubble .uv small { display:block; color:#94a3b8; font-weight:600; font-size:0.7rem; }
+ .usage-bubble.hot { background: linear-gradient(135deg,#fef3c7,#fee2e2); border-color: rgba(239,68,68,.3); }
+ .usage-bubble.hot .uv { color: #b91c1c; }
+ .price-up { color: #16a34a; font-size: 0.75rem; margin-left: 6px; }
+ .mkt { font-size: 0.7rem; padding: 2px 8px; border-radius: 999px; margin-left: 6px; font-weight: 700; vertical-align: middle; }
+ .mkt.hot { background: #fee2e2; color: #b91c1c; }
+ .mkt.up { background: #dcfce7; color: #166534; }
+ .inventory-grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+ .inv-card { background: #fff; border: 1px solid rgba(15,23,42,.1); border-radius: 18px; padding: 14px; display: grid; grid-template-columns: 48px 1fr; gap: 12px; align-items: center; }
+ .inv-card .ie { font-size: 1.8rem; }
+ .inv-card .il { font-weight: 700; font-size: 0.92rem; }
+ .inv-card .iq { color: #475569; font-size: 0.82rem; }
+ .inv-card .ip { color: #1d4ed8; font-weight: 800; font-size: 0.9rem; }
+ .inv-card .ia { grid-column: 1 / -1; display: flex; gap: 8px; margin-top: 4px; }
+ .inv-card button { flex: 1; padding: 8px 10px; font-size: 0.82rem; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; }
+ .inv-card .sell-one { background: #16a34a; color: #fff; }
+ .inv-card .sell-all { background: #e2e8f0; color: #0f172a; }
+ .inv-card .sell-one:hover { background: #15803d; }
+ .inv-card .sell-all:hover { background: #cbd5e1; }
+ .inv-card .convert-btn { background: #2563eb; color: #fff; }
+ .inv-card .convert-btn:hover { background: #1d4ed8; }
+ .inv-card .send-btn { background: #f59e0b; color: #fff; }
+ .inv-card .send-btn:hover { background: #d97706; }
+ .market-ticker { background: #0f172a; color: #fff; border-radius: 18px; padding: 12px 0; margin-bottom: 22px; overflow: hidden; position: relative; box-shadow: 0 18px 38px rgba(15,23,42,.18); }
+ .market-ticker::before, .market-ticker::after { content: ''; position: absolute; top: 0; bottom: 0; width: 50px; z-index: 2; pointer-events: none; }
+ .market-ticker::before { left: 0; background: linear-gradient(90deg,#0f172a, transparent); }
+ .market-ticker::after { right: 0; background: linear-gradient(-90deg,#0f172a, transparent); }
+ .ticker-track { display: inline-flex; gap: 28px; white-space: nowrap; animation: ticker-scroll 60s linear infinite; padding-left: 100%; }
+ .ticker-item { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; font-size: 0.95rem; }
+ .ticker-item .te { font-size: 1.3rem; }
+ .ticker-item .tp { color: #93c5fd; }
+ .ticker-item .tu { color: #4ade80; font-size: 0.78rem; }
+ .ticker-item .td { color: #f87171; font-size: 0.78rem; }
+ @keyframes ticker-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+ .market-ticker:hover .ticker-track { animation-play-state: paused; }
+ .flow-controls { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+ .flow-controls select { border: 1px solid rgba(148,163,184,.4); border-radius: 12px; padding: 8px 12px; background: #f8fafc; font-weight: 600; }
+ .flow-controls button { padding: 8px 16px; font-size: 0.85rem; }
+ .flow-stream { display: grid; gap: 8px; max-height: 320px; overflow-y: auto; padding-right: 4px; }
+ .flow-msg { display: grid; grid-template-columns: 36px 1fr auto; gap: 10px; align-items: center; padding: 10px 14px; background: #f8fafc; border-radius: 14px; border-left: 3px solid #cbd5e1; animation: flow-in .3s ease; }
+ .flow-msg.buy { border-left-color: #16a34a; background: #f0fdf4; }
+ .flow-msg.sell { border-left-color: #dc2626; background: #fef2f2; }
+ .flow-msg.send { border-left-color: #f59e0b; background: #fffbeb; }
+ .flow-msg.convert { border-left-color: #2563eb; background: #eff6ff; }
+ .flow-msg.tick { border-left-color: #64748b; }
+ .flow-msg .fe { font-size: 1.5rem; }
+ .flow-msg .ft { font-size: 0.88rem; color: #0f172a; }
+ .flow-msg .ft small { color: #64748b; }
+ .flow-msg .fp { font-weight: 800; color: #1d4ed8; font-size: 0.92rem; }
+ @keyframes flow-in { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+ .withdraw-row { display: flex; gap: 10px; flex-wrap: wrap; }
+ .withdraw-row input { flex: 1; min-width: 200px; padding: 12px 14px; border-radius: 14px; border: 1px solid rgba(148,163,184,.4); background: #f8fafc; font-size: 1rem; font-weight: 600; }
+ .withdraw-row button { padding: 12px 20px; }
+ .withdraw-summary { margin-top: 12px; color: #475569; font-size: 0.9rem; padding: 10px 14px; background: #f8fafc; border-radius: 12px; border-left: 3px solid #2563eb; }
+ .withdraw-summary.ok { border-left-color: #16a34a; background: #f0fdf4; }
+ .withdraw-summary.err { border-left-color: #dc2626; background: #fef2f2; }
+ @media (max-width: 960px) {
+ .info-grid, .grid-two, .supply-grid { grid-template-columns: 1fr; }
+ }
+
+ /* Spiral balance-emoji flow */
+ .spiral-wrap { display: flex; justify-content: center; margin: 28px 0 8px; }
+ .spiral-stage { position: relative; width: 360px; height: 360px; }
+ @media (max-width: 480px) { .spiral-stage { width: 280px; height: 280px; } }
+ .spiral-ring { position: absolute; inset: 0; border-radius: 50%; border: 1px dashed rgba(99,102,241,0.25); animation: spiralSpin 22s linear infinite; }
+ .spiral-ring.r2 { inset: 32px; border-color: rgba(34,197,94,0.22); animation-duration: 18s; animation-direction: reverse; }
+ .spiral-ring.r3 { inset: 64px; border-color: rgba(244,114,182,0.22); animation-duration: 14s; }
+ @keyframes spiralSpin { to { transform: rotate(360deg); } }
+ .spiral-orb { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 150px; height: 150px; border-radius: 50%;
+ background: radial-gradient(circle at 30% 30%, #fef3c7, #fbbf24 55%, #b45309 100%);
+ box-shadow: 0 0 0 6px rgba(251,191,36,0.18), 0 18px 38px rgba(180,83,9,0.32);
+ display: flex; flex-direction: column; align-items: center; justify-content: center;
+ color: #422006; text-align: center; padding: 8px; transition: transform .4s ease;
+ }
+ .spiral-orb .pi-amount { font-size: 1.45rem; font-weight: 800; letter-spacing: 0.3px; }
+ .spiral-orb .pi-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.12em; opacity: 0.75; }
+ .spiral-orb .pi-emojis { font-size: 0.78rem; margin-top: 4px; font-weight: 700; }
+ .spiral-orb.pulse { animation: orbPulse 0.9s ease; }
+ @keyframes orbPulse { 0%,100% { transform: translate(-50%,-50%) scale(1); } 50% { transform: translate(-50%,-50%) scale(1.12); box-shadow: 0 0 0 14px rgba(251,191,36,0.32), 0 22px 52px rgba(180,83,9,0.42); } }
+ .spiral-particle { position: absolute; left: 50%; top: 50%; font-size: 1.4rem; transform-origin: 0 0; pointer-events: none;
+ transform: translate(-50%, -50%) rotate(var(--a)) translateX(var(--r)) rotate(calc(-1 * var(--a)));
+ animation: spiralOrbit var(--dur, 12s) linear infinite; animation-delay: var(--delay, 0s);
+ filter: drop-shadow(0 4px 6px rgba(15,23,42,0.15));
+ }
+ @keyframes spiralOrbit {
+ from { transform: translate(-50%,-50%) rotate(var(--a)) translateX(var(--r)) rotate(calc(-1 * var(--a))); }
+ to { transform: translate(-50%,-50%) rotate(calc(var(--a) + 360deg)) translateX(var(--r)) rotate(calc(-1 * (var(--a) + 360deg))); }
+ }
+ .spiral-flyin { animation: spiralFly 1.2s ease forwards; position: absolute; left: 50%; top: 50%; font-size: 1.8rem; pointer-events: none; z-index: 5; }
+ @keyframes spiralFly { 0% { transform: translate(-50%,-50%) scale(0.3); opacity: 0; } 30% { opacity: 1; } 100% { transform: translate(var(--tx), var(--ty)) scale(1); opacity: 0; } }
+ .spiral-caption { text-align: center; color: #475569; font-size: 0.9rem; margin-top: 6px; }
+ .tx-when{color:#64748b;}
+ .tx-amount{font-weight:700;}
+ .tx-amount.pos{color:#16a34a;}
+ .tx-amount.neg{color:#dc2626;}
+ </style>
+</head>
+<body class="page-wrap">
+ <div class="top-bar">
+ <div>
+ <div class="logo">Omenda Emoji AI</div>
+ <div class="tagline">A Pi-powered emoji gift system for social posts, country flag support, and smart gift recommendations.</div>
+ </div>
+ <div class="nav-links">
+ <a href="social.html">Feed</a>
+ <a href="shop.html">Marketplace</a>
+ <a href="map.html">Map</a>
+ <a href="ride.html">City Rush</a>
+ <a href="emoji-ai.html" class="active">Emoji AI</a>
+ </div>
+ </div>
+
+ <section class="hero">
+ <h1>Omenda Emoji AI System</h1>
+ <p>Use Pi to buy expressive emoji gifts, support creators with country flag gifts priced by economic strength, and get AI-powered recommendations for the perfect emoji reaction.</p>
+ </section>
+
+ <div class="spiral-wrap">
+ <div class="spiral-stage" id="spiralStage">
+ <div class="spiral-ring"></div>
+ <div class="spiral-ring r2"></div>
+ <div class="spiral-ring r3"></div>
+ <div class="spiral-orb" id="spiralOrb">
+ <div class="pi-label">Wallet</div>
+ <div class="pi-amount" id="spiralPi">π0</div>
+ <div class="pi-emojis" id="spiralCount">0 emojis</div>
+ </div>
+ </div>
+ </div>
+ <div class="spiral-caption">Your Pi balance and held emojis spiral together — buys, sells &amp; yield flow into the orb.</div>
+
+ <div class="market-ticker" id="marketTicker">
+ <div class="ticker-track" id="tickerTrack"></div>
+ </div>
+
+ <section class="history-panel" id="priceFlowPanel">
+ <h2>Live price flow — all categories</h2>
+ <div class="flow-controls">
+ <label for="flowCategory">Filter:</label>
+ <select id="flowCategory" aria-label="Flow category">
+ <option value="all">All</option>
+ <option value="Emoji">Emojis</option>
+ <option value="Country Flag">Flags</option>
+ </select>
+ <button class="button secondary" id="pauseFlowBtn">Pause</button>
+ </div>
+ <div class="flow-stream" id="flowStream"></div>
+ </section>
+
+ <div class="info-grid">
+ <div class="card">
+ <h2>Emoji Pi pricing</h2>
+ <p>Common emojis cost micro Pi values from <strong>0.0000001 π</strong> to <strong>0.1 π</strong>, while country flag gifts are priced between <strong>1 π</strong> and <strong>5 π</strong> based on economy strength.</p>
+ </div>
+ <div class="card">
+ <h2>How it works</h2>
+ <p>Describe the mood, post, or creator direction and let the AI recommend a gift. Then purchase it with Pi and optionally send it to a social feed post.</p>
+ </div>
+ <div class="card x-cb4589">
+ <p id="balanceLabel"></p>
+ <p id="giftBalanceLabel"></p>
+ </div>
+ </div>
+
+ <div class="grid-two">
+ <div class="panel">
+ <div class="panel-header">
+ <h3 class="panel-title">Emoji AI Recommendation</h3>
+ </div>
+ <div class="panel-body">
+ <div class="input-group">
+ <label for="moodInput">Describe the mood or post theme</label>
+ <textarea id="moodInput" placeholder="Example: support a travel creator with celebration vibes"></textarea>
+ </div>
+ <div class="button-row">
+ <button class="button primary" id="recommendBtn">Recommend emoji gift</button>
+ <button class="button secondary" id="clearBtn">Clear</button>
+ </div>
+ <div class="input-group">
+ <label>AI suggestion</label>
+ <div id="recommendationCard" class="card x-57ed80">
+ <div class="x-2b3cec">
+ <div class="x-5c0e5c">🤖</div>
+ <p id="recommendationText">Type a mood and press Recommend.</p>
+ <p><strong id="recommendationEmoji"></strong> <span id="recommendationLabel"></span></p>
+ <p id="recommendationCost" class="x-cc2837"></p>
+ <button class="button primary" id="buyRecommendedBtn" disabled>Buy recommended gift</button>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+
+ <div class="panel">
+ <div class="panel-header">
+ <h3 class="panel-title">Emoji gift supply</h3>
+ </div>
+ <div class="panel-body">
+ <div class="supply-grid" id="supplyGrid">
+ <div class="card">Loading emoji supply…</div>
+ </div>
+ </div>
+ </div>
+ </div>
+
+ <section class="history-panel">
+ <h2>Recent emoji gift purchases</h2>
+ <div class="history-list" id="historyList">
+ <div class="history-item"><span>Loading gift history…</span></div>
+ </div>
+ </section>
+
+ <section class="history-panel" id="depositPanel">
+ <h2>Deposit Pi to your wallet</h2>
+ <p class="x-fcdb33">
+ Adds Pi from your Pi Wallet into your Omenda wallet via the official Pi SDK so you can buy emojis.
+ </p>
+ <div class="withdraw-row">
+ <input type="number" id="depositAmount" placeholder="Amount in π" min="0.01" step="0.01" />
+ <button class="button primary" id="depositBtn">Connect &amp; Deposit</button>
+ </div>
+ <div id="depositSummary" class="withdraw-summary"></div>
+ </section>
+
+ <section class="history-panel" id="withdrawPanel">
+ <h2>Withdraw Pi to your wallet</h2>
+ <p class="x-fcdb33">
+ Pulls Pi from your Omenda wallet into your Pi Wallet via the official Pi SDK.
+ Fees: <strong>0.01π Pi Core Team</strong> + <strong>0.01π Omenda system wallet</strong> = <strong>0.02π</strong> total.
+ </p>
+ <div class="withdraw-row">
+ <input type="number" id="withdrawAmount" placeholder="Amount in π" min="0.03" step="0.01" />
+ <button class="button primary" id="withdrawBtn">Connect &amp; Withdraw</button>
+ </div>
+ <div id="withdrawSummary" class="withdraw-summary"></div>
+ <div id="piAuthStatus" class="withdraw-summary x-9e3c4c"></div>
+ </section>
+
+ <section class="history-panel" id="txPanel">
+ <h2>Transaction flow</h2>
+ <p class="x-fcdb33">Every wallet movement on this account, newest first.</p>
+ <div id="txList" class="history-list"><div class="history-item"><span>No transactions yet.</span></div></div>
+ </section>
+
+ <section class="history-panel" id="inventoryPanel">
+ <h2>Your Emoji Inventory — buy &amp; sell</h2>
+ <p class="x-e371b3">
+ Emojis you buy are stored here. Sell them back to the market at <strong>70%</strong> of their current Pi value. Frequently-used emojis sell for more.
+ </p>
+ <div class="x-f2d3b2">
+ <span class="badge" id="walletPi">Wallet: π0</span>
+ <span class="badge" id="inventoryCount">Owned: 0</span>
+ <span class="badge" id="inventoryValue">Sell-back value: π0</span>
+ </div>
+ <div class="inventory-grid" id="inventoryGrid">
+ <div class="history-item"><span>Buy any emoji to add it to your inventory.</span></div>
+ </div>
+ </section>
+
+ <section class="history-panel" id="sentGiftsPanel">
+ <h2>Gifts sent to social feed</h2>
+ <p class="x-e371b3">
+ Emojis you send from your inventory get logged here and queued for the social page inbox.
+ </p>
+ <div class="history-list" id="sentGiftsList">
+ <div class="history-item"><span>No gifts sent yet.</span></div>
+ </div>
+ </section>
+
+ <section class="history-panel" id="usageChat">
+ <h2>Emoji Pi-Value Chat — your most used emojis</h2>
+ <p class="x-e371b3">
+ The more you send an emoji, the higher its Pi value climbs. Base price × (1 + uses × 0.15). Top picks show below.
+ </p>
+ <div class="usage-feed" id="usageFeed">
+ <div class="history-item"><span>Send an emoji to start tracking its rising value.</span></div>
+ </div>
+ <button class="button secondary x-002535" id="resetUsageBtn">Reset usage</button>
+ </section>
+
+ <script>
+ const fallbackEmojiSupply = [
+ { id: 'smile', emoji: '😀', label: 'Happy Smile', category: 'Emoji', cost: 0.0000001, description: 'Tiny Pi sticker that spreads joy.' },
+ { id: 'spark', emoji: '✨', label: 'Sparkle', category: 'Emoji', cost: 0.000002, description: 'Add a little shine to a post.' },
+ { id: 'fire', emoji: '🔥', label: 'Fire', category: 'Emoji', cost: 0.00001, description: 'Send a hot reaction with minimal Pi.' },
+ { id: 'heart', emoji: '❤️', label: 'Heart', category: 'Emoji', cost: 0.00005, description: 'A small love gift with Pi value.' },
+ { id: 'rocket', emoji: '🚀', label: 'Rocket Boost', category: 'Emoji', cost: 0.0002, description: 'Launch your support with a lightweight gift.' },
+ { id: 'thumbs', emoji: '👍', label: 'Thumbs Up', category: 'Emoji', cost: 0.001, description: 'A friendly support badge.' },
+ { id: 'tada', emoji: '🎉', label: 'Celebration', category: 'Emoji', cost: 0.01, description: 'A bigger Pi celebration gift.' },
+ { id: 'eyes', emoji: '👀', label: 'Eyes', category: 'Emoji', cost: 0.05, description: 'A strong attention gift.' },
+ { id: 'diamond', emoji: '💎', label: 'Diamond', category: 'Emoji', cost: 0.1, description: 'Premium sparkle with Pi.' },
+ { id: 'star', emoji: '🌟', label: 'Star Power', category: 'Emoji', cost: 0.008, description: 'A bright Pi boost.' },
+ { id: 'wave', emoji: '👋', label: 'Wave', category: 'Emoji', cost: 0.0003, description: 'Say hi with Pi support.' },
+ { id: 'kiss', emoji: '😘', label: 'Kiss', category: 'Emoji', cost: 0.0002, description: 'Send warm appreciation.' },
+ { id: 'clap', emoji: '👏', label: 'Applause', category: 'Emoji', cost: 0.002, description: 'Celebrate a post with claps.' },
+ { id: 'joy', emoji: '😄', label: 'Joy', category: 'Emoji', cost: 0.0000001, description: 'A bright joyful reaction.' },
+ { id: 'blush', emoji: '😊', label: 'Blush', category: 'Emoji', cost: 0.0000002, description: 'Gentle positive support.' },
+ { id: 'love', emoji: '😍', label: 'Love Eyes', category: 'Emoji', cost: 0.0000005, description: 'Show extra love and excitement.' },
+ { id: 'party', emoji: '🥳', label: 'Party', category: 'Emoji', cost: 0.000005, description: 'Celebrate with a fun party reaction.' },
+ { id: 'cool', emoji: '😎', label: 'Cool Shades', category: 'Emoji', cost: 0.00001, description: 'A smooth support badge.' },
+ { id: 'heartSparkle', emoji: '💖', label: 'Heart Sparkle', category: 'Emoji', cost: 0.00003, description: 'Send a shiny heart.' },
+ { id: 'gift', emoji: '🎁', label: 'Gift', category: 'Emoji', cost: 0.0005, description: 'Packaged support gift.' },
+ { id: 'sun', emoji: '☀️', label: 'Sun', category: 'Emoji', cost: 0.00006, description: 'Brighten a post with sunshine.' },
+ { id: 'moon', emoji: '🌙', label: 'Moon', category: 'Emoji', cost: 0.00006, description: 'Send peaceful night vibes.' },
+ { id: 'pizza', emoji: '🍕', label: 'Pizza', category: 'Emoji', cost: 0.00009, description: 'Share a tasty Pi snack.' },
+ { id: 'coffee', emoji: '☕', label: 'Coffee', category: 'Emoji', cost: 0.00012, description: 'Fuel the feed with coffee energy.' },
+ { id: 'cake', emoji: '🎂', label: 'Birthday Cake', category: 'Emoji', cost: 0.0008, description: 'Sweet celebration gift.' },
+ { id: 'rose', emoji: '🌹', label: 'Rose', category: 'Emoji', cost: 0.0004, description: 'Send a romantic rose.' },
+ { id: 'rainbow', emoji: '🌈', label: 'Rainbow', category: 'Emoji', cost: 0.0006, description: 'Spread colorful vibes.' },
+ { id: 'crown', emoji: '👑', label: 'Crown', category: 'Emoji', cost: 0.05, description: 'Crown a top creator.' },
+ { id: 'trophy', emoji: '🏆', label: 'Trophy', category: 'Emoji', cost: 0.04, description: 'Award a winning post.' },
+ { id: 'medal', emoji: '🥇', label: 'Gold Medal', category: 'Emoji', cost: 0.03, description: 'First-place recognition.' },
+ { id: 'mind', emoji: '🤯', label: 'Mind Blown', category: 'Emoji', cost: 0.002, description: 'React to something amazing.' },
+ { id: 'laugh', emoji: '😂', label: 'Laugh Cry', category: 'Emoji', cost: 0.000003, description: 'Hilarious reaction.' },
+ { id: 'wink', emoji: '😉', label: 'Wink', category: 'Emoji', cost: 0.0000003, description: 'Playful acknowledgment.' },
+ { id: 'pray', emoji: '🙏', label: 'Pray', category: 'Emoji', cost: 0.0007, description: 'Send gratitude or hope.' },
+ { id: 'muscle', emoji: '💪', label: 'Strong', category: 'Emoji', cost: 0.0009, description: 'Power and strength gift.' },
+ { id: 'brain', emoji: '🧠', label: 'Big Brain', category: 'Emoji', cost: 0.003, description: 'Celebrate a smart take.' },
+ { id: 'unicorn', emoji: '🦄', label: 'Unicorn', category: 'Emoji', cost: 0.015, description: 'Rare and magical gift.' },
+ { id: 'dragon', emoji: '🐉', label: 'Dragon', category: 'Emoji', cost: 0.02, description: 'Legendary support badge.' },
+ { id: 'butterfly', emoji: '🦋', label: 'Butterfly', category: 'Emoji', cost: 0.0006, description: 'Graceful transformation.' },
+ { id: 'sunflower', emoji: '🌻', label: 'Sunflower', category: 'Emoji', cost: 0.0003, description: 'Sunny warm support.' },
+ { id: 'cherry', emoji: '🍒', label: 'Cherry', category: 'Emoji', cost: 0.0001, description: 'Sweet tiny gift.' },
+ { id: 'champagne', emoji: '🍾', label: 'Champagne', category: 'Emoji', cost: 0.025, description: 'Pop the celebration.' },
+ { id: 'gem', emoji: '💍', label: 'Ring', category: 'Emoji', cost: 0.08, description: 'Precious commitment gift.' },
+ { id: 'moneybag', emoji: '💰', label: 'Money Bag', category: 'Emoji', cost: 0.04, description: 'Wealth and fortune.' },
+ { id: 'cash', emoji: '💵', label: 'Cash', category: 'Emoji', cost: 0.02, description: 'Show the money love.' },
+ { id: 'globe', emoji: '🌍', label: 'Globe', category: 'Emoji', cost: 0.001, description: 'Worldwide support.' },
+ { id: 'lightning', emoji: '⚡', label: 'Lightning', category: 'Emoji', cost: 0.0008, description: 'Energetic boost.' },
+ { id: 'music', emoji: '🎵', label: 'Music Note', category: 'Emoji', cost: 0.0002, description: 'Tune in support.' },
+ { id: 'guitar', emoji: '🎸', label: 'Guitar', category: 'Emoji', cost: 0.003, description: 'Rock on gift.' },
+ { id: 'football', emoji: '⚽', label: 'Football', category: 'Emoji', cost: 0.001, description: 'Sport fan support.' },
+ { id: 'basketball', emoji: '🏀', label: 'Basketball', category: 'Emoji', cost: 0.001, description: 'Slam-dunk reaction.' },
+ { id: 'controller', emoji: '🎮', label: 'Game Controller', category: 'Emoji', cost: 0.002, description: 'Gamer love gift.' },
+ { id: 'camera', emoji: '📸', label: 'Camera', category: 'Emoji', cost: 0.0008, description: 'Capture-the-moment gift.' },
+ { id: 'paint', emoji: '🎨', label: 'Art Palette', category: 'Emoji', cost: 0.0015, description: 'Creative support.' },
+ { id: 'book', emoji: '📚', label: 'Books', category: 'Emoji', cost: 0.0007, description: 'For the readers.' },
+ { id: 'pencil', emoji: '✏️', label: 'Pencil', category: 'Emoji', cost: 0.0001, description: 'Writer support.' },
+ { id: 'idea', emoji: '💡', label: 'Idea', category: 'Emoji', cost: 0.0009, description: 'Bright idea reaction.' },
+ { id: 'rocketShip', emoji: '🛸', label: 'UFO', category: 'Emoji', cost: 0.01, description: 'Out-of-this-world gift.' },
+ { id: 'comet', emoji: '☄️', label: 'Comet', category: 'Emoji', cost: 0.007, description: 'Streaking support.' },
+ { id: 'volcano', emoji: '🌋', label: 'Volcano', category: 'Emoji', cost: 0.008, description: 'Explosive reaction.' },
+ { id: 'wave2', emoji: '🌊', label: 'Wave', category: 'Emoji', cost: 0.0004, description: 'Riding the wave gift.' },
+ { id: 'snow', emoji: '❄️', label: 'Snowflake', category: 'Emoji', cost: 0.0002, description: 'Cool support.' },
+ { id: 'tree', emoji: '🌳', label: 'Tree', category: 'Emoji', cost: 0.0005, description: 'Growing support.' },
+ { id: 'cactus', emoji: '🌵', label: 'Cactus', category: 'Emoji', cost: 0.0003, description: 'Resilient gift.' },
+ { id: 'pumpkin', emoji: '🎃', label: 'Pumpkin', category: 'Emoji', cost: 0.0009, description: 'Spooky season gift.' },
+ { id: 'snowman', emoji: '⛄', label: 'Snowman', category: 'Emoji', cost: 0.0008, description: 'Winter cheer.' },
+ { id: 'ghost', emoji: '👻', label: 'Ghost', category: 'Emoji', cost: 0.0006, description: 'Boo support gift.' },
+ { id: 'alien', emoji: '👽', label: 'Alien', category: 'Emoji', cost: 0.005, description: 'Otherworldly reaction.' },
+ { id: 'robot', emoji: '🤖', label: 'Robot', category: 'Emoji', cost: 0.004, description: 'AI-powered gift.' },
+ { id: 'angel', emoji: '😇', label: 'Angel', category: 'Emoji', cost: 0.001, description: 'Pure-hearted gift.' },
+ { id: 'devil', emoji: '😈', label: 'Devil Smile', category: 'Emoji', cost: 0.001, description: 'Mischievous gift.' },
+ { id: 'cool2', emoji: '🥶', label: 'Cold Face', category: 'Emoji', cost: 0.0008, description: 'Ice-cold reaction.' },
+ { id: 'hot', emoji: '🥵', label: 'Hot Face', category: 'Emoji', cost: 0.0008, description: 'Fire-hot reaction.' },
+ { id: 'salute', emoji: '🫡', label: 'Salute', category: 'Emoji', cost: 0.0007, description: 'Respect gift.' },
+ { id: 'shaka', emoji: '🤙', label: 'Shaka', category: 'Emoji', cost: 0.0005, description: 'Hang loose support.' },
+ { id: 'peace', emoji: '✌️', label: 'Peace', category: 'Emoji', cost: 0.0004, description: 'Peace and good vibes.' },
+ { id: 'highfive', emoji: '🙌', label: 'High Five', category: 'Emoji', cost: 0.0006, description: 'Celebrate together.' },
+ { id: 'handshake', emoji: '🤝', label: 'Handshake', category: 'Emoji', cost: 0.0009, description: 'Deal-sealing gift.' },
+ { id: 'alien_monster', emoji: '👾', label: 'Alien Monster', category: 'Emoji', cost: 0.003, description: 'Retro game support.' },
+ { id: 'robot2', emoji: '🤖', label: 'Robot Face', category: 'Emoji', cost: 0.004, description: 'Tech-savvy reaction.' },
+ { id: 'jack_o_lantern', emoji: '🎃', label: 'Jack-o-Lantern', category: 'Emoji', cost: 0.001, description: 'Halloween cheer.' },
+ { id: 'smiling_cat', emoji: '😺', label: 'Smiling Cat', category: 'Emoji', cost: 0.0000003, description: 'Happy cat gift.' },
+ { id: 'grinning_cat', emoji: '😸', label: 'Grinning Cat', category: 'Emoji', cost: 0.0000004, description: 'Excited cat reaction.' },
+ { id: 'joy_cat', emoji: '😹', label: 'Joy Cat', category: 'Emoji', cost: 0.0000005, description: 'Cat laughing tears.' },
+ { id: 'heart_eyes_cat', emoji: '😻', label: 'Heart Cat', category: 'Emoji', cost: 0.000001, description: 'Cat love gift.' },
+ { id: 'smirk_cat', emoji: '😼', label: 'Smirk Cat', category: 'Emoji', cost: 0.0000007, description: 'Sly cat reaction.' },
+ { id: 'kissing_cat', emoji: '😽', label: 'Kissing Cat', category: 'Emoji', cost: 0.0000008, description: 'Affectionate cat.' },
+ { id: 'scream_cat', emoji: '🙀', label: 'Scream Cat', category: 'Emoji', cost: 0.000001, description: 'Shocked cat.' },
+ { id: 'crying_cat', emoji: '😿', label: 'Crying Cat', category: 'Emoji', cost: 0.000001, description: 'Sad cat support.' },
+ { id: 'pouting_cat', emoji: '😾', label: 'Pouting Cat', category: 'Emoji', cost: 0.000001, description: 'Grumpy cat reaction.' },
+ { id: 'heart_hands', emoji: '🫶', label: 'Heart Hands', category: 'Emoji', cost: 0.0008, description: 'Loving heart hands.' },
+ { id: 'open_hands', emoji: '👐', label: 'Open Hands', category: 'Emoji', cost: 0.0004, description: 'Welcoming hug gift.' },
+ { id: 'raising_hands', emoji: '🙌', label: 'Raising Hands', category: 'Emoji', cost: 0.0006, description: 'Praise celebration.' },
+ { id: 'clapping', emoji: '👏', label: 'Clapping', category: 'Emoji', cost: 0.0005, description: 'Round of applause.' },
+ { id: 'thumbs_up', emoji: '👍', label: 'Thumbs Up', category: 'Emoji', cost: 0.0003, description: 'Approval gift.' },
+ { id: 'thumbs_down', emoji: '👎', label: 'Thumbs Down', category: 'Emoji', cost: 0.0001, description: 'Disapproval reaction.' },
+ { id: 'fist', emoji: '👊', label: 'Fist Bump', category: 'Emoji', cost: 0.0004, description: 'Bro-fist support.' },
+ { id: 'raised_fist', emoji: '✊', label: 'Raised Fist', category: 'Emoji', cost: 0.0005, description: 'Solidarity gift.' },
+ { id: 'left_fist', emoji: '🤛', label: 'Left Fist', category: 'Emoji', cost: 0.0003, description: 'Side bump left.' },
+ { id: 'right_fist', emoji: '🤜', label: 'Right Fist', category: 'Emoji', cost: 0.0003, description: 'Side bump right.' },
+ { id: 'crossed_fingers', emoji: '🤞', label: 'Crossed Fingers', category: 'Emoji', cost: 0.0004, description: 'Wishing luck.' },
+ { id: 'love_you', emoji: '🤟', label: 'Love You Hand', category: 'Emoji', cost: 0.0008, description: 'I love you sign.' },
+ { id: 'horns', emoji: '🤘', label: 'Rock On', category: 'Emoji', cost: 0.0007, description: 'Rock metal sign.' },
+ { id: 'call_me', emoji: '🤙', label: 'Call Me', category: 'Emoji', cost: 0.0004, description: 'Hang loose / call.' },
+ { id: 'ok_hand', emoji: '👌', label: 'OK Hand', category: 'Emoji', cost: 0.0003, description: 'All good gift.' },
+ { id: 'pinched', emoji: '🤌', label: 'Pinched Fingers', category: 'Emoji', cost: 0.0003, description: 'Italian gesture.' },
+ { id: 'pinching', emoji: '🤏', label: 'Pinching Hand', category: 'Emoji', cost: 0.0002, description: 'A little bit.' },
+ { id: 'victory', emoji: '✌️', label: 'Victory', category: 'Emoji', cost: 0.0004, description: 'Peace and victory.' },
+ { id: 'index_point', emoji: '☝️', label: 'Point Up', category: 'Emoji', cost: 0.0002, description: 'Attention gift.' },
+ { id: 'point_right', emoji: '👉', label: 'Point Right', category: 'Emoji', cost: 0.0002, description: 'Direction right.' },
+ { id: 'point_left', emoji: '👈', label: 'Point Left', category: 'Emoji', cost: 0.0002, description: 'Direction left.' },
+ { id: 'point_down', emoji: '👇', label: 'Point Down', category: 'Emoji', cost: 0.0002, description: 'Direction down.' },
+ { id: 'point_up_2', emoji: '👆', label: 'Point Up 2', category: 'Emoji', cost: 0.0002, description: 'Look above.' },
+ { id: 'middle_finger', emoji: '🖕', label: 'Middle Finger', category: 'Emoji', cost: 0.0009, description: 'Rude gesture.' },
+ { id: 'raised_hand', emoji: '✋', label: 'Raised Hand', category: 'Emoji', cost: 0.0003, description: 'Stop or hi.' },
+ { id: 'vulcan', emoji: '🖖', label: 'Vulcan Salute', category: 'Emoji', cost: 0.0007, description: 'Live long & prosper.' },
+ { id: 'palm_up', emoji: '🤲', label: 'Palms Up', category: 'Emoji', cost: 0.0004, description: 'Pleading prayer.' },
+ { id: 'wave_hand', emoji: '👋', label: 'Wave Hi', category: 'Emoji', cost: 0.0003, description: 'Friendly wave.' },
+ { id: 'writing_hand', emoji: '✍️', label: 'Writing Hand', category: 'Emoji', cost: 0.0004, description: 'Author support.' },
+ { id: 'nail_polish', emoji: '💅', label: 'Nail Polish', category: 'Emoji', cost: 0.0006, description: 'Sassy support.' },
+ { id: 'biceps', emoji: '💪', label: 'Biceps', category: 'Emoji', cost: 0.0009, description: 'Strength gift.' },
+ { id: 'leg', emoji: '🦵', label: 'Leg', category: 'Emoji', cost: 0.0003, description: 'Body emoji.' },
+ { id: 'foot', emoji: '🦶', label: 'Foot', category: 'Emoji', cost: 0.0002, description: 'Body emoji.' },
+ { id: 'mech_arm', emoji: '🦾', label: 'Mechanical Arm', category: 'Emoji', cost: 0.002, description: 'Bionic support.' },
+ { id: 'mech_leg', emoji: '🦿', label: 'Mechanical Leg', category: 'Emoji', cost: 0.002, description: 'Bionic support.' },
+ { id: 'lipstick', emoji: '💄', label: 'Lipstick', category: 'Emoji', cost: 0.0008, description: 'Glamour gift.' },
+ { id: 'kiss_mark', emoji: '💋', label: 'Kiss Mark', category: 'Emoji', cost: 0.0006, description: 'A kiss for you.' },
+ { id: 'lips', emoji: '👄', label: 'Lips', category: 'Emoji', cost: 0.0003, description: 'Lips emoji.' },
+ { id: 'tooth', emoji: '🦷', label: 'Tooth', category: 'Emoji', cost: 0.0002, description: 'Dental emoji.' },
+ { id: 'tongue', emoji: '👅', label: 'Tongue', category: 'Emoji', cost: 0.0002, description: 'Cheeky emoji.' },
+ { id: 'ear', emoji: '👂', label: 'Ear', category: 'Emoji', cost: 0.0002, description: 'Listening gift.' },
+ { id: 'nose', emoji: '👃', label: 'Nose', category: 'Emoji', cost: 0.0002, description: 'Body emoji.' },
+ { id: 'fingerprint', emoji: '🫆', label: 'Fingerprint', category: 'Emoji', cost: 0.0005, description: 'Unique mark.' },
+ { id: 'footprints', emoji: '👣', label: 'Footprints', category: 'Emoji', cost: 0.0002, description: 'Journey gift.' },
+ { id: 'eye', emoji: '👁️', label: 'Eye', category: 'Emoji', cost: 0.0003, description: 'Single eye.' },
+ { id: 'anatomical_heart', emoji: '🫀', label: 'Anatomical Heart', category: 'Emoji', cost: 0.001, description: 'Real-heart gift.' },
+ { id: 'lungs', emoji: '🫁', label: 'Lungs', category: 'Emoji', cost: 0.0008, description: 'Breath of support.' },
+ { id: 'brain2', emoji: '🧠', label: 'Brain', category: 'Emoji', cost: 0.003, description: 'Smart support.' },
+ { id: 'speaking_head', emoji: '🗣️', label: 'Speaking Head', category: 'Emoji', cost: 0.0004, description: 'Loud support.' },
+ { id: 'bust', emoji: '👤', label: 'Person Silhouette', category: 'Emoji', cost: 0.0001, description: 'Anonymous gift.' },
+ { id: 'busts', emoji: '👥', label: 'People Silhouette', category: 'Emoji', cost: 0.0002, description: 'Community support.' },
+ { id: 'hug', emoji: '🫂', label: 'Hug', category: 'Emoji', cost: 0.0009, description: 'Warm hug gift.' },
+ { id: 'baby', emoji: '👶', label: 'Baby', category: 'Emoji', cost: 0.0005, description: 'Adorable baby.' },
+ { id: 'girl', emoji: '👧', label: 'Girl', category: 'Emoji', cost: 0.0003, description: 'Young support.' },
+ { id: 'boy', emoji: '👦', label: 'Boy', category: 'Emoji', cost: 0.0003, description: 'Young support.' },
+ { id: 'woman', emoji: '👩', label: 'Woman', category: 'Emoji', cost: 0.0003, description: 'Woman emoji.' },
+ { id: 'man', emoji: '👨', label: 'Man', category: 'Emoji', cost: 0.0003, description: 'Man emoji.' },
+ { id: 'older_woman', emoji: '👵', label: 'Older Woman', category: 'Emoji', cost: 0.0003, description: 'Grandma support.' },
+ { id: 'older_man', emoji: '👴', label: 'Older Man', category: 'Emoji', cost: 0.0003, description: 'Grandpa support.' },
+ { id: 'person_blond', emoji: '👱', label: 'Blond Person', category: 'Emoji', cost: 0.0003, description: 'Blond emoji.' },
+ { id: 'person_red', emoji: '🧑‍🦰', label: 'Red Hair Person', category: 'Emoji', cost: 0.0003, description: 'Red-hair emoji.' },
+ { id: 'person_white', emoji: '🧑‍🦳', label: 'White Hair Person', category: 'Emoji', cost: 0.0003, description: 'White-hair emoji.' },
+ { id: 'person_bald', emoji: '🧑‍🦲', label: 'Bald Person', category: 'Emoji', cost: 0.0003, description: 'Bald emoji.' },
+ { id: 'person_beard', emoji: '🧔', label: 'Bearded Person', category: 'Emoji', cost: 0.0003, description: 'Beard emoji.' },
+ { id: 'prince', emoji: '🤴', label: 'Prince', category: 'Emoji', cost: 0.004, description: 'Royal gift.' },
+ { id: 'princess', emoji: '👸', label: 'Princess', category: 'Emoji', cost: 0.004, description: 'Royal gift.' },
+ { id: 'turban', emoji: '👳', label: 'Turban', category: 'Emoji', cost: 0.0008, description: 'Cultural emoji.' },
+ { id: 'dog', emoji: '🐶', label: 'Dog', category: 'Emoji', cost: 0.0005, description: 'Puppy love.' },
+ { id: 'cat', emoji: '🐱', label: 'Cat', category: 'Emoji', cost: 0.0005, description: 'Kitty love.' },
+ { id: 'mouse', emoji: '🐭', label: 'Mouse', category: 'Emoji', cost: 0.0003, description: 'Mouse emoji.' },
+ { id: 'hamster', emoji: '🐹', label: 'Hamster', category: 'Emoji', cost: 0.0003, description: 'Hamster emoji.' },
+ { id: 'rabbit', emoji: '🐰', label: 'Rabbit', category: 'Emoji', cost: 0.0004, description: 'Bunny gift.' },
+ { id: 'fox', emoji: '🦊', label: 'Fox', category: 'Emoji', cost: 0.0006, description: 'Sly fox.' },
+ { id: 'bear', emoji: '🐻', label: 'Bear', category: 'Emoji', cost: 0.0006, description: 'Bear hug.' },
+ { id: 'panda', emoji: '🐼', label: 'Panda', category: 'Emoji', cost: 0.0008, description: 'Panda gift.' },
+ { id: 'polar_bear', emoji: '🐻‍❄️', label: 'Polar Bear', category: 'Emoji', cost: 0.001, description: 'Arctic bear.' },
+ { id: 'koala', emoji: '🐨', label: 'Koala', category: 'Emoji', cost: 0.0008, description: 'Koala love.' },
+ { id: 'tiger', emoji: '🐯', label: 'Tiger', category: 'Emoji', cost: 0.001, description: 'Tiger power.' },
+ { id: 'lion', emoji: '🦁', label: 'Lion', category: 'Emoji', cost: 0.001, description: 'King of jungle.' },
+ { id: 'cow', emoji: '🐮', label: 'Cow', category: 'Emoji', cost: 0.0003, description: 'Cow emoji.' },
+ { id: 'pig', emoji: '🐷', label: 'Pig', category: 'Emoji', cost: 0.0003, description: 'Piggy emoji.' },
+ { id: 'pig_nose', emoji: '🐽', label: 'Pig Nose', category: 'Emoji', cost: 0.0002, description: 'Snout emoji.' },
+ { id: 'frog', emoji: '🐸', label: 'Frog', category: 'Emoji', cost: 0.0005, description: 'Frog gift.' },
+ { id: 'monkey_face', emoji: '🐵', label: 'Monkey Face', category: 'Emoji', cost: 0.0005, description: 'Monkey emoji.' },
+ { id: 'see_no_evil', emoji: '🙈', label: 'See No Evil', category: 'Emoji', cost: 0.0005, description: 'Hide eyes monkey.' },
+ { id: 'hear_no_evil', emoji: '🙉', label: 'Hear No Evil', category: 'Emoji', cost: 0.0005, description: 'Hide ears monkey.' },
+ { id: 'speak_no_evil', emoji: '🙊', label: 'Speak No Evil', category: 'Emoji', cost: 0.0005, description: 'Hide mouth monkey.' },
+ { id: 'monkey', emoji: '🐒', label: 'Monkey', category: 'Emoji', cost: 0.0005, description: 'Full body monkey.' },
+ { id: 'chicken', emoji: '🐔', label: 'Chicken', category: 'Emoji', cost: 0.0003, description: 'Chicken emoji.' },
+ { id: 'penguin', emoji: '🐧', label: 'Penguin', category: 'Emoji', cost: 0.0006, description: 'Penguin gift.' },
+ { id: 'bird', emoji: '🐦', label: 'Bird', category: 'Emoji', cost: 0.0003, description: 'Bird emoji.' },
+ { id: 'chick', emoji: '🐤', label: 'Chick', category: 'Emoji', cost: 0.0003, description: 'Baby chick.' },
+ { id: 'hatching', emoji: '🐣', label: 'Hatching Chick', category: 'Emoji', cost: 0.0004, description: 'New beginnings.' },
+ { id: 'duck', emoji: '🦆', label: 'Duck', category: 'Emoji', cost: 0.0004, description: 'Duck emoji.' },
+ { id: 'eagle', emoji: '🦅', label: 'Eagle', category: 'Emoji', cost: 0.0009, description: 'Eagle pride.' },
+ { id: 'owl', emoji: '🦉', label: 'Owl', category: 'Emoji', cost: 0.0007, description: 'Wise owl.' },
+ { id: 'bat', emoji: '🦇', label: 'Bat', category: 'Emoji', cost: 0.0005, description: 'Spooky bat.' },
+ { id: 'wolf', emoji: '🐺', label: 'Wolf', category: 'Emoji', cost: 0.001, description: 'Lone wolf.' },
+ { id: 'boar', emoji: '🐗', label: 'Boar', category: 'Emoji', cost: 0.0005, description: 'Wild boar.' },
+ { id: 'horse_face', emoji: '🐴', label: 'Horse Face', category: 'Emoji', cost: 0.0005, description: 'Horse emoji.' },
+ { id: 'horse', emoji: '🐎', label: 'Horse', category: 'Emoji', cost: 0.0008, description: 'Full body horse.' },
+ { id: 'unicorn2', emoji: '🦄', label: 'Unicorn Face', category: 'Emoji', cost: 0.015, description: 'Magical unicorn.' },
+ { id: 'deer', emoji: '🦌', label: 'Deer', category: 'Emoji', cost: 0.0006, description: 'Forest deer.' },
+ { id: 'bee', emoji: '🐝', label: 'Bee', category: 'Emoji', cost: 0.0004, description: 'Busy bee.' },
+ { id: 'worm', emoji: '🪱', label: 'Worm', category: 'Emoji', cost: 0.0001, description: 'Worm emoji.' },
+ { id: 'caterpillar', emoji: '🐛', label: 'Caterpillar', category: 'Emoji', cost: 0.0003, description: 'Caterpillar emoji.' },
+ { id: 'butterfly2', emoji: '🦋', label: 'Butterfly', category: 'Emoji', cost: 0.0006, description: 'Butterfly gift.' },
+ { id: 'snail', emoji: '🐌', label: 'Snail', category: 'Emoji', cost: 0.0002, description: 'Slow gift.' },
+ { id: 'ladybug', emoji: '🐞', label: 'Ladybug', category: 'Emoji', cost: 0.0004, description: 'Lucky ladybug.' },
+ { id: 'ant', emoji: '🐜', label: 'Ant', category: 'Emoji', cost: 0.0001, description: 'Hardworking ant.' },
+ { id: 'fly', emoji: '🪰', label: 'Fly', category: 'Emoji', cost: 0.0001, description: 'Fly emoji.' },
+ { id: 'beetle', emoji: '🪲', label: 'Beetle', category: 'Emoji', cost: 0.0003, description: 'Beetle emoji.' },
+ { id: 'cockroach', emoji: '🪳', label: 'Cockroach', category: 'Emoji', cost: 0.0002, description: 'Roach emoji.' },
+ { id: 'mosquito', emoji: '🦟', label: 'Mosquito', category: 'Emoji', cost: 0.0001, description: 'Mosquito emoji.' },
+ { id: 'cricket', emoji: '🦗', label: 'Cricket', category: 'Emoji', cost: 0.0002, description: 'Cricket emoji.' },
+ { id: 'spider', emoji: '🕷️', label: 'Spider', category: 'Emoji', cost: 0.0004, description: 'Spider gift.' },
+ { id: 'web', emoji: '🕸️', label: 'Spider Web', category: 'Emoji', cost: 0.0002, description: 'Web emoji.' },
+ { id: 'scorpion', emoji: '🦂', label: 'Scorpion', category: 'Emoji', cost: 0.0007, description: 'Scorpion gift.' },
+ { id: 'turtle', emoji: '🐢', label: 'Turtle', category: 'Emoji', cost: 0.0006, description: 'Slow & steady.' },
+ { id: 'snake', emoji: '🐍', label: 'Snake', category: 'Emoji', cost: 0.0006, description: 'Snake emoji.' },
+ { id: 'lizard', emoji: '🦎', label: 'Lizard', category: 'Emoji', cost: 0.0004, description: 'Lizard emoji.' },
+ { id: 't_rex', emoji: '🦖', label: 'T-Rex', category: 'Emoji', cost: 0.005, description: 'Dino king.' },
+ { id: 'dino', emoji: '🦕', label: 'Sauropod', category: 'Emoji', cost: 0.005, description: 'Long-neck dino.' },
+ { id: 'octopus', emoji: '🐙', label: 'Octopus', category: 'Emoji', cost: 0.001, description: 'Octopus gift.' },
+ { id: 'squid', emoji: '🦑', label: 'Squid', category: 'Emoji', cost: 0.0008, description: 'Squid emoji.' },
+ { id: 'jellyfish', emoji: '🪼', label: 'Jellyfish', category: 'Emoji', cost: 0.0007, description: 'Jelly gift.' },
+ { id: 'shrimp', emoji: '🦐', label: 'Shrimp', category: 'Emoji', cost: 0.0004, description: 'Shrimp emoji.' },
+ { id: 'lobster', emoji: '🦞', label: 'Lobster', category: 'Emoji', cost: 0.001, description: 'Lobster gift.' },
+ { id: 'crab', emoji: '🦀', label: 'Crab', category: 'Emoji', cost: 0.0008, description: 'Crab gift.' },
+ { id: 'pufferfish', emoji: '🐡', label: 'Pufferfish', category: 'Emoji', cost: 0.0005, description: 'Puffer emoji.' },
+ { id: 'tropical_fish', emoji: '🐠', label: 'Tropical Fish', category: 'Emoji', cost: 0.0005, description: 'Reef fish.' },
+ { id: 'fish', emoji: '🐟', label: 'Fish', category: 'Emoji', cost: 0.0003, description: 'Fish emoji.' },
+ { id: 'dolphin', emoji: '🐬', label: 'Dolphin', category: 'Emoji', cost: 0.0009, description: 'Dolphin gift.' },
+ { id: 'whale', emoji: '🐳', label: 'Whale', category: 'Emoji', cost: 0.001, description: 'Whale support.' },
+ { id: 'whale2', emoji: '🐋', label: 'Whale Side', category: 'Emoji', cost: 0.001, description: 'Big whale.' },
+ { id: 'orca', emoji: '🫎', label: 'Orca', category: 'Emoji', cost: 0.0015, description: 'Orca gift.' },
+ { id: 'shark', emoji: '🦈', label: 'Shark', category: 'Emoji', cost: 0.001, description: 'Shark gift.' },
+ { id: 'seal', emoji: '🦭', label: 'Seal', category: 'Emoji', cost: 0.0007, description: 'Seal gift.' },
+ { id: 'crocodile', emoji: '🐊', label: 'Crocodile', category: 'Emoji', cost: 0.0009, description: 'Crocodile gift.' },
+ { id: 'leopard', emoji: '🐆', label: 'Leopard', category: 'Emoji', cost: 0.001, description: 'Leopard gift.' },
+ { id: 'zebra', emoji: '🦓', label: 'Zebra', category: 'Emoji', cost: 0.0008, description: 'Zebra gift.' },
+ { id: 'gorilla', emoji: '🦍', label: 'Gorilla', category: 'Emoji', cost: 0.0012, description: 'Gorilla strength.' },
+ { id: 'orangutan', emoji: '🦧', label: 'Orangutan', category: 'Emoji', cost: 0.001, description: 'Orangutan gift.' },
+ { id: 'mammoth', emoji: '🦣', label: 'Mammoth', category: 'Emoji', cost: 0.002, description: 'Ancient giant.' },
+ { id: 'elephant', emoji: '🐘', label: 'Elephant', category: 'Emoji', cost: 0.0012, description: 'Big elephant.' },
+ { id: 'hippo', emoji: '🦛', label: 'Hippo', category: 'Emoji', cost: 0.001, description: 'Hippo gift.' },
+ { id: 'rhino', emoji: '🦏', label: 'Rhino', category: 'Emoji', cost: 0.001, description: 'Rhino gift.' },
+ { id: 'camel', emoji: '🐪', label: 'Camel', category: 'Emoji', cost: 0.0008, description: 'Desert camel.' },
+ { id: 'two_hump', emoji: '🐫', label: 'Two-Hump Camel', category: 'Emoji', cost: 0.0008, description: 'Bactrian camel.' },
+ { id: 'giraffe', emoji: '🦒', label: 'Giraffe', category: 'Emoji', cost: 0.0009, description: 'Tall giraffe.' },
+ { id: 'kangaroo', emoji: '🦘', label: 'Kangaroo', category: 'Emoji', cost: 0.0009, description: 'Hopping kangaroo.' },
+ { id: 'bison', emoji: '🦬', label: 'Bison', category: 'Emoji', cost: 0.001, description: 'Bison gift.' },
+ { id: 'water_buffalo', emoji: '🐃', label: 'Water Buffalo', category: 'Emoji', cost: 0.0008, description: 'Buffalo gift.' },
+ { id: 'ox', emoji: '🐂', label: 'Ox', category: 'Emoji', cost: 0.0008, description: 'Ox gift.' },
+ { id: 'cow_full', emoji: '🐄', label: 'Cow', category: 'Emoji', cost: 0.0005, description: 'Full cow.' },
+ { id: 'donkey', emoji: '🫏', label: 'Donkey', category: 'Emoji', cost: 0.0005, description: 'Donkey emoji.' },
+ { id: 'pig_full', emoji: '🐖', label: 'Pig Full', category: 'Emoji', cost: 0.0005, description: 'Full pig.' },
+ { id: 'ram', emoji: '🐏', label: 'Ram', category: 'Emoji', cost: 0.0005, description: 'Ram emoji.' },
+ { id: 'sheep', emoji: '🐑', label: 'Sheep', category: 'Emoji', cost: 0.0004, description: 'Sheep gift.' },
+ { id: 'llama', emoji: '🦙', label: 'Llama', category: 'Emoji', cost: 0.0007, description: 'Llama gift.' },
+ { id: 'goat', emoji: '🐐', label: 'Goat', category: 'Emoji', cost: 0.0005, description: 'GOAT emoji.' },
+ { id: 'poodle', emoji: '🐩', label: 'Poodle', category: 'Emoji', cost: 0.0006, description: 'Poodle emoji.' },
+ { id: 'guide_dog', emoji: '🦮', label: 'Guide Dog', category: 'Emoji', cost: 0.0008, description: 'Service dog.' },
+ { id: 'feather', emoji: '🪶', label: 'Feather', category: 'Emoji', cost: 0.0003, description: 'Light feather.' },
+ { id: 'wing', emoji: '🪽', label: 'Wing', category: 'Emoji', cost: 0.0005, description: 'Flying wing.' },
+ { id: 'raccoon', emoji: '🦝', label: 'Raccoon', category: 'Emoji', cost: 0.0006, description: 'Raccoon emoji.' },
+ { id: 'skunk', emoji: '🦨', label: 'Skunk', category: 'Emoji', cost: 0.0005, description: 'Skunk gift.' },
+ { id: 'badger', emoji: '🦡', label: 'Badger', category: 'Emoji', cost: 0.0006, description: 'Badger gift.' },
+ { id: 'beaver', emoji: '🦫', label: 'Beaver', category: 'Emoji', cost: 0.0006, description: 'Beaver emoji.' },
+ { id: 'otter', emoji: '🦦', label: 'Otter', category: 'Emoji', cost: 0.0007, description: 'Otter gift.' },
+ { id: 'sloth', emoji: '🦥', label: 'Sloth', category: 'Emoji', cost: 0.0007, description: 'Chill sloth.' },
+ { id: 'rat', emoji: '🐀', label: 'Rat', category: 'Emoji', cost: 0.0002, description: 'Rat emoji.' },
+ { id: 'mouse_full', emoji: '🐁', label: 'Mouse Full', category: 'Emoji', cost: 0.0002, description: 'Full mouse.' },
+ { id: 'chipmunk', emoji: '🐿️', label: 'Chipmunk', category: 'Emoji', cost: 0.0004, description: 'Chipmunk gift.' },
+ { id: 'hedgehog', emoji: '🦔', label: 'Hedgehog', category: 'Emoji', cost: 0.0006, description: 'Hedgehog emoji.' },
+ { id: 'paw_prints', emoji: '🐾', label: 'Paw Prints', category: 'Emoji', cost: 0.0003, description: 'Pet paws.' },
+ { id: 'dragon_face', emoji: '🐲', label: 'Dragon Face', category: 'Emoji', cost: 0.018, description: 'Dragon face.' },
+ { id: 'dragon_full', emoji: '🐉', label: 'Dragon Full', category: 'Emoji', cost: 0.02, description: 'Legendary dragon.' },
+ { id: 'phoenix', emoji: '🐦‍🔥', label: 'Phoenix', category: 'Emoji', cost: 0.025, description: 'Rising phoenix.' },
+ { id: 'cactus2', emoji: '🌵', label: 'Cactus', category: 'Emoji', cost: 0.0003, description: 'Resilient cactus.' },
+ { id: 'christmas_tree', emoji: '🎄', label: 'Christmas Tree', category: 'Emoji', cost: 0.001, description: 'Holiday tree.' },
+ { id: 'evergreen', emoji: '🌲', label: 'Evergreen', category: 'Emoji', cost: 0.0005, description: 'Pine tree.' },
+ { id: 'deciduous', emoji: '🌳', label: 'Tree', category: 'Emoji', cost: 0.0005, description: 'Big tree.' },
+ { id: 'palm_tree', emoji: '🌴', label: 'Palm Tree', category: 'Emoji', cost: 0.0006, description: 'Tropical palm.' },
+ { id: 'dead_tree', emoji: '🪾', label: 'Dead Tree', category: 'Emoji', cost: 0.0002, description: 'Bare tree.' },
+ { id: 'wood', emoji: '🪵', label: 'Wood Log', category: 'Emoji', cost: 0.0003, description: 'Wood log.' },
+ { id: 'seedling', emoji: '🌱', label: 'Seedling', category: 'Emoji', cost: 0.0003, description: 'New growth.' },
+ { id: 'herb', emoji: '🌿', label: 'Herb', category: 'Emoji', cost: 0.0003, description: 'Green herb.' },
+ { id: 'shamrock', emoji: '☘️', label: 'Shamrock', category: 'Emoji', cost: 0.0004, description: 'Lucky shamrock.' },
+ { id: 'four_leaf', emoji: '🍀', label: 'Four Leaf Clover', category: 'Emoji', cost: 0.001, description: 'Extra-lucky clover.' },
+ { id: 'bouquet', emoji: '💐', label: 'Bouquet', category: 'Emoji', cost: 0.003, description: 'Flower bouquet.' },
+ { id: 'potted_plant', emoji: '🪴', label: 'Potted Plant', category: 'Emoji', cost: 0.0008, description: 'Houseplant gift.' },
+ { id: 'leafy_green', emoji: '🥬', label: 'Leafy Green', category: 'Emoji', cost: 0.0003, description: 'Fresh greens.' },
+ { id: 'bamboo', emoji: '🎋', label: 'Bamboo', category: 'Emoji', cost: 0.0004, description: 'Bamboo gift.' },
+ { id: 'fallen_leaf', emoji: '🍂', label: 'Fallen Leaf', category: 'Emoji', cost: 0.0002, description: 'Autumn leaf.' },
+ { id: 'maple', emoji: '🍁', label: 'Maple Leaf', category: 'Emoji', cost: 0.0003, description: 'Maple leaf.' },
+ { id: 'nest_eggs', emoji: '🪺', label: 'Nest with Eggs', category: 'Emoji', cost: 0.0005, description: 'Bird nest.' },
+ { id: 'nest', emoji: '🪹', label: 'Empty Nest', category: 'Emoji', cost: 0.0003, description: 'Empty nest.' },
+ { id: 'mushroom', emoji: '🍄', label: 'Mushroom', category: 'Emoji', cost: 0.0004, description: 'Red mushroom.' },
+ { id: 'mushroom_brown', emoji: '🍄‍🟫', label: 'Brown Mushroom', category: 'Emoji', cost: 0.0003, description: 'Edible mushroom.' },
+ { id: 'shell', emoji: '🐚', label: 'Shell', category: 'Emoji', cost: 0.0004, description: 'Sea shell.' },
+ { id: 'coral', emoji: '🪸', label: 'Coral', category: 'Emoji', cost: 0.0008, description: 'Reef coral.' },
+ { id: 'rock', emoji: '🪨', label: 'Rock', category: 'Emoji', cost: 0.0002, description: 'Solid rock.' },
+ { id: 'wheat', emoji: '🌾', label: 'Wheat', category: 'Emoji', cost: 0.0003, description: 'Wheat sheaf.' },
+ { id: 'lotus', emoji: '🪷', label: 'Lotus', category: 'Emoji', cost: 0.0008, description: 'Lotus flower.' },
+ { id: 'hibiscus', emoji: '🌺', label: 'Hibiscus', category: 'Emoji', cost: 0.0006, description: 'Tropical flower.' },
+ { id: 'cherry_blossom', emoji: '🌸', label: 'Cherry Blossom', category: 'Emoji', cost: 0.0006, description: 'Sakura.' },
+ { id: 'daisy', emoji: '🌼', label: 'Daisy', category: 'Emoji', cost: 0.0003, description: 'Daisy flower.' },
+ { id: 'sunflower2', emoji: '🌻', label: 'Sunflower', category: 'Emoji', cost: 0.0004, description: 'Bright sunflower.' },
+ { id: 'sun_face', emoji: '🌞', label: 'Sun with Face', category: 'Emoji', cost: 0.0006, description: 'Smiling sun.' },
+ { id: 'full_moon_face', emoji: '🌝', label: 'Full Moon Face', category: 'Emoji', cost: 0.0006, description: 'Moon with face.' },
+ { id: 'first_quarter_face', emoji: '🌛', label: 'First Quarter Face', category: 'Emoji', cost: 0.0005, description: 'Half moon face.' },
+ { id: 'last_quarter_face', emoji: '🌜', label: 'Last Quarter Face', category: 'Emoji', cost: 0.0005, description: 'Half moon face.' },
+ { id: 'new_moon_face', emoji: '🌚', label: 'New Moon Face', category: 'Emoji', cost: 0.0005, description: 'Dark moon face.' },
+ { id: 'full_moon', emoji: '🌕', label: 'Full Moon', category: 'Emoji', cost: 0.0003, description: 'Full moon.' },
+ { id: 'waning_gibbous', emoji: '🌖', label: 'Waning Gibbous', category: 'Emoji', cost: 0.0003, description: 'Moon phase.' },
+ { id: 'last_quarter', emoji: '🌗', label: 'Last Quarter', category: 'Emoji', cost: 0.0003, description: 'Moon phase.' },
+ { id: 'waning_crescent', emoji: '🌘', label: 'Waning Crescent', category: 'Emoji', cost: 0.0003, description: 'Moon phase.' },
+ { id: 'new_moon', emoji: '🌑', label: 'New Moon', category: 'Emoji', cost: 0.0003, description: 'Dark moon.' },
+ { id: 'waxing_crescent', emoji: '🌒', label: 'Waxing Crescent', category: 'Emoji', cost: 0.0003, description: 'Moon phase.' },
+ { id: 'first_quarter', emoji: '🌓', label: 'First Quarter', category: 'Emoji', cost: 0.0003, description: 'Moon phase.' },
+ { id: 'waxing_gibbous', emoji: '🌔', label: 'Waxing Gibbous', category: 'Emoji', cost: 0.0003, description: 'Moon phase.' },
+ { id: 'crescent', emoji: '🌙', label: 'Crescent', category: 'Emoji', cost: 0.0003, description: 'Crescent moon.' },
+ { id: 'earth_americas', emoji: '🌎', label: 'Earth Americas', category: 'Emoji', cost: 0.0008, description: 'Earth view.' },
+ { id: 'earth_africa', emoji: '🌍', label: 'Earth Africa', category: 'Emoji', cost: 0.0008, description: 'Earth view.' },
+ { id: 'earth_asia', emoji: '🌏', label: 'Earth Asia', category: 'Emoji', cost: 0.0008, description: 'Earth view.' },
+ { id: 'saturn', emoji: '🪐', label: 'Saturn', category: 'Emoji', cost: 0.005, description: 'Ringed planet.' },
+ { id: 'shooting_star', emoji: '🌠', label: 'Shooting Star', category: 'Emoji', cost: 0.002, description: 'Make a wish.' },
+ { id: 'star', emoji: '⭐', label: 'Star', category: 'Emoji', cost: 0.0005, description: 'Star gift.' },
+ { id: 'glowing_star', emoji: '🌟', label: 'Glowing Star', category: 'Emoji', cost: 0.001, description: 'Bright star.' },
+ { id: 'sparkles', emoji: '✨', label: 'Sparkles', category: 'Emoji', cost: 0.0008, description: 'Shine bright.' },
+ { id: 'high_voltage', emoji: '⚡', label: 'High Voltage', category: 'Emoji', cost: 0.0008, description: 'Lightning bolt.' },
+ { id: 'comet2', emoji: '☄️', label: 'Comet', category: 'Emoji', cost: 0.005, description: 'Streaking comet.' },
+ { id: 'collision', emoji: '💥', label: 'Collision', category: 'Emoji', cost: 0.001, description: 'Boom reaction.' },
+ { id: 'fire2', emoji: '🔥', label: 'Fire', category: 'Emoji', cost: 0.0008, description: 'Fire gift.' },
+ { id: 'dizzy', emoji: '💫', label: 'Dizzy', category: 'Emoji', cost: 0.0006, description: 'Dizzy star.' },
+ { id: 'tornado', emoji: '🌪️', label: 'Tornado', category: 'Emoji', cost: 0.001, description: 'Spinning twister.' },
+ { id: 'rainbow2', emoji: '🌈', label: 'Rainbow', category: 'Emoji', cost: 0.001, description: 'Full rainbow.' },
+ { id: 'sun2', emoji: '☀️', label: 'Sun', category: 'Emoji', cost: 0.0004, description: 'Bright sun.' },
+ { id: 'sun_cloud', emoji: '⛅', label: 'Sun Behind Cloud', category: 'Emoji', cost: 0.0003, description: 'Partly sunny.' },
+ { id: 'sun_small_cloud', emoji: '🌤️', label: 'Sun & Small Cloud', category: 'Emoji', cost: 0.0003, description: 'Mostly sunny.' },
+ { id: 'sun_big_cloud', emoji: '🌥️', label: 'Sun & Big Cloud', category: 'Emoji', cost: 0.0003, description: 'Mostly cloudy.' },
+ { id: 'cloud', emoji: '☁️', label: 'Cloud', category: 'Emoji', cost: 0.0002, description: 'Cloud gift.' },
+ { id: 'sun_rain', emoji: '🌦️', label: 'Sun Behind Rain', category: 'Emoji', cost: 0.0004, description: 'Sun & rain.' },
+ { id: 'rain', emoji: '🌧️', label: 'Rain Cloud', category: 'Emoji', cost: 0.0003, description: 'Rainy day.' },
+ { id: 'thunder_rain', emoji: '⛈️', label: 'Thunder & Rain', category: 'Emoji', cost: 0.0006, description: 'Storm gift.' },
+ { id: 'thunder_cloud', emoji: '🌩️', label: 'Thunder Cloud', category: 'Emoji', cost: 0.0006, description: 'Lightning cloud.' },
+ { id: 'snow_cloud', emoji: '🌨️', label: 'Snow Cloud', category: 'Emoji', cost: 0.0004, description: 'Snowing.' },
+ { id: 'snowflake', emoji: '❄️', label: 'Snowflake', category: 'Emoji', cost: 0.0003, description: 'Single snowflake.' },
+ { id: 'snowman2', emoji: '☃️', label: 'Snowman', category: 'Emoji', cost: 0.001, description: 'Winter snowman.' },
+ { id: 'snowman_no_snow', emoji: '⛄', label: 'Snowman No Snow', category: 'Emoji', cost: 0.0008, description: 'Snowman simple.' },
+ { id: 'wind', emoji: '🌬️', label: 'Wind', category: 'Emoji', cost: 0.0003, description: 'Wind face.' },
+ { id: 'fog', emoji: '🌫️', label: 'Fog', category: 'Emoji', cost: 0.0002, description: 'Foggy gift.' },
+ { id: 'droplet', emoji: '💧', label: 'Droplet', category: 'Emoji', cost: 0.0002, description: 'Water drop.' },
+ { id: 'sweat_drops', emoji: '💦', label: 'Sweat Drops', category: 'Emoji', cost: 0.0003, description: 'Water splash.' },
+ { id: 'bubbles', emoji: '🫧', label: 'Bubbles', category: 'Emoji', cost: 0.0003, description: 'Bubble gift.' },
+ { id: 'umbrella_rain', emoji: '☔', label: 'Umbrella Rain', category: 'Emoji', cost: 0.0004, description: 'Rainy umbrella.' },
+ { id: 'umbrella', emoji: '☂️', label: 'Umbrella', category: 'Emoji', cost: 0.0003, description: 'Open umbrella.' },
+ { id: 'ocean_wave', emoji: '🌊', label: 'Ocean Wave', category: 'Emoji', cost: 0.0005, description: 'Big wave.' },
+{ id: 'flag_white', emoji: '🏳️', label: 'White Flag', category: 'Country Flag', cost: 1, description: 'Surrender or peace.' },
+ { id: 'flag_black', emoji: '🏴', label: 'Black Flag', category: 'Country Flag', cost: 1, description: 'Black flag.' },
+ { id: 'flag_pirate', emoji: '🏴‍☠️', label: 'Pirate Flag', category: 'Country Flag', cost: 1, description: 'Skull pirate flag.' },
+ { id: 'flag_checkered', emoji: '🏁', label: 'Checkered Flag', category: 'Country Flag', cost: 1, description: 'Race finish.' },
+ { id: 'flag_triangle', emoji: '🚩', label: 'Triangular Flag', category: 'Country Flag', cost: 1, description: 'Red marker flag.' },
+ { id: 'flag_rainbow', emoji: '🏳️‍🌈', label: 'Rainbow Flag', category: 'Country Flag', cost: 1, description: 'Pride flag.' },
+ { id: 'flag_trans', emoji: '🏳️‍⚧️', label: 'Transgender Flag', category: 'Country Flag', cost: 1, description: 'Transgender pride.' },
+ { id: 'flag_un', emoji: '🇺🇳', label: 'United Nations Flag', category: 'Country Flag', cost: 1, description: 'UN flag.' },
+{ id: 'flag_af', emoji: '🇦🇫', label: 'Afghanistan Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Afghanistan' },
+ { id: 'flag_ax', emoji: '🇦🇽', label: 'Åland Islands Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Åland Islands' },
+ { id: 'flag_al', emoji: '🇦🇱', label: 'Albania Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Albania' },
+ { id: 'flag_dz', emoji: '🇩🇿', label: 'Algeria Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Algeria' },
+ { id: 'flag_as', emoji: '🇦🇸', label: 'American Samoa Flag', category: 'Country Flag', cost: 1, description: 'Country flag for American Samoa' },
+ { id: 'flag_ad', emoji: '🇦🇩', label: 'Andorra Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Andorra' },
+ { id: 'flag_ao', emoji: '🇦🇴', label: 'Angola Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Angola' },
+ { id: 'flag_ai', emoji: '🇦🇮', label: 'Anguilla Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Anguilla' },
+ { id: 'flag_aq', emoji: '🇦🇶', label: 'Antarctica Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Antarctica' },
+ { id: 'flag_ag', emoji: '🇦🇬', label: 'Antigua & Barbuda Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Antigua & Barbuda' },
+ { id: 'flag_ar', emoji: '🇦🇷', label: 'Argentina Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Argentina' },
+ { id: 'flag_am', emoji: '🇦🇲', label: 'Armenia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Armenia' },
+ { id: 'flag_aw', emoji: '🇦🇼', label: 'Aruba Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Aruba' },
+ { id: 'flag_au', emoji: '🇦🇺', label: 'Australia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Australia' },
+ { id: 'flag_at', emoji: '🇦🇹', label: 'Austria Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Austria' },
+ { id: 'flag_az', emoji: '🇦🇿', label: 'Azerbaijan Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Azerbaijan' },
+ { id: 'flag_bs', emoji: '🇧🇸', label: 'Bahamas Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Bahamas' },
+ { id: 'flag_bh', emoji: '🇧🇭', label: 'Bahrain Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Bahrain' },
+ { id: 'flag_bd', emoji: '🇧🇩', label: 'Bangladesh Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Bangladesh' },
+ { id: 'flag_bb', emoji: '🇧🇧', label: 'Barbados Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Barbados' },
+ { id: 'flag_by', emoji: '🇧🇾', label: 'Belarus Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Belarus' },
+ { id: 'flag_be', emoji: '🇧🇪', label: 'Belgium Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Belgium' },
+ { id: 'flag_bz', emoji: '🇧🇿', label: 'Belize Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Belize' },
+ { id: 'flag_bj', emoji: '🇧🇯', label: 'Benin Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Benin' },
+ { id: 'flag_bm', emoji: '🇧🇲', label: 'Bermuda Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Bermuda' },
+ { id: 'flag_bt', emoji: '🇧🇹', label: 'Bhutan Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Bhutan' },
+ { id: 'flag_bo', emoji: '🇧🇴', label: 'Bolivia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Bolivia' },
+ { id: 'flag_bq', emoji: '🇧🇶', label: 'Caribbean Netherlands Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Caribbean Netherlands' },
+ { id: 'flag_ba', emoji: '🇧🇦', label: 'Bosnia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Bosnia' },
+ { id: 'flag_bw', emoji: '🇧🇼', label: 'Botswana Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Botswana' },
+ { id: 'flag_bv', emoji: '🇧🇻', label: 'Bouvet Island Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Bouvet Island' },
+ { id: 'flag_br', emoji: '🇧🇷', label: 'Brazil Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Brazil' },
+ { id: 'flag_io', emoji: '🇮🇴', label: 'British Indian Ocean Territory Flag', category: 'Country Flag', cost: 1, description: 'Country flag for British Indian Ocean Territory' },
+ { id: 'flag_vg', emoji: '🇻🇬', label: 'British Virgin Islands Flag', category: 'Country Flag', cost: 1, description: 'Country flag for British Virgin Islands' },
+ { id: 'flag_bn', emoji: '🇧🇳', label: 'Brunei Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Brunei' },
+ { id: 'flag_bg', emoji: '🇧🇬', label: 'Bulgaria Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Bulgaria' },
+ { id: 'flag_bf', emoji: '🇧🇫', label: 'Burkina Faso Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Burkina Faso' },
+ { id: 'flag_bi', emoji: '🇧🇮', label: 'Burundi Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Burundi' },
+ { id: 'flag_cv', emoji: '🇨🇻', label: 'Cape Verde Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Cape Verde' },
+ { id: 'flag_kh', emoji: '🇰🇭', label: 'Cambodia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Cambodia' },
+ { id: 'flag_cm', emoji: '🇨🇲', label: 'Cameroon Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Cameroon' },
+ { id: 'flag_ca', emoji: '🇨🇦', label: 'Canada Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Canada' },
+ { id: 'flag_ky', emoji: '🇰🇾', label: 'Cayman Islands Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Cayman Islands' },
+ { id: 'flag_cf', emoji: '🇨🇫', label: 'Central African Republic Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Central African Republic' },
+ { id: 'flag_td', emoji: '🇹🇩', label: 'Chad Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Chad' },
+ { id: 'flag_cl', emoji: '🇨🇱', label: 'Chile Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Chile' },
+ { id: 'flag_cn', emoji: '🇨🇳', label: 'China Flag', category: 'Country Flag', cost: 1, description: 'Country flag for China' },
+ { id: 'flag_hk', emoji: '🇭🇰', label: 'Hong Kong Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Hong Kong' },
+ { id: 'flag_mo', emoji: '🇲🇴', label: 'Macao Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Macao' },
+ { id: 'flag_cx', emoji: '🇨🇽', label: 'Christmas Island Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Christmas Island' },
+ { id: 'flag_cc', emoji: '🇨🇨', label: 'Cocos Islands Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Cocos Islands' },
+ { id: 'flag_co', emoji: '🇨🇴', label: 'Colombia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Colombia' },
+ { id: 'flag_km', emoji: '🇰🇲', label: 'Comoros Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Comoros' },
+ { id: 'flag_cg', emoji: '🇨🇬', label: 'Congo - Brazzaville Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Congo - Brazzaville' },
+ { id: 'flag_ck', emoji: '🇨🇰', label: 'Cook Islands Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Cook Islands' },
+ { id: 'flag_cr', emoji: '🇨🇷', label: 'Costa Rica Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Costa Rica' },
+ { id: 'flag_hr', emoji: '🇭🇷', label: 'Croatia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Croatia' },
+ { id: 'flag_cu', emoji: '🇨🇺', label: 'Cuba Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Cuba' },
+ { id: 'flag_cw', emoji: '🇨🇼', label: 'Curaçao Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Curaçao' },
+ { id: 'flag_cy', emoji: '🇨🇾', label: 'Cyprus Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Cyprus' },
+ { id: 'flag_cz', emoji: '🇨🇿', label: 'Czechia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Czechia' },
+ { id: 'flag_kp', emoji: '🇰🇵', label: 'North Korea Flag', category: 'Country Flag', cost: 1, description: 'Country flag for North Korea' },
+ { id: 'flag_cd', emoji: '🇨🇩', label: 'Congo - Kinshasa Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Congo - Kinshasa' },
+ { id: 'flag_dk', emoji: '🇩🇰', label: 'Denmark Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Denmark' },
+ { id: 'flag_dj', emoji: '🇩🇯', label: 'Djibouti Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Djibouti' },
+ { id: 'flag_dm', emoji: '🇩🇲', label: 'Dominica Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Dominica' },
+ { id: 'flag_do', emoji: '🇩🇴', label: 'Dominican Republic Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Dominican Republic' },
+ { id: 'flag_ec', emoji: '🇪🇨', label: 'Ecuador Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Ecuador' },
+ { id: 'flag_eg', emoji: '🇪🇬', label: 'Egypt Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Egypt' },
+ { id: 'flag_sv', emoji: '🇸🇻', label: 'El Salvador Flag', category: 'Country Flag', cost: 1, description: 'Country flag for El Salvador' },
+ { id: 'flag_gq', emoji: '🇬🇶', label: 'Equatorial Guinea Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Equatorial Guinea' },
+ { id: 'flag_er', emoji: '🇪🇷', label: 'Eritrea Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Eritrea' },
+ { id: 'flag_ee', emoji: '🇪🇪', label: 'Estonia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Estonia' },
+ { id: 'flag_sz', emoji: '🇸🇿', label: 'Eswatini Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Eswatini' },
+ { id: 'flag_et', emoji: '🇪🇹', label: 'Ethiopia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Ethiopia' },
+ { id: 'flag_fk', emoji: '🇫🇰', label: 'Falkland Islands Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Falkland Islands' },
+ { id: 'flag_fo', emoji: '🇫🇴', label: 'Faroe Islands Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Faroe Islands' },
+ { id: 'flag_fj', emoji: '🇫🇯', label: 'Fiji Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Fiji' },
+ { id: 'flag_fi', emoji: '🇫🇮', label: 'Finland Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Finland' },
+ { id: 'flag_fr', emoji: '🇫🇷', label: 'France Flag', category: 'Country Flag', cost: 1, description: 'Country flag for France' },
+ { id: 'flag_gf', emoji: '🇬🇫', label: 'French Guiana Flag', category: 'Country Flag', cost: 1, description: 'Country flag for French Guiana' },
+ { id: 'flag_pf', emoji: '🇵🇫', label: 'French Polynesia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for French Polynesia' },
+ { id: 'flag_tf', emoji: '🇹🇫', label: 'French Southern Territories Flag', category: 'Country Flag', cost: 1, description: 'Country flag for French Southern Territories' },
+ { id: 'flag_ga', emoji: '🇬🇦', label: 'Gabon Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Gabon' },
+ { id: 'flag_gm', emoji: '🇬🇲', label: 'Gambia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Gambia' },
+ { id: 'flag_ge', emoji: '🇬🇪', label: 'Georgia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Georgia' },
+ { id: 'flag_de', emoji: '🇩🇪', label: 'Germany Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Germany' },
+ { id: 'flag_gh', emoji: '🇬🇭', label: 'Ghana Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Ghana' },
+ { id: 'flag_gi', emoji: '🇬🇮', label: 'Gibraltar Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Gibraltar' },
+ { id: 'flag_gr', emoji: '🇬🇷', label: 'Greece Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Greece' },
+ { id: 'flag_gl', emoji: '🇬🇱', label: 'Greenland Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Greenland' },
+ { id: 'flag_gd', emoji: '🇬🇩', label: 'Grenada Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Grenada' },
+ { id: 'flag_gp', emoji: '🇬🇵', label: 'Guadeloupe Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Guadeloupe' },
+ { id: 'flag_gu', emoji: '🇬🇺', label: 'Guam Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Guam' },
+ { id: 'flag_gt', emoji: '🇬🇹', label: 'Guatemala Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Guatemala' },
+ { id: 'flag_gg', emoji: '🇬🇬', label: 'Guernsey Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Guernsey' },
+ { id: 'flag_gn', emoji: '🇬🇳', label: 'Guinea Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Guinea' },
+ { id: 'flag_gw', emoji: '🇬🇼', label: 'Guinea-Bissau Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Guinea-Bissau' },
+ { id: 'flag_gy', emoji: '🇬🇾', label: 'Guyana Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Guyana' },
+ { id: 'flag_ht', emoji: '🇭🇹', label: 'Haiti Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Haiti' },
+ { id: 'flag_hm', emoji: '🇭🇲', label: 'Heard & McDonald Islands Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Heard & McDonald Islands' },
+ { id: 'flag_va', emoji: '🇻🇦', label: 'Vatican City Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Vatican City' },
+ { id: 'flag_hn', emoji: '🇭🇳', label: 'Honduras Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Honduras' },
+ { id: 'flag_hu', emoji: '🇭🇺', label: 'Hungary Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Hungary' },
+ { id: 'flag_is', emoji: '🇮🇸', label: 'Iceland Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Iceland' },
+ { id: 'flag_in', emoji: '🇮🇳', label: 'India Flag', category: 'Country Flag', cost: 1, description: 'Country flag for India' },
+ { id: 'flag_id', emoji: '🇮🇩', label: 'Indonesia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Indonesia' },
+ { id: 'flag_ir', emoji: '🇮🇷', label: 'Iran Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Iran' },
+ { id: 'flag_iq', emoji: '🇮🇶', label: 'Iraq Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Iraq' },
+ { id: 'flag_ie', emoji: '🇮🇪', label: 'Ireland Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Ireland' },
+ { id: 'flag_im', emoji: '🇮🇲', label: 'Isle of Man Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Isle of Man' },
+ { id: 'flag_il', emoji: '🇮🇱', label: 'Israel Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Israel' },
+ { id: 'flag_it', emoji: '🇮🇹', label: 'Italy Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Italy' },
+ { id: 'flag_ci', emoji: '🇨🇮', label: 'Côte d’Ivoire Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Côte d’Ivoire' },
+ { id: 'flag_jm', emoji: '🇯🇲', label: 'Jamaica Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Jamaica' },
+ { id: 'flag_jp', emoji: '🇯🇵', label: 'Japan Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Japan' },
+ { id: 'flag_je', emoji: '🇯🇪', label: 'Jersey Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Jersey' },
+ { id: 'flag_jo', emoji: '🇯🇴', label: 'Jordan Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Jordan' },
+ { id: 'flag_kz', emoji: '🇰🇿', label: 'Kazakhstan Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Kazakhstan' },
+ { id: 'flag_ke', emoji: '🇰🇪', label: 'Kenya Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Kenya' },
+ { id: 'flag_ki', emoji: '🇰🇮', label: 'Kiribati Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Kiribati' },
+ { id: 'flag_kw', emoji: '🇰🇼', label: 'Kuwait Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Kuwait' },
+ { id: 'flag_kg', emoji: '🇰🇬', label: 'Kyrgyzstan Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Kyrgyzstan' },
+ { id: 'flag_la', emoji: '🇱🇦', label: 'Laos Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Laos' },
+ { id: 'flag_lv', emoji: '🇱🇻', label: 'Latvia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Latvia' },
+ { id: 'flag_lb', emoji: '🇱🇧', label: 'Lebanon Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Lebanon' },
+ { id: 'flag_ls', emoji: '🇱🇸', label: 'Lesotho Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Lesotho' },
+ { id: 'flag_lr', emoji: '🇱🇷', label: 'Liberia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Liberia' },
+ { id: 'flag_ly', emoji: '🇱🇾', label: 'Libya Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Libya' },
+ { id: 'flag_li', emoji: '🇱🇮', label: 'Liechtenstein Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Liechtenstein' },
+ { id: 'flag_lt', emoji: '🇱🇹', label: 'Lithuania Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Lithuania' },
+ { id: 'flag_lu', emoji: '🇱🇺', label: 'Luxembourg Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Luxembourg' },
+ { id: 'flag_mg', emoji: '🇲🇬', label: 'Madagascar Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Madagascar' },
+ { id: 'flag_mw', emoji: '🇲🇼', label: 'Malawi Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Malawi' },
+ { id: 'flag_my', emoji: '🇲🇾', label: 'Malaysia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Malaysia' },
+ { id: 'flag_mv', emoji: '🇲🇻', label: 'Maldives Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Maldives' },
+ { id: 'flag_ml', emoji: '🇲🇱', label: 'Mali Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Mali' },
+ { id: 'flag_mt', emoji: '🇲🇹', label: 'Malta Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Malta' },
+ { id: 'flag_mh', emoji: '🇲🇭', label: 'Marshall Islands Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Marshall Islands' },
+ { id: 'flag_mq', emoji: '🇲🇶', label: 'Martinique Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Martinique' },
+ { id: 'flag_mr', emoji: '🇲🇷', label: 'Mauritania Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Mauritania' },
+ { id: 'flag_mu', emoji: '🇲🇺', label: 'Mauritius Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Mauritius' },
+ { id: 'flag_yt', emoji: '🇾🇹', label: 'Mayotte Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Mayotte' },
+ { id: 'flag_mx', emoji: '🇲🇽', label: 'Mexico Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Mexico' },
+ { id: 'flag_fm', emoji: '🇫🇲', label: 'Micronesia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Micronesia' },
+ { id: 'flag_mc', emoji: '🇲🇨', label: 'Monaco Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Monaco' },
+ { id: 'flag_mn', emoji: '🇲🇳', label: 'Mongolia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Mongolia' },
+ { id: 'flag_me', emoji: '🇲🇪', label: 'Montenegro Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Montenegro' },
+ { id: 'flag_ms', emoji: '🇲🇸', label: 'Montserrat Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Montserrat' },
+ { id: 'flag_ma', emoji: '🇲🇦', label: 'Morocco Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Morocco' },
+ { id: 'flag_mz', emoji: '🇲🇿', label: 'Mozambique Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Mozambique' },
+ { id: 'flag_mm', emoji: '🇲🇲', label: 'Myanmar Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Myanmar' },
+ { id: 'flag_na', emoji: '🇳🇦', label: 'Namibia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Namibia' },
+ { id: 'flag_nr', emoji: '🇳🇷', label: 'Nauru Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Nauru' },
+ { id: 'flag_np', emoji: '🇳🇵', label: 'Nepal Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Nepal' },
+ { id: 'flag_nl', emoji: '🇳🇱', label: 'Netherlands Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Netherlands' },
+ { id: 'flag_nc', emoji: '🇳🇨', label: 'New Caledonia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for New Caledonia' },
+ { id: 'flag_nz', emoji: '🇳🇿', label: 'New Zealand Flag', category: 'Country Flag', cost: 1, description: 'Country flag for New Zealand' },
+ { id: 'flag_ni', emoji: '🇳🇮', label: 'Nicaragua Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Nicaragua' },
+ { id: 'flag_ne', emoji: '🇳🇪', label: 'Niger Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Niger' },
+ { id: 'flag_ng', emoji: '🇳🇬', label: 'Nigeria Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Nigeria' },
+ { id: 'flag_nu', emoji: '🇳🇺', label: 'Niue Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Niue' },
+ { id: 'flag_nf', emoji: '🇳🇫', label: 'Norfolk Island Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Norfolk Island' },
+ { id: 'flag_mp', emoji: '🇲🇵', label: 'Northern Mariana Islands Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Northern Mariana Islands' },
+ { id: 'flag_mk', emoji: '🇲🇰', label: 'North Macedonia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for North Macedonia' },
+ { id: 'flag_no', emoji: '🇳🇴', label: 'Norway Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Norway' },
+ { id: 'flag_om', emoji: '🇴🇲', label: 'Oman Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Oman' },
+ { id: 'flag_pk', emoji: '🇵🇰', label: 'Pakistan Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Pakistan' },
+ { id: 'flag_pw', emoji: '🇵🇼', label: 'Palau Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Palau' },
+ { id: 'flag_pa', emoji: '🇵🇦', label: 'Panama Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Panama' },
+ { id: 'flag_pg', emoji: '🇵🇬', label: 'Papua New Guinea Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Papua New Guinea' },
+ { id: 'flag_py', emoji: '🇵🇾', label: 'Paraguay Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Paraguay' },
+ { id: 'flag_pe', emoji: '🇵🇪', label: 'Peru Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Peru' },
+ { id: 'flag_ph', emoji: '🇵🇭', label: 'Philippines Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Philippines' },
+ { id: 'flag_pn', emoji: '🇵🇳', label: 'Pitcairn Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Pitcairn' },
+ { id: 'flag_pl', emoji: '🇵🇱', label: 'Poland Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Poland' },
+ { id: 'flag_pt', emoji: '🇵🇹', label: 'Portugal Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Portugal' },
+ { id: 'flag_pr', emoji: '🇵🇷', label: 'Puerto Rico Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Puerto Rico' },
+ { id: 'flag_qa', emoji: '🇶🇦', label: 'Qatar Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Qatar' },
+ { id: 'flag_kr', emoji: '🇰🇷', label: 'South Korea Flag', category: 'Country Flag', cost: 1, description: 'Country flag for South Korea' },
+ { id: 'flag_md', emoji: '🇲🇩', label: 'Moldova Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Moldova' },
+ { id: 'flag_re', emoji: '🇷🇪', label: 'Réunion Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Réunion' },
+ { id: 'flag_ro', emoji: '🇷🇴', label: 'Romania Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Romania' },
+ { id: 'flag_ru', emoji: '🇷🇺', label: 'Russia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Russia' },
+ { id: 'flag_rw', emoji: '🇷🇼', label: 'Rwanda Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Rwanda' },
+ { id: 'flag_bl', emoji: '🇧🇱', label: 'St. Barthélemy Flag', category: 'Country Flag', cost: 1, description: 'Country flag for St. Barthélemy' },
+ { id: 'flag_sh', emoji: '🇸🇭', label: 'St. Helena Flag', category: 'Country Flag', cost: 1, description: 'Country flag for St. Helena' },
+ { id: 'flag_kn', emoji: '🇰🇳', label: 'St. Kitts & Nevis Flag', category: 'Country Flag', cost: 1, description: 'Country flag for St. Kitts & Nevis' },
+ { id: 'flag_lc', emoji: '🇱🇨', label: 'St. Lucia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for St. Lucia' },
+ { id: 'flag_mf', emoji: '🇲🇫', label: 'St. Martin Flag', category: 'Country Flag', cost: 1, description: 'Country flag for St. Martin' },
+ { id: 'flag_pm', emoji: '🇵🇲', label: 'St. Pierre & Miquelon Flag', category: 'Country Flag', cost: 1, description: 'Country flag for St. Pierre & Miquelon' },
+ { id: 'flag_vc', emoji: '🇻🇨', label: 'St. Vincent & Grenadines Flag', category: 'Country Flag', cost: 1, description: 'Country flag for St. Vincent & Grenadines' },
+ { id: 'flag_ws', emoji: '🇼🇸', label: 'Samoa Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Samoa' },
+ { id: 'flag_sm', emoji: '🇸🇲', label: 'San Marino Flag', category: 'Country Flag', cost: 1, description: 'Country flag for San Marino' },
+ { id: 'flag_st', emoji: '🇸🇹', label: 'São Tomé & Príncipe Flag', category: 'Country Flag', cost: 1, description: 'Country flag for São Tomé & Príncipe' },
+ { id: 'flag_sa', emoji: '🇸🇦', label: 'Saudi Arabia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Saudi Arabia' },
+ { id: 'flag_sn', emoji: '🇸🇳', label: 'Senegal Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Senegal' },
+ { id: 'flag_rs', emoji: '🇷🇸', label: 'Serbia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Serbia' },
+ { id: 'flag_sc', emoji: '🇸🇨', label: 'Seychelles Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Seychelles' },
+ { id: 'flag_sl', emoji: '🇸🇱', label: 'Sierra Leone Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Sierra Leone' },
+ { id: 'flag_sg', emoji: '🇸🇬', label: 'Singapore Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Singapore' },
+ { id: 'flag_sx', emoji: '🇸🇽', label: 'Sint Maarten Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Sint Maarten' },
+ { id: 'flag_sk', emoji: '🇸🇰', label: 'Slovakia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Slovakia' },
+ { id: 'flag_si', emoji: '🇸🇮', label: 'Slovenia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Slovenia' },
+ { id: 'flag_sb', emoji: '🇸🇧', label: 'Solomon Islands Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Solomon Islands' },
+ { id: 'flag_so', emoji: '🇸🇴', label: 'Somalia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Somalia' },
+ { id: 'flag_za', emoji: '🇿🇦', label: 'South Africa Flag', category: 'Country Flag', cost: 1, description: 'Country flag for South Africa' },
+ { id: 'flag_gs', emoji: '🇬🇸', label: 'South Georgia & South Sandwich Islands Flag', category: 'Country Flag', cost: 1, description: 'Country flag for South Georgia & South Sandwich Islands' },
+ { id: 'flag_ss', emoji: '🇸🇸', label: 'South Sudan Flag', category: 'Country Flag', cost: 1, description: 'Country flag for South Sudan' },
+ { id: 'flag_es', emoji: '🇪🇸', label: 'Spain Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Spain' },
+ { id: 'flag_lk', emoji: '🇱🇰', label: 'Sri Lanka Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Sri Lanka' },
+ { id: 'flag_ps', emoji: '🇵🇸', label: 'Palestine Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Palestine' },
+ { id: 'flag_sd', emoji: '🇸🇩', label: 'Sudan Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Sudan' },
+ { id: 'flag_sr', emoji: '🇸🇷', label: 'Suriname Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Suriname' },
+ { id: 'flag_sj', emoji: '🇸🇯', label: 'Svalbard & Jan Mayen Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Svalbard & Jan Mayen' },
+ { id: 'flag_se', emoji: '🇸🇪', label: 'Sweden Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Sweden' },
+ { id: 'flag_ch', emoji: '🇨🇭', label: 'Switzerland Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Switzerland' },
+ { id: 'flag_sy', emoji: '🇸🇾', label: 'Syria Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Syria' },
+ { id: 'flag_tw', emoji: '🇹🇼', label: 'Taiwan Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Taiwan' },
+ { id: 'flag_tj', emoji: '🇹🇯', label: 'Tajikistan Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Tajikistan' },
+ { id: 'flag_th', emoji: '🇹🇭', label: 'Thailand Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Thailand' },
+ { id: 'flag_tl', emoji: '🇹🇱', label: 'Timor-Leste Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Timor-Leste' },
+ { id: 'flag_tg', emoji: '🇹🇬', label: 'Togo Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Togo' },
+ { id: 'flag_tk', emoji: '🇹🇰', label: 'Tokelau Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Tokelau' },
+ { id: 'flag_to', emoji: '🇹🇴', label: 'Tonga Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Tonga' },
+ { id: 'flag_tt', emoji: '🇹🇹', label: 'Trinidad & Tobago Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Trinidad & Tobago' },
+ { id: 'flag_tn', emoji: '🇹🇳', label: 'Tunisia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Tunisia' },
+ { id: 'flag_tr', emoji: '🇹🇷', label: 'Türkiye Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Türkiye' },
+ { id: 'flag_tm', emoji: '🇹🇲', label: 'Turkmenistan Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Turkmenistan' },
+ { id: 'flag_tc', emoji: '🇹🇨', label: 'Turks & Caicos Islands Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Turks & Caicos Islands' },
+ { id: 'flag_tv', emoji: '🇹🇻', label: 'Tuvalu Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Tuvalu' },
+ { id: 'flag_ug', emoji: '🇺🇬', label: 'Uganda Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Uganda' },
+ { id: 'flag_ua', emoji: '🇺🇦', label: 'Ukraine Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Ukraine' },
+ { id: 'flag_ae', emoji: '🇦🇪', label: 'United Arab Emirates Flag', category: 'Country Flag', cost: 1, description: 'Country flag for United Arab Emirates' },
+ { id: 'flag_gb', emoji: '🇬🇧', label: 'UK Flag', category: 'Country Flag', cost: 1, description: 'Country flag for UK' },
+ { id: 'flag_tz', emoji: '🇹🇿', label: 'Tanzania Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Tanzania' },
+ { id: 'flag_um', emoji: '🇺🇲', label: 'U.S. Outlying Islands Flag', category: 'Country Flag', cost: 1, description: 'Country flag for U.S. Outlying Islands' },
+ { id: 'flag_us', emoji: '🇺🇸', label: 'US Flag', category: 'Country Flag', cost: 1, description: 'Country flag for US' },
+ { id: 'flag_vi', emoji: '🇻🇮', label: 'U.S. Virgin Islands Flag', category: 'Country Flag', cost: 1, description: 'Country flag for U.S. Virgin Islands' },
+ { id: 'flag_uy', emoji: '🇺🇾', label: 'Uruguay Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Uruguay' },
+ { id: 'flag_uz', emoji: '🇺🇿', label: 'Uzbekistan Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Uzbekistan' },
+ { id: 'flag_vu', emoji: '🇻🇺', label: 'Vanuatu Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Vanuatu' },
+ { id: 'flag_ve', emoji: '🇻🇪', label: 'Venezuela Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Venezuela' },
+ { id: 'flag_vn', emoji: '🇻🇳', label: 'Vietnam Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Vietnam' },
+ { id: 'flag_wf', emoji: '🇼🇫', label: 'Wallis & Futuna Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Wallis & Futuna' },
+ { id: 'flag_eh', emoji: '🇪🇭', label: 'Western Sahara Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Western Sahara' },
+ { id: 'flag_ye', emoji: '🇾🇪', label: 'Yemen Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Yemen' },
+ { id: 'flag_zm', emoji: '🇿🇲', label: 'Zambia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Zambia' },
+ { id: 'flag_zw', emoji: '🇿🇼', label: 'Zimbabwe Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Zimbabwe' }
+];
+
+ const flagTiers = {
+ 5: ['us','cn','jp','de','in','gb','fr','it','br','ca'],
+ 4: ['kr','ru','au','es','mx','id','nl','sa','tr','ch'],
+ 3: ['tw','pl','se','be','ie','th','il','no','ng','za','ae','eg','sg','my','ph','vn','at','dk','fi','ar'],
+ 2: ['cl','co','pe','cz','ro','pt','nz','gr','hu','kz','qa','kw','dz','ma','bd','pk','ua','ve','iq','ec','sk','om','lk','hr','do','gt','et','ke','tz','uz','lu','bg','rs','tn','lb','jo','az','by','tm','pa','cr','uy','ba','si','lv','lt','ee','is','cy','mt','bo','py','sv','hn','ni','ge','am','kg','tj','mn','la','kh','mm','np','af','sn','ci','cm','zw','ug','sd','ye','sy','ly','mz','ao','gh','rw','mg']
+ };
+
+ function priceForFlag(id) {
+ const code = id.replace('flag_','');
+ for (const tier of [5,4,3,2]) {
+ if (flagTiers[tier].includes(code)) return tier;
+ }
+ return 1;
+ }
+
+ function applyFlagPricing(items) {
+ return items.map(item => item.category === 'Country Flag'
+ ? { ...item, cost: priceForFlag(item.id) }
+ : item);
+ }
+
+ const aiRules = [
+ { keywords: ['celebrate', 'celebration', 'party', 'launch'], itemId: 'tada' },
+ { keywords: ['hot', 'fire', 'trend', 'viral'], itemId: 'fire' },
+ { keywords: ['love', 'heart', 'romance', 'support'], itemId: 'heart' },
+ { keywords: ['travel', 'journey', 'adventure'], itemId: 'rocket' },
+ { keywords: ['strong', 'flag', 'economy', 'country'], itemId: 'flag_us' },
+ { keywords: ['discover', 'look', 'see', 'eyes'], itemId: 'eyes' },
+ { keywords: ['thanks', 'thank', 'good', 'great'], itemId: 'thumbs' },
+ { keywords: ['premium', 'diamond', 'rich'], itemId: 'diamond' }
+ ];
+
+ let emojiSupply = [];
+ let selectedRecommendation = null;
+
+ const USAGE_KEY = 'omendaEmojiUsage';
+ const USAGE_MULTIPLIER = 0.15;
+ const INVENTORY_KEY = 'omendaEmojiInventory';
+ const WALLET_KEY = 'omendaEmojiWallet';
+ const SELL_RATIO = 0.7;
+ const DEMAND_KEY = 'omendaEmojiDemand';
+ const DEMAND_LAST_KEY = 'omendaEmojiDemandLast';
+ const DEMAND_MULTIPLIER = 0.22;
+ const DEMAND_DECAY_PER_HOUR = 0.5;
+ const DAILY_YIELD = 0.02;
+ const CONVERT_TOLERANCE = 0.08;
+ const SENT_GIFTS_KEY = 'omendaEmojiSentGifts';
+
+ function yieldRateFor(price) {
+ if (price>= 1) return 0.05;
+ if (price>= 0.1) return 0.04;
+ if (price>= 0.01) return 0.03;
+ if (price>= 0.001) return 0.02;
+ return 0.01;
+ }
+ function loadSentGifts() {
+ try { return JSON.parse(localStorage.getItem(SENT_GIFTS_KEY)) || []; }
+ catch { return []; }
+ }
+ function saveSentGifts(g) { localStorage.setItem(SENT_GIFTS_KEY, JSON.stringify(g.slice(0, 30))); }
+ async function sendGiftFromInventory(id) {
+ const item = emojiSupply.find(i => i.id === id);
+ if (!item) return;
+ const inv = loadInventory();
+ const lot = inv[id];
+ if (!lot || lot.qty < 1) { alert('You do not own this emoji.'); return; }
+ const recipient = prompt('Send gift to which @handle on the social page?');
+ if (!recipient) return;
+ const cleanRecipient = recipient.replace(/^@/, '').trim();
+ if (!cleanRecipient) { alert('Invalid recipient.'); return; }
+ const postId = (prompt('Optional: post ID to attach the gift to (leave blank for profile):') || '').trim();
+ removeFromInventory(id, 1);
+ const yVal = lotYield(lot);
+ const value = Math.max(yVal, item.cost);
+ const gifts = loadSentGifts();
+ gifts.unshift({
+ id: item.id,
+ emoji: item.emoji,
+ label: item.label,
+ recipient: cleanRecipient,
+ postId,
+ value,
+ ts: Date.now()
+ });
+ saveSentGifts(gifts);
+ try {
+ const social = JSON.parse(localStorage.getItem('omendaSocialInbox') || '[]');
+ social.unshift({ to: cleanRecipient, emoji: item.emoji, label: item.label, value, ts: Date.now(), postId });
+ localStorage.setItem('omendaSocialInbox', JSON.stringify(social.slice(0, 50)));
+ } catch {}
+ let serverOk = false;
+ try {
+ const res = await fetch('/api/emoji/gifts', {
+ method: 'POST',
+ headers: { 'Content-Type': 'application/json' },
+ credentials: 'same-origin',
+ body: JSON.stringify({ id: item.id, emoji: item.emoji, label: item.label, recipient: cleanRecipient, postId, value })
+ });
+ serverOk = res.ok;
+ if (!res.ok) console.warn('[gift] server send failed', res.status);
+ try { localStorage.setItem('omendaSocialPing', String(Date.now())); } catch {}
+ } catch (e) { console.warn('[gift] server send err', e); }
+ renderInventory();
+ renderSentGifts();
+ pushFlow('send', item, { price: value, note: `→ @${cleanRecipient}` });
+ spiralFlyIn(item.emoji);
+ alert(`Sent ${item.emoji} ${item.label} (worth π${formatPi(value)}) to @${cleanRecipient}${postId ? ' on post ' + postId : ''}.${serverOk ? '' : ' (offline — saved locally)'}`);
+ }
+ function renderSentGifts() {
+ const el = document.getElementById('sentGiftsList');
+ if (!el) return;
+ const gifts = loadSentGifts();
+ if (!gifts.length) { el.innerHTML = '<div class="history-item"><span>No gifts sent yet.</span></div>'; return; }
+ el.innerHTML = gifts.slice(0, 10).map(g => `
+ <div class="history-item">
+ <p>${g.emoji} ${g.label} → <strong>@${g.recipient}</strong>${g.postId ? ` on post <code>${g.postId}</code>` : ''}</p>
+ <span>${new Date(g.ts).toLocaleString()} · π${formatPi(g.value)}</span>
+ </div>
+ `).join('');
+ }
+
+ const flowState = { messages: [], paused: false, filter: 'all', max: 60 };
+
+ function pushFlow(kind, item, extra = {}) {
+ if (!item) return;
+ const msg = { kind, id: item.id, emoji: item.emoji, label: item.label, category: item.category, price: extra.price ?? item.cost, note: extra.note || '', ts: Date.now() };
+ flowState.messages.unshift(msg);
+ if (flowState.messages.length> flowState.max) flowState.messages.length = flowState.max;
+ if (!flowState.paused) renderFlowStream();
+ }
+ function renderFlowStream() {
+ const el = document.getElementById('flowStream');
+ if (!el) return;
+ const visible = flowState.messages.filter(m => flowState.filter === 'all' || m.category === flowState.filter).slice(0, 20);
+ if (!visible.length) { el.innerHTML = '<div class="flow-msg tick"><div class="fe">💬</div><div class="ft">No price activity yet. Buy or sell an emoji to start the flow.</div><div class="fp"></div></div>'; return; }
+ el.innerHTML = visible.map(m => {
+ const verbMap = { buy: 'Bought', sell: 'Sold', send: 'Sent', convert: 'Converted', tick: 'Tick' };
+ const verb = verbMap[m.kind] || 'Update';
+ const time = new Date(m.ts).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+ return `
+ <div class="flow-msg ${m.kind}">
+ <div class="fe">${m.emoji}</div>
+ <div class="ft"><strong>${verb}</strong> ${m.label}${m.note ? ` <small>· ${m.note}</small>` : ''}<br><small>${m.category} · ${time}</small></div>
+ <div class="fp">π${formatPi(m.price)}</div>
+ </div>
+ `;
+ }).join('');
+ }
+ function renderTicker() {
+ const track = document.getElementById('tickerTrack');
+ if (!track || !emojiSupply.length) return;
+ const topDemand = demandRank();
+ const picks = [];
+ const usage = loadUsage();
+ const seen = new Set();
+ for (const id of topDemand) {
+ const it = emojiSupply.find(i => i.id === id);
+ if (it) { picks.push(it); seen.add(id); }
+ }
+ const remaining = emojiSupply.filter(i => !seen.has(i.id));
+ while (picks.length < 30 && remaining.length) {
+ picks.push(remaining.splice(Math.floor(Math.random() * remaining.length), 1)[0]);
+ }
+ const items = picks.slice(0, 30);
+ const html = items.map(item => {
+ const uses = usage[item.id] || 0;
+ const baseC = item._baseCost ?? item.cost;
+ const change = item.cost> baseC ? `<span class="tu">+${Math.round(((item.cost - baseC) / baseC) * 100)}%</span>` : '';
+ return `<span class="ticker-item"><span class="te">${item.emoji}</span><span>${item.label}</span><span class="tp">π${formatPi(item.cost)}</span>${change}</span>`;
+ }).join('');
+ track.innerHTML = html + html;
+ }
+
+ function daysSince(ts) { return (Date.now() - ts) / 86400000; }
+ function lotYield(lot) {
+ if (!lot || !lot.paid) return 0;
+ const days = daysSince(lot.ts || Date.now());
+ const rate = yieldRateFor(lot.paid);
+ return lot.paid * Math.pow(1 + rate, days);
+ }
+ function findConvertTarget(currentId, yieldValue) {
+ let best = null;
+ let bestDiff = Infinity;
+ for (const candidate of emojiSupply) {
+ if (candidate.id === currentId) continue;
+ const diff = Math.abs(candidate.cost - yieldValue) / yieldValue;
+ if (diff < bestDiff && diff <= CONVERT_TOLERANCE) {
+ bestDiff = diff;
+ best = candidate;
+ }
+ }
+ return best;
+ }
+ function convertHolding(fromId) {
+ const inv = loadInventory();
+ const lot = inv[fromId];
+ if (!lot || !lot.qty) return;
+ const item = emojiSupply.find(i => i.id === fromId);
+ if (!item) return;
+ const yVal = lotYield(lot);
+ const target = findConvertTarget(fromId, yVal);
+ if (!target) { alert('No equivalently-priced emoji available to convert into right now.'); return; }
+ delete inv[fromId];
+ const prev = inv[target.id];
+ const newQty = (prev?.qty || 0) + lot.qty;
+ const newPaid = prev ? ((prev.paid * prev.qty + target.cost * lot.qty) / newQty) : target.cost;
+ inv[target.id] = { qty: newQty, paid: newPaid, ts: Date.now() };
+ saveInventory(inv);
+ renderInventory();
+ pushFlow('convert', target, { price: target.cost, note: `from ${item.emoji}` });
+ alert(`Converted ${lot.qty}× ${item.emoji} → ${target.emoji} ${target.label} at π${formatPi(target.cost)}.`);
+ }
+
+ function loadDemand() {
+ try { return JSON.parse(localStorage.getItem(DEMAND_KEY)) || {}; }
+ catch { return {}; }
+ }
+ function saveDemand(d) { localStorage.setItem(DEMAND_KEY, JSON.stringify(d)); }
+ function applyDemandDecay() {
+ const last = parseFloat(localStorage.getItem(DEMAND_LAST_KEY));
+ const now = Date.now();
+ if (Number.isFinite(last)) {
+ const hours = (now - last) / 3600000;
+ if (hours> 0.01) {
+ const d = loadDemand();
+ const factor = Math.pow(1 - DEMAND_DECAY_PER_HOUR / 24, hours);
+ for (const k of Object.keys(d)) {
+ d[k] = d[k] * factor;
+ if (d[k] < 0.05) delete d[k];
+ }
+ saveDemand(d);
+ }
+ }
+ localStorage.setItem(DEMAND_LAST_KEY, String(now));
+ }
+ function bumpDemand(id, weight = 1) {
+ applyDemandDecay();
+ const d = loadDemand();
+ d[id] = (d[id] || 0) + weight;
+ saveDemand(d);
+ }
+ function getDemand(id) {
+ return loadDemand()[id] || 0;
+ }
+ function demandRank() {
+ const d = loadDemand();
+ return Object.entries(d).sort((a, b) => b[1] - a[1]).map(([id]) => id);
+ }
+
+ function loadInventory() {
+ try {
+ const raw = JSON.parse(localStorage.getItem(INVENTORY_KEY)) || {};
+ const migrated = {};
+ for (const [k, v] of Object.entries(raw)) {
+ if (typeof v === 'number') migrated[k] = { qty: v, paid: 0, ts: Date.now() };
+ else if (v && typeof v === 'object') migrated[k] = { qty: v.qty || 0, paid: v.paid || 0, ts: v.ts || Date.now() };
+ }
+ return migrated;
+ } catch { return {}; }
+ }
+ function saveInventory(inv) { localStorage.setItem(INVENTORY_KEY, JSON.stringify(inv)); }
+ let _serverBalance = null;
+ let _serverBalanceFetched = false;
+ async function fetchServerBalance() {
+ try {
+ const res = await fetch('/api/user', { credentials: 'same-origin' });
+ if (!res.ok) { console.warn('[wallet] /api/user failed', res.status); return null; }
+ const data = await res.json();
+ if (typeof data.balance === 'number') {
+ _serverBalance = data.balance;
+ _serverBalanceFetched = true;
+ localStorage.setItem(WALLET_KEY, String(data.balance));
+ return data.balance;
+ }
+ } catch (e) { console.warn('[wallet] fetch err', e); }
+ return null;
+ }
+ function loadWallet() {
+ if (_serverBalanceFetched && typeof _serverBalance === 'number') return _serverBalance;
+ const w = parseFloat(localStorage.getItem(WALLET_KEY));
+ return Number.isFinite(w) ? w : 0;
+ }
+ function saveWallet(v) {
+ _serverBalance = v;
+ localStorage.setItem(WALLET_KEY, String(v));
+ }
+ async function recordTx(amount, type, name) {
+ try {
+ const res = await fetch('/api/wallet/adjust', {
+ method: 'POST',
+ headers: { 'Content-Type': 'application/json' },
+ credentials: 'same-origin',
+ body: JSON.stringify({ amount, type, name })
+ });
+ if (!res.ok) { console.warn('[wallet] adjust failed', res.status); return false; }
+ const data = await res.json();
+ if (data && typeof data.balance === 'number') {
+ _serverBalance = data.balance;
+ _serverBalanceFetched = true;
+ localStorage.setItem(WALLET_KEY, String(data.balance));
+ loadBalance();
+ return true;
+ }
+ } catch (e) { console.warn('[wallet] adjust err', e); }
+ return false;
+ }
+ async function renderTransactions() {
+ const list = document.getElementById('txList');
+ if (!list) return;
+ try {
+ const res = await fetch('/api/transactions', { credentials: 'same-origin' });
+ if (!res.ok) return;
+ const data = await res.json();
+ const txs = (data.transactions || []).slice(0, 50);
+ if (!txs.length) { list.innerHTML = '<div class="history-item"><span>No transactions yet.</span></div>'; return; }
+ list.innerHTML = txs.map(tx => {
+ const amt = Number(tx.amount) || 0;
+ const sign = amt>= 0 ? '+' : '−';
+ const color = amt>= 0 ? '#16a34a' : '#dc2626';
+ const when = tx.date ? new Date(tx.date).toLocaleString() : '';
+ return `<div class="history-item"><span><strong>${tx.name || tx.type}</strong><br><small class="tx-when">${when}</small></span><span class="tx-amount ${amt>=0?'pos':'neg'}">${sign}π${formatPi(Math.abs(amt))}</span></div>`;
+ }).join('');
+ } catch (e) { console.warn('[tx] render err', e); }
+ }
+ function addToInventory(id, qty = 1, paidEach = 0) {
+ const inv = loadInventory();
+ const prev = inv[id];
+ const newQty = (prev?.qty || 0) + qty;
+ const newPaid = prev ? ((prev.paid * prev.qty + paidEach * qty) / newQty) : paidEach;
+ inv[id] = { qty: newQty, paid: newPaid, ts: prev?.ts || Date.now() };
+ saveInventory(inv);
+ }
+ function removeFromInventory(id, qty = 1) {
+ const inv = loadInventory();
+ if (!inv[id] || inv[id].qty < qty) return false;
+ inv[id].qty -= qty;
+ if (inv[id].qty <= 0) delete inv[id];
+ saveInventory(inv);
+ return true;
+ }
+ function sellEmoji(id, qty = 1) {
+ const item = emojiSupply.find(i => i.id === id);
+ if (!item) return;
+ const inv = loadInventory();
+ const lot = inv[id];
+ if (!lot || lot.qty < qty) { alert('Not enough in inventory.'); return; }
+ const unitPrice = Math.max(lotYield(lot), item.cost) * SELL_RATIO;
+ if (!removeFromInventory(id, qty)) { alert('Not enough in inventory.'); return; }
+ const sellPrice = unitPrice * qty;
+ const wallet = loadWallet() + sellPrice;
+ saveWallet(wallet);
+ recordTx(sellPrice, 'recv', `Sold ${qty}× ${item.emoji} ${item.label}`);
+ bumpDemand(id, -0.3 * qty);
+ renderSupply(emojiSupply.map(i => ({ ...i, cost: baseCost(i) })));
+ renderInventory();
+ loadBalance();
+ pushFlow('sell', item, { price: unitPrice, note: `${qty}× sold` });
+ spiralFlyIn(item.emoji);
+ renderTransactions();
+ alert(`Sold ${qty}× ${item.emoji} ${item.label} for π${formatPi(sellPrice)}. Wallet: π${formatPi(wallet)}`);
+ }
+ function renderInventory() {
+ const grid = document.getElementById('inventoryGrid');
+ if (!grid) return;
+ const inv = loadInventory();
+ const wallet = loadWallet();
+ document.getElementById('walletPi').textContent = `Wallet: π${formatPi(wallet)}`;
+ const ids = Object.keys(inv);
+ const totalOwned = ids.reduce((a, k) => a + (inv[k].qty || 0), 0);
+ document.getElementById('inventoryCount').textContent = `Owned: ${totalOwned}`;
+ let totalValue = 0;
+ const cards = ids
+ .map(id => ({ id, lot: inv[id], item: emojiSupply.find(i => i.id === id) }))
+ .filter(e => e.item && e.lot.qty> 0)
+ .sort((a, b) => b.lot.qty - a.lot.qty);
+ cards.forEach(({ item, lot }) => {
+ const unit = Math.max(lotYield(lot), item.cost);
+ totalValue += unit * SELL_RATIO * lot.qty;
+ });
+ document.getElementById('inventoryValue').textContent = `Sell-back value: π${formatPi(totalValue)}`;
+ if (!cards.length) {
+ grid.innerHTML = '<div class="history-item"><span>Buy any emoji to add it to your inventory.</span></div>';
+ return;
+ }
+ grid.innerHTML = cards.map(({ id, lot, item }) => {
+ const yVal = lotYield(lot);
+ const days = daysSince(lot.ts);
+ const gainPct = lot.paid> 0 ? Math.round(((yVal - lot.paid) / lot.paid) * 100) : 0;
+ const sellUnit = Math.max(yVal, item.cost) * SELL_RATIO;
+ const rate = (yieldRateFor(lot.paid) * 100).toFixed(0);
+ const target = findConvertTarget(id, yVal);
+ return `
+ <div class="inv-card">
+ <div class="ie">${item.emoji}</div>
+ <div>
+ <div class="il">${item.label}</div>
+ <div class="iq">Qty ${lot.qty} · paid π${formatPi(lot.paid)} · held ${days.toFixed(1)}d</div>
+ <div class="iq">Yield <span class="ip">π${formatPi(yVal)}</span> <span class="price-up">${gainPct>= 0 ? '+' : ''}${gainPct}%</span> @ ${rate}%/day</div>
+ <div class="iq">Sell @ <span class="ip">π${formatPi(sellUnit)}</span> each</div>
+ </div>
+ <div class="ia">
+ <button class="sell-one" data-sell-id="${id}" data-sell-qty="1">Sell 1</button>
+ <button class="sell-all" data-sell-id="${id}" data-sell-qty="${lot.qty}">Sell all (${lot.qty})</button>
+ <button class="send-btn" data-send-id="${id}">Send Gift</button>
+ ${target ? `<button class="convert-btn" data-convert-id="${id}">→ ${target.emoji} (π${formatPi(target.cost)})</button>` : ''}
+ </div>
+ </div>
+ `;
+ }).join('');
+ grid.querySelectorAll('button[data-sell-id]').forEach(btn => {
+ btn.addEventListener('click', () => {
+ sellEmoji(btn.dataset.sellId, Number(btn.dataset.sellQty));
+ });
+ });
+ grid.querySelectorAll('button[data-send-id]').forEach(btn => {
+ btn.addEventListener('click', () => sendGiftFromInventory(btn.dataset.sendId));
+ });
+ grid.querySelectorAll('button[data-convert-id]').forEach(btn => {
+ btn.addEventListener('click', () => convertHolding(btn.dataset.convertId));
+ });
+ }
+
+ function loadUsage() {
+ try { return JSON.parse(localStorage.getItem(USAGE_KEY)) || {}; }
+ catch { return {}; }
+ }
+ function saveUsage(u) { localStorage.setItem(USAGE_KEY, JSON.stringify(u)); }
+ function bumpUsage(id) {
+ const u = loadUsage();
+ u[id] = (u[id] || 0) + 1;
+ saveUsage(u);
+ renderUsageChat();
+ renderSupply(emojiSupply.map(i => ({ ...i, cost: baseCost(i) })));
+ }
+ function baseCost(item) {
+ if (item._baseCost != null) return item._baseCost;
+ return item.cost;
+ }
+ function dynamicCost(item, uses) {
+ const base = baseCost(item);
+ const demand = item.id ? getDemand(item.id) : 0;
+ const adjusted = base * (1 + uses * USAGE_MULTIPLIER) * (1 + demand * DEMAND_MULTIPLIER);
+ return Number(adjusted.toFixed(8));
+ }
+ function formatPi(n) {
+ if (n>= 1) return n.toFixed(2);
+ if (n>= 0.01) return n.toFixed(4);
+ return Number(n).toPrecision(2);
+ }
+
+ function renderUsageChat() {
+ const feed = document.getElementById('usageFeed');
+ if (!feed) return;
+ const usage = loadUsage();
+ const entries = Object.entries(usage)
+ .map(([id, uses]) => ({ id, uses, item: emojiSupply.find(i => i.id === id) }))
+ .filter(e => e.item)
+ .sort((a, b) => b.uses - a.uses)
+ .slice(0, 10);
+ if (!entries.length) {
+ feed.innerHTML = '<div class="history-item"><span>Send an emoji to start tracking its rising value.</span></div>';
+ return;
+ }
+ const maxUses = entries[0].uses;
+ feed.innerHTML = entries.map(({ id, uses, item }) => {
+ const cur = dynamicCost(item, uses);
+ const base = baseCost(item);
+ const pct = Math.round(((cur - base) / base) * 100);
+ const hot = uses>= 5 || uses === maxUses && uses> 1;
+ return `
+ <div class="usage-bubble ${hot ? 'hot' : ''}">
+ <div class="ue">${item.emoji}</div>
+ <div>
+ <div class="ut">${item.label} ${hot ? '🔥 most used' : ''}</div>
+ <div class="uc">Used ${uses}× · base π${formatPi(base)}</div>
+ </div>
+ <div class="uv">π${formatPi(cur)}<small>+${pct}%</small></div>
+ </div>
+ `;
+ }).join('');
+ }
+
+ async function loadBalance() {
+ const wallet = loadWallet();
+ document.getElementById('balanceLabel').textContent = `Wallet: π${formatPi(wallet)}`;
+ const inv = loadInventory();
+ const owned = Object.values(inv).reduce((a, b) => a + (typeof b === 'object' && b ? Number(b.qty) || 0 : Number(b) || 0), 0);
+ document.getElementById('giftBalanceLabel').textContent = `Owned emojis: ${owned}`;
+ renderSpiralOrb();
+ }
+
+ let _lastSpiralBalance = null;
+ function renderSpiralOrb() {
+ const stage = document.getElementById('spiralStage');
+ const orb = document.getElementById('spiralOrb');
+ const piEl = document.getElementById('spiralPi');
+ const countEl = document.getElementById('spiralCount');
+ if (!stage || !orb || !piEl || !countEl) return;
+ const wallet = loadWallet();
+ const inv = loadInventory();
+ piEl.textContent = 'π' + formatPi(wallet);
+ const ownedQty = Object.values(inv).reduce((a, b) => a + (typeof b === 'object' && b ? Number(b.qty) || 0 : Number(b) || 0), 0);
+ countEl.textContent = ownedQty + ' emoji' + (ownedQty === 1 ? '' : 's');
+
+ if (_lastSpiralBalance !== null && wallet !== _lastSpiralBalance) {
+ orb.classList.remove('pulse'); void orb.offsetWidth; orb.classList.add('pulse');
+ }
+ _lastSpiralBalance = wallet;
+
+ stage.querySelectorAll('.spiral-particle').forEach(n => n.remove());
+ const entries = [];
+ for (const id in inv) {
+ const rec = inv[id];
+ const qty = typeof rec === 'object' && rec ? Number(rec.qty) || 0 : Number(rec) || 0;
+ if (qty <= 0) continue;
+ const found = (emojiSupply || []).find(e => e.id === id) || (fallbackEmojiSupply || []).find(e => e.id === id);
+ const emoji = found ? found.emoji : '✨';
+ entries.push({ emoji, qty });
+ }
+ if (!entries.length) return;
+ const stageSize = stage.clientWidth || 360;
+ const particles = [];
+ const maxPerEmoji = 6;
+ entries.forEach((e, idx) => {
+ const count = Math.min(maxPerEmoji, Math.max(1, Math.round(Math.log2(e.qty + 1) + 1)));
+ for (let i = 0; i < count; i++) particles.push({ emoji: e.emoji, group: idx });
+ });
+ const total = particles.length;
+ const ringRadii = [stageSize * 0.42, stageSize * 0.34, stageSize * 0.26];
+ particles.slice(0, 36).forEach((p, i) => {
+ const ring = i % 3;
+ const angle = (i / total) * 360;
+ const node = document.createElement('div');
+ node.className = 'spiral-particle';
+ node.textContent = p.emoji;
+ node.style.setProperty('--a', angle + 'deg');
+ node.style.setProperty('--r', ringRadii[ring] + 'px');
+ node.style.setProperty('--dur', (10 + ring * 4) + 's');
+ node.style.setProperty('--delay', (-i * 0.3) + 's');
+ if (ring === 1) node.style.animationDirection = 'reverse';
+ stage.appendChild(node);
+ });
+ }
+
+ function spiralFlyIn(emoji) {
+ const stage = document.getElementById('spiralStage');
+ if (!stage || !emoji) return;
+ const node = document.createElement('div');
+ node.className = 'spiral-flyin';
+ node.textContent = emoji;
+ const angle = Math.random() * Math.PI * 2;
+ const dist = 140 + Math.random() * 60;
+ node.style.setProperty('--tx', `calc(-50% + ${Math.cos(angle) * dist}px)`);
+ node.style.setProperty('--ty', `calc(-50% + ${Math.sin(angle) * dist}px)`);
+ stage.appendChild(node);
+ setTimeout(() => node.remove(), 1300);
+ }
+
+ function buildRecommendation(text) {
+ const normalized = text.toLowerCase();
+ for (const rule of aiRules) {
+ if (rule.keywords.some(keyword => normalized.includes(keyword))) {
+ return emojiSupply.find(item => item.id === rule.itemId) || fallbackEmojiSupply.find(item => item.id === rule.itemId);
+ }
+ }
+ return emojiSupply[0] || fallbackEmojiSupply[0];
+ }
+
+ function renderSupply(items) {
+ applyDemandDecay();
+ const usage = loadUsage();
+ const topDemand = demandRank().slice(0, 5);
+ emojiSupply = applyFlagPricing(items).map(item => {
+ const baseC = item._baseCost != null ? item._baseCost : item.cost;
+ const uses = usage[item.id] || 0;
+ return { ...item, _baseCost: baseC, cost: dynamicCost({ id: item.id, _baseCost: baseC }, uses), _uses: uses, _demand: getDemand(item.id) };
+ });
+ const grid = document.getElementById('supplyGrid');
+ if (!grid) return;
+ grid.innerHTML = emojiSupply.map(item => {
+ const hotRank = topDemand.indexOf(item.id);
+ let badge = '';
+ if (hotRank === 0) badge = '<span class="mkt hot">🔥 hot</span>';
+ else if (hotRank> 0 && hotRank < 5) badge = '<span class="mkt up">↑ trending</span>';
+ else if (item._demand> 0) badge = '<span class="mkt up">↑</span>';
+ const change = item.cost> item._baseCost ? `+${Math.round(((item.cost - item._baseCost) / item._baseCost) * 100)}%` : '';
+ return `
+ <div class="supply-card">
+ <div class="supply-icon">${item.emoji}</div>
+ <div class="supply-meta">
+ <strong>${item.label} ${badge}</strong>
+ <span>${item.description}${item._uses ? ` · used ${item._uses}×` : ''}${item._demand ? ` · demand ${item._demand.toFixed(1)}` : ''}</span>
+ </div>
+ <div class="supply-price">
+ <strong>π${formatPi(item.cost)}${change ? `<span class="price-up">${change}</span>` : ''}</strong>
+ <button class="button secondary" data-item-id="${item.id}">Buy</button>
+ </div>
+ </div>
+ `; }).join('');
+ grid.querySelectorAll('button[data-item-id]').forEach(button => {
+ button.addEventListener('click', async () => {
+ const itemId = button.dataset.itemId;
+ await purchaseGift(itemId, null);
+ });
+ });
+ renderUsageChat();
+ renderInventory();
+ renderTicker();
+ }
+
+ function renderHistory(transactions) {
+ const list = document.getElementById('historyList');
+ if (!list) return;
+ const history = transactions.filter(tx => tx.type === 'emoji-gift' || tx.type === 'gift');
+ if (!history.length) {
+ list.innerHTML = '<div class="history-item"><span>No gift purchases yet.</span></div>';
+ return;
+ }
+ list.innerHTML = history.slice(0, 8).map(tx => `
+ <div class="history-item">
+ <p>${tx.name}</p>
+ <span>${new Date(tx.date).toLocaleString()}</span>
+ <p class="history-card-amount">π${Math.abs(Number(tx.amount)).toFixed(8)}</p>
+ </div>
+ `).join('');
+ }
+
+ async function loadSupply() {
+ try {
+ const response = await fetch('/api/emoji-supply');
+ if (!response.ok) throw new Error('Unable to load supply');
+ const data = await response.json();
+ renderSupply(data.items || fallbackEmojiSupply);
+ } catch (error) {
+ console.error(error);
+ renderSupply(fallbackEmojiSupply);
+ }
+ }
+
+ async function loadHistory() {
+ try {
+ const response = await fetch('/api/transactions');
+ if (!response.ok) throw new Error('Unable to load history');
+ const data = await response.json();
+ renderHistory(data.transactions || []);
+ } catch (error) {
+ console.error(error);
+ document.getElementById('historyList').innerHTML = '<div class="history-item"><span>Unable to load history.</span></div>';
+ }
+ }
+
+ async function purchaseGift(itemId, targetPostId) {
+ const item = emojiSupply.find(i => i.id === itemId);
+ if (!item) return null;
+ const wallet = loadWallet();
+ if (wallet < item.cost) {
+ alert(`Not enough Pi. Need π${formatPi(item.cost)}, have π${formatPi(wallet)}.`);
+ return null;
+ }
+ const newWallet = wallet - item.cost;
+ saveWallet(newWallet);
+ recordTx(-item.cost, 'shop', `Bought ${item.emoji} ${item.label}`);
+ addToInventory(itemId, 1, item.cost);
+ const usage = loadUsage();
+ usage[itemId] = (usage[itemId] || 0) + 1;
+ saveUsage(usage);
+ bumpDemand(itemId, 1);
+ renderSupply(emojiSupply.map(i => ({ ...i, cost: baseCost(i) })));
+ loadBalance();
+ pushFlow('buy', item, { price: item.cost });
+ renderTransactions();
+ spiralFlyIn(item.emoji);
+ alert(`Bought ${item.emoji} ${item.label} for π${formatPi(item.cost)}. Wallet: π${formatPi(newWallet)}`);
+ return { item, balance: newWallet };
+ }
+
+ document.getElementById('recommendBtn').addEventListener('click', () => {
+ const moodText = document.getElementById('moodInput').value.trim();
+ if (!moodText) {
+ alert('Type a mood or description first.');
+ return;
+ }
+ selectedRecommendation = buildRecommendation(moodText);
+ document.getElementById('recommendationText').textContent = `Recommended gift for: ${moodText}`;
+ document.getElementById('recommendationEmoji').textContent = selectedRecommendation.emoji;
+ document.getElementById('recommendationLabel').textContent = `${selectedRecommendation.label} — ${selectedRecommendation.description}`;
+ document.getElementById('recommendationCost').textContent = `Price: π${selectedRecommendation.cost}`;
+ document.getElementById('buyRecommendedBtn').disabled = false;
+ });
+
+ document.getElementById('clearBtn').addEventListener('click', () => {
+ document.getElementById('moodInput').value = '';
+ document.getElementById('recommendationText').textContent = 'Type a mood and press Recommend.';
+ document.getElementById('recommendationEmoji').textContent = '';
+ document.getElementById('recommendationLabel').textContent = '';
+ document.getElementById('recommendationCost').textContent = '';
+ document.getElementById('buyRecommendedBtn').disabled = true;
+ selectedRecommendation = null;
+ });
+
+ document.getElementById('buyRecommendedBtn').addEventListener('click', async () => {
+ if (!selectedRecommendation) return;
+ const targetPostId = prompt('Enter post ID to send this gift to (optional):');
+ await purchaseGift(selectedRecommendation.id, targetPostId?.trim() || null);
+ });
+
+ document.getElementById('resetUsageBtn')?.addEventListener('click', () => {
+ if (confirm('Reset your emoji usage history? Prices will return to base values.')) {
+ localStorage.removeItem(USAGE_KEY);
+ renderSupply(emojiSupply.map(i => ({ ...i, cost: baseCost(i) })));
+ }
+ });
+
+ document.getElementById('flowCategory')?.addEventListener('change', e => {
+ flowState.filter = e.target.value;
+ renderFlowStream();
+ });
+ document.getElementById('pauseFlowBtn')?.addEventListener('click', e => {
+ flowState.paused = !flowState.paused;
+ e.target.textContent = flowState.paused ? 'Resume' : 'Pause';
+ if (!flowState.paused) renderFlowStream();
+ });
+
+ function autoMarketTick() {
+ if (!emojiSupply.length) return;
+ const it = emojiSupply[Math.floor(Math.random() * emojiSupply.length)];
+ const drift = (Math.random() - 0.45) * 0.05;
+ const newPrice = Math.max(it._baseCost * 0.5, it.cost * (1 + drift));
+ pushFlow('tick', it, { price: newPrice, note: drift>= 0 ? 'market up' : 'market down' });
+ }
+ setInterval(autoMarketTick, 4000);
+
+ const PI_CORE_FEE = 0.01;
+ const SYSTEM_FEE = 0.01;
+
+ function setWithdrawStatus(msg, kind) {
+ const el = document.getElementById('withdrawSummary');
+ if (!el) return;
+ el.textContent = msg;
+ el.className = 'withdraw-summary' + (kind ? ' ' + kind : '');
+ }
+ function setAuthStatus(msg, kind) {
+ const el = document.getElementById('piAuthStatus');
+ if (!el) return;
+ el.textContent = msg;
+ el.className = 'withdraw-summary' + (kind ? ' ' + kind : '');
+ }
+
+ function ensurePiSdk() {
+ return new Promise((resolve, reject) => {
+ if (window.piSdkReady) return resolve(true);
+ if (!window.Pi) return reject(new Error('Pi SDK script not loaded. Open inside Pi Browser.'));
+ try {
+ window.Pi.init({ version: '2.0', sandbox: false });
+ window.piSdkReady = true;
+ resolve(true);
+ } catch (e) { reject(e); }
+ });
+ }
+
+ let withdrawInFlight = false;
+
+ function piCreatePaymentAsync(amount, memo, metadata) {
+ return new Promise((resolve, reject) => {
+ window.piCreatePayment(amount, memo, metadata, (paymentId, txid) => resolve({ paymentId, txid }), (err) => reject(err));
+ });
+ }
+ function piA2UPaymentAsync(amount, memo, metadata) {
+ return new Promise((resolve, reject) => {
+ window.piA2UPayment(amount, memo, metadata, (paymentId, txid) => resolve({ paymentId, txid }), (err) => reject(err));
+ });
+ }
+ function piAuthenticateAsync(scopes) {
+ return new Promise((resolve, reject) => {
+ window.piAuthenticate((auth) => auth && auth.user ? resolve(auth) : reject(new Error('Pi authentication failed or cancelled')), scopes);
+ });
+ }
+ function errMsg(err) {
+ if (!err) return 'Unknown error';
+ if (typeof err === 'string') return err;
+ return err.message || JSON.stringify(err);
+ }
+
+ async function withdrawFlow() {
+ if (withdrawInFlight) { setWithdrawStatus('Withdraw already in progress…', 'err'); return; }
+ const btn = document.getElementById('withdrawBtn');
+ const input = document.getElementById('withdrawAmount');
+ const amt = parseFloat(input.value);
+ if (!Number.isFinite(amt) || amt <= 0) { setWithdrawStatus('Enter a valid amount.', 'err'); return; }
+ const totalFees = PI_CORE_FEE + SYSTEM_FEE;
+ const wallet = loadWallet();
+ if (wallet < amt) {
+ setWithdrawStatus(`Need π${formatPi(amt)} in wallet. Wallet has π${formatPi(wallet)}. (Fees π${totalFees} paid separately in real Pi.)`, 'err');
+ return;
+ }
+
+ withdrawInFlight = true;
+ if (btn) { btn.disabled = true; btn.textContent = 'Processing…'; }
+
+ try {
+ setWithdrawStatus('Connecting Pi SDK…');
+ await ensurePiSdk();
+
+ setAuthStatus('Authenticating with Pi…');
+ const auth = await piAuthenticateAsync(['username', 'payments', 'wallet_address']);
+ setAuthStatus(`Authenticated as @${auth.user.username}`, 'ok');
+
+ setWithdrawStatus(`Paying π${PI_CORE_FEE} Pi Core Team fee…`);
+ await piCreatePaymentAsync(PI_CORE_FEE, 'Omenda Emoji withdraw — Pi Core Team fee', { kind: 'fee', target: 'pi-core-team', withdrawAmount: amt });
+
+ setWithdrawStatus(`Paying π${SYSTEM_FEE} Omenda system wallet fee…`);
+ await piCreatePaymentAsync(SYSTEM_FEE, 'Omenda Emoji withdraw — system app wallet fee', { kind: 'fee', target: 'omenda-system', withdrawAmount: amt });
+
+ setWithdrawStatus(`Releasing π${formatPi(amt)} to your Pi wallet…`);
+ const payout = await piA2UPaymentAsync(amt, 'Omenda Emoji withdrawal payout', { kind: 'payout', amount: amt, uid: auth.user.uid });
+
+ saveWallet(loadWallet() - amt);
+ await recordTx(-amt, 'sent', `Withdraw to Pi wallet${payout.txid ? ' (tx ' + payout.txid.slice(0,10) + '…)' : ''}`);
+ loadBalance();
+ renderTransactions();
+ const txInfo = payout.txid ? ` (tx ${payout.txid.slice(0, 10)}…)` : '';
+ setWithdrawStatus(`Withdraw complete. π${formatPi(amt)} sent${txInfo}. Real-Pi fees π${totalFees} paid via SDK.`, 'ok');
+ pushFlow('send', { id: 'withdraw', emoji: '🏦', label: `Withdraw π${formatPi(amt)}`, category: 'Emoji', cost: amt }, { price: amt, note: `fees π${totalFees}` });
+ if (input) input.value = '';
+ } catch (err) {
+ setWithdrawStatus('Withdraw failed: ' + errMsg(err) + '. Any fees already paid are not auto-refunded — contact support.', 'err');
+ } finally {
+ withdrawInFlight = false;
+ if (btn) { btn.disabled = false; btn.textContent = 'Connect \u0026 Withdraw'; }
+ }
+ }
+
+ function updateWithdrawSummary() {
+ const amt = parseFloat(document.getElementById('withdrawAmount').value);
+ if (!Number.isFinite(amt) || amt <= 0) { setWithdrawStatus(''); return; }
+ setWithdrawStatus(`You'll receive π${formatPi(amt)} from your wallet. Real-Pi fees paid via SDK: π${PI_CORE_FEE} (Pi Core Team) + π${SYSTEM_FEE} (system) = π${PI_CORE_FEE + SYSTEM_FEE}.`);
+ }
+ document.getElementById('withdrawAmount')?.addEventListener('input', updateWithdrawSummary);
+ document.getElementById('withdrawBtn')?.addEventListener('click', withdrawFlow);
+
+ let depositInFlight = false;
+ function setDepositStatus(msg, kind) {
+ const el = document.getElementById('depositSummary');
+ if (!el) return;
+ el.textContent = msg;
+ el.className = 'withdraw-summary' + (kind ? ' ' + kind : '');
+ }
+ async function depositFlow() {
+ if (depositInFlight) { setDepositStatus('Deposit already in progress…', 'err'); return; }
+ const btn = document.getElementById('depositBtn');
+ const input = document.getElementById('depositAmount');
+ const amt = parseFloat(input.value);
+ if (!Number.isFinite(amt) || amt <= 0) { setDepositStatus('Enter a valid amount.', 'err'); return; }
+ depositInFlight = true;
+ if (btn) { btn.disabled = true; btn.textContent = 'Processing…'; }
+ try {
+ setDepositStatus('Connecting Pi SDK…');
+ await ensurePiSdk();
+ setDepositStatus('Authenticating with Pi…');
+ await piAuthenticateAsync(['username', 'payments']);
+ setDepositStatus(`Paying π${formatPi(amt)} to Omenda…`);
+ await piCreatePaymentAsync(amt, 'Omenda Emoji deposit', { kind: 'deposit', amount: amt });
+ setDepositStatus('Crediting your Omenda wallet…');
+ const res = await fetch('/api/topup', {
+ method: 'POST',
+ headers: { 'Content-Type': 'application/json' },
+ credentials: 'same-origin',
+ body: JSON.stringify({ amount: amt })
+ });
+ if (!res.ok) throw new Error('Top-up failed (' + res.status + ')');
+ const data = await res.json();
+ const newBal = (typeof data.balance === 'number') ? data.balance : (typeof data.newBalance === 'number' ? data.newBalance : null);
+ if (newBal !== null) {
+ _serverBalance = newBal;
+ _serverBalanceFetched = true;
+ localStorage.setItem(WALLET_KEY, String(newBal));
+ }
+ loadBalance();
+ renderTransactions();
+ setDepositStatus(`Deposit complete. Wallet: π${formatPi(loadWallet())}.`, 'ok');
+ if (input) input.value = '';
+ } catch (err) {
+ setDepositStatus('Deposit failed: ' + errMsg(err), 'err');
+ } finally {
+ depositInFlight = false;
+ if (btn) { btn.disabled = false; btn.textContent = 'Connect \u0026 Deposit'; }
+ }
+ }
+ document.getElementById('depositBtn')?.addEventListener('click', depositFlow);
+ setTimeout(() => { try { ensurePiSdk().then(() => setAuthStatus('Pi SDK ready. Press Connect & Withdraw.', 'ok')).catch(e => setAuthStatus('Pi SDK not initialised: ' + (e.message || e))); } catch {} }, 600);
+
+ loadBalance();
+ (function resetStaleSeedBalance() {
+ const RESET_FLAG = 'omendaEmojiWalletReset_v2';
+ if (!localStorage.getItem(RESET_FLAG)) {
+ const cur = parseFloat(localStorage.getItem(WALLET_KEY));
+ if (cur === 100 || cur === 100.03 || !Number.isFinite(cur)) {
+ localStorage.setItem(WALLET_KEY, '0');
+ }
+ localStorage.setItem(RESET_FLAG, '1');
+ }
+ })();
+ fetchServerBalance().then(b => { if (b !== null) loadBalance(); });
+ setInterval(() => { fetchServerBalance().then(b => { if (b !== null) loadBalance(); }); }, 15000);
+ loadBalance();
+ renderTransactions();
+ setInterval(renderTransactions, 20000);
+ loadSupply();
+ loadHistory();
+ renderSentGifts();
+ renderFlowStream();
+ </script>
+</body>
+</html>

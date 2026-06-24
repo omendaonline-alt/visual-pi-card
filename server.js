@@ -48,8 +48,14 @@ app.use((req, res, next) => {
 
 app.use((req, res, next) => {
     const decoded = decodeURIComponent(req.path || '');
-    if (decoded === '/visual pi card/ride.html' || decoded === '/visual%20pi%20card/ride.html') {
-        return res.redirect(301, '/ride.html');
+    if (decoded.startsWith('/visual pi card/')) {
+        const target = decoded.replace('/visual pi card/', '/');
+        return res.redirect(301, target);
+    }
+    if (req.path.startsWith('/visual%20pi%20card/')) {
+        const decodedPath = decodeURIComponent(req.path);
+        const target = decodedPath.replace('/visual pi card/', '/');
+        return res.redirect(301, target);
     }
     if (decoded.includes('/visual pi card') || req.path.includes('/visual%20pi%20card')) {
         return res.status(404).end();
@@ -70,16 +76,11 @@ const users = {
         id: 'usr_pioneer',
         username: 'pioneer',
         name: 'PI PIONEER',
-        balance: 1247.83,
+        balance: 100,
+        giftBalance: 0,
         piAddress: 'GCDXL7HQ4GKMV5YA3BQPZ4PIPIONEER',
         cardType: 'visa',
-        transactions: [
-            { id: 'tx_001', type: 'recv',  name: 'Mining Reward',             amount: 3.14,  date: '2026-03-25T10:00:00Z', status: 'completed' },
-            { id: 'tx_002', type: 'sent',  name: 'Sent to @pioneer42',        amount: -15.00, date: '2026-03-24T14:30:00Z', status: 'completed' },
-            { id: 'tx_003', type: 'shop',  name: 'Pi Marketplace',            amount: -8.50,  date: '2026-03-23T09:15:00Z', status: 'completed' },
-            { id: 'tx_004', type: 'recv',  name: 'Received from @pidev',      amount: 50.00,  date: '2026-03-22T16:45:00Z', status: 'completed' },
-            { id: 'tx_005', type: 'shop',  name: 'Coffee Shop Pi Pay',        amount: -2.75,  date: '2026-03-21T08:20:00Z', status: 'completed' }
-        ]
+        transactions: []
     }
 };
 
@@ -94,6 +95,598 @@ function generateTxId() {
 function formatDate(d) {
     return new Date(d).toISOString();
 }
+
+// --------------- Social feed API (backend functions) ---------------
+const socialPosts = [
+    {
+        id: 'post_001',
+        user: '@OmendaOfficial',
+        name: 'Omenda Official',
+        avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=400&auto=format&fit=crop',
+        image: 'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?q=80&w=1200&auto=format&fit=crop',
+        caption: 'Our latest Pi-powered storefront feature is now live. Discover how creators can tag products inside posts and let customers checkout directly from the feed.',
+        label: 'Shop-ready social commerce',
+        postedAt: '2h ago',
+        reactions: { like: 1200, fire: 320, laugh: 84, clap: 46 },
+        gifts: { gift: 12, rocket: 3, diamond: 1 }
+    },
+    {
+        id: 'post_002',
+        user: '@PiTravel',
+        name: 'Pi Travel',
+        avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=400&auto=format&fit=crop',
+        image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1200&auto=format&fit=crop',
+        caption: 'Travel with Pi and capture moments from trusted local guides, sellers, and Portals.',
+        label: 'Travel stories',
+        postedAt: '5h ago',
+        reactions: { like: 980, wave: 160, comment: 52 },
+        gifts: { gift: 8, rocket: 2, diamond: 0 }
+    },
+    {
+        id: 'post_003',
+        user: '@MarketPulse',
+        name: 'Market Pulse',
+        avatar: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=400&auto=format&fit=crop',
+        image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1200&auto=format&fit=crop',
+        caption: 'Browse trusted Pi vendors, product stories, and marketplace highlights in one social feed. From fashion to gadgets, every discovery is connected with Pi commerce.',
+        label: 'Marketplace pulse',
+        postedAt: '1d ago',
+        reactions: { like: 1500, shop: 210, fire: 79 },
+        gifts: { gift: 18, rocket: 5, diamond: 2 }
+    }
+];
+
+const marketplaceProducts = [
+    { id: 'e1', title: '17 PRO MAX Smartphone', price: 'π0.003', image: 'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?q=80&w=400&auto=format&fit=crop', category: 'Electronics', brand: 'TechVista', tag: 'Most Popular' },
+    { id: 'f2', title: 'Running Sneakers Air Max', price: 'π0.0004', image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=400&auto=format&fit=crop', category: 'Fashion', brand: 'StepKing', tag: 'Hot Trend' },
+    { id: 'hg4', title: 'LED Desk Lamp Touch Dimmable', price: 'π0.0001', image: 'https://images.unsplash.com/photo-1507473885765-e6ed057ab6fe?q=80&w=400&auto=format&fit=crop', category: 'Home & Garden', brand: 'LightWave', tag: 'New Arrival' },
+    { id: 'c6', title: 'Tesla Model Y Long Range 2024', price: 'π0.13', image: 'https://images.unsplash.com/photo-1560958089-b8a1929cea89?q=80&w=400&auto=format&fit=crop', category: 'Cars', brand: 'Tesla Inc', tag: 'Hot Deal' },
+    { id: 're1', title: 'Modern 3BR Apartment Downtown', price: 'π5.0', image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=400&auto=format&fit=crop', category: 'Real Estate', brand: 'Prime Realty', tag: 'Featured' }
+];
+
+const productStats = {
+    e1: { reactions: { like: 320, fire: 120, shop: 45 }, gifts: { gift: 10, rocket: 2 } },
+    f2: { reactions: { like: 210, fire: 68 }, gifts: { gift: 5 } },
+    hg4: { reactions: { like: 94 }, gifts: { gift: 2 } },
+    c6: { reactions: { like: 40 }, gifts: { rocket: 1, diamond: 1 } },
+    re1: { reactions: { like: 25, shop: 12 }, gifts: { gift: 1 } }
+};
+
+function getProductById(productId) {
+    return marketplaceProducts.find(product => product.id === productId) || null;
+}
+
+function getProductStats(productId) {
+    if (!productStats[productId]) {
+        productStats[productId] = { reactions: {}, gifts: {} };
+    }
+    return productStats[productId];
+}
+
+function addProductReaction(productId, reactionType) {
+    const product = getProductById(productId);
+    if (!product || !reactionType) return null;
+
+    const normalized = String(reactionType).toLowerCase();
+    if (!normalized) return null;
+
+    const stats = getProductStats(productId);
+    if (!stats.reactions[normalized]) {
+        stats.reactions[normalized] = 0;
+    }
+    stats.reactions[normalized] += 1;
+    return stats;
+}
+
+function addProductGift(productId, giftType) {
+    const user = users[CURRENT_USER];
+    const product = getProductById(productId);
+    const gift = giftCatalog[giftType];
+
+    if (!user || !product || !gift) return { error: 'Invalid gift or product.' };
+    if (user.balance < gift.cost) return { error: 'Insufficient Pi balance.' };
+
+    user.balance -= gift.cost;
+    const stats = getProductStats(productId);
+    if (!stats.gifts[giftType]) {
+        stats.gifts[giftType] = 0;
+    }
+    stats.gifts[giftType] += 1;
+
+    const tx = {
+        id: generateTxId(),
+        type: 'gift',
+        name: `${gift.label} to product ${productId}`,
+        amount: -gift.cost,
+        date: formatDate(new Date()),
+        status: 'completed'
+    };
+    user.transactions.unshift(tx);
+
+    return { product: stats, balance: user.balance, giftBalance: user.giftBalance || 0 };
+}
+
+const giftCatalog = {
+    gift: { cost: 1, label: 'Pi Gift', emoji: '🎁' },
+    rocket: { cost: 5, label: 'Pi Rocket', emoji: '🚀' },
+    diamond: { cost: 10, label: 'Pi Diamond', emoji: '💎' },
+    gvc: { cost: 314159, label: 'GVC Follow', emoji: '🪙' }
+};
+
+const emojiSupply = [
+    { id: 'smile', emoji: '😀', label: 'Happy Smile', category: 'Emoji', cost: 0.0000001, description: 'Tiny Pi sticker that spreads joy.' },
+    { id: 'spark', emoji: '✨', label: 'Sparkle', category: 'Emoji', cost: 0.000002, description: 'Add a little shine to a post.' },
+    { id: 'fire', emoji: '🔥', label: 'Fire', category: 'Emoji', cost: 0.00001, description: 'Send a hot reaction with minimal Pi.' },
+    { id: 'heart', emoji: '❤️', label: 'Heart', category: 'Emoji', cost: 0.00005, description: 'A small love gift with Pi value.' },
+    { id: 'rocket', emoji: '🚀', label: 'Rocket Boost', category: 'Emoji', cost: 0.0002, description: 'Launch your support with a lightweight gift.' },
+    { id: 'thumbs', emoji: '👍', label: 'Thumbs Up', category: 'Emoji', cost: 0.001, description: 'A friendly support badge.' },
+    { id: 'tada', emoji: '🎉', label: 'Celebration', category: 'Emoji', cost: 0.01, description: 'A bigger Pi celebration gift.' },
+    { id: 'eyes', emoji: '👀', label: 'Eyes', category: 'Emoji', cost: 0.05, description: 'A strong attention gift.' },
+    { id: 'diamond', emoji: '💎', label: 'Diamond', category: 'Emoji', cost: 0.1, description: 'Premium sparkle with Pi.' },
+    { id: 'star', emoji: '🌟', label: 'Star Power', category: 'Emoji', cost: 0.008, description: 'A bright Pi boost.' },
+    { id: 'wave', emoji: '👋', label: 'Wave', category: 'Emoji', cost: 0.0003, description: 'Say hi with Pi support.' },
+    { id: 'kiss', emoji: '😘', label: 'Kiss', category: 'Emoji', cost: 0.0002, description: 'Send warm appreciation.' },
+    { id: 'clap', emoji: '👏', label: 'Applause', category: 'Emoji', cost: 0.002, description: 'Celebrate a post with claps.' },
+    { id: 'joy', emoji: '😄', label: 'Joy', category: 'Emoji', cost: 0.0000001, description: 'A bright joyful reaction.' },
+    { id: 'blush', emoji: '😊', label: 'Blush', category: 'Emoji', cost: 0.0000002, description: 'Gentle positive support.' },
+    { id: 'love', emoji: '😍', label: 'Love Eyes', category: 'Emoji', cost: 0.0000005, description: 'Show extra love and excitement.' },
+    { id: 'party', emoji: '🥳', label: 'Party', category: 'Emoji', cost: 0.000005, description: 'Celebrate with a fun party reaction.' },
+    { id: 'cool', emoji: '😎', label: 'Cool Shades', category: 'Emoji', cost: 0.00001, description: 'A smooth support badge.' },
+    { id: 'heartSparkle', emoji: '💖', label: 'Heart Sparkle', category: 'Emoji', cost: 0.00003, description: 'Send a shiny heart.' },
+    { id: 'gift', emoji: '🎁', label: 'Gift', category: 'Emoji', cost: 0.0005, description: 'Packaged support gift.' },
+    { id: 'sun', emoji: '☀️', label: 'Sun', category: 'Emoji', cost: 0.00006, description: 'Brighten a post with sunshine.' },
+    { id: 'moon', emoji: '🌙', label: 'Moon', category: 'Emoji', cost: 0.00006, description: 'Send peaceful night vibes.' },
+    { id: 'pizza', emoji: '🍕', label: 'Pizza', category: 'Emoji', cost: 0.00009, description: 'Share a tasty Pi snack.' },
+    { id: 'coffee', emoji: '☕', label: 'Coffee', category: 'Emoji', cost: 0.00012, description: 'Fuel the feed with coffee energy.' }
+];
+
+const countryFlagSupply = [
+{ id: 'flag_af', emoji: '🇦🇫', label: 'Afghanistan Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Afghanistan' },
+  { id: 'flag_ax', emoji: '🇦🇽', label: 'Åland Islands Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Åland Islands' },
+  { id: 'flag_al', emoji: '🇦🇱', label: 'Albania Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Albania' },
+  { id: 'flag_dz', emoji: '🇩🇿', label: 'Algeria Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Algeria' },
+  { id: 'flag_as', emoji: '🇦🇸', label: 'American Samoa Flag', category: 'Country Flag', cost: 1, description: 'Country flag for American Samoa' },
+  { id: 'flag_ad', emoji: '🇦🇩', label: 'Andorra Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Andorra' },
+  { id: 'flag_ao', emoji: '🇦🇴', label: 'Angola Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Angola' },
+  { id: 'flag_ai', emoji: '🇦🇮', label: 'Anguilla Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Anguilla' },
+  { id: 'flag_aq', emoji: '🇦🇶', label: 'Antarctica Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Antarctica' },
+  { id: 'flag_ag', emoji: '🇦🇬', label: 'Antigua & Barbuda Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Antigua & Barbuda' },
+  { id: 'flag_ar', emoji: '🇦🇷', label: 'Argentina Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Argentina' },
+  { id: 'flag_am', emoji: '🇦🇲', label: 'Armenia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Armenia' },
+  { id: 'flag_aw', emoji: '🇦🇼', label: 'Aruba Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Aruba' },
+  { id: 'flag_au', emoji: '🇦🇺', label: 'Australia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Australia' },
+  { id: 'flag_at', emoji: '🇦🇹', label: 'Austria Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Austria' },
+  { id: 'flag_az', emoji: '🇦🇿', label: 'Azerbaijan Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Azerbaijan' },
+  { id: 'flag_bs', emoji: '🇧🇸', label: 'Bahamas Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Bahamas' },
+  { id: 'flag_bh', emoji: '🇧🇭', label: 'Bahrain Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Bahrain' },
+  { id: 'flag_bd', emoji: '🇧🇩', label: 'Bangladesh Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Bangladesh' },
+  { id: 'flag_bb', emoji: '🇧🇧', label: 'Barbados Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Barbados' },
+  { id: 'flag_by', emoji: '🇧🇾', label: 'Belarus Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Belarus' },
+  { id: 'flag_be', emoji: '🇧🇪', label: 'Belgium Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Belgium' },
+  { id: 'flag_bz', emoji: '🇧🇿', label: 'Belize Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Belize' },
+  { id: 'flag_bj', emoji: '🇧🇯', label: 'Benin Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Benin' },
+  { id: 'flag_bm', emoji: '🇧🇲', label: 'Bermuda Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Bermuda' },
+  { id: 'flag_bt', emoji: '🇧🇹', label: 'Bhutan Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Bhutan' },
+  { id: 'flag_bo', emoji: '🇧🇴', label: 'Bolivia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Bolivia' },
+  { id: 'flag_bq', emoji: '🇧🇶', label: 'Caribbean Netherlands Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Caribbean Netherlands' },
+  { id: 'flag_ba', emoji: '🇧🇦', label: 'Bosnia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Bosnia' },
+  { id: 'flag_bw', emoji: '🇧🇼', label: 'Botswana Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Botswana' },
+  { id: 'flag_bv', emoji: '🇧🇻', label: 'Bouvet Island Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Bouvet Island' },
+  { id: 'flag_br', emoji: '🇧🇷', label: 'Brazil Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Brazil' },
+  { id: 'flag_io', emoji: '🇮🇴', label: 'British Indian Ocean Territory Flag', category: 'Country Flag', cost: 1, description: 'Country flag for British Indian Ocean Territory' },
+  { id: 'flag_vg', emoji: '🇻🇬', label: 'British Virgin Islands Flag', category: 'Country Flag', cost: 1, description: 'Country flag for British Virgin Islands' },
+  { id: 'flag_bn', emoji: '🇧🇳', label: 'Brunei Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Brunei' },
+  { id: 'flag_bg', emoji: '🇧🇬', label: 'Bulgaria Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Bulgaria' },
+  { id: 'flag_bf', emoji: '🇧🇫', label: 'Burkina Faso Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Burkina Faso' },
+  { id: 'flag_bi', emoji: '🇧🇮', label: 'Burundi Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Burundi' },
+  { id: 'flag_cv', emoji: '🇨🇻', label: 'Cape Verde Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Cape Verde' },
+  { id: 'flag_kh', emoji: '🇰🇭', label: 'Cambodia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Cambodia' },
+  { id: 'flag_cm', emoji: '🇨🇲', label: 'Cameroon Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Cameroon' },
+  { id: 'flag_ca', emoji: '🇨🇦', label: 'Canada Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Canada' },
+  { id: 'flag_ky', emoji: '🇰🇾', label: 'Cayman Islands Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Cayman Islands' },
+  { id: 'flag_cf', emoji: '🇨🇫', label: 'Central African Republic Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Central African Republic' },
+  { id: 'flag_td', emoji: '🇹🇩', label: 'Chad Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Chad' },
+  { id: 'flag_cl', emoji: '🇨🇱', label: 'Chile Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Chile' },
+  { id: 'flag_cn', emoji: '🇨🇳', label: 'China Flag', category: 'Country Flag', cost: 1, description: 'Country flag for China' },
+  { id: 'flag_hk', emoji: '🇭🇰', label: 'Hong Kong Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Hong Kong' },
+  { id: 'flag_mo', emoji: '🇲🇴', label: 'Macao Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Macao' },
+  { id: 'flag_cx', emoji: '🇨🇽', label: 'Christmas Island Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Christmas Island' },
+  { id: 'flag_cc', emoji: '🇨🇨', label: 'Cocos Islands Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Cocos Islands' },
+  { id: 'flag_co', emoji: '🇨🇴', label: 'Colombia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Colombia' },
+  { id: 'flag_km', emoji: '🇰🇲', label: 'Comoros Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Comoros' },
+  { id: 'flag_cg', emoji: '🇨🇬', label: 'Congo - Brazzaville Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Congo - Brazzaville' },
+  { id: 'flag_ck', emoji: '🇨🇰', label: 'Cook Islands Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Cook Islands' },
+  { id: 'flag_cr', emoji: '🇨🇷', label: 'Costa Rica Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Costa Rica' },
+  { id: 'flag_hr', emoji: '🇭🇷', label: 'Croatia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Croatia' },
+  { id: 'flag_cu', emoji: '🇨🇺', label: 'Cuba Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Cuba' },
+  { id: 'flag_cw', emoji: '🇨🇼', label: 'Curaçao Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Curaçao' },
+  { id: 'flag_cy', emoji: '🇨🇾', label: 'Cyprus Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Cyprus' },
+  { id: 'flag_cz', emoji: '🇨🇿', label: 'Czechia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Czechia' },
+  { id: 'flag_kp', emoji: '🇰🇵', label: 'North Korea Flag', category: 'Country Flag', cost: 1, description: 'Country flag for North Korea' },
+  { id: 'flag_cd', emoji: '🇨🇩', label: 'Congo - Kinshasa Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Congo - Kinshasa' },
+  { id: 'flag_dk', emoji: '🇩🇰', label: 'Denmark Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Denmark' },
+  { id: 'flag_dj', emoji: '🇩🇯', label: 'Djibouti Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Djibouti' },
+  { id: 'flag_dm', emoji: '🇩🇲', label: 'Dominica Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Dominica' },
+  { id: 'flag_do', emoji: '🇩🇴', label: 'Dominican Republic Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Dominican Republic' },
+  { id: 'flag_ec', emoji: '🇪🇨', label: 'Ecuador Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Ecuador' },
+  { id: 'flag_eg', emoji: '🇪🇬', label: 'Egypt Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Egypt' },
+  { id: 'flag_sv', emoji: '🇸🇻', label: 'El Salvador Flag', category: 'Country Flag', cost: 1, description: 'Country flag for El Salvador' },
+  { id: 'flag_gq', emoji: '🇬🇶', label: 'Equatorial Guinea Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Equatorial Guinea' },
+  { id: 'flag_er', emoji: '🇪🇷', label: 'Eritrea Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Eritrea' },
+  { id: 'flag_ee', emoji: '🇪🇪', label: 'Estonia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Estonia' },
+  { id: 'flag_sz', emoji: '🇸🇿', label: 'Eswatini Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Eswatini' },
+  { id: 'flag_et', emoji: '🇪🇹', label: 'Ethiopia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Ethiopia' },
+  { id: 'flag_fk', emoji: '🇫🇰', label: 'Falkland Islands Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Falkland Islands' },
+  { id: 'flag_fo', emoji: '🇫🇴', label: 'Faroe Islands Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Faroe Islands' },
+  { id: 'flag_fj', emoji: '🇫🇯', label: 'Fiji Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Fiji' },
+  { id: 'flag_fi', emoji: '🇫🇮', label: 'Finland Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Finland' },
+  { id: 'flag_fr', emoji: '🇫🇷', label: 'France Flag', category: 'Country Flag', cost: 1, description: 'Country flag for France' },
+  { id: 'flag_gf', emoji: '🇬🇫', label: 'French Guiana Flag', category: 'Country Flag', cost: 1, description: 'Country flag for French Guiana' },
+  { id: 'flag_pf', emoji: '🇵🇫', label: 'French Polynesia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for French Polynesia' },
+  { id: 'flag_tf', emoji: '🇹🇫', label: 'French Southern Territories Flag', category: 'Country Flag', cost: 1, description: 'Country flag for French Southern Territories' },
+  { id: 'flag_ga', emoji: '🇬🇦', label: 'Gabon Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Gabon' },
+  { id: 'flag_gm', emoji: '🇬🇲', label: 'Gambia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Gambia' },
+  { id: 'flag_ge', emoji: '🇬🇪', label: 'Georgia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Georgia' },
+  { id: 'flag_de', emoji: '🇩🇪', label: 'Germany Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Germany' },
+  { id: 'flag_gh', emoji: '🇬🇭', label: 'Ghana Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Ghana' },
+  { id: 'flag_gi', emoji: '🇬🇮', label: 'Gibraltar Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Gibraltar' },
+  { id: 'flag_gr', emoji: '🇬🇷', label: 'Greece Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Greece' },
+  { id: 'flag_gl', emoji: '🇬🇱', label: 'Greenland Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Greenland' },
+  { id: 'flag_gd', emoji: '🇬🇩', label: 'Grenada Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Grenada' },
+  { id: 'flag_gp', emoji: '🇬🇵', label: 'Guadeloupe Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Guadeloupe' },
+  { id: 'flag_gu', emoji: '🇬🇺', label: 'Guam Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Guam' },
+  { id: 'flag_gt', emoji: '🇬🇹', label: 'Guatemala Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Guatemala' },
+  { id: 'flag_gg', emoji: '🇬🇬', label: 'Guernsey Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Guernsey' },
+  { id: 'flag_gn', emoji: '🇬🇳', label: 'Guinea Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Guinea' },
+  { id: 'flag_gw', emoji: '🇬🇼', label: 'Guinea-Bissau Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Guinea-Bissau' },
+  { id: 'flag_gy', emoji: '🇬🇾', label: 'Guyana Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Guyana' },
+  { id: 'flag_ht', emoji: '🇭🇹', label: 'Haiti Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Haiti' },
+  { id: 'flag_hm', emoji: '🇭🇲', label: 'Heard & McDonald Islands Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Heard & McDonald Islands' },
+  { id: 'flag_va', emoji: '🇻🇦', label: 'Vatican City Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Vatican City' },
+  { id: 'flag_hn', emoji: '🇭🇳', label: 'Honduras Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Honduras' },
+  { id: 'flag_hu', emoji: '🇭🇺', label: 'Hungary Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Hungary' },
+  { id: 'flag_is', emoji: '🇮🇸', label: 'Iceland Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Iceland' },
+  { id: 'flag_in', emoji: '🇮🇳', label: 'India Flag', category: 'Country Flag', cost: 1, description: 'Country flag for India' },
+  { id: 'flag_id', emoji: '🇮🇩', label: 'Indonesia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Indonesia' },
+  { id: 'flag_ir', emoji: '🇮🇷', label: 'Iran Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Iran' },
+  { id: 'flag_iq', emoji: '🇮🇶', label: 'Iraq Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Iraq' },
+  { id: 'flag_ie', emoji: '🇮🇪', label: 'Ireland Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Ireland' },
+  { id: 'flag_im', emoji: '🇮🇲', label: 'Isle of Man Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Isle of Man' },
+  { id: 'flag_il', emoji: '🇮🇱', label: 'Israel Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Israel' },
+  { id: 'flag_it', emoji: '🇮🇹', label: 'Italy Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Italy' },
+  { id: 'flag_ci', emoji: '🇨🇮', label: 'Côte d’Ivoire Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Côte d’Ivoire' },
+  { id: 'flag_jm', emoji: '🇯🇲', label: 'Jamaica Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Jamaica' },
+  { id: 'flag_jp', emoji: '🇯🇵', label: 'Japan Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Japan' },
+  { id: 'flag_je', emoji: '🇯🇪', label: 'Jersey Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Jersey' },
+  { id: 'flag_jo', emoji: '🇯🇴', label: 'Jordan Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Jordan' },
+  { id: 'flag_kz', emoji: '🇰🇿', label: 'Kazakhstan Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Kazakhstan' },
+  { id: 'flag_ke', emoji: '🇰🇪', label: 'Kenya Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Kenya' },
+  { id: 'flag_ki', emoji: '🇰🇮', label: 'Kiribati Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Kiribati' },
+  { id: 'flag_kw', emoji: '🇰🇼', label: 'Kuwait Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Kuwait' },
+  { id: 'flag_kg', emoji: '🇰🇬', label: 'Kyrgyzstan Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Kyrgyzstan' },
+  { id: 'flag_la', emoji: '🇱🇦', label: 'Laos Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Laos' },
+  { id: 'flag_lv', emoji: '🇱🇻', label: 'Latvia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Latvia' },
+  { id: 'flag_lb', emoji: '🇱🇧', label: 'Lebanon Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Lebanon' },
+  { id: 'flag_ls', emoji: '🇱🇸', label: 'Lesotho Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Lesotho' },
+  { id: 'flag_lr', emoji: '🇱🇷', label: 'Liberia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Liberia' },
+  { id: 'flag_ly', emoji: '🇱🇾', label: 'Libya Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Libya' },
+  { id: 'flag_li', emoji: '🇱🇮', label: 'Liechtenstein Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Liechtenstein' },
+  { id: 'flag_lt', emoji: '🇱🇹', label: 'Lithuania Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Lithuania' },
+  { id: 'flag_lu', emoji: '🇱🇺', label: 'Luxembourg Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Luxembourg' },
+  { id: 'flag_mg', emoji: '🇲🇬', label: 'Madagascar Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Madagascar' },
+  { id: 'flag_mw', emoji: '🇲🇼', label: 'Malawi Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Malawi' },
+  { id: 'flag_my', emoji: '🇲🇾', label: 'Malaysia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Malaysia' },
+  { id: 'flag_mv', emoji: '🇲🇻', label: 'Maldives Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Maldives' },
+  { id: 'flag_ml', emoji: '🇲🇱', label: 'Mali Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Mali' },
+  { id: 'flag_mt', emoji: '🇲🇹', label: 'Malta Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Malta' },
+  { id: 'flag_mh', emoji: '🇲🇭', label: 'Marshall Islands Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Marshall Islands' },
+  { id: 'flag_mq', emoji: '🇲🇶', label: 'Martinique Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Martinique' },
+  { id: 'flag_mr', emoji: '🇲🇷', label: 'Mauritania Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Mauritania' },
+  { id: 'flag_mu', emoji: '🇲🇺', label: 'Mauritius Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Mauritius' },
+  { id: 'flag_yt', emoji: '🇾🇹', label: 'Mayotte Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Mayotte' },
+  { id: 'flag_mx', emoji: '🇲🇽', label: 'Mexico Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Mexico' },
+  { id: 'flag_fm', emoji: '🇫🇲', label: 'Micronesia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Micronesia' },
+  { id: 'flag_mc', emoji: '🇲🇨', label: 'Monaco Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Monaco' },
+  { id: 'flag_mn', emoji: '🇲🇳', label: 'Mongolia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Mongolia' },
+  { id: 'flag_me', emoji: '🇲🇪', label: 'Montenegro Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Montenegro' },
+  { id: 'flag_ms', emoji: '🇲🇸', label: 'Montserrat Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Montserrat' },
+  { id: 'flag_ma', emoji: '🇲🇦', label: 'Morocco Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Morocco' },
+  { id: 'flag_mz', emoji: '🇲🇿', label: 'Mozambique Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Mozambique' },
+  { id: 'flag_mm', emoji: '🇲🇲', label: 'Myanmar Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Myanmar' },
+  { id: 'flag_na', emoji: '🇳🇦', label: 'Namibia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Namibia' },
+  { id: 'flag_nr', emoji: '🇳🇷', label: 'Nauru Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Nauru' },
+  { id: 'flag_np', emoji: '🇳🇵', label: 'Nepal Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Nepal' },
+  { id: 'flag_nl', emoji: '🇳🇱', label: 'Netherlands Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Netherlands' },
+  { id: 'flag_nc', emoji: '🇳🇨', label: 'New Caledonia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for New Caledonia' },
+  { id: 'flag_nz', emoji: '🇳🇿', label: 'New Zealand Flag', category: 'Country Flag', cost: 1, description: 'Country flag for New Zealand' },
+  { id: 'flag_ni', emoji: '🇳🇮', label: 'Nicaragua Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Nicaragua' },
+  { id: 'flag_ne', emoji: '🇳🇪', label: 'Niger Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Niger' },
+  { id: 'flag_ng', emoji: '🇳🇬', label: 'Nigeria Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Nigeria' },
+  { id: 'flag_nu', emoji: '🇳🇺', label: 'Niue Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Niue' },
+  { id: 'flag_nf', emoji: '🇳🇫', label: 'Norfolk Island Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Norfolk Island' },
+  { id: 'flag_mp', emoji: '🇲🇵', label: 'Northern Mariana Islands Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Northern Mariana Islands' },
+  { id: 'flag_mk', emoji: '🇲🇰', label: 'North Macedonia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for North Macedonia' },
+  { id: 'flag_no', emoji: '🇳🇴', label: 'Norway Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Norway' },
+  { id: 'flag_om', emoji: '🇴🇲', label: 'Oman Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Oman' },
+  { id: 'flag_pk', emoji: '🇵🇰', label: 'Pakistan Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Pakistan' },
+  { id: 'flag_pw', emoji: '🇵🇼', label: 'Palau Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Palau' },
+  { id: 'flag_pa', emoji: '🇵🇦', label: 'Panama Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Panama' },
+  { id: 'flag_pg', emoji: '🇵🇬', label: 'Papua New Guinea Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Papua New Guinea' },
+  { id: 'flag_py', emoji: '🇵🇾', label: 'Paraguay Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Paraguay' },
+  { id: 'flag_pe', emoji: '🇵🇪', label: 'Peru Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Peru' },
+  { id: 'flag_ph', emoji: '🇵🇭', label: 'Philippines Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Philippines' },
+  { id: 'flag_pn', emoji: '🇵🇳', label: 'Pitcairn Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Pitcairn' },
+  { id: 'flag_pl', emoji: '🇵🇱', label: 'Poland Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Poland' },
+  { id: 'flag_pt', emoji: '🇵🇹', label: 'Portugal Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Portugal' },
+  { id: 'flag_pr', emoji: '🇵🇷', label: 'Puerto Rico Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Puerto Rico' },
+  { id: 'flag_qa', emoji: '🇶🇦', label: 'Qatar Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Qatar' },
+  { id: 'flag_kr', emoji: '🇰🇷', label: 'South Korea Flag', category: 'Country Flag', cost: 1, description: 'Country flag for South Korea' },
+  { id: 'flag_md', emoji: '🇲🇩', label: 'Moldova Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Moldova' },
+  { id: 'flag_re', emoji: '🇷🇪', label: 'Réunion Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Réunion' },
+  { id: 'flag_ro', emoji: '🇷🇴', label: 'Romania Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Romania' },
+  { id: 'flag_ru', emoji: '🇷🇺', label: 'Russia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Russia' },
+  { id: 'flag_rw', emoji: '🇷🇼', label: 'Rwanda Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Rwanda' },
+  { id: 'flag_bl', emoji: '🇧🇱', label: 'St. Barthélemy Flag', category: 'Country Flag', cost: 1, description: 'Country flag for St. Barthélemy' },
+  { id: 'flag_sh', emoji: '🇸🇭', label: 'St. Helena Flag', category: 'Country Flag', cost: 1, description: 'Country flag for St. Helena' },
+  { id: 'flag_kn', emoji: '🇰🇳', label: 'St. Kitts & Nevis Flag', category: 'Country Flag', cost: 1, description: 'Country flag for St. Kitts & Nevis' },
+  { id: 'flag_lc', emoji: '🇱🇨', label: 'St. Lucia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for St. Lucia' },
+  { id: 'flag_mf', emoji: '🇲🇫', label: 'St. Martin Flag', category: 'Country Flag', cost: 1, description: 'Country flag for St. Martin' },
+  { id: 'flag_pm', emoji: '🇵🇲', label: 'St. Pierre & Miquelon Flag', category: 'Country Flag', cost: 1, description: 'Country flag for St. Pierre & Miquelon' },
+  { id: 'flag_vc', emoji: '🇻🇨', label: 'St. Vincent & Grenadines Flag', category: 'Country Flag', cost: 1, description: 'Country flag for St. Vincent & Grenadines' },
+  { id: 'flag_ws', emoji: '🇼🇸', label: 'Samoa Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Samoa' },
+  { id: 'flag_sm', emoji: '🇸🇲', label: 'San Marino Flag', category: 'Country Flag', cost: 1, description: 'Country flag for San Marino' },
+  { id: 'flag_st', emoji: '🇸🇹', label: 'São Tomé & Príncipe Flag', category: 'Country Flag', cost: 1, description: 'Country flag for São Tomé & Príncipe' },
+  { id: 'flag_sa', emoji: '🇸🇦', label: 'Saudi Arabia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Saudi Arabia' },
+  { id: 'flag_sn', emoji: '🇸🇳', label: 'Senegal Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Senegal' },
+  { id: 'flag_rs', emoji: '🇷🇸', label: 'Serbia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Serbia' },
+  { id: 'flag_sc', emoji: '🇸🇨', label: 'Seychelles Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Seychelles' },
+  { id: 'flag_sl', emoji: '🇸🇱', label: 'Sierra Leone Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Sierra Leone' },
+  { id: 'flag_sg', emoji: '🇸🇬', label: 'Singapore Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Singapore' },
+  { id: 'flag_sx', emoji: '🇸🇽', label: 'Sint Maarten Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Sint Maarten' },
+  { id: 'flag_sk', emoji: '🇸🇰', label: 'Slovakia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Slovakia' },
+  { id: 'flag_si', emoji: '🇸🇮', label: 'Slovenia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Slovenia' },
+  { id: 'flag_sb', emoji: '🇸🇧', label: 'Solomon Islands Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Solomon Islands' },
+  { id: 'flag_so', emoji: '🇸🇴', label: 'Somalia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Somalia' },
+  { id: 'flag_za', emoji: '🇿🇦', label: 'South Africa Flag', category: 'Country Flag', cost: 1, description: 'Country flag for South Africa' },
+  { id: 'flag_gs', emoji: '🇬🇸', label: 'South Georgia & South Sandwich Islands Flag', category: 'Country Flag', cost: 1, description: 'Country flag for South Georgia & South Sandwich Islands' },
+  { id: 'flag_ss', emoji: '🇸🇸', label: 'South Sudan Flag', category: 'Country Flag', cost: 1, description: 'Country flag for South Sudan' },
+  { id: 'flag_es', emoji: '🇪🇸', label: 'Spain Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Spain' },
+  { id: 'flag_lk', emoji: '🇱🇰', label: 'Sri Lanka Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Sri Lanka' },
+  { id: 'flag_ps', emoji: '🇵🇸', label: 'Palestine Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Palestine' },
+  { id: 'flag_sd', emoji: '🇸🇩', label: 'Sudan Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Sudan' },
+  { id: 'flag_sr', emoji: '🇸🇷', label: 'Suriname Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Suriname' },
+  { id: 'flag_sj', emoji: '🇸🇯', label: 'Svalbard & Jan Mayen Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Svalbard & Jan Mayen' },
+  { id: 'flag_se', emoji: '🇸🇪', label: 'Sweden Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Sweden' },
+  { id: 'flag_ch', emoji: '🇨🇭', label: 'Switzerland Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Switzerland' },
+  { id: 'flag_sy', emoji: '🇸🇾', label: 'Syria Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Syria' },
+  { id: 'flag_tw', emoji: '🇹🇼', label: 'Taiwan Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Taiwan' },
+  { id: 'flag_tj', emoji: '🇹🇯', label: 'Tajikistan Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Tajikistan' },
+  { id: 'flag_th', emoji: '🇹🇭', label: 'Thailand Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Thailand' },
+  { id: 'flag_tl', emoji: '🇹🇱', label: 'Timor-Leste Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Timor-Leste' },
+  { id: 'flag_tg', emoji: '🇹🇬', label: 'Togo Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Togo' },
+  { id: 'flag_tk', emoji: '🇹🇰', label: 'Tokelau Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Tokelau' },
+  { id: 'flag_to', emoji: '🇹🇴', label: 'Tonga Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Tonga' },
+  { id: 'flag_tt', emoji: '🇹🇹', label: 'Trinidad & Tobago Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Trinidad & Tobago' },
+  { id: 'flag_tn', emoji: '🇹🇳', label: 'Tunisia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Tunisia' },
+  { id: 'flag_tr', emoji: '🇹🇷', label: 'Türkiye Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Türkiye' },
+  { id: 'flag_tm', emoji: '🇹🇲', label: 'Turkmenistan Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Turkmenistan' },
+  { id: 'flag_tc', emoji: '🇹🇨', label: 'Turks & Caicos Islands Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Turks & Caicos Islands' },
+  { id: 'flag_tv', emoji: '🇹🇻', label: 'Tuvalu Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Tuvalu' },
+  { id: 'flag_ug', emoji: '🇺🇬', label: 'Uganda Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Uganda' },
+  { id: 'flag_ua', emoji: '🇺🇦', label: 'Ukraine Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Ukraine' },
+  { id: 'flag_ae', emoji: '🇦🇪', label: 'United Arab Emirates Flag', category: 'Country Flag', cost: 1, description: 'Country flag for United Arab Emirates' },
+  { id: 'flag_gb', emoji: '🇬🇧', label: 'UK Flag', category: 'Country Flag', cost: 1, description: 'Country flag for UK' },
+  { id: 'flag_tz', emoji: '🇹🇿', label: 'Tanzania Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Tanzania' },
+  { id: 'flag_um', emoji: '🇺🇲', label: 'U.S. Outlying Islands Flag', category: 'Country Flag', cost: 1, description: 'Country flag for U.S. Outlying Islands' },
+  { id: 'flag_us', emoji: '🇺🇸', label: 'US Flag', category: 'Country Flag', cost: 1, description: 'Country flag for US' },
+  { id: 'flag_vi', emoji: '🇻🇮', label: 'U.S. Virgin Islands Flag', category: 'Country Flag', cost: 1, description: 'Country flag for U.S. Virgin Islands' },
+  { id: 'flag_uy', emoji: '🇺🇾', label: 'Uruguay Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Uruguay' },
+  { id: 'flag_uz', emoji: '🇺🇿', label: 'Uzbekistan Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Uzbekistan' },
+  { id: 'flag_vu', emoji: '🇻🇺', label: 'Vanuatu Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Vanuatu' },
+  { id: 'flag_ve', emoji: '🇻🇪', label: 'Venezuela Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Venezuela' },
+  { id: 'flag_vn', emoji: '🇻🇳', label: 'Vietnam Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Vietnam' },
+  { id: 'flag_wf', emoji: '🇼🇫', label: 'Wallis & Futuna Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Wallis & Futuna' },
+  { id: 'flag_eh', emoji: '🇪🇭', label: 'Western Sahara Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Western Sahara' },
+  { id: 'flag_ye', emoji: '🇾🇪', label: 'Yemen Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Yemen' },
+  { id: 'flag_zm', emoji: '🇿🇲', label: 'Zambia Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Zambia' },
+  { id: 'flag_zw', emoji: '🇿🇼', label: 'Zimbabwe Flag', category: 'Country Flag', cost: 1, description: 'Country flag for Zimbabwe' }
+];
+
+function getSupplyItemById(itemId) {
+    return [...emojiSupply, ...countryFlagSupply].find(item => item.id === itemId || item.emoji === itemId) || null;
+}
+
+function purchaseEmojiSupply(itemId, targetPostId) {
+    const user = users[CURRENT_USER];
+    const item = getSupplyItemById(itemId);
+    if (!user || !item) return { error: 'Invalid emoji gift.' };
+    if (user.balance < item.cost) return { error: 'Insufficient Pi balance.' };
+
+    user.balance -= item.cost;
+    const tx = {
+        id: generateTxId(),
+        type: 'emoji-gift',
+        name: `Purchased ${item.label}`,
+        amount: -item.cost,
+        date: formatDate(new Date()),
+        status: 'completed',
+        metadata: { itemId, targetPostId: targetPostId || null }
+    };
+    user.transactions.unshift(tx);
+
+    if (targetPostId) {
+        const post = getPostById(targetPostId);
+        if (post) {
+            if (!post.gifts[itemId]) {
+                post.gifts[itemId] = 0;
+            }
+            post.gifts[itemId] += 1;
+        }
+    }
+
+    return { item, balance: user.balance, giftBalance: user.giftBalance || 0, transaction: tx };
+}
+
+function getPostById(postId) {
+    return socialPosts.find(post => post.id === postId);
+}
+
+function addReaction(postId, reactionType) {
+    const post = getPostById(postId);
+    if (!post) return null;
+
+    const normalized = String(reactionType || '').toLowerCase();
+    if (!normalized) return null;
+
+    if (!post.reactions[normalized]) {
+        post.reactions[normalized] = 0;
+    }
+    post.reactions[normalized] += 1;
+    return post;
+}
+
+function addGift(postId, giftType) {
+    const user = users[CURRENT_USER];
+    const post = getPostById(postId);
+    const gift = giftCatalog[giftType];
+
+    if (!user || !post || !gift) return { error: 'Invalid gift or post.' };
+    if (user.balance < gift.cost) return { error: 'Insufficient Pi balance.' };
+
+    user.balance -= gift.cost;
+    if (!post.gifts[giftType]) {
+        post.gifts[giftType] = 0;
+    }
+    post.gifts[giftType] += 1;
+
+    const tx = {
+        id: generateTxId(),
+        type: 'gift',
+        name: `${gift.label} to ${post.user}`,
+        amount: -gift.cost,
+        date: formatDate(new Date()),
+        status: 'completed'
+    };
+    user.transactions.unshift(tx);
+
+    return { post, balance: user.balance, giftBalance: user.giftBalance || 0 };
+}
+
+app.get('/api/feed', (req, res) => {
+    res.json({ posts: socialPosts });
+});
+
+app.get('/api/user', (req, res) => {
+    const user = users[CURRENT_USER];
+    if (!user) {
+        return res.status(404).json({ error: 'User not found.' });
+    }
+    res.json({ id: user.id, username: user.username, name: user.name, balance: user.balance, giftBalance: user.giftBalance || 0 });
+});
+
+app.post('/api/feed/:id/reactions', (req, res) => {
+    const postId = req.params.id;
+    const { reaction } = req.body;
+
+    if (!reaction) {
+        return res.status(400).json({ error: 'Reaction type is required.' });
+    }
+
+    const updatedPost = addReaction(postId, reaction);
+    if (!updatedPost) {
+        return res.status(404).json({ error: 'Post not found or invalid reaction.' });
+    }
+    res.json(updatedPost);
+});
+
+app.post('/api/feed/:id/gift', (req, res) => {
+    const postId = req.params.id;
+    const { gift } = req.body;
+
+    if (!gift) {
+        return res.status(400).json({ error: 'Gift type is required.' });
+    }
+
+    const result = addGift(postId, gift);
+    if (result.error) {
+        const status = result.error === 'Insufficient Pi balance.' ? 402 : 400;
+        return res.status(status).json({ error: result.error });
+    }
+
+    res.json(result);
+});
+
+app.get('/api/products', (req, res) => {
+    const products = marketplaceProducts.map(product => {
+        const stats = getProductStats(product.id);
+        return {
+            id: product.id,
+            title: product.title,
+            price: product.price,
+            image: product.image,
+            category: product.category,
+            brand: product.brand,
+            tag: product.tag,
+            reactions: stats.reactions,
+            gifts: stats.gifts
+        };
+    });
+    res.json({ products });
+});
+
+app.post('/api/products/:id/reactions', (req, res) => {
+    const productId = req.params.id;
+    const { reaction } = req.body;
+
+    if (!reaction) {
+        return res.status(400).json({ error: 'Reaction type is required.' });
+    }
+
+    const updatedStats = addProductReaction(productId, reaction);
+    if (!updatedStats) {
+        return res.status(404).json({ error: 'Product not found or invalid reaction.' });
+    }
+
+    res.json({ id: productId, reactions: updatedStats.reactions, gifts: updatedStats.gifts });
+});
+
+app.post('/api/products/:id/gift', (req, res) => {
+    const productId = req.params.id;
+    const { gift } = req.body;
+
+    if (!gift) {
+        return res.status(400).json({ error: 'Gift type is required.' });
+    }
+
+    const result = addProductGift(productId, gift);
+    if (result.error) {
+        const status = result.error === 'Insufficient Pi balance.' ? 402 : 400;
+        return res.status(status).json({ error: result.error });
+    }
+
+    res.json(result);
+});
+
+app.get('/api/emoji-supply', (req, res) => {
+    res.json({ items: [...emojiSupply, ...countryFlagSupply] });
+});
+
+app.post('/api/emoji-supply/:id/purchase', (req, res) => {
+    const itemId = req.params.id;
+    const { targetPostId } = req.body || {};
+
+    if (!itemId) {
+        return res.status(400).json({ error: 'Emoji gift ID is required.' });
+    }
+
+    const result = purchaseEmojiSupply(itemId, targetPostId);
+    if (result.error) {
+        const status = result.error === 'Insufficient Pi balance.' ? 402 : 400;
+        return res.status(status).json({ error: result.error });
+    }
+
+    res.json(result);
+});
 
 // --------------- Language catalog ---------------
 const languageCatalog = {
@@ -307,6 +900,7 @@ app.get('/api/user', (req, res) => {
         username: user.username,
         name: user.name,
         balance: user.balance,
+        giftBalance: user.giftBalance || 0,
         piAddress: user.piAddress,
         cardType: user.cardType
     });
@@ -337,6 +931,60 @@ app.get('/api/transactions', (req, res) => {
     // Return newest first
     const sorted = [...user.transactions].sort((a, b) => new Date(b.date) - new Date(a.date));
     res.json({ transactions: sorted });
+});
+
+/** Adjust wallet balance & record a transaction (used by emoji marketplace) */
+app.post('/api/wallet/adjust', (req, res) => {
+    const user = users[CURRENT_USER];
+    if (!user) return res.status(404).json({ error: 'User not found' });
+    const { amount, type, name } = req.body || {};
+    const parsed = parseFloat(amount);
+    if (!Number.isFinite(parsed)) return res.status(400).json({ error: 'Invalid amount' });
+    const newBalance = user.balance + parsed;
+    if (newBalance < 0) return res.status(400).json({ error: 'Insufficient balance', balance: user.balance });
+    user.balance = newBalance;
+    const tx = {
+        id: generateTxId(),
+        type: type || (parsed >= 0 ? 'recv' : 'sent'),
+        name: name || 'Emoji marketplace',
+        amount: parsed,
+        date: new Date().toISOString(),
+        status: 'completed'
+    };
+    user.transactions.unshift(tx);
+    res.json({ success: true, balance: user.balance, transaction: tx });
+});
+
+/** Emoji gift inbox (shared across users for the demo) */
+const emojiGifts = [];
+
+app.get('/api/emoji/gifts', (req, res) => {
+    const { postId, recipient, limit } = req.query;
+    let list = emojiGifts;
+    if (postId) list = list.filter(g => (g.postId || '') === String(postId));
+    if (recipient) list = list.filter(g => g.recipient === String(recipient).replace(/^@/, ''));
+    const n = Math.min(parseInt(limit, 10) || 50, 200);
+    res.json({ success: true, gifts: list.slice(0, n) });
+});
+
+app.post('/api/emoji/gifts', (req, res) => {
+    const { emoji, label, id, recipient, postId, value } = req.body || {};
+    if (!emoji || !recipient) return res.status(400).json({ error: 'emoji and recipient required' });
+    const v = parseFloat(value);
+    const gift = {
+        giftId: generateTxId(),
+        id: String(id || '').slice(0, 64),
+        emoji: String(emoji).slice(0, 16),
+        label: String(label || '').slice(0, 80),
+        recipient: String(recipient).replace(/^@/, '').slice(0, 64),
+        postId: String(postId || '').slice(0, 64),
+        value: Number.isFinite(v) ? v : 0,
+        sender: users[CURRENT_USER]?.username || 'anonymous',
+        ts: Date.now()
+    };
+    emojiGifts.unshift(gift);
+    if (emojiGifts.length > 500) emojiGifts.length = 500;
+    res.json({ success: true, gift });
 });
 
 /** Send Pi to another user */

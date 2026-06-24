@@ -172,12 +172,12 @@ function piA2UPayment(amount,memo,metadata,onSuccess,onError){
         <div class="atm-box">
             <div class="atm-row">
                 <div class="inline-style-9">
-                    <label>Amount (π)</label>
+                    <label for="atmAmount">Amount (π)</label>
                     <input type="number" id="atmAmount" placeholder="0.00" min="0.01" step="0.01">
                 </div>
                 <div class="inline-style-9">
-                    <label>Currency</label>
-                    <select id="atmCurrency">
+                    <label for="atmCurrency">Currency</label>
+                    <select id="atmCurrency" aria-label="ATM currency">
                         <option value="USD">USD — US Dollar</option>
                         <option value="EUR">EUR — Euro</option>
                         <option value="GBP">GBP — British Pound</option>
@@ -205,12 +205,12 @@ function piA2UPayment(amount,memo,metadata,onSuccess,onError){
         <div class="swap-box">
             <div class="atm-row">
                 <div class="inline-style-9">
-                    <label>Amount</label>
+                    <label for="swapAmount">Amount</label>
                     <input type="number" id="swapAmount" placeholder="0.00" min="0.01" step="0.01">
                 </div>
                 <div class="inline-style-9">
-                    <label>From</label>
-                    <select id="swapFrom">
+                    <label for="swapFrom">From</label>
+                    <select id="swapFrom" aria-label="Swap from currency">
                         <option value="PI">Pi (π)</option>
                         <option value="BTC">Bitcoin (BTC)</option>
                         <option value="ETH">Ethereum (ETH)</option>
@@ -223,8 +223,8 @@ function piA2UPayment(amount,memo,metadata,onSuccess,onError){
             <div class="swap-arrow">⇅</div>
             <div class="atm-row">
                 <div class="inline-style-9">
-                    <label>To</label>
-                    <select id="swapTo">
+                    <label for="swapTo">To</label>
+                    <select id="swapTo" aria-label="Swap to currency">
                         <option value="USD">USD</option>
                         <option value="EUR">EUR</option>
                         <option value="GBP">GBP</option>
@@ -245,6 +245,16 @@ function piA2UPayment(amount,memo,metadata,onSuccess,onError){
                 <div class="out" id="swapOut">0.00</div>
             </div>
         </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="section">
+        <h2><span>📋</span> Recent Activity</h2>
+        <div class="activity-actions">
+            <button class="btn btn-primary" onclick="addTestTransaction()">➕ Add Test Transaction</button>
+            <button class="btn btn-secondary" onclick="clearAllTransactions()">🗑️ Clear History</button>
+        </div>
+        <div id="transactionHistory" class="transaction-list"></div>
     </div>
 
     <!-- Payment Types -->
@@ -366,6 +376,7 @@ function sendPiToCard() {
         piCreatePayment(amt, 'Send ' + amt + ' π to Visa card ' + addr.substring(0,8) + '...', {to: addr, card:'visa'}, function(pid,txid) {
             status.style.display='block'; status.style.background='rgba(39,174,96,.15)'; status.style.color='#27ae60'; status.textContent='✅ Sent ' + amt + ' π — TxID: ' + (txid||pid).substring(0,12) + '...';
             document.getElementById('sendAmount').value='';
+            addTransaction('send', amt, 'Sent to ' + addr.substring(0,12) + '...', 'completed');
         }, function(err) {
             status.style.display='block'; status.style.background='rgba(231,76,60,.15)'; status.style.color='#e74c3c'; status.textContent='Payment failed: ' + (err||'cancelled');
         });
@@ -421,8 +432,125 @@ function calcSwap() {
     document.getElementById('swapResult').style.display = 'block';
 }
 
+/* ── Transaction History ── */
+const TX_STORAGE_KEY = 'visa_card_transactions';
+
+function loadTransactions() {
+    try {
+        const stored = localStorage.getItem(TX_STORAGE_KEY);
+        return stored ? JSON.parse(stored) : [];
+    } catch(e) { return []; }
+}
+
+function saveTransactions(txList) {
+    try {
+        localStorage.setItem(TX_STORAGE_KEY, JSON.stringify(txList.slice(0, 50)));
+    } catch(e) {}
+}
+
+function addTransaction(type, amount, description, status = 'completed') {
+    const txList = loadTransactions();
+    const tx = {
+        id: 'tx_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+        type: type,
+        amount: amount,
+        description: description,
+        status: status,
+        timestamp: Date.now(),
+        date: new Date().toLocaleString()
+    };
+    txList.unshift(tx);
+    saveTransactions(txList);
+    renderTransactions();
+    return tx;
+}
+
+function renderTransactions() {
+    const txList = loadTransactions();
+    const container = document.getElementById('transactionHistory');
+    if (!container) return;
+
+    if (txList.length === 0) {
+        container.innerHTML = '<div class="tx-empty">No transactions yet. Click "Add Test Transaction" to simulate activity.</div>';
+        return;
+    }
+
+    let html = '';
+    txList.forEach(function(tx) {
+        const icon = tx.type === 'send' ? '📤' : tx.type === 'receive' ? '📥' :
+                     tx.type === 'atm' ? '🏧' : tx.type === 'swap' ? '🔄' :
+                     tx.type === 'purchase' ? '🛒' : '💳';
+        const amountClass = tx.type === 'receive' ? 'tx-positive' : 'tx-negative';
+        const sign = tx.type === 'receive' ? '+' : '-';
+        const statusBadge = tx.status === 'completed' ? '<span class="tx-status tx-completed">✓</span>' :
+                           tx.status === 'pending' ? '<span class="tx-status tx-pending">⏳</span>' :
+                           '<span class="tx-status tx-failed">✗</span>';
+
+        html += '<div class="tx-item">' +
+                '<div class="tx-icon">' + icon + '</div>' +
+                '<div class="tx-details">' +
+                '<div class="tx-desc">' + tx.description + '</div>' +
+                '<div class="tx-date">' + tx.date + '</div>' +
+                '</div>' +
+                '<div class="tx-amount-box">' +
+                '<div class="tx-amount ' + amountClass + '">' + sign + 'π' + tx.amount.toFixed(4) + '</div>' +
+                statusBadge +
+                '</div>' +
+                '</div>';
+    });
+
+    container.innerHTML = html;
+}
+
+function addTestTransaction() {
+    const types = ['send', 'receive', 'atm', 'swap', 'purchase'];
+    const descriptions = {
+        send: ['Sent to @alice', 'Payment to @bob_crypto', 'Transfer to @carol_pi', 'Sent to @david2024'],
+        receive: ['Received from @eve', 'Payment from @frank', 'Transfer from @grace', 'Income from @heidi'],
+        atm: ['ATM Withdrawal - USD', 'ATM Withdrawal - EUR', 'ATM Withdrawal - GBP', 'ATM Withdrawal - NGN'],
+        swap: ['Swapped π to BTC', 'Swapped π to ETH', 'Swapped π to USDT', 'Swapped BTC to π'],
+        purchase: ['Purchase at Shop.Pi', 'Payment to Merchant', 'Online Purchase', 'Subscription Payment']
+    };
+
+    const type = types[Math.floor(Math.random() * types.length)];
+    const descList = descriptions[type];
+    const description = descList[Math.floor(Math.random() * descList.length)];
+    const amount = (Math.random() * 50 + 0.5).toFixed(4);
+    const statuses = ['completed', 'completed', 'completed', 'pending'];
+    const status = statuses[Math.floor(Math.random() * statuses.length)];
+
+    addTransaction(type, parseFloat(amount), description, status);
+
+    const msg = document.createElement('div');
+    msg.className = 'toast-notification';
+    msg.textContent = '✓ Test transaction added';
+    document.body.appendChild(msg);
+    setTimeout(function() { msg.remove(); }, 2000);
+}
+
+function clearAllTransactions() {
+    if (!confirm('Clear all transaction history?')) return;
+    localStorage.removeItem(TX_STORAGE_KEY);
+    renderTransactions();
+}
+
+function initDemoTransactions() {
+    const existing = loadTransactions();
+    if (existing.length > 0) return;
+
+    addTransaction('receive', 25.5000, 'Initial Pi deposit', 'completed');
+    setTimeout(function() { addTransaction('send', 5.2500, 'Sent to @alice', 'completed'); }, 100);
+    setTimeout(function() { addTransaction('purchase', 12.7500, 'Purchase at Shop.Pi', 'completed'); }, 200);
+    setTimeout(function() { addTransaction('atm', 3.0000, 'ATM Withdrawal - USD', 'completed'); }, 300);
+    setTimeout(function() { addTransaction('swap', 2.5000, 'Swapped π to BTC', 'completed'); }, 400);
+    setTimeout(function() { addTransaction('receive', 8.3500, 'Payment from @bob', 'pending'); }, 500);
+}
+
 fetchPrice();
 setInterval(fetchPrice, 60000);
+initDemoTransactions();
+renderTransactions();
+
 </script>
 </div><!-- /cardContent -->
 </body>

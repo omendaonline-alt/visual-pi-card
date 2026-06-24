@@ -134,12 +134,12 @@ function piA2UPayment(amount,memo,metadata,onSuccess,onError){
         <div class="convert-box inline-style-10" id="ptConvertBox" >
             <div class="convert-row">
                 <div class="inline-style-11">
-                    <label>Amount (π)</label>
+                    <label for="ptConvertAmt">Amount (π)</label>
                     <input type="number" id="ptConvertAmt" placeholder="1" min="0" step="0.01">
                 </div>
                 <div class="inline-style-11">
-                    <label>Convert To</label>
-                    <select id="ptConvertTarget">
+                    <label for="ptConvertTarget">Convert To</label>
+                    <select id="ptConvertTarget" aria-label="Convert target">
                         <option value="usd">USD ($)</option>
                         <option value="btc">Bitcoin (BTC)</option>
                         <option value="eth">Ethereum (ETH)</option>
@@ -167,7 +167,7 @@ function piA2UPayment(amount,memo,metadata,onSuccess,onError){
             <div class="sched-form">
                 <input type="text" id="schedRecipient" placeholder="@recipient">
                 <input type="number" id="schedAmount" placeholder="Amount (π)" min="0.01" step="0.01">
-                <select id="schedFreq">
+                <select id="schedFreq" aria-label="Schedule frequency">
                     <option value="daily">Daily</option>
                     <option value="weekly" selected>Weekly</option>
                     <option value="monthly">Monthly</option>
@@ -212,11 +212,11 @@ function piA2UPayment(amount,memo,metadata,onSuccess,onError){
             <div class="wallet-card"><div class="w-icon">🎯</div><div class="w-name">Goals</div><div class="w-bal" id="walGoal">0.00 π</div></div>
         </div>
         <div class="inline-style-15">
-            <select id="walFrom" class="inline-style-16">
+            <select id="walFrom" class="inline-style-16" aria-label="Wallet from">
                 <option value="main">Main</option><option value="savings">Savings</option><option value="shopping">Shopping</option><option value="goals">Goals</option>
             </select>
             <span class="inline-style-17">→</span>
-            <select id="walTo" class="inline-style-16">
+            <select id="walTo" class="inline-style-16" aria-label="Wallet to">
                 <option value="savings">Savings</option><option value="main">Main</option><option value="shopping">Shopping</option><option value="goals">Goals</option>
             </select>
             <input type="number" id="walAmt" placeholder="Amount" min="0.01" step="0.01" class="inline-style-18">

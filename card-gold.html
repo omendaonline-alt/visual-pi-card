@@ -140,12 +140,12 @@ function piA2UPayment(amount,memo,metadata,onSuccess,onError){
         <div class="calc-box">
             <div class="calc-row">
                 <div class="inline-style-9">
-                    <label>Monthly Spending (π)</label>
+                    <label for="calcSpend">Monthly Spending (π)</label>
                     <input type="number" id="calcSpend" placeholder="100" min="0" step="1">
                 </div>
                 <div class="inline-style-9">
-                    <label>Category</label>
-                    <select id="calcCategory" class="inline-style-10">
+                    <label for="calcCategory">Category</label>
+                    <select id="calcCategory" class="inline-style-10" aria-label="Calculator category">
                         <option value="0.01">General (1%)</option>
                         <option value="0.015">Digital (1.5%)</option>
                         <option value="0.02" selected>Shopping (2%)</option>
@@ -203,12 +203,12 @@ function piA2UPayment(amount,memo,metadata,onSuccess,onError){
         <div class="convert-box inline-style-15" id="convertBox" >
             <div class="convert-row">
                 <div class="inline-style-9">
-                    <label>Amount (π)</label>
+                    <label for="convertAmount">Amount (π)</label>
                     <input type="number" id="convertAmount" placeholder="1" min="0" step="0.01">
                 </div>
                 <div class="inline-style-9">
-                    <label>Convert To</label>
-                    <select id="convertTarget">
+                    <label for="convertTarget">Convert To</label>
+                    <select id="convertTarget" aria-label="Convert target currency">
                         <option value="usd">USD ($)</option>
                         <option value="btc">Bitcoin (BTC)</option>
                         <option value="eth">Ethereum (ETH)</option>

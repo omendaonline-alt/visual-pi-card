@@ -118,12 +118,12 @@ function piA2UPayment(amount,memo,metadata,onSuccess,onError){
         <div class="convert-box">
             <div class="conv-row">
                 <div class="inline-style-9">
-                    <label>Points to Convert</label>
+                    <label for="convPoints">Points to Convert</label>
                     <input type="number" id="convPoints" placeholder="500" min="1" step="1">
                 </div>
                 <div class="inline-style-9">
-                    <label>Convert To</label>
-                    <select id="convTarget">
+                    <label for="convTarget">Convert To</label>
+                    <select id="convTarget" aria-label="Convert target">
                         <option value="pi">Pi (π) — 100 pts = 1 π</option>
                         <option value="flights">Flight Miles — 1:1</option>
                         <option value="hotels">Hotel Credits — 100 pts = $1</option>

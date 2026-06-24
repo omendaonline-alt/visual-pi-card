@@ -104,7 +104,7 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="regCountry">Country</label>
-                        <select id="regCountry" required>
+                        <select id="regCountry" required aria-label="Country">
                             <option value="">Select country</option>
                             <option value="US">United States</option>
                             <option value="GB">United Kingdom</option>
@@ -132,7 +132,7 @@
                     </div>
                     <div class="form-group">
                         <label for="regCardType">Preferred Card</label>
-                        <select id="regCardType" onchange="updateCardPrice()">
+                        <select id="regCardType" onchange="updateCardPrice()" aria-label="Card type">
                             <option value="mastercard">Mastercard — FREE</option>
                             <option value="visa">Visa — 5 π</option>
                             <option value="gold">Gold</option>
@@ -474,9 +474,9 @@
                 <div class="inline-style-22">Live from market data</div>
             </div>
 
-            <label>From</label>
+            <label for="swapFrom">From</label>
             <div class="swap-from-to">
-                <select id="swapFrom">
+                <select id="swapFrom" aria-label="Swap from currency">
                     <option value="PI">Pi (&pi;)</option>
                     <option value="BTC">Bitcoin (BTC)</option>
                     <option value="ETH">Ethereum (ETH)</option>
@@ -485,7 +485,7 @@
                     <option value="SOL">Solana (SOL)</option>
                 </select>
                 <span class="swap-arrow">&#8594;</span>
-                <select id="swapTo">
+                <select id="swapTo" aria-label="Swap to currency">
                     <option value="USD">US Dollar (USD)</option>
                     <option value="EUR">Euro (EUR)</option>
                     <option value="GBP">Pound (GBP)</option>
@@ -535,7 +535,7 @@
             </div>
 
             <label for="atmCurrency">Receive In</label>
-            <select id="atmCurrency" onchange="updateAtmEstimate()">
+            <select id="atmCurrency" onchange="updateAtmEstimate()" aria-label="ATM currency">
                 <option value="USD">US Dollar (USD)</option>
                 <option value="EUR">Euro (EUR)</option>
                 <option value="GBP">Pound (GBP)</option>
