@@ -1,7 +1,7 @@
 <#
     Visual Pi Card - Auto Deploy to cPanel
     Domain: omendapipaysglobel.online
-    Server: 198.54.116.227
+    Server: 109.199.109.143
 
     This script uploads all required files to your cPanel hosting.
     Run: .\deploy.ps1
@@ -10,14 +10,14 @@
 Write-Host ""
 Write-Host "  ========================================" -ForegroundColor Yellow
 Write-Host "  VISUAL PI CARD - AUTO DEPLOY" -ForegroundColor Yellow
-Write-Host "  omendapipaysglobel.online (198.54.116.227)" -ForegroundColor Yellow
+Write-Host "  omendapipaysglobel.online (109.199.109.143)" -ForegroundColor Yellow
 Write-Host "  ========================================" -ForegroundColor Yellow
 Write-Host ""
 
 # ===== CONFIGURATION =====
 $DOMAIN = "omendapipaysglobel.online"
-$SERVER_IP = "198.54.116.227"
-$FTP_HOST = "ftp.$DOMAIN"
+$SERVER_IP = "109.199.109.143"
+$FTP_HOST = $DOMAIN
 $REMOTE_DIR = "/public_html"
 
 # Files to deploy
