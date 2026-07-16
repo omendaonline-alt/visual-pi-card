@@ -10,16 +10,25 @@ jobs:
   ftp-deploy:
     name: Deploy to omendapipaysglobel.online
     runs-on: ubuntu-latest
+    env:
+      FTP_DEPLOY_USERNAME: ${{ secrets.FTP_USERNAME || secrets.FTP_USER }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Validate FTP credentials
+        run: |
+          if [ -z "${FTP_DEPLOY_USERNAME}" ]; then
+            echo "::error::Missing FTP username secret. Configure FTP_USERNAME or FTP_USER for this repository."
+            exit 1
+          fi
+
       - name: Deploy site via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.0
         with:
           server: ftp.omendapipaysglobel.online
-          username: ${{ secrets.FTP_USERNAME }}
+          username: ${{ env.FTP_DEPLOY_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           protocol: ftp
           local-dir: './'
