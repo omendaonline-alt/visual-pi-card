@@ -18,7 +18,7 @@ jobs:
       - name: Deploy site via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.0
         with:
-          server: ftp.omendapipaysglobel.online
+          server: omendapipaysglobel.online
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           protocol: ftp

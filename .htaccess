@@ -3,8 +3,8 @@ ErrorDocument 404 /index.html
 
 RewriteEngine On
 
-# ===== Force domain: redirect IP (198.54.116.227) to omendapipaysglobel.online =====
-RewriteCond %{HTTP_HOST} ^198\.54\.116\.227$ [OR]
+# ===== Force domain: redirect IP (109.199.109.143) to omendapipaysglobel.online =====
+RewriteCond %{HTTP_HOST} ^109\.199\.109\.143$ [OR]
 RewriteCond %{HTTP_HOST} ^www\.pivisualcard\.online$
 RewriteRule ^(.*)$ https://omendapipaysglobel.online/$1 [L,R=301]
 

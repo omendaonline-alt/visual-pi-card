@@ -22,6 +22,7 @@
     <!-- PWA / Mobile --><meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Visual Pi Card">
+    <link rel="apple-touch-icon" sizes="192x192" href="icon-192.svg">
     <link rel="manifest" href="manifest.json">
 
     <!-- DNS Prefetch for performance -->
@@ -185,7 +186,7 @@
     <!-- CONNECTION INFO BANNER (shows on first visit) -->
     <div id="setupBanner" class="inline-style-7">
         <strong class="inline-style-8">&#10003; Domain Connected Successfully</strong><br>
-        <span class="inline-style-9">omendapipaysglobel.online &bull; 198.54.116.227 &bull; SSL Active</span>
+        <span class="inline-style-9">omendapipaysglobel.online &bull; 109.199.109.143 &bull; SSL Active</span>
         <div class="inline-style-10">
             <button onclick="document.getElementById('setupBanner').style.display='none'; try{localStorage.setItem('pvc_setup_seen','1')}catch(e){}" class="inline-style-11">Got it</button>
         </div>
@@ -550,7 +551,7 @@
 
             <label>From</label>
             <div class="swap-from-to">
-                <select id="swapFrom">
+                <select id="swapFrom" aria-label="Swap from currency">
                     <option value="PI">Pi (&pi;)</option>
                     <option value="BTC">Bitcoin (BTC)</option>
                     <option value="ETH">Ethereum (ETH)</option>
@@ -559,7 +560,7 @@
                     <option value="SOL">Solana (SOL)</option>
                 </select>
                 <span class="swap-arrow">&#8594;</span>
-                <select id="swapTo">
+                <select id="swapTo" aria-label="Swap to currency">
                     <option value="USD">US Dollar (USD)</option>
                     <option value="EUR">Euro (EUR)</option>
                     <option value="GBP">Pound (GBP)</option>
@@ -631,7 +632,7 @@
         /* ===== CONFIG ===== */
         var STORAGE_KEY = 'pivisualcard_data';
         var DOMAIN = 'omendapipaysglobel.online';
-        var SERVER_IP = '198.54.116.227';
+        var SERVER_IP = '109.199.109.143';
 
         /* ===== STATE ===== */
         let balance = 1247.83;
