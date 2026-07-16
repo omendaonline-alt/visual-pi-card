@@ -25,11 +25,26 @@ $DEPLOY_FILES = @(
     "index.html",
     ".htaccess",
     ".env",
+    "styles.css",
     "manifest.json",
     "sw.js",
     "server.js",
     "package.json",
+    "package-lock.json",
     "setup.html",
+    "shop.html",
+    "map.html",
+    "ride.html",
+    "records.html",
+    "omenda-ai.html",
+    "about.html",
+    "cards.html",
+    "form.html",
+    "post product.html",
+    "social.html",
+    "whitepaper.html",
+    "contracts.html",
+    "contract-request.js",
     "pi visual card.html",
     "card-visa.html",
     "card-mastercard.html",
@@ -37,6 +52,11 @@ $DEPLOY_FILES = @(
     "card-platinum.html",
     "card-black.html",
     "card-amex.html",
+    "contracts/house-building.html",
+    "contracts/road-contracts.html",
+    "contracts/industry-projects.html",
+    "contracts/mining-minerals.html",
+    "contracts/tourism-projects.html",
     "icon-192.svg"
 )
 
@@ -106,6 +126,37 @@ $ftpPass = [Runtime.InteropServices.Marshal]::PtrToStringAuto(
 Write-Host ""
 Write-Host "  Uploading files to $FTP_HOST..." -ForegroundColor White
 
+$createdRemoteDirs = @{}
+function Ensure-RemoteDirectory {
+    param([string]$FilePath)
+
+    $dir = Split-Path -Parent $FilePath
+    if ([string]::IsNullOrWhiteSpace($dir)) { return }
+
+    $current = $REMOTE_DIR.TrimEnd('/')
+    foreach ($part in ($dir -split '[\\/]')) {
+        if ([string]::IsNullOrWhiteSpace($part)) { continue }
+        $current = "$current/$part"
+        if ($createdRemoteDirs.ContainsKey($current)) { continue }
+
+        try {
+            $dirRequest = [System.Net.FtpWebRequest]::Create("ftp://$FTP_HOST$current")
+            $dirRequest.Method = [System.Net.WebRequestMethods+Ftp]::MakeDirectory
+            $dirRequest.Credentials = New-Object System.Net.NetworkCredential($ftpUser, $ftpPass)
+            $dirRequest.UsePassive = $true
+            $dirRequest.EnableSsl = $false
+            $dirRequest.KeepAlive = $false
+            $dirResponse = $dirRequest.GetResponse()
+            $dirResponse.Close()
+            Write-Host "    CREATED   $current" -ForegroundColor Green
+        } catch {
+            # Folder may already exist on the hosting account.
+        }
+
+        $createdRemoteDirs[$current] = $true
+    }
+}
+
 $success = 0
 $failed = 0
 
@@ -114,6 +165,7 @@ foreach ($file in $DEPLOY_FILES) {
     $remotePath = "ftp://$FTP_HOST$REMOTE_DIR/$file"
 
     try {
+        Ensure-RemoteDirectory $file
         $ftpRequest = [System.Net.FtpWebRequest]::Create($remotePath)
         $ftpRequest.Method = [System.Net.WebRequestMethods+Ftp]::UploadFile
         $ftpRequest.Credentials = New-Object System.Net.NetworkCredential($ftpUser, $ftpPass)

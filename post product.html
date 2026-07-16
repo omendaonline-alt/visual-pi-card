@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Post Product - Omenda Pi Pays Global</title>
+  <link rel="icon" type="image/svg+xml" href="icon-192.svg">
+  <style>
+    body{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;margin:0;background:#f8fafc;color:#111827}
+    header{padding:18px 20px;background:#1e1245;color:#fff;display:flex;justify-content:space-between;gap:14px;align-items:center}
+    header a{color:#f8d866;text-decoration:none;font-weight:800}
+    main{max-width:680px;margin:24px auto;padding:0 16px}
+    form{background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:18px;display:grid;gap:12px;box-shadow:0 14px 40px rgba(15,23,42,.08)}
+    label{font-weight:800;font-size:.9rem}
+    input,textarea,select{width:100%;box-sizing:border-box;border:1px solid #d1d5db;border-radius:8px;padding:11px;font:inherit}
+    button{border:0;border-radius:8px;padding:12px 16px;background:#c0392b;color:#fff;font-weight:900;cursor:pointer}
+    .msg{margin-top:14px;padding:12px;border-radius:8px;background:#ecfdf5;color:#166534;display:none}
+  </style>
+</head>
+<body>
+  <header><strong>Post Product</strong><a href="shop.html">Back to Marketplace</a></header>
+  <main>
+    <form id="productForm">
+      <label>Product name<input id="title" required placeholder="Example: Solar charger"></label>
+      <label>Price in Pi<input id="price" required placeholder="0.001"></label>
+      <label>Category<select id="category"><option>Electronics</option><option>Fashion</option><option>Home & Garden</option><option>Cars</option><option>Real Estate</option></select></label>
+      <label>Description<textarea id="description" rows="4" placeholder="Describe your product"></textarea></label>
+      <button type="submit">Save Product Locally</button>
+    </form>
+    <div class="msg" id="msg">Product saved locally. Marketplace publishing integration can read `omendaSellerProducts` next.</div>
+  </main>
+  <script>
+    document.getElementById('productForm').onsubmit=function(e){
+      e.preventDefault();
+      var rows=[];
+      try{rows=JSON.parse(localStorage.getItem('omendaSellerProducts')||'[]')}catch(err){}
+      rows.unshift({title:title.value.trim(),price:price.value.trim(),category:category.value,description:description.value.trim(),createdAt:new Date().toISOString()});
+      localStorage.setItem('omendaSellerProducts',JSON.stringify(rows.slice(0,50)));
+      document.getElementById('msg').style.display='block';
+      this.reset();
+    };
+  </script>
+</body>
+</html>

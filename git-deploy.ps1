@@ -22,11 +22,7 @@ Write-Host "  $REPO" -ForegroundColor Yellow
 Write-Host "  ========================================" -ForegroundColor Yellow
 Write-Host ""
 
-# ===== STEP 1: Sync pi visual card.html =====
-Write-Host "  [SYNC] index.html -> pi visual card.html" -ForegroundColor White
-Copy-Item "index.html" "pi visual card.html" -Force
-
-# ===== STEP 2: Stage & Commit =====
+# ===== STEP 1: Stage & Commit =====
 if ($Message -ne "") {
     Write-Host "  [GIT] Staging all changes..." -ForegroundColor Cyan
     git add -A

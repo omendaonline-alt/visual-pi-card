@@ -41,7 +41,7 @@
         var piUser = null;
         var piAccessToken = null;
         try {
-            Pi.init({ version: "2.0", sandbox: false });
+            Pi.init({ version: "2.0", sandbox: true });
             piSdkReady = true;
         } catch(e) {
             console.warn('Pi SDK not available — running outside Pi Browser');

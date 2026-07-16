@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Omenda Pi Pays – City Rush</title>
+  <title>City Rush - Pi Ride Booking</title>
   <link rel="preconnect" href="https://sdk.minepi.com">
   <script src="https://sdk.minepi.com/pi-sdk.js"></script>
   <script src="pi-sdk-helper.js"></script>
@@ -14,36 +14,40 @@
 </head>
 <body class="page-ride">
   <header class="topbar">
-    <img src="logo.jpg" alt="Omenda Pi Pays Logo">
-    <div class="topbar-title">
-      <strong>City Rush</strong>
-      <span>Ride booking with Pi pay — fast, safe, low-fee transport.</span>
-    </div>
+    <a href="shop.html" class="brand-lockup" aria-label="City Rush home">
+      <img src="icon-192.svg" alt="Omenda Pi Pays Logo">
+      <span>City Rush</span>
+    </a>
     <nav class="topbar-nav">
-      <a href="shop.html">Dashboard</a>
-      <a href="map.html">Business Map</a>
-      <a href="shop.html#services" class="active">Book Ride</a>
+      <a href="ride.html" class="active">Ride</a>
+      <a href="#deliveryOptions">Delivery</a>
+      <a href="#flightOptions">Flights</a>
+      <a href="map.html">Map</a>
     </nav>
+    <div class="topbar-actions">
+      <a class="topbar-action" href="shop.html">Dashboard</a>
+    </div>
   </header>
 
   <section class="page-shell">
     <article class="hero">
-      <h1>City Rush — Worldwide Transport & Delivery</h1>
-      <p>Omenda Pi Pays City Rush brings transport, delivery, airport transfer, and air travel into one Pi-powered booking hub. Enter your route, choose the right service, and pay quickly with Pi.</p>
-      <div class="hero-grid">
-        <div class="hero-card"><strong>Global routing</strong><small>Plan trips anywhere with route previews, airport pickup, cargo delivery, and city rides.</small></div>
-        <div class="hero-card"><strong>Flexible services</strong><small>Economy, premium, cargo, private driver, flights and same-day delivery — all in one platform.</small></div>
-        <div class="hero-card"><strong>Pi checkout</strong><small>Secure wallet payment for every booking type, from rides to flights and delivery orders.</small></div>
+      <div>
+        <span class="eyebrow">Pi-powered mobility</span>
+        <h1>Book a ride, delivery, or airport transfer in minutes.</h1>
+        <p>City Rush brings Bolt-style route planning, clear service choices, and instant Pi checkout into one worldwide transport hub.</p>
       </div>
-      <div class="hero-badges">
-        <span>🌍 Worldwide service</span>
-        <span>🚚 Transport & delivery</span>
-        <span>✈️ Airport transfer</span>
+      <div class="hero-metrics" aria-label="City Rush service highlights">
+        <div><strong>2 min</strong><span>Fast pickup estimate</span></div>
+        <div><strong>0.00001 π</strong><span>Rides from</span></div>
+        <div><strong>24/7</strong><span>Airport and delivery</span></div>
       </div>
     </article>
 
     <aside class="summary">
-      <h2>Ride overview</h2>
+      <div class="summary-head">
+        <span class="live-dot"></span>
+        <div><strong>Booking summary</strong><small>Live fare preview</small></div>
+      </div>
       <div class="estimate">
         <strong id="estimateTitle">Select a ride to view estimate</strong>
         <p id="estimateText">Choose a route and service to preview fare, distance, duration, and payment details.</p>
@@ -78,7 +82,10 @@
         <button id="payButton" disabled>Choose a ride to pay</button>
         <button id="routeButton" class="secondary">Open route in Map</button>
       </div>
-      <div class="notice">City Rush is built for Pi pay users. Your ride itinerary, driver details, and booking confirmation will display here after payment.</div>
+      <div class="driver-preview">
+        <div class="driver-avatar">CR</div>
+        <div><strong>Nearby drivers online</strong><span>Verified vehicles, delivery riders, and airport crews are matched after checkout.</span></div>
+      </div>
       <div class="bottom-links">
         <a href="shop.html">Back to Dashboard</a>
         <a href="map.html">Explore Business Map</a>
@@ -87,25 +94,49 @@
 
     <main class="main-panel">
       <div class="panel-block">
-        <h2>Enter your route</h2>
+        <div class="panel-title-row">
+          <div>
+            <span class="eyebrow">Where to?</span>
+            <h2>Enter your route</h2>
+          </div>
+          <div class="service-tabs" aria-label="Service type">
+            <button type="button" class="active">Ride</button>
+            <button type="button">Delivery</button>
+            <button type="button">Airport</button>
+          </div>
+        </div>
         <div class="route-fields">
-          <div class="field"><label>Pickup location</label><input id="pickupInput" type="text" placeholder="e.g. New York, Tokyo, or Lat 40.7128, Lng -74.0060"></div>
-          <div class="field"><label>Dropoff location</label><input id="dropoffInput" type="text" placeholder="e.g. London, Nairobi, or Lat -1.2921, Lng 36.8219"></div>
+          <div class="field route-point pickup"><label>Pickup location</label><input id="pickupInput" type="text" placeholder="Enter pickup address or tap the map"></div>
+          <div class="field route-point dropoff"><label>Destination</label><input id="dropoffInput" type="text" placeholder="Where are you going?"></div>
           <div class="field"><label>Ride note</label><input id="noteInput" type="text" placeholder="Add special instructions for the driver or charter crew"></div>
         </div>
-        <div class="route-actions"><button type="button" id="locateBtn" class="secondary">Use my current location</button></div>
+        <div class="route-actions">
+          <button type="button" id="locateBtn" class="secondary">Use my current location</button>
+          <span>Tap the map once for pickup, again for destination.</span>
+        </div>
         <div class="ride-map-block">
-          <div class="map-caption">Tap the map to place pickup and dropoff points in the city.</div>
+          <div class="map-caption"><strong>Live route map</strong><span>Pickup, destination, and route line update instantly.</span></div>
           <div id="rideMap"></div>
         </div>
       </div>
 
-      <div class="panel-block">
-        <h2>Choose a ride</h2>
+      <div class="panel-block ride-picker" id="deliveryOptions">
+        <div class="panel-title-row compact">
+          <div>
+            <span class="eyebrow">Choose your service</span>
+            <h2>Recommended options</h2>
+          </div>
+          <span class="availability-pill">10 options nearby</span>
+        </div>
         <div class="options" id="rideOptions"></div>
       </div>
       <div class="panel-block">
-        <h2>Featured flights</h2>
+        <div class="panel-title-row compact">
+          <div>
+            <span class="eyebrow">Long distance</span>
+            <h2>Featured flights</h2>
+          </div>
+        </div>
         <div class="flight-grid" id="flightOptions"></div>
       </div>
     </main>
@@ -116,6 +147,8 @@
     var piUser = null;
     var piAccessToken = null;
     var savedPiUser = null;
+    var PI_SANDBOX_MODE = true;
+    var PI_SANDBOX_APP_URL = 'https://sandbox.minepi.com/app/omenda-pi-pays-global-04690d704d76576f';
 
     function savePiUser(user) {
       try { localStorage.setItem('pivisualcard_pi_user', JSON.stringify(user || {})); } catch (e) {}
@@ -131,7 +164,7 @@
 
     try {
       if (window.Pi && Pi.init) {
-        Pi.init({ version: '2.0', sandbox: false });
+        Pi.init({ version: '2.0', sandbox: PI_SANDBOX_MODE });
         piSdkReady = true;
       }
     } catch (e) {
@@ -190,16 +223,16 @@
     }
 
     var rideServices = [
-      {id:'tr1',icon:'🚗',name:'Economy Ride',price:'0.00001-0.00003 π',desc:'Affordable everyday rides',badge:'Popular'},
-      {id:'tr2',icon:'🚙',name:'Comfort Plus',price:'0.00003-0.00005 π',desc:'Spacious SUVs, premium interiors'},
-      {id:'tr3',icon:'🏎️',name:'Premium',price:'0.00005-0.0001 π',desc:'Luxury executive transport',badge:'Premium'},
-      {id:'tr4',icon:'🚕',name:'City Taxi',price:'0.00001-0.00003 π',desc:'Licensed metered taxis',badge:'Popular'},
-      {id:'tr5',icon:'✈️🚕',name:'Airport Transfer',price:'0.00003-0.00007 π',desc:'Reliable airport pickup & drop'},
-      {id:'tr6',icon:'🏍️',name:'Boda / Motorbike',price:'0.000003-0.00001 π',desc:'Quick motorcycle rides'},
-      {id:'tr7',icon:'🛺',name:'Tuk-Tuk',price:'0.000006-0.00002 π',desc:'Short city trips',badge:'New'},
-      {id:'tr8',icon:'👨‍✈️',name:'Daily Driver',price:'0.00006-0.0001 π/day',desc:'Personal driver for the day'},
-      {id:'tr9',icon:'📦',name:'Express Delivery',price:'0.000006-0.00002 π',desc:'Same-day delivery, under 2 hrs',badge:'Popular'},
-      {id:'tr10',icon:'🚛',name:'Heavy Cargo',price:'0.00003-0.0001 π',desc:'Furniture & large item transport'}
+      {id:'tr1',icon:'🚗',name:'Economy Ride',price:'0.00001-0.00003 π',desc:'Affordable everyday rides',badge:'Popular',eta:'2 min',capacity:'4 seats'},
+      {id:'tr2',icon:'🚙',name:'Comfort Plus',price:'0.00003-0.00005 π',desc:'Spacious SUVs, premium interiors',eta:'4 min',capacity:'6 seats'},
+      {id:'tr3',icon:'🏎️',name:'Premium',price:'0.00005-0.0001 π',desc:'Luxury executive transport',badge:'Premium',eta:'6 min',capacity:'4 seats'},
+      {id:'tr4',icon:'🚕',name:'City Taxi',price:'0.00001-0.00003 π',desc:'Licensed metered taxis',badge:'Popular',eta:'3 min',capacity:'Metered'},
+      {id:'tr5',icon:'✈️🚕',name:'Airport Transfer',price:'0.00003-0.00007 π',desc:'Reliable airport pickup & drop',eta:'12 min',capacity:'Flight tracking'},
+      {id:'tr6',icon:'🏍️',name:'Boda / Motorbike',price:'0.000003-0.00001 π',desc:'Quick motorcycle rides',eta:'1 min',capacity:'1 rider'},
+      {id:'tr7',icon:'🛺',name:'Tuk-Tuk',price:'0.000006-0.00002 π',desc:'Short city trips',badge:'New',eta:'5 min',capacity:'3 seats'},
+      {id:'tr8',icon:'👨‍✈️',name:'Daily Driver',price:'0.00006-0.0001 π/day',desc:'Personal driver for the day',eta:'30 min',capacity:'Day hire'},
+      {id:'tr9',icon:'📦',name:'Express Delivery',price:'0.000006-0.00002 π',desc:'Same-day delivery, under 2 hrs',badge:'Popular',eta:'8 min',capacity:'Parcel'},
+      {id:'tr10',icon:'🚛',name:'Heavy Cargo',price:'0.00003-0.0001 π',desc:'Furniture & large item transport',eta:'25 min',capacity:'Large load'}
     ];
 
     var selectedService = null;
@@ -250,7 +283,7 @@
         card.className = 'ride-card';
         card.id = service.id;
         card.innerHTML = '<div class="ride-icon">'+service.icon+'</div>' +
-          '<div class="ride-meta"><strong>'+service.name+'</strong><small>'+service.desc+'</small>'+ (service.badge ? '<small class="ride-badge">'+service.badge+'</small>' : '') + '</div>' +
+          '<div class="ride-meta"><strong>'+service.name+'</strong><small>'+service.desc+'</small><span class="ride-facts"><em>'+service.eta+'</em><em>'+service.capacity+'</em></span>'+ (service.badge ? '<small class="ride-badge">'+service.badge+'</small>' : '') + '</div>' +
           '<div class="ride-rate"><strong>'+service.price+'</strong><span>Est. fare</span></div>';
         card.addEventListener('click', function() { selectRide(service.id); });
         rideOptions.appendChild(card);
@@ -400,18 +433,22 @@
         return;
       }
       if (!piSdkReady) {
-        paymentStatus.textContent = 'Pi SDK unavailable — open in Pi Browser or connect Pi wallet.';
+        paymentStatus.textContent = 'Pi SDK unavailable here. Open the Pi Sandbox app to test wallet connection.';
         return;
       }
       if (piUser) {
-        paymentStatus.textContent = 'Pi wallet connected as ' + (piUser.username || 'authenticated user');
+        paymentStatus.textContent = 'Pi sandbox wallet connected as ' + (piUser.username || 'authenticated user');
         return;
       }
       if (savedPiUser) {
-        paymentStatus.textContent = 'Pi wallet remembered from previous login. Tap Connect Pi to resume.';
+        paymentStatus.textContent = 'Pi sandbox wallet remembered from previous login. Tap Connect Pi to resume.';
         return;
       }
-      paymentStatus.textContent = 'Pi wallet ready. Tap Connect Pi to sign in.';
+      paymentStatus.textContent = 'Pi sandbox mode ready. Open the Pi Sandbox app, then connect your test wallet.';
+    }
+
+    function openPiSandboxApp() {
+      window.open(PI_SANDBOX_APP_URL, '_blank', 'noopener');
     }
 
     function initRideMap() {
@@ -632,7 +669,8 @@
 
     authButton.addEventListener('click', function() {
       if (!piSdkReady) {
-        showToast('Pi SDK not available. Open in Pi Browser.', false);
+        showToast('Pi SDK not available here. Opening Pi Sandbox app.', false);
+        openPiSandboxApp();
         return;
       }
       authButton.disabled = true;

@@ -60,7 +60,7 @@ app.use((req, res, next) => {
 app.use(express.static(path.join(__dirname), { index: false }));
 
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'pi visual card.html'));
+    res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 // --------------- In-Memory Store ---------------

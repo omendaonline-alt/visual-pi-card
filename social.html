@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Omenda Social Feed</title>
+ <meta name="description" content="Omenda Social feed brings photo stories, product drops, and community posts together in a modern, Instagram-style experience.">
+ <link rel="icon" type="image/svg+xml" href="icon-192.svg">
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+ <link rel="stylesheet" href="styles.css">
+ <style>
+ body { margin: 0; font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f5f7fb; color: #0f172a; }
+ .page-social { max-width: 1200px; margin: 0 auto; padding-bottom: 60px; }
+ .top-bar { position: sticky; top: 0; z-index: 20; background: #ffffff; border-bottom: 1px solid rgba(15, 23, 42, .08); padding: 20px 24px; display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+ .brand { display: flex; flex-direction: column; gap: 6px; }
+ .logo { font-size: 1.55rem; font-weight: 800; letter-spacing: -0.04em; }
+ .tagline { color: #475569; font-size: 0.95rem; }
+ .nav-links { display: flex; flex-wrap: wrap; gap: 12px; }
+ .nav-links a { text-decoration: none; color: #334155; font-weight: 600; padding: 10px 14px; border-radius: 14px; background: #f8fafc; border: 1px solid rgba(148, 163, 184, .25); transition: all .18s ease; }
+ .nav-links a:hover { background: #eff6ff; border-color: rgba(59, 130, 246, .25); color: #1d4ed8; }
+.nav-links a.active { background: #eff6ff; border-color: rgba(59, 130, 246, .35); color: #1d4ed8; }
+ .story-strip { display: flex; gap: 14px; overflow-x: auto; padding: 20px 24px 18px; background: #fff; border-bottom: 1px solid rgba(15, 23, 42, .08); }
+ .story { min-width: 92px; max-width: 92px; text-align: center; display: grid; gap: 10px; }
+ .story img { width: 92px; height: 92px; border-radius: 50%; object-fit: cover; border: 3px solid #0f172a; border-color: #0f172a33; box-shadow: 0 18px 40px rgba(15, 23, 42, .08); }
+ .story strong { font-size: 0.92rem; line-height: 1.2; }
+ .story span { color: #64748b; font-size: 0.82rem; }
+ .feed { display: grid; gap: 24px; padding: 24px; }
+ .post-card { background: #fff; border-radius: 28px; border: 1px solid rgba(15, 23, 42, .08); overflow: hidden; box-shadow: 0 24px 50px rgba(15, 23, 42, .05); }
+ .post-header { display: flex; align-items: center; gap: 14px; padding: 18px 20px; }
+ .avatar { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid #fff; box-shadow: 0 12px 28px rgba(15, 23, 42, .08); }
+ .post-meta { display: flex; flex-direction: column; gap: 4px; }
+ .user-name { margin: 0; font-size: 1rem; font-weight: 700; }
+ .user-sub { margin: 0; color: #64748b; font-size: 0.91rem; }
+ .post-time { color: #94a3b8; font-size: 0.88rem; }
+ .post-image { width: 100%; height: 520px; object-fit: cover; background: #e2e8f0; }
+ .post-actions { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; padding: 16px 20px; gap: 14px; }
+ .action-buttons { display: flex; align-items: center; gap: 14px; }
+ .post-actions button, .post-actions .save { border: none; background: none; color: #0f172a; font-size: 1.25rem; cursor: pointer; transition: color .18s ease; }
+ .post-actions button:hover, .post-actions .save:hover { color: #1d4ed8; }
+ .post-summary { padding: 0 20px 22px; color: #334155; line-height: 1.8; }
+ .post-summary strong { color: #0f172a; }
+ .post-summary a { color: #2563eb; text-decoration: none; font-weight: 700; }
+ .post-summary a:hover { text-decoration: underline; }
+ .caption { display: block; margin-top: 14px; color: #475569; font-size: 0.96rem; }
+ .label { display: inline-flex; align-items: center; gap: 8px; margin-top: 14px; color: #2563eb; font-size: 0.95rem; font-weight: 700; }
+ .label span { font-size: 1.05rem; }
+ .trending-panel { max-width: 1140px; margin: 0 auto; padding: 0 24px; }
+ .trending-panel h2 { margin: 0; font-size: clamp(1.75rem, 2vw, 2.2rem); }
+ .trending-panel p { margin: 10px 0 0; max-width: 760px; color: #475569; line-height: 1.75; }
+ .trending-grid { margin-top: 22px; display: grid; gap: 18px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+ .trending-card { background: #fff; border-radius: 24px; overflow: hidden; border: 1px solid rgba(15, 23, 42, .08); box-shadow: 0 18px 35px rgba(15, 23, 42, .04); }
+ .trending-card img { width: 100%; height: 180px; object-fit: cover; }
+ .trending-card-body { padding: 18px; }
+ .trending-card h3 { margin: 0 0 10px; font-size: 1rem; }
+ .trending-card p { margin: 0; color: #64748b; line-height: 1.7; font-size: 0.95rem; }
+ @media (max-width: 900px) {
+ .top-bar, .story-strip, .feed, .trending-panel { padding-left: 16px; padding-right: 16px; }
+ .story-strip { padding-top: 16px; padding-bottom: 16px; }
+ .story { min-width: 80px; max-width: 80px; }
+ .post-image { height: 360px; }
+ .trending-grid { grid-template-columns: 1fr; }
+ }
+
+ /* Emoji gift flow from omenda-ai.html */
+ .emoji-inbox { background: #fff; border-radius: 24px; border: 1px solid rgba(15,23,42,.08); margin: 24px; padding: 22px 24px; box-shadow: 0 18px 35px rgba(15,23,42,.04); }
+ .emoji-inbox h2 { margin: 0 0 6px; font-size: 1.15rem; }
+ .emoji-inbox p.sub { margin: 0 0 14px; color: #64748b; font-size: 0.92rem; }
+ .emoji-inbox-list { display: grid; gap: 10px; }
+ .emoji-inbox-item { display: flex; align-items: center; gap: 14px; padding: 10px 12px; background: #f8fafc; border-radius: 14px; border: 1px solid rgba(148,163,184,.2); }
+ .emoji-inbox-item .ei-emoji { font-size: 1.8rem; }
+ .emoji-inbox-item .ei-body { flex: 1; min-width: 0; }
+ .emoji-inbox-item .ei-to { font-weight: 700; color: #0f172a; }
+ .emoji-inbox-item .ei-meta { color: #64748b; font-size: 0.88rem; margin-top: 2px; }
+ .emoji-inbox-item .ei-value { color: #16a34a; font-weight: 700; font-size: 0.92rem; white-space: nowrap; }
+ .emoji-inbox-empty { color: #94a3b8; font-size: 0.9rem; text-align: center; padding: 12px; }
+ .post-gifts { padding: 0 20px 18px; display: flex; flex-wrap: wrap; gap: 8px; }
+ .post-gift-badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; background: linear-gradient(135deg,#fef3c7,#fbbf24); color: #422006; border-radius: 999px; font-size: 0.85rem; font-weight: 700; }
+ .emoji-flow-ticker { overflow: hidden; background: #0f172a; color: #f8fafc; margin: 0 24px 8px; border-radius: 14px; padding: 10px 14px; font-size: 0.9rem; white-space: nowrap; position: relative; }
+ .emoji-flow-ticker .track { display: inline-flex; gap: 22px; animation: emojiTicker 28s linear infinite; }
+ .emoji-flow-ticker .track span { opacity: 0.92; }
+ @keyframes emojiTicker { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
+ .live-badge{color:#16a34a;font-size:0.7rem;}
+ .gift-link{color:#fbbf24;}
+ </style>
+</head>
+<body class="page-social">
+ <div class="top-bar">
+ <div class="brand">
+ <span class="logo">Omenda</span>
+ <span class="tagline">Social feed for Pi creators, brands, and communities</span>
+ </div>
+ <div class="nav-links">
+ <a href="social.html" class="active">Social</a>
+ <a href="shop.html">Marketplace</a>
+ <a href="map.html">Map</a>
+ <a href="ride.html">City Rush</a>
+ <a href="omenda-ai.html">Emoji AI</a>
+ </div>
+ </div>
+
+ <section class="story-strip" aria-label="Stories">
+ <article class="story">
+ <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=400&auto=format&fit=crop" alt="Omenda story">
+ <strong>Omenda</strong>
+ <span>Brand</span>
+ </article>
+ <article class="story">
+ <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=400&auto=format&fit=crop" alt="Community story">
+ <strong>Pi Travel</strong>
+ <span>Travel</span>
+ </article>
+ <article class="story">
+ <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=400&auto=format&fit=crop" alt="Seller story">
+ <strong>Market</strong>
+ <span>Vendor</span>
+ </article>
+ <article class="story">
+ <img src="https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?q=80&w=400&auto=format&fit=crop" alt="Creative story">
+ <strong>Creator</strong>
+ <span>Design</span>
+ </article>
+ </section>
+
+ <div class="emoji-flow-ticker" id="emojiFlowTicker"><div class="track" id="emojiFlowTickerTrack"><span>No emoji gifts yet — send one from <a href="omenda-ai.html" class="x-382888">Emoji AI</a></span></div></div>
+
+ <section class="emoji-inbox" aria-label="Emoji gift inbox">
+ <h2>Emoji gift inbox</h2>
+ <p class="sub">Gifts sent from <a href="omenda-ai.html">Emoji AI</a> to social handles or posts show up here, newest first.</p>
+ <div class="emoji-inbox-list" id="emojiInboxList">
+ <div class="emoji-inbox-empty">No emoji gifts yet.</div>
+ </div>
+ </section>
+
+ <section class="feed">
+ <article class="post-card" data-post-id="omenda-launch">
+ <div class="post-header">
+ <img class="avatar" src="https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=400&auto=format&fit=crop" alt="Omenda Official profile">
+ <div class="post-meta">
+ <p class="user-name">@OmendaOfficial</p>
+ <p class="user-sub">Official community updates</p>
+ </div>
+ <p class="post-time">2h ago</p>
+ </div>
+ <img class="post-image" src="https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?q=80&w=1200&auto=format&fit=crop" alt="New Pi product drop">
+ <div class="post-actions">
+ <div class="action-buttons">
+ <button aria-label="Like post">❤️</button>
+ <button aria-label="Comment">💬</button>
+ <button aria-label="Share">📤</button>
+ </div>
+ <button class="save" aria-label="Save post">🔖</button>
+ </div>
+ <div class="post-summary">
+ <strong>New product launch!</strong> Our latest Pi-powered storefront feature is now live. <span class="caption">Discover how creators can tag products inside posts and let customers checkout directly from the feed.</span>
+ <div class="label"><span>✨</span> Shop-ready social commerce</div>
+ </div>
+ <div class="post-gifts" data-gifts-for="omenda-launch"></div>
+ </article>
+
+ <article class="post-card" data-post-id="pi-travel-sunrise">
+ <div class="post-header">
+ <img class="avatar" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=400&auto=format&fit=crop" alt="Travel community profile">
+ <div class="post-meta">
+ <p class="user-name">@PiTravel</p>
+ <p class="user-sub">Travel stories</p>
+ </div>
+ <p class="post-time">5h ago</p>
+ </div>
+ <img class="post-image" src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1200&auto=format&fit=crop" alt="Beach sunrise post">
+ <div class="post-actions">
+ <div class="action-buttons">
+ <button aria-label="Like post">❤️</button>
+ <button aria-label="Comment">💬</button>
+ <button aria-label="Share">📤</button>
+ </div>
+ <button class="save" aria-label="Save post">🔖</button>
+ </div>
+ <div class="post-summary">
+ <strong>Sunrise at the coast</strong> Shared by our community explorer. <span class="caption">Travel with Pi and capture moments from trusted local guides, sellers, and Portals.</span>
+ <div class="label"><span>🌍</span> Travel stories</div>
+ </div>
+ <div class="post-gifts" data-gifts-for="pi-travel-sunrise"></div>
+ </article>
+
+ <article class="post-card" data-post-id="market-pulse">
+ <div class="post-header">
+ <img class="avatar" src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=400&auto=format&fit=crop" alt="Local seller profile">
+ <div class="post-meta">
+ <p class="user-name">@MarketPulse</p>
+ <p class="user-sub">Local goods & offers</p>
+ </div>
+ <p class="post-time">1d ago</p>
+ </div>
+ <img class="post-image" src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1200&auto=format&fit=crop" alt="Market product post">
+ <div class="post-actions">
+ <div class="action-buttons">
+ <button aria-label="Like post">❤️</button>
+ <button aria-label="Comment">💬</button>
+ <button aria-label="Share">📤</button>
+ </div>
+ <button class="save" aria-label="Save post">🔖</button>
+ </div>
+ <div class="post-summary">
+ <strong>Fresh deals from local sellers</strong> Browse trusted Pi vendors, product stories, and marketplace highlights in one social feed. <span class="caption">From fashion to gadgets, every discovery is connected with Pi commerce.</span>
+ <div class="label"><span>🛍️</span> Marketplace pulse</div>
+ </div>
+ <div class="post-gifts" data-gifts-for="market-pulse"></div>
+ </article>
+ </section>
+
+ <section class="trending-panel">
+ <h2>Trending on Omenda</h2>
+ <p>See the latest feed activity, product reveals, and creator stories shaping the Omenda social experience.</p>
+ <div class="trending-grid">
+ <article class="trending-card">
+ <img src="https://images.unsplash.com/photo-1512436991641-6745cdb1723f?q=80&w=800&auto=format&fit=crop" alt="Story highlight">
+ <div class="trending-card-body">
+ <h3>Creator spotlight</h3>
+ <p>New design drops and Pi-powered product showcases shared in today&rsquo;s stories.</p>
+ </div>
+ </article>
+ <article class="trending-card">
+ <img src="https://images.unsplash.com/photo-1495562569060-2eec283d3391?q=80&w=800&auto=format&fit=crop" alt="Travel highlight">
+ <div class="trending-card-body">
+ <h3>Community journeys</h3>
+ <p>Top shared locations, vendor recommendations, and local commerce moments.</p>
+ </div>
+ </article>
+ <article class="trending-card">
+ <img src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?q=80&w=800&auto=format&fit=crop" alt="Shop highlight">
+ <div class="trending-card-body">
+ <h3>Marketplace trends</h3>
+ <p>Trending drops, verified sellers, and Pi-enabled checkout posts from the feed.</p>
+ </div>
+ </article>
+ </div>
+ </section>
+
+ <script>
+ (function emojiGiftFlow() {
+ const KEY = 'omendaSocialInbox';
+ let serverGifts = [];
+ function loadLocal() { try { return JSON.parse(localStorage.getItem(KEY) || '[]'); } catch { return []; } }
+ function mergedGifts() {
+ const local = loadLocal().map(g => ({
+ emoji: g.emoji, label: g.label, recipient: (g.to || g.recipient || '').replace(/^@/, ''),
+ postId: g.postId || '', value: g.value || 0, ts: g.ts || Date.now(), _src: 'local'
+ }));
+ const remote = serverGifts.map(g => ({
+ emoji: g.emoji, label: g.label, recipient: (g.recipient || '').replace(/^@/, ''),
+ postId: g.postId || '', value: g.value || 0, ts: g.ts || Date.now(), _src: 'server'
+ }));
+ const seen = new Set();
+ const all = [...remote, ...local].filter(g => {
+ const k = `${g.emoji}|${g.recipient}|${g.postId}|${g.ts}`;
+ if (seen.has(k)) return false; seen.add(k); return true;
+ });
+ all.sort((a, b) => (b.ts || 0) - (a.ts || 0));
+ return all;
+ }
+ function fmtPi(v) { const n = Number(v) || 0; if (n>= 1) return n.toFixed(2); if (n>= 0.01) return n.toFixed(3); return n.toFixed(4); }
+ function timeAgo(ts) {
+ const diff = Math.max(0, Date.now() - Number(ts));
+ const m = Math.floor(diff / 60000);
+ if (m < 1) return 'just now';
+ if (m < 60) return m + 'm ago';
+ const h = Math.floor(m / 60);
+ if (h < 24) return h + 'h ago';
+ return Math.floor(h / 24) + 'd ago';
+ }
+ function renderInbox(gifts) {
+ const list = document.getElementById('emojiInboxList');
+ if (!list) return;
+ if (!gifts.length) { list.innerHTML = '<div class="emoji-inbox-empty">No emoji gifts yet.</div>'; return; }
+ list.innerHTML = gifts.slice(0, 30).map(g => {
+ const to = g.recipient || 'unknown';
+ const post = g.postId ? ` · post <code>${g.postId}</code>` : '';
+ const live = g._src === 'server' ? ' <span class="live-badge">● live</span>' : '';
+ return `<div class="emoji-inbox-item">
+ <span class="ei-emoji">${g.emoji || '🎁'}</span>
+ <div class="ei-body">
+ <div class="ei-to">@${to}${live}</div>
+ <div class="ei-meta">${g.label || 'emoji gift'} · ${timeAgo(g.ts)}${post}</div>
+ </div>
+ <span class="ei-value">π${fmtPi(g.value)}</span>
+ </div>`;
+ }).join('');
+ }
+ function renderTicker(gifts) {
+ const track = document.getElementById('emojiFlowTickerTrack');
+ if (!track) return;
+ if (!gifts.length) { track.innerHTML = '<span>No emoji gifts yet — send one from <a href="omenda-ai.html" class="gift-link">Emoji AI</a></span>'; return; }
+ const items = gifts.slice(0, 20).map(g => `<span>${g.emoji || '🎁'} <strong>@${g.recipient}</strong> · π${fmtPi(g.value)}</span>`);
+ track.innerHTML = items.concat(items).join('');
+ }
+ function renderPostBadges(gifts) {
+ document.querySelectorAll('[data-gifts-for]').forEach(el => {
+ const pid = el.getAttribute('data-gifts-for');
+ const matches = gifts.filter(g => (g.postId || '').trim() === pid);
+ if (!matches.length) { el.innerHTML = ''; return; }
+ const counts = {};
+ matches.forEach(g => { const k = g.emoji || '🎁'; counts[k] = (counts[k] || 0) + 1; });
+ el.innerHTML = Object.entries(counts).map(([emoji, n]) =>
+ `<span class="post-gift-badge">${emoji} ×${n}</span>`
+ ).join('');
+ });
+ }
+ function renderAll() {
+ const gifts = mergedGifts();
+ renderInbox(gifts);
+ renderTicker(gifts);
+ renderPostBadges(gifts);
+ }
+ async function fetchServer() {
+ try {
+ const res = await fetch('/api/emoji/gifts?limit=100', { credentials: 'same-origin' });
+ if (!res.ok) return;
+ const data = await res.json();
+ if (Array.isArray(data.gifts)) {
+ const prevLen = serverGifts.length;
+ serverGifts = data.gifts;
+ renderAll();
+ if (serverGifts.length> prevLen && prevLen> 0) flashNew(serverGifts[0]);
+ }
+ } catch (e) { console.warn('[gift] fetch err', e); }
+ }
+ function flashNew(g) {
+ const tk = document.getElementById('emojiFlowTicker');
+ if (!tk) return;
+ tk.style.boxShadow = '0 0 0 3px rgba(251,191,36,0.6)';
+ setTimeout(() => { tk.style.boxShadow = ''; }, 1200);
+ }
+ async function init() {
+ await fetchServer();
+ renderAll();
+ }
+ init();
+ window.addEventListener('storage', e => {
+ if (e.key === KEY) renderAll();
+ if (e.key === 'omendaSocialPing') fetchServer();
+ });
+ setInterval(fetchServer, 3000);
+ })();
+ </script>
+</body>
+</html>

@@ -7,7 +7,7 @@
 <meta name="description" content="Omenda Pi Pays Global marketplace. Access services, map, wallets, and Pi business tools from one central hub.">
 <meta name="robots" content="index, follow">
 <meta name="referrer" content="strict-origin-when-cross-origin">
-<link rel="icon" type="image/jpeg" href="logo.jpg">
+<link rel="icon" type="image/svg+xml" href="icon-192.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -16,7 +16,8 @@
 <script>
 /* Pi SDK init — must match index.html exactly */
 var piSdkReady = false;
-try { Pi.init({ version: "2.0", sandbox: false }); piSdkReady = true; } catch(e) { console.warn('Pi SDK not available:', e); }
+var PI_SANDBOX_MODE = true;
+try { Pi.init({ version: "2.0", sandbox: PI_SANDBOX_MODE }); piSdkReady = true; } catch(e) { console.warn('Pi SDK not available:', e); }
 </script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons/css/flag-icons.min.css">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
@@ -28,9 +29,10 @@ try { Pi.init({ version: "2.0", sandbox: false }); piSdkReady = true; } catch(e)
 
 <!-- ── TOP HEADER ── -->
 <div class="top-header">
-  <img src="logo.jpg" alt="Omenda Pi Pays Global Logo" onerror="this.style.background='#7c3aed';this.alt='π'">
+  <img src="icon-192.svg" alt="Omenda Pi Pays Global Logo" onerror="this.style.background='#7c3aed';this.alt='π'">
   <h1>Omenda Pi Pays Global</h1>
-  <p class="handle" id="pi-handle">@Omfidxx</p>
+  <p class="handle" id="pi-handle"><button class="join-pi-btn" id="join-pi-btn" type="button" onclick="joinPiNow()">Join with Pi</button></p>
+  <p class="pi-join-status" id="pi-join-status"></p>
 </div>
 
 <!-- ── NAV TABS ── -->
@@ -38,6 +40,7 @@ try { Pi.init({ version: "2.0", sandbox: false }); piSdkReady = true; } catch(e)
   <a href="index.html" class="inline-style-2">💳 Pi Card</a>
   <a href="map.html" id="navMapLink">Map</a>
   <a href="ride.html">🚀 City Rush</a>
+  <a href="contracts.html">Contracts</a>
   <a href="social.html">Social</a>
   <span class="spacer"></span>
   <select id="langSelect" class="lang-select" onchange="setLanguage(this.value)" aria-label="Select language">
@@ -411,6 +414,119 @@ var selectedProduct = null;
 
 /* ── HELPERS ── */
 function esc(s){if(s==null)return"";var d=document.createElement("div");d.textContent=String(s);return d.innerHTML}
+var PRODUCT_EMOJI_KEY='omendaProductEmojiCounts';
+function formatCount(count){
+  count=Number(count)||0;
+  if(count>=1000)return (count/1000).toFixed(1).replace(/\.0$/,'')+'K';
+  return String(count);
+}
+function loadProductEmojiCounts(){
+  try{var d=JSON.parse(localStorage.getItem(PRODUCT_EMOJI_KEY)||'{}');return d&&typeof d==='object'?d:{}}catch(e){return{}}
+}
+function saveProductEmojiCounts(d){
+  try{localStorage.setItem(PRODUCT_EMOJI_KEY,JSON.stringify(d))}catch(e){}
+}
+function mirrorProductEmojiToSocial(p,type){
+  try{
+    var rows=JSON.parse(localStorage.getItem('omendaSocialInbox')||'[]');
+    rows.unshift({
+      to:(p.owner||p.seller||p.brand||'seller').toString().replace(/^@/,''),
+      emoji:type==='gift'?'🎁':'❤️',
+      label:(type==='gift'?'Gift on ':'Like on ')+(p.title||'product'),
+      value:0,
+      ts:Date.now(),
+      postId:p.id
+    });
+    localStorage.setItem('omendaSocialInbox',JSON.stringify(rows.slice(0,50)));
+    localStorage.setItem('omendaSocialPing',String(Date.now()));
+  }catch(e){}
+}
+function syncSellerProducts(){
+  var rows=[];
+  try{rows=JSON.parse(localStorage.getItem('omendaSellerProducts')||'[]')}catch(e){}
+  if(!Array.isArray(rows)||!rows.length)return;
+  rows.slice().reverse().forEach(function(row,idx){
+    if(!row||!row.title)return;
+    var id='seller-'+String(row.createdAt||idx).replace(/[^\w]/g,'');
+    if(marketProducts.some(function(p){return p.id===id}))return;
+    var price=String(row.price||'0').trim();
+    if(price.charAt(0)!=='π')price='π'+price;
+    marketProducts.unshift({
+      id:id,
+      title:row.title,
+      price:price,
+      stat:'Seller post',
+      brand:'Local Seller',
+      moq:'1 Piece',
+      audited:false,
+      secured:false,
+      inStock:true,
+      image:'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=400&auto=format&fit=crop',
+      images:['https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=400&auto=format&fit=crop'],
+      category:row.category||'Electronics',
+      owner:'local-seller',
+      description:row.description||''
+    });
+  });
+}
+function getProductEmojiTotals(p){
+  var stored=loadProductEmojiCounts()[p.id]||{};
+  var likes=Number(stored.likes)||0;
+  var gifts=Number(stored.gifts)||0;
+  if(p.reactions){Object.values(p.reactions).forEach(function(v){likes+=Number(v)||0})}
+  if(p.gifts){Object.values(p.gifts).forEach(function(v){gifts+=Number(v)||0})}
+  return {likes:likes,gifts:gifts};
+}
+function flyEmojiFromButton(btn,emoji){
+  if(!btn)return;
+  var r=btn.getBoundingClientRect();
+  var el=document.createElement('div');
+  el.className='product-emoji-fly';
+  el.textContent=emoji;
+  el.style.left=(r.left+r.width/2-12)+'px';
+  el.style.top=(r.top-8)+'px';
+  document.body.appendChild(el);
+  requestAnimationFrame(function(){el.classList.add('active')});
+  setTimeout(function(){el.remove()},1200);
+}
+function updateProductEmojiUI(container,p){
+  if(!container||!p)return;
+  var totals=getProductEmojiTotals(p);
+  var likeBtn=container.querySelector('.pc-like');
+  var giftBtn=container.querySelector('.pc-gift');
+  if(likeBtn)likeBtn.textContent='❤️ '+formatCount(totals.likes);
+  if(giftBtn)giftBtn.textContent='🎁 '+formatCount(totals.gifts);
+}
+function handleProductEmoji(pid,type,btn){
+  var p=marketProducts.find(function(x){return x.id===pid});
+  if(!p)return;
+  var data=loadProductEmojiCounts();
+  var row=data[pid]||{likes:0,gifts:0};
+  if(type==='gift')row.gifts=(Number(row.gifts)||0)+1;
+  else row.likes=(Number(row.likes)||0)+1;
+  data[pid]=row;
+  saveProductEmojiCounts(data);
+  var emoji=type==='gift'?'🎁':'❤️';
+  mirrorProductEmojiToSocial(p,type);
+  flyEmojiFromButton(btn,emoji);
+  document.querySelectorAll('[data-pid="'+pid+'"], #modal-interaction-card').forEach(function(el){updateProductEmojiUI(el,p)});
+}
+function bindProductEmojiEvents(){
+  document.querySelectorAll('.prod-card').forEach(function(card){
+    var pid=card.getAttribute('data-pid');
+    var likeBtn=card.querySelector('.pc-like');
+    var giftBtn=card.querySelector('.pc-gift');
+    if(likeBtn)likeBtn.onclick=function(e){e.stopPropagation();handleProductEmoji(pid,'like',likeBtn)};
+    if(giftBtn)giftBtn.onclick=function(e){e.stopPropagation();handleProductEmoji(pid,'gift',giftBtn)};
+  });
+}
+function bindModalProductEmojiEvents(){
+  if(!selectedProduct)return;
+  var likeBtn=document.getElementById('modal-like-btn');
+  var giftBtn=document.getElementById('modal-gift-btn');
+  if(likeBtn)likeBtn.onclick=function(){handleProductEmoji(selectedProduct.id,'like',likeBtn)};
+  if(giftBtn)giftBtn.onclick=function(){handleProductEmoji(selectedProduct.id,'gift',giftBtn)};
+}
 function parsePiPrice(p){return parseFloat(String(p).replace(/[^\d.]/g,""))||0}
 function doSearch(){var i=document.getElementById("searchInput");searchQuery=i?i.value:"";render()}
 var starSvg='<svg class="star filled" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>';
@@ -429,6 +545,7 @@ function setBmCat(c){bmActiveCat=c;render()}
    RENDER
    ══════════════════════════════════════════════════════════════ */
 function render(){
+  syncSellerProducts();
   var q=searchQuery.toLowerCase();
   var filtered=marketProducts.filter(function(p){
     var mt=activeTab==="All"||p.category===activeTab;
@@ -470,7 +587,15 @@ function render(){
     html+='<a class="hub-card" href="map.html"><div class="hub-icon inline-style-4" >🗺️</div><div class="hub-title">Worldwide Map</div><div class="hub-sub">Explore global business locations and markets.</div></a>';
     html+='<a class="hub-card" href="omenda-ai.html"><div class="hub-icon inline-style-4" >⚙️</div><div class="hub-title">Omenda AI</div><div class="hub-sub">Access all Omenda AI services, offers and tools.</div></a>';
     html+='<a class="hub-card" href="index.html"><div class="hub-icon inline-style-1" >🤖</div><div class="hub-title">Omenda Sport</div><div class="hub-sub">Sport Future</div></a>';
+    html+='<a class="hub-card" href="contracts.html"><div class="hub-icon inline-style-4" >🏗️</div><div class="hub-title">Contracts Hub</div><div class="hub-sub">House building, roads, industry, mining, minerals, and tourism contracts.</div></a>';
     html+='<a class="hub-card" href="social.html"><div class="hub-icon inline-style-5" >👥</div><div class="hub-title">Community</div><div class="hub-sub">Connect with buyers, sellers, and Pi groups.</div></a>';
+    html+='</div>';
+    html+='<div class="contract-shop-strip" aria-label="Contract project pages">';
+    html+='<a href="contracts/house-building.html"><strong>House Building</strong><span>Homes, apartments, estates</span></a>';
+    html+='<a href="contracts/road-contracts.html"><strong>Road Contracts</strong><span>Roads, drainage, bridges</span></a>';
+    html+='<a href="contracts/industry-projects.html"><strong>Industry Projects</strong><span>Factories and machinery</span></a>';
+    html+='<a href="contracts/mining-minerals.html"><strong>Mining & Minerals</strong><span>Exploration and supply</span></a>';
+    html+='<a href="contracts/tourism-projects.html"><strong>Tourism Projects</strong><span>Hotels, tours, travel</span></a>';
     html+='</div>';
     html+='<div class="hub-map-section"><div class="hub-map-header"><h3>Global Business Map</h3><a href="map.html" class="inline-style-6">Open full map</a></div><div id="dashboard-map"></div></div>';
     html+='</div>';
@@ -558,6 +683,11 @@ function render(){
       html+='<div class="pc-badges">';
       if(item.audited) html+='<span class="badge-a"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> Audited</span>';
       if(item.secured) html+='<span class="badge-s">\uD83D\uDEE1\uFE0F Secured Trading</span>';
+      html+='</div>';
+      var emojiTotals=getProductEmojiTotals(item);
+      html+='<div class="pc-interactions" data-pid="'+item.id+'">';
+      html+='<button class="pc-like" type="button" aria-label="Like '+esc(item.title)+'">❤️ '+formatCount(emojiTotals.likes)+'</button>';
+      html+='<button class="pc-gift" type="button" aria-label="Send gift for '+esc(item.title)+'">🎁 '+formatCount(emojiTotals.gifts)+'</button>';
       html+='</div>';
       if(item.rating) html+=renderStars(item.rating,item.reviews);
       if(item.responseTime||item.yrs){
@@ -708,7 +838,7 @@ function render(){
   html+='<div class="sell-cta"><div class="sell-cta-inner"><div class="glow"></div>'+
     '<h2>Sell Your Product for Pi</h2>'+
     '<p>Post your item, chat with buyers, and accept Pi cryptocurrency securely through our marketplace.</p>'+
-    '<div class="cta-btns"><a href="#" class="btn-sell" id="sell-btn">\uD83D\uDE80 Sell Now</a><a href="form.html?redirect=post product.html" class="btn-verify">Get Verified</a></div>'+
+    '<div class="cta-btns"><a href="#" class="btn-sell" id="sell-btn">\uD83D\uDE80 Sell Now</a><a href="form.html?redirect=post%20product.html" class="btn-verify">Get Verified</a></div>'+
     '</div></div>';
 
   html+='<div class="inline-style-23"></div>';
@@ -724,6 +854,7 @@ function render(){
   var sb=document.getElementById("sell-btn");
   if(sb){sb.onclick=function(e){e.preventDefault();handleSellClick(e);}}
 
+  bindProductEmojiEvents();
   startAutoSwipe();
 }
 
@@ -798,6 +929,12 @@ function renderModal(){
     '<div><div class="tl">Verified</div><div class="ts">Seller</div></div>'+
     '<div><div class="tl">Global</div><div class="ts">Shipping</div></div></div>';
 
+  var emojiTotals=getProductEmojiTotals(p);
+  h+='<div class="modal-interactions" id="modal-interaction-card">';
+  h+='<button id="modal-like-btn" class="pc-like" type="button">❤️ '+formatCount(emojiTotals.likes)+'</button>';
+  h+='<button id="modal-gift-btn" class="pc-gift" type="button">🎁 '+formatCount(emojiTotals.gifts)+'</button>';
+  h+='</div>';
+
   h+='<div id="modal-card-strip"></div>';
   h+='<div id="modal-pay-msg"></div>';
   h+='<div id="modal-tx-progress"></div>';
@@ -808,7 +945,7 @@ function renderModal(){
   h+='</div>';
   document.getElementById("modal-content").innerHTML=h;
   /* Show card info strip if user has a registered card */
-  setTimeout(function(){renderCardStrip()},0);
+  setTimeout(function(){renderCardStrip();bindModalProductEmojiEvents()},0);
 }
 
 /* ── Card Data from Pi Visual Card ── */
@@ -879,6 +1016,10 @@ function renderCardStrip(){
   }
   h+='</div>';
   el.innerHTML=h;
+  var buyBtn=document.getElementById('modal-buy-btn');
+  if(buyBtn&&selectedProduct&&selectedPayCard){
+    buyBtn.textContent='\u03C0 Pay with '+(cardLabels[selectedPayCard]||selectedPayCard)+' ('+esc(selectedProduct.price)+')';
+  }
 }
 
 function pickCard(type){
@@ -890,19 +1031,62 @@ function pickCard(type){
   }
 }
 
+function getPiWalletSource(){
+  var u=getCardUser()||{};
+  var saved=null;
+  try{saved=JSON.parse(localStorage.getItem('piUser')||sessionStorage.getItem('piUser')||'null')}catch(e){}
+  var wallet=u.piAddress||(saved&&saved.wallet_address)||'';
+  if(wallet)return wallet.substring(0,12)+'...';
+  var username=u.piUser||(saved&&saved.username)||DEFAULT_PI_USERNAME;
+  return '@'+normalizePiUsername(username);
+}
+
+function addPiWalletBalanceToCard(amount, card, label, options){
+  if(!(amount>0)||!card)return false;
+  try{
+    var state=JSON.parse(localStorage.getItem('pivisualcard_data')||'{}');
+    if(!state.transactions)state.transactions=[];
+    if(typeof state.balance!=='number')state.balance=0;
+    state.balance+=amount;
+    state.cardType=card.type||state.cardType;
+    var tx={type:'recv',name:(label||cardLabels[card.type]+' Card Top Up')+' from Pi Wallet',amount:amount,date:new Date().toISOString(),card:card.type,source:'pi-wallet',wallet:getPiWalletSource(),mode:(options&&options.mode)||'wallet-topup'};
+    if(options&&options.txid)tx.txid=options.txid;
+    state.transactions.unshift(tx);
+    localStorage.setItem('pivisualcard_data',JSON.stringify(state));
+    return true;
+  }catch(e){return false}
+}
+
 function addToCardBalance(productId){
   var p=marketProducts.find(function(x){return x.id===productId});
   if(!p)return;
   var card=getSelectedCard();
   if(!card||!card.number){window.location.href='index.html';return}
+  var amount=parsePiPrice(p.price);
+  addPiWalletBalanceToCard(amount,card,esc(cardLabels[card.type]||card.type)+' Card Balance',{mode:'shop-add-card'});
+  var msgEl=document.getElementById('modal-pay-msg');
+  if(msgEl) msgEl.innerHTML='<div class="pay-msg ok">\u2705 Added '+esc(p.price)+' from Pi Wallet to '+esc(cardLabels[card.type]||card.type)+' card. <a href="index.html" class="inline-style-24">View Card</a></div>';
+}
+
+function payWithSelectedCard(productId, options){
+  var p=marketProducts.find(function(x){return x.id===productId});
+  if(!p)return false;
+  var card=getSelectedCard();
+  if(!card||!card.number){window.location.href='index.html';return false}
+  var amount=parsePiPrice(p.price);
+  addPiWalletBalanceToCard(amount,card,esc(cardLabels[card.type]||card.type)+' Card Funding',{mode:(options&&options.mode)||'card'});
   try{
     var state=JSON.parse(localStorage.getItem('pivisualcard_data')||'{}');
     if(!state.transactions)state.transactions=[];
-    state.transactions.unshift({type:'shop',name:p.title+' (Marketplace)',amount:-parsePiPrice(p.price),date:new Date().toISOString(),card:card.type});
+    state.transactions.unshift({type:'shop',name:p.title+' (Marketplace)',amount:-amount,date:new Date().toISOString(),card:card.type,mode:(options&&options.mode)||'card'});
+    if(typeof state.balance==='number')state.balance-=amount;
     localStorage.setItem('pivisualcard_data',JSON.stringify(state));
   }catch(e){}
   var msgEl=document.getElementById('modal-pay-msg');
-  if(msgEl) msgEl.innerHTML='<div class="pay-msg ok">\u2705 Added to '+esc(cardLabels[card.type]||card.type)+' card \u2014 <a href="index.html" class="inline-style-24">View Card</a></div>';
+  var buyBtn=document.getElementById('modal-buy-btn');
+  if(msgEl) msgEl.innerHTML='<div class="pay-msg ok">\u2705 Pi Wallet added '+esc(p.price)+' to '+esc(cardLabels[card.type]||card.type)+' card, then paid marketplace. Local card checkout recorded. <a href="index.html" class="inline-style-24">View Card</a></div>';
+  if(buyBtn){buyBtn.disabled=false;buyBtn.textContent='\u2705 Paid with '+(cardShort[card.type]||'Card')}
+  return true;
 }
 
 /* ── Transaction Progress ── */
@@ -926,6 +1110,8 @@ var piAuthUser = null;
 var piAuthPromise = null;
 var piInitDone = false;
 var piDebugLog = [];
+var PI_AUTH_TIMEOUT_MS = 90000;
+var DEFAULT_PI_USERNAME = 'Omfidxx';
 
 function piDebug(msg){
   piDebugLog.push(new Date().toLocaleTimeString()+' '+msg);
@@ -943,6 +1129,63 @@ function piWithTimeout(promise, ms){
     }, ms);
     promise.then(function(v){if(!done){done=true;clearTimeout(timer);resolve(v);}})
            .catch(function(e){if(!done){done=true;clearTimeout(timer);reject(e);}});
+  });
+}
+
+function isLocalPiPreview(){
+  return window.location.protocol==='file:' ||
+    /^(localhost|127\.0\.0\.1)$/i.test(window.location.hostname) ||
+    /vscode-livepreview=true/i.test(window.location.search||'');
+}
+
+function resetBuyButton(btn, price){
+  if(btn){btn.disabled=false;btn.textContent='\u03C0 Pay with Card ('+esc(price)+')'}
+}
+
+function setPiJoinStatus(message,type){
+  var el=document.getElementById('pi-join-status');
+  if(!el)return;
+  el.textContent=message||'';
+  el.className='pi-join-status '+(type||'');
+}
+
+function normalizePiUsername(username){
+  return String(username||DEFAULT_PI_USERNAME).trim().replace(/^@/,'')||DEFAULT_PI_USERNAME;
+}
+
+function savePiAuth(auth){
+  if(!auth||!auth.user)return;
+  auth.user.username=normalizePiUsername(auth.user.username);
+  piAuthReady=true;
+  piAuthUser=auth.user;
+  try{localStorage.setItem('piUser',JSON.stringify(auth.user));}catch(e){}
+  try{sessionStorage.setItem('piUser',JSON.stringify(auth.user));}catch(e){}
+  try{
+    var u=JSON.parse(localStorage.getItem('pivisualcard_user')||'null');
+    if(u){
+      u.piUser=auth.user.username||u.piUser;
+      if(auth.user.wallet_address)u.piAddress=auth.user.wallet_address;
+      localStorage.setItem('pivisualcard_user',JSON.stringify(u));
+    }
+  }catch(e){}
+  if(auth.user.username)updateUsernameUI(auth.user.username);
+}
+
+function authenticateWithPi(scopes){
+  return new Promise(function(resolve,reject){
+    if(typeof window.Pi==='undefined'||typeof Pi.authenticate!=='function'){
+      reject(new Error('Pi SDK not available. Open in Pi Browser.'));
+      return;
+    }
+    try{
+      var p=Pi.authenticate(scopes,function onIncompletePaymentFound(payment){
+        if(payment&&payment.identifier){
+          piDebug('Join found incomplete payment: '+payment.identifier);
+          piHandleIncomplete(payment);
+        }
+      });
+      piWithTimeout(p,PI_AUTH_TIMEOUT_MS).then(resolve).catch(reject);
+    }catch(e){reject(e);}
   });
 }
 
@@ -991,6 +1234,12 @@ function handlePiBuy(productId){
     return;
   }
 
+  if(isLocalPiPreview()){
+    piDebug('Local preview detected; using visual card checkout for '+window.location.href);
+    payWithSelectedCard(productId,{mode:'local-card'});
+    return;
+  }
+
   /* Get selected card info for metadata */
   var card=getSelectedCard();
   var meta={productId:p.id,productTitle:p.title};
@@ -1010,7 +1259,7 @@ function handlePiBuy(productId){
       if(!paymentStarted){
         txStep(1,'fail');
         if(msgEl) msgEl.innerHTML='<div class="pay-msg err">\u274C Payment timed out. Pi Network may be busy. <a href="javascript:void(0)" onclick="document.getElementById(\'modal-pay-msg\').innerHTML=\'\'" class="inline-style-25">Dismiss</a></div>';
-        if(buyBtn){buyBtn.disabled=false;buyBtn.textContent='\u03C0 Pay with Card ('+esc(p.price)+')'}
+        resetBuyButton(buyBtn,p.price);
       }
     }, 20000);
 
@@ -1032,9 +1281,9 @@ function handlePiBuy(productId){
             body:JSON.stringify({paymentId:paymentId})
           }).then(function(r){return r.json()}).then(function(data){
             if(data.success){txStep(2,'done');txStep(3,'active');if(msgEl) msgEl.innerHTML='<div class="pay-msg processing">\u23F3 Waiting for blockchain\u2026</div>'}
-            else{txStep(2,'fail');if(msgEl) msgEl.innerHTML='<div class="pay-msg err">\u274C Approval failed: '+(data.error||'Unknown')+'. Try again.</div>';if(buyBtn){buyBtn.disabled=false;buyBtn.textContent='\u03C0 Pay with Card ('+esc(p.price)+')'}}
+            else{txStep(2,'fail');if(msgEl) msgEl.innerHTML='<div class="pay-msg err">\u274C Approval failed: '+(data.error||'Unknown')+'. Try again.</div>';resetBuyButton(buyBtn,p.price)}
           }).catch(function(err){
-            txStep(2,'fail');if(msgEl) msgEl.innerHTML='<div class="pay-msg err">\u274C Server error. Try again.</div>';if(buyBtn){buyBtn.disabled=false;buyBtn.textContent='\u03C0 Pay with Card ('+esc(p.price)+')'}
+            txStep(2,'fail');if(msgEl) msgEl.innerHTML='<div class="pay-msg err">\u274C Server error. Try again.</div>';resetBuyButton(buyBtn,p.price);
           });
         },
         onReadyForServerCompletion:function(paymentId,txid){
@@ -1051,20 +1300,21 @@ function handlePiBuy(productId){
             txStep(4,'done');
             /* Record transaction on card */
             if(card&&card.number){
+              addPiWalletBalanceToCard(amount,card,esc(cardLabels[card.type]||card.type)+' Card Funding',{mode:'pi-wallet',txid:txid});
               try{
                 var state=JSON.parse(localStorage.getItem('pivisualcard_data')||'{}');
                 if(!state.transactions)state.transactions=[];
-                state.transactions.unshift({type:'shop',name:p.title+' (Marketplace)',amount:-amount,date:new Date().toISOString(),txid:txid});
+                state.transactions.unshift({type:'shop',name:p.title+' (Marketplace)',amount:-amount,date:new Date().toISOString(),txid:txid,card:card.type,mode:'pi-payment'});
                 if(typeof state.balance==='number')state.balance-=amount;
                 localStorage.setItem('pivisualcard_data',JSON.stringify(state));
               }catch(e){}
             }
-            if(msgEl) msgEl.innerHTML='<div class="pay-msg ok">\u2705 Payment successful! TxID: '+esc(txid.substring(0,12))+'\u2026'+(card?' \u2014 Charged to '+esc(card.type)+' card':'')+'</div>';
+            if(msgEl) msgEl.innerHTML='<div class="pay-msg ok">\u2705 Pi Wallet funded '+(card?esc(cardLabels[card.type]||card.type)+' card and ':'')+'paid marketplace. TxID: '+esc(txid.substring(0,12))+'\u2026</div>';
             if(buyBtn){buyBtn.disabled=false;buyBtn.textContent='\u2705 Paid!'}
           }).catch(function(err){
             txStep(4,'fail');
             if(msgEl) msgEl.innerHTML='<div class="pay-msg err">\u274C Completion error. Contact support.</div>';
-            if(buyBtn){buyBtn.disabled=false;buyBtn.textContent='\u03C0 Pay with Card ('+esc(p.price)+')'}
+            resetBuyButton(buyBtn,p.price);
           });
         },
         onCancel:function(paymentId){
@@ -1073,7 +1323,7 @@ function handlePiBuy(productId){
           txHide();
           fetch('/api/pi/cancel',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({paymentId:paymentId})}).catch(function(){});
           if(msgEl) msgEl.innerHTML='<div class="pay-msg err">\u274C Payment cancelled. <a href="javascript:void(0)" onclick="document.getElementById(\'modal-pay-msg\').innerHTML=\'\'" class="inline-style-25">Dismiss</a></div>';
-          if(buyBtn){buyBtn.disabled=false;buyBtn.textContent='\u03C0 Pay with Card ('+esc(p.price)+')'}
+          resetBuyButton(buyBtn,p.price);
         },
         onError:function(err,payment){
           paymentStarted = true;
@@ -1082,14 +1332,14 @@ function handlePiBuy(productId){
           var errMsg = (err && err.message) ? err.message : String(err);
           fetch('/api/pi/error',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({paymentId:payment?payment.identifier:null,error:errMsg})}).catch(function(){});
           if(msgEl) msgEl.innerHTML='<div class="pay-msg err">\u274C '+esc(errMsg)+' <a href="javascript:void(0)" onclick="document.getElementById(\'modal-pay-msg\').innerHTML=\'\'" class="inline-style-25">Dismiss</a></div>';
-          if(buyBtn){buyBtn.disabled=false;buyBtn.textContent='\u03C0 Pay with Card ('+esc(p.price)+')'}
+          resetBuyButton(buyBtn,p.price);
         }
       });
     } catch(e) {
       clearTimeout(payTimeout);
       txStep(1,'fail');
       if(msgEl) msgEl.innerHTML='<div class="pay-msg err">\u274C '+esc(e.message||'Payment creation failed')+' <a href="javascript:void(0)" onclick="document.getElementById(\'modal-pay-msg\').innerHTML=\'\'" class="inline-style-25">Dismiss</a></div>';
-      if(buyBtn){buyBtn.disabled=false;buyBtn.textContent='\u03C0 Pay with Card ('+esc(p.price)+')'}
+      resetBuyButton(buyBtn,p.price);
     }
   }
 
@@ -1100,8 +1350,8 @@ function handlePiBuy(productId){
   } else {
     piDebug('Authenticating on user click...');
     if(msgEl) msgEl.innerHTML='<div class="pay-msg processing">\u23F3 Authenticating\u2026<br><small id="pi-debug-panel" class="inline-style-26"></small></div>';
-    /* Scopes: match index.html exactly */
-    var authScopes = ["username","payments","wallet_address"];
+    /* Marketplace checkout only needs identity + payments. Wallet address is requested on card registration pages. */
+    var authScopes = ["username","payments"];
     piDebug('Scopes: '+authScopes.join(','));
     try {
       piAuthPromise = Pi.authenticate(authScopes, function onIncompletePaymentFound(payment){
@@ -1120,15 +1370,12 @@ function handlePiBuy(productId){
     } catch(syncErr) {
       piDebug('authenticate() threw sync: '+syncErr.message);
       if(msgEl) msgEl.innerHTML='<div class="pay-msg err">\u274C '+esc(syncErr.message)+' <a href="javascript:void(0)" onclick="document.getElementById(\'modal-pay-msg\').innerHTML=\'\'" class="inline-style-25">Dismiss</a></div>';
-      if(buyBtn){buyBtn.disabled=false;buyBtn.textContent='\u03C0 Pay with Card ('+esc(p.price)+')'}
+      resetBuyButton(buyBtn,p.price);
       return;
     }
-    piWithTimeout(piAuthPromise, 25000).then(function(auth){
+    piWithTimeout(piAuthPromise, PI_AUTH_TIMEOUT_MS).then(function(auth){
       piDebug('Auth OK: user='+(auth.user?auth.user.username:'unknown')+' token='+(auth.accessToken?'yes':'no'));
-      piAuthReady = true;
-      piAuthUser = auth.user;
-      try { localStorage.setItem("piUser",JSON.stringify(auth.user)); } catch(e) {}
-      if(auth.user&&auth.user.username) updateUsernameUI(auth.user.username);
+      savePiAuth(auth);
       startPayment();
     }).catch(function(e){
       piAuthPromise = null;
@@ -1136,8 +1383,8 @@ function handlePiBuy(productId){
       var errMsg = '';
       try { errMsg = typeof e === 'object' ? JSON.stringify(e, Object.getOwnPropertyNames(e)) : String(e); } catch(j){ errMsg = String(e); }
       piDebug('Auth FAILED type='+(typeof e)+' msg='+(e&&e.message||'none')+' full='+errMsg);
-      if(msgEl) msgEl.innerHTML='<div class="pay-msg err">\u274C Authentication failed<br><br><b>Debug log:</b><pre class="inline-style-27">'+esc(piDebugLog.join('\n'))+'</pre><br><a href="javascript:void(0)" onclick="document.getElementById(\'modal-pay-msg\').innerHTML=\'\'" class="inline-style-25">Dismiss</a></div>';
-      if(buyBtn){buyBtn.disabled=false;buyBtn.textContent='\u03C0 Pay with Card ('+esc(p.price)+')'}
+      if(msgEl) msgEl.innerHTML='<div class="pay-msg err">\u274C Authentication failed. Confirm you are opening the deployed Pi app URL in Pi Browser, not localhost or VS Code Live Preview.<br><br><b>Debug log:</b><pre class="inline-style-27">'+esc(piDebugLog.join('\n'))+'</pre><br><a href="javascript:void(0)" onclick="document.getElementById(\'modal-pay-msg\').innerHTML=\'\';document.getElementById(\'modal-buy-btn\').click()" class="inline-style-25"><b>Retry</b></a> &nbsp; <a href="javascript:void(0)" onclick="document.getElementById(\'modal-pay-msg\').innerHTML=\'\'" class="inline-style-25">Dismiss</a></div>';
+      resetBuyButton(buyBtn,p.price);
     });
   }
 }
@@ -1157,12 +1404,44 @@ document.addEventListener("keydown",function(e){
 
 /* ── Pi SDK Init ── */
 function updateUsernameUI(username) {
+  username=normalizePiUsername(username);
   var handle = document.getElementById("pi-handle");
   var navName = document.getElementById("pi-username-display");
   var dotEl = document.querySelector(".profile-badge .dot");
   if (handle) handle.textContent = "@" + username;
   if (navName) navName.textContent = "@" + username;
   if (dotEl) dotEl.textContent = username.charAt(0).toUpperCase();
+}
+
+function joinPiNow(){
+  var btn=document.getElementById('join-pi-btn');
+  if(piAuthReady&&piAuthUser&&piAuthUser.username){
+    var readyName=normalizePiUsername(piAuthUser.username);
+    updateUsernameUI(readyName);
+    setPiJoinStatus('Connected as @'+readyName,'ok');
+    return;
+  }
+  if(isLocalPiPreview()){
+    updateUsernameUI(DEFAULT_PI_USERNAME);
+    setPiJoinStatus('Preview account @'+DEFAULT_PI_USERNAME+'. Open the deployed Pi app URL in Pi Browser to authenticate with Pi.','');
+    return;
+  }
+  if(btn){btn.disabled=true;btn.textContent='Connecting...'}
+  setPiJoinStatus('Waiting for Pi Browser approval...','');
+  piDebug('Join with Pi clicked');
+  authenticateWithPi(['username','payments']).then(function(auth){
+    savePiAuth(auth);
+    if(auth.user&&auth.user.username){
+      setPiJoinStatus('Connected as @'+normalizePiUsername(auth.user.username),'ok');
+    }else{
+      setPiJoinStatus('Connected with Pi','ok');
+    }
+  }).catch(function(err){
+    piDebug('Join with Pi failed: '+(err&&err.message?err.message:String(err)));
+    setPiJoinStatus('Pi connection failed. Open in Pi Browser and try again.','err');
+  }).finally(function(){
+    if(btn){btn.disabled=false;btn.textContent='Join with Pi'}
+  });
 }
 
 /* ── KYC Gate for Sell ── */
@@ -1302,7 +1581,11 @@ var isPiBrowser=/PiBrowser/i.test(navigator.userAgent)||typeof window.Pi!=="unde
     var saved = localStorage.getItem("piUser") || sessionStorage.getItem("piUser");
     if (saved) {
       var u = JSON.parse(saved);
-      if (u && u.username) updateUsernameUI(u.username);
+      if (u && u.username) {
+        piAuthUser=u;
+        updateUsernameUI(u.username);
+        setPiJoinStatus('Saved account @'+normalizePiUsername(u.username),'ok');
+      }
     }
   } catch(e){}
   piDebug('Page load: piSdkReady='+piSdkReady+', isPiBrowser='+isPiBrowser);

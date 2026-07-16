@@ -1,17 +1,21 @@
 (function(){
     // Shared Pi Browser SDK helpers for all Pi-enabled pages
+    var PI_SANDBOX_MODE = true;
+    var PI_SANDBOX_APP_URL = 'https://sandbox.minepi.com/app/omenda-pi-pays-global-04690d704d76576f';
     window.piSdkReady = false;
     window.piUser = null;
     window.piAccessToken = null;
     window.piAuthPromise = null;
     window.piAuthReady = false;
+    window.piSandboxMode = PI_SANDBOX_MODE;
+    window.piSandboxAppUrl = PI_SANDBOX_APP_URL;
 
     function initPiSdk() {
         if (!window.Pi || typeof Pi.init !== 'function') {
             return false;
         }
         try {
-            Pi.init({ version: '2.0', sandbox: false });
+            Pi.init({ version: '2.0', sandbox: PI_SANDBOX_MODE });
             window.piSdkReady = true;
             return true;
         } catch (e) {
