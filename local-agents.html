@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Local Agents - City Rush Delivery</title>
+  <meta name="description" content="Find and register local pickup, delivery, cargo, and customs agents with City Rush Delivery.">
+  <link rel="icon" type="image/svg+xml" href="icon-192.svg">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="page-delivery-network" data-delivery-page="agents">
+  <header class="delivery-topbar">
+    <a class="delivery-brand" href="delivery.html"><img src="icon-192.svg" alt="Omenda Pi Pays Logo"><span>City Rush Delivery</span></a>
+    <nav aria-label="Delivery navigation">
+      <a href="delivery.html">Delivery</a>
+      <a href="cargo-companies.html">Cargo Companies</a>
+      <a href="local-agents.html" class="active">Local Agents</a>
+      <a href="cargo-operations.html">Cargo Operations</a>
+      <a href="shop.html">Marketplace</a>
+    </nav>
+  </header>
+
+  <main class="delivery-workspace">
+    <section class="delivery-workspace-head">
+      <div><span class="delivery-eyebrow">Local delivery network</span><h1>Pickup, delivery, cargo, and customs agents</h1><p>Build coverage by city, district, port, airport, and border point with locally registered operators.</p></div>
+      <div class="delivery-head-actions"><a href="#agentRegistration">Register agent</a><a href="cargo-companies.html#shipmentRequest" class="secondary">Create shipment</a></div>
+    </section>
+
+    <section class="delivery-metrics" aria-label="Local agent network status">
+      <div><strong id="localAgentCount">0</strong><span>Registered agents</span></div>
+      <div><strong>Local</strong><span>Last-mile coverage</span></div>
+      <div><strong>Private</strong><span>Contact protection</span></div>
+    </section>
+
+    <section class="delivery-section" id="agentDirectory">
+      <div class="delivery-section-head"><div><span class="delivery-eyebrow">Agent directory</span><h2>Find coverage near the cargo route</h2></div><input class="delivery-search" id="agentSearch" type="search" placeholder="Search city, country, coverage, or vehicle"></div>
+      <div class="delivery-directory" id="agentDirectoryList"></div>
+    </section>
+
+    <section class="delivery-section" id="agentRegistration">
+      <div class="delivery-section-head"><div><span class="delivery-eyebrow">Agent onboarding</span><h2>Register as a local delivery agent</h2></div><span class="delivery-state">Review required</span></div>
+      <form class="delivery-form" id="agentForm">
+        <div class="delivery-field"><label for="agentName">Agent name</label><input id="agentName" name="name" type="text" autocomplete="name" required></div>
+        <div class="delivery-field"><label for="agentBusiness">Business name</label><input id="agentBusiness" name="businessName" type="text" placeholder="Optional"></div>
+        <div class="delivery-field"><label for="agentContact">Email or phone</label><input id="agentContact" name="contact" type="text" required></div>
+        <div class="delivery-field"><label for="agentCountry">Country</label><input id="agentCountry" name="country" type="text" required></div>
+        <div class="delivery-field"><label for="agentCity">City or district</label><input id="agentCity" name="city" type="text" required></div>
+        <div class="delivery-field"><label for="agentVehicle">Vehicle or work mode</label><select id="agentVehicle" name="vehicle"><option>Motorbike</option><option>Car</option><option>Van</option><option>Pickup truck</option><option>Box truck</option><option>Heavy truck</option><option>Port or customs desk</option><option>Walking courier</option></select></div>
+        <div class="delivery-field full"><label for="agentCoverage">Coverage area and services</label><input id="agentCoverage" name="coverage" type="text" placeholder="Neighborhoods, airport, port, customs, pickup, delivery, or storage" required></div>
+        <button class="delivery-submit full" type="submit">Submit agent for review</button>
+        <p class="delivery-form-status full" id="agentStatus" aria-live="polite">Contact details remain private in the public directory API.</p>
+      </form>
+      <div class="delivery-reference hidden" id="agentReference"><span>Agent reference</span><strong id="agentReferenceId">CRA-PENDING</strong><p id="agentReferenceLocation">Waiting for registration</p><em>Review pending</em></div>
+    </section>
+
+    <section class="delivery-section delivery-modes">
+      <div class="delivery-section-head"><div><span class="delivery-eyebrow">Agent work</span><h2>Supported local operations</h2></div></div>
+      <div class="delivery-mode-grid"><div><strong>Pickup and drop-off</strong><span>Homes, shops, warehouses, hotels, and offices.</span></div><div><strong>Airport and port handoff</strong><span>Cargo collection, terminal delivery, and document transfer.</span></div><div><strong>Customs support</strong><span>Local coordination for declarations and release handoff.</span></div><div><strong>Last-mile delivery</strong><span>Parcel, motorbike, van, truck, and scheduled local routes.</span></div></div>
+    </section>
+  </main>
+  <script src="delivery-network.js"></script>
+</body>
+</html>

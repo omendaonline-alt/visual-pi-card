@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cargo Operations - City Rush Delivery</title>
+  <meta name="description" content="Protected cargo assignment, scanning, status, and delivery operations for City Rush Delivery.">
+  <link rel="icon" type="image/svg+xml" href="icon-192.svg">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="page-delivery-network page-cargo-operations">
+  <header class="delivery-topbar">
+    <a class="delivery-brand" href="delivery.html"><img src="icon-192.svg" alt="Omenda Pi Pays Logo"><span>City Rush Delivery</span></a>
+    <nav aria-label="Cargo operations navigation">
+      <a href="delivery.html">Delivery</a>
+      <a href="cargo-companies.html">Cargo Companies</a>
+      <a href="local-agents.html">Local Agents</a>
+      <a href="cargo-operations.html" class="active">Cargo Operations</a>
+      <a href="shop.html">Marketplace</a>
+    </nav>
+  </header>
+
+  <main class="delivery-workspace">
+    <section class="delivery-workspace-head">
+      <div><span class="delivery-eyebrow">Protected operator desk</span><h1>Assign, scan, and update cargo</h1><p>Load a CRT tracking number, confirm the latest version, and append a controlled tracking event.</p></div>
+      <div class="delivery-head-actions"><a href="cargo-companies.html#trackingLookup" class="secondary">Public tracking</a></div>
+    </section>
+
+    <section class="delivery-section">
+      <div class="delivery-section-head"><div><span class="delivery-eyebrow">Load shipment</span><h2>Tracking access</h2></div><span class="delivery-state">Admin key required to update</span></div>
+      <form class="cargo-operator-load" id="cargoOperatorLoadForm">
+        <div class="delivery-field"><label for="operatorTrackingNumber">Tracking number</label><input id="operatorTrackingNumber" type="text" placeholder="CRT-YYMMDD-XXXXXXXXXX-X" autocomplete="off" required></div>
+        <div class="delivery-field"><label for="operatorAdminKey">Delivery admin key</label><input id="operatorAdminKey" type="password" autocomplete="off" placeholder="Not stored in the browser" required></div>
+        <button class="delivery-submit" type="submit">Load cargo</button>
+        <p class="delivery-form-status" id="operatorLoadStatus" aria-live="polite">The key stays in memory for this page only.</p>
+      </form>
+    </section>
+
+    <section class="delivery-section cargo-operator-workspace hidden" id="cargoOperatorWorkspace">
+      <div class="cargo-operator-summary">
+        <div><span>Tracking number</span><strong id="operatorTrackedNumber">CRT-PENDING</strong></div>
+        <div><span>Current status</span><strong id="operatorCurrentStatus">Quote Pending</strong></div>
+        <div><span>Record version</span><strong id="operatorVersion">1</strong></div>
+        <div><span>Latest location</span><strong id="operatorLatestLocation">-</strong></div>
+        <div><span>Assigned company</span><strong id="operatorAssignedCompany">Unassigned</strong></div>
+        <div><span>Estimated delivery</span><strong id="operatorEstimatedDelivery">Not set</strong></div>
+      </div>
+
+      <div class="delivery-section-head cargo-update-heading"><div><span class="delivery-eyebrow">New tracking event</span><h2>Update cargo movement</h2></div><span class="delivery-state" id="operatorTerminalState">Active shipment</span></div>
+      <form class="delivery-form" id="cargoOperatorUpdateForm">
+        <div class="delivery-field"><label for="operatorNextStatus">Status</label><select id="operatorNextStatus" required></select></div>
+        <div class="delivery-field"><label for="operatorLocation">Current location</label><input id="operatorLocation" type="text" placeholder="Warehouse, city, airport, port, or delivery area"></div>
+        <div class="delivery-field"><label for="operatorAssignedCompanyInput">Assigned company</label><input id="operatorAssignedCompanyInput" type="text" placeholder="Required when assigning company"></div>
+        <div class="delivery-field"><label for="operatorAssignedAgent">Assigned agent reference</label><input id="operatorAssignedAgent" type="text" placeholder="CRA reference, optional"></div>
+        <div class="delivery-field"><label for="operatorEstimatedDate">Estimated delivery date</label><input id="operatorEstimatedDate" type="date"></div>
+        <div class="delivery-field"><label for="operatorNote">Public tracking note</label><input id="operatorNote" type="text" placeholder="Visible to the customer"></div>
+        <button class="delivery-submit full" id="operatorUpdateButton" type="submit">Append tracking event</button>
+        <p class="delivery-form-status full" id="operatorUpdateStatus" aria-live="polite">Select an allowed next status or keep the current status for a location scan.</p>
+      </form>
+
+      <div class="cargo-operator-history">
+        <div class="delivery-section-head"><div><span class="delivery-eyebrow">Audit timeline</span><h2>Tracking events</h2></div></div>
+        <ol class="cargo-tracking-events" id="operatorTrackingEvents"></ol>
+      </div>
+    </section>
+  </main>
+  <script src="cargo-operations.js"></script>
+</body>
+</html>

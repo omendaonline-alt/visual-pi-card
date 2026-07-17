@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Delivery - City Rush Cargo Network</title>
+  <meta name="description" content="Create, track, assign, and deliver shipments through City Rush cargo companies and local agents.">
+  <link rel="icon" type="image/svg+xml" href="icon-192.svg">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="page-delivery-network page-delivery-hub">
+  <header class="delivery-topbar">
+    <a class="delivery-brand" href="delivery.html"><img src="icon-192.svg" alt="Omenda Pi Pays Logo"><span>City Rush Delivery</span></a>
+    <nav aria-label="City Rush navigation">
+      <a href="ride.html">Ride</a>
+      <a href="delivery.html" class="active">Delivery</a>
+      <a href="flights.html">Flights</a>
+      <a href="map.html">Map</a>
+      <a href="shop.html">Dashboard</a>
+    </nav>
+  </header>
+
+  <main class="delivery-workspace">
+    <section class="delivery-workspace-head">
+      <div><span class="delivery-eyebrow">Worldwide shipment network</span><h1>Send and follow cargo from pickup to delivery</h1><p>Start with a shipment request, receive a checksum-protected tracking number, then follow each verified movement event.</p></div>
+      <div class="delivery-head-actions"><a href="cargo-companies.html#shipmentRequest">Create shipment</a><a href="cargo-companies.html#trackingLookup" class="secondary">Track cargo</a></div>
+    </section>
+
+    <section class="delivery-flow" aria-label="Delivery workflow">
+      <a href="cargo-companies.html#shipmentRequest"><strong>1</strong><span>Create shipment</span><small>Route, cargo, weight, and company preference</small></a>
+      <a href="cargo-companies.html#trackingLookup"><strong>2</strong><span>Receive tracking</span><small>Automatic CRT number with checksum validation</small></a>
+      <a href="cargo-operations.html"><strong>3</strong><span>Assign and move</span><small>Protected company, agent, and status updates</small></a>
+      <a href="cargo-companies.html#trackingLookup"><strong>4</strong><span>Track delivery</span><small>Public timeline without private sender details</small></a>
+    </section>
+
+    <section class="delivery-office-section" aria-labelledby="deliveryOfficeTitle">
+      <div class="delivery-section-head"><div><span class="delivery-eyebrow">Operations network</span><h2 id="deliveryOfficeTitle">Driver and cargo company offices</h2></div><span class="delivery-state">Worldwide coordination</span></div>
+      <div class="delivery-office-grid">
+        <article>
+          <img src="assets/delivery/driver-agent-office.webp" alt="Driver and dispatcher planning local delivery routes in an operations office" loading="lazy">
+          <div><span class="delivery-eyebrow">Driver operations</span><h3>Driver and local agent office</h3><p>Coordinate collection, route assignment, motorbike, van, customs, and last-mile delivery work.</p><a href="local-agents.html#agentDirectory">Find local agents</a></div>
+        </article>
+        <article>
+          <img src="assets/delivery/ocean-cargo-office.webp" alt="Ocean cargo company team working beside a container ship and port" loading="lazy">
+          <div><span class="delivery-eyebrow">Ocean freight</span><h3>Shipping cargo company office</h3><p>Connect container, port, customs, ocean freight, and international cargo movements through registered companies.</p><a href="cargo-companies.html#companyDirectory">Browse cargo companies</a></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="cargo-ship-section" aria-labelledby="cargoShipTitle">
+      <div class="delivery-section-head"><div><span class="delivery-eyebrow">Ocean shipping</span><h2 id="cargoShipTitle">Cargo shipping fleet</h2></div><a class="delivery-inline-link" href="cargo-companies.html#shipmentRequest">Request ocean freight</a></div>
+      <div class="cargo-ship-grid">
+        <a href="cargo-companies.html#shipmentRequest">
+          <img src="assets/delivery/container-cargo-ship.webp" alt="Container cargo ship entering a commercial port" loading="lazy">
+          <span><strong>Container ship</strong><small>Containers, general goods, and international port routes</small></span>
+        </a>
+        <a href="cargo-companies.html#shipmentRequest">
+          <img src="assets/delivery/bulk-cargo-ship.webp" alt="Dry bulk cargo carrier near an industrial loading terminal" loading="lazy">
+          <span><strong>Bulk cargo carrier</strong><small>Grain, minerals, construction material, and industrial loads</small></span>
+        </a>
+        <a href="cargo-companies.html#shipmentRequest">
+          <img src="assets/delivery/roro-cargo-ship.webp" alt="Roll-on roll-off cargo ship with its loading ramp open" loading="lazy">
+          <span><strong>Vehicle cargo ship</strong><small>Cars, trucks, machinery, and heavy equipment</small></span>
+        </a>
+      </div>
+    </section>
+
+    <section class="delivery-service-grid" aria-label="Delivery actions">
+      <article>
+        <span class="delivery-eyebrow">Sender</span>
+        <h2>Ship cargo</h2>
+        <p>Create parcel, road, air, ocean, rail, or heavy-cargo requests and choose a network company.</p>
+        <div><a href="cargo-companies.html#shipmentRequest">New shipment</a><a href="cargo-companies.html#companyDirectory" class="secondary">Browse companies</a></div>
+      </article>
+      <article>
+        <span class="delivery-eyebrow">Public tracking</span>
+        <h2>Find a shipment</h2>
+        <p>Validate a CRT tracking number and see its current status, route, assignments, and complete event timeline.</p>
+        <div><a href="cargo-companies.html#trackingLookup">Track cargo</a></div>
+      </article>
+      <article>
+        <span class="delivery-eyebrow">Local coverage</span>
+        <h2>Find a delivery agent</h2>
+        <p>Search pickup, last-mile, customs, airport, port, and local vehicle coverage by place.</p>
+        <div><a href="local-agents.html#agentDirectory">Find agent</a><a href="local-agents.html#agentRegistration" class="secondary">Register agent</a></div>
+      </article>
+      <article>
+        <span class="delivery-eyebrow">Operator access</span>
+        <h2>Update cargo movement</h2>
+        <p>Authorized operators can assign a company or agent and append only valid shipment status events.</p>
+        <div><a href="cargo-operations.html">Open operations</a></div>
+      </article>
+    </section>
+
+    <section class="delivery-section delivery-hub-directory">
+      <div class="delivery-section-head"><div><span class="delivery-eyebrow">Network onboarding</span><h2>Build delivery coverage</h2></div><span class="delivery-state">Private contacts protected</span></div>
+      <div class="delivery-mode-grid">
+        <div><strong>Cargo companies</strong><span>Register transport mode, base location, routes, and service coverage.</span><a href="cargo-companies.html#companyRegistration">Register company</a></div>
+        <div><strong>Local agents</strong><span>Register pickup, customs, port, airport, and last-mile capability.</span><a href="local-agents.html#agentRegistration">Register agent</a></div>
+        <div><strong>Business map</strong><span>Open the worldwide map for route and network context.</span><a href="map.html">Open map</a></div>
+        <div><strong>Public cargo search</strong><span>Customers only see operational shipment fields and tracking events.</span><a href="cargo-companies.html#trackingLookup">Search tracking</a></div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

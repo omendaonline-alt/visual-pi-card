@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flights - City Rush Worldwide Agent</title>
+  <meta name="description" content="Create a worldwide airline ticket request for any airport and preferred airline through City Rush.">
+  <link rel="icon" type="image/svg+xml" href="icon-192.svg">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="page-ride page-flights">
+  <header class="topbar">
+    <a href="shop.html" class="brand-lockup" aria-label="City Rush home">
+      <img src="icon-192.svg" alt="Omenda Pi Pays Logo">
+      <span>City Rush</span>
+    </a>
+    <nav class="topbar-nav" aria-label="City Rush navigation">
+      <a href="ride.html">Ride</a>
+      <a href="delivery.html">Delivery</a>
+      <a href="flights.html" class="active">Flights</a>
+      <a href="map.html">Map</a>
+    </nav>
+    <div class="topbar-actions"><a class="topbar-action" href="shop.html">Dashboard</a></div>
+  </header>
+
+  <main class="page-shell">
+    <section class="flight-page-head">
+      <div><span class="eyebrow">Worldwide flight agent</span><h1>Request a ticket from any airport.</h1><p>Enter the passenger and route once. A flight agent checks schedules and fares with the requested airline before an e-ticket is issued.</p></div>
+      <div class="flight-flow" aria-label="Flight request progress">
+        <div><strong>1</strong><span>Request</span></div>
+        <div><strong>2</strong><span>Agent review</span></div>
+        <div><strong>3</strong><span>Airline review</span></div>
+        <div><strong>4</strong><span>E-ticket</span></div>
+      </div>
+    </section>
+
+    <section class="panel-block flight-agent" id="flightOptions">
+      <div class="panel-title-row compact">
+        <div><span class="eyebrow">Passenger and route</span><h2>Create an airline ticket request</h2></div>
+        <span class="availability-pill">Any airport and airline</span>
+      </div>
+      <form class="flight-agent-form" id="flightAgentForm">
+        <div class="flight-trip-toggle full" aria-label="Trip type">
+          <button type="button" class="active" data-trip="one-way">One way</button>
+          <button type="button" data-trip="return">Return</button>
+        </div>
+        <input id="flightTripType" type="hidden" value="one-way">
+        <div class="field"><label for="flightPassenger">Passenger name</label><input id="flightPassenger" type="text" autocomplete="name" placeholder="Name as shown on passport" required></div>
+        <div class="field"><label for="flightContact">Email or phone</label><input id="flightContact" type="text" autocomplete="email" placeholder="Agent contact details" required></div>
+        <div class="field"><label for="flightFrom">Departure airport</label><input id="flightFrom" type="text" list="airportDirectory" placeholder="Airport name, city, or IATA code" required></div>
+        <div class="field"><label for="flightTo">Destination airport</label><input id="flightTo" type="text" list="airportDirectory" placeholder="Airport name, city, or IATA code" required></div>
+        <div class="field"><label for="flightDeparture">Departure date</label><input id="flightDeparture" type="date" required></div>
+        <div class="field hidden" id="flightReturnField"><label for="flightReturn">Return date</label><input id="flightReturn" type="date"></div>
+        <div class="field"><label for="flightPassengers">Passengers</label><input id="flightPassengers" type="number" min="1" max="9" value="1" required></div>
+        <div class="field"><label for="flightCabin">Cabin</label><select id="flightCabin"><option>Economy</option><option>Premium Economy</option><option>Business</option><option>First</option></select></div>
+        <div class="field full"><label for="flightAirline">Preferred airline</label><input id="flightAirline" type="text" list="airlineDirectory" placeholder="Any available airline"></div>
+        <button class="flight-agent-submit full" id="flightAgentSubmit" type="submit">Create agent ticket</button>
+        <p class="flight-agent-status full" id="flightAgentStatus" aria-live="polite">Schedule and fare require airline confirmation. This request is not yet a paid or issued ticket.</p>
+      </form>
+
+      <datalist id="airportDirectory">
+        <option value="ATL - Hartsfield-Jackson Atlanta International Airport"><option value="DXB - Dubai International Airport"><option value="LHR - London Heathrow Airport"><option value="JFK - John F. Kennedy International Airport"><option value="CDG - Paris Charles de Gaulle Airport"><option value="AMS - Amsterdam Airport Schiphol"><option value="FRA - Frankfurt Airport"><option value="IST - Istanbul Airport"><option value="DOH - Hamad International Airport"><option value="ADD - Addis Ababa Bole International Airport"><option value="NBO - Jomo Kenyatta International Airport"><option value="DAR - Julius Nyerere International Airport"><option value="JNB - O.R. Tambo International Airport"><option value="SIN - Singapore Changi Airport"><option value="HND - Tokyo Haneda Airport"><option value="SYD - Sydney Kingsford Smith Airport"><option value="GRU - Sao Paulo Guarulhos International Airport"><option value="YYZ - Toronto Pearson International Airport">
+      </datalist>
+      <datalist id="airlineDirectory">
+        <option value="Any available airline"><option value="Air France"><option value="American Airlines"><option value="British Airways"><option value="Delta Air Lines"><option value="Emirates"><option value="Ethiopian Airlines"><option value="KLM"><option value="Kenya Airways"><option value="Lufthansa"><option value="Qatar Airways"><option value="Singapore Airlines"><option value="Turkish Airlines"><option value="United Airlines"><option value="Air Tanzania">
+      </datalist>
+
+      <section class="flight-agent-result hidden" id="flightAgentResult" aria-live="polite">
+        <div class="agent-ticket-head">
+          <div><span>City Rush Flight Agent</span><strong id="ticketReference">CRF-PENDING</strong></div>
+          <span class="ticket-status">Airline confirmation pending</span>
+        </div>
+        <div class="agent-ticket-route"><strong id="ticketFrom">From airport</strong><span>&rarr;</span><strong id="ticketTo">Destination airport</strong></div>
+        <div class="agent-ticket-details">
+          <div><span>Passenger</span><strong id="ticketPassenger">-</strong></div>
+          <div><span>Departure</span><strong id="ticketDeparture">-</strong></div>
+          <div><span>Return</span><strong id="ticketReturn">One way</strong></div>
+          <div><span>Passengers</span><strong id="ticketPassengers">1</strong></div>
+          <div><span>Cabin</span><strong id="ticketCabin">Economy</strong></div>
+          <div><span>Airline</span><strong id="ticketAirline">Any available airline</strong></div>
+        </div>
+        <div class="agent-ticket-actions"><button type="button" id="printFlightTicket">Print request</button><button type="button" class="secondary" id="newFlightTicket">New request</button></div>
+      </section>
+
+      <div class="featured-flight-block">
+        <div class="map-caption"><strong>Airline companies and routes</strong><span>Select an airline route, then complete passenger and date details.</span></div>
+        <div class="flight-grid" id="featuredFlights"></div>
+      </div>
+    </section>
+  </main>
+  <script src="flights.js"></script>
+</body>
+</html>

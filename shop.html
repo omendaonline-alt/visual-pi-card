@@ -390,18 +390,18 @@ var transportServices = [
   {id:"tr5",icon:"\u2708\uFE0F\uD83D\uDE95",name:"Airport Transfer",price:"0.00003-0.00007 \u03C0",desc:"Reliable airport pickup & drop"},
   {id:"tr6",icon:"\uD83C\uDFCD\uFE0F",name:"Boda / Motorbike",price:"0.000003-0.00001 \u03C0",desc:"Quick motorcycle rides"},
   {id:"tr7",icon:"\uD83D\uDEFA",name:"Tuk-Tuk",price:"0.000006-0.00002 \u03C0",desc:"Short city trips",badge:"New"},
-  {id:"tr8",icon:"\uD83D\uDC68\u200D\u2708\uFE0F",name:"Daily Driver",price:"0.00006-0.0001 \u03C0/day",desc:"Personal driver for the day"},
+  {id:"tr8",icon:"\uD83D\uDEE9\uFE0F",name:"Small Airplane Hire",price:"from 0.0007 \u03C0",desc:"Private regional charter flights"},
   {id:"tr9",icon:"\uD83D\uDCE6",name:"Express Delivery",price:"0.000006-0.00002 \u03C0",desc:"Same-day delivery, under 2 hrs",badge:"Popular"},
   {id:"tr10",icon:"\uD83D\uDE9B",name:"Heavy Cargo",price:"0.00003-0.0001 \u03C0",desc:"Furniture & large items"}
 ];
 
 var flights = [
-  {id:"fl1",airline:"Kenya Airways",icon:"\uD83C\uDDF0\uD83C\uDDEA",from:"NBO",to:"DXB",price:"0.002 \u03C0",duration:"5h 20m"},
-  {id:"fl2",airline:"Ethiopian Airlines",icon:"\uD83C\uDDEA\uD83C\uDDF9",from:"ADD",to:"LHR",price:"0.003 \u03C0",duration:"8h 15m"},
-  {id:"fl3",airline:"Emirates",icon:"\uD83C\uDDE6\uD83C\uDDEA",from:"DXB",to:"JFK",price:"0.004 \u03C0",duration:"13h 40m"},
-  {id:"fl4",airline:"RwandAir",icon:"\uD83C\uDDF7\uD83C\uDDFC",from:"NBO",to:"EBB",price:"0.0005 \u03C0",duration:"1h 05m"},
-  {id:"fl5",airline:"Qatar Airways",icon:"\uD83C\uDDF6\uD83C\uDDE6",from:"NBO",to:"NRT",price:"0.005 \u03C0",duration:"18h 30m"},
-  {id:"fl6",airline:"Turkish Airlines",icon:"\uD83C\uDDF9\uD83C\uDDF7",from:"DAR",to:"CDG",price:"0.004 \u03C0",duration:"12h 45m"}
+  {id:"fl1",airline:"Kenya Airways",icon:"\uD83C\uDDF0\uD83C\uDDEA",from:"NBO",to:"DXB",price:"0.002 \u03C0",duration:"5h 20m",image:"assets/airlines/kenya-airways.webp"},
+  {id:"fl2",airline:"Ethiopian Airlines",icon:"\uD83C\uDDEA\uD83C\uDDF9",from:"ADD",to:"LHR",price:"0.003 \u03C0",duration:"8h 15m",image:"assets/airlines/ethiopian-airlines.webp"},
+  {id:"fl3",airline:"Emirates",icon:"\uD83C\uDDE6\uD83C\uDDEA",from:"DXB",to:"JFK",price:"0.004 \u03C0",duration:"13h 40m",image:"assets/airlines/emirates.webp"},
+  {id:"fl4",airline:"RwandAir",icon:"\uD83C\uDDF7\uD83C\uDDFC",from:"NBO",to:"EBB",price:"0.0005 \u03C0",duration:"1h 05m",image:"assets/airlines/rwandair.webp"},
+  {id:"fl5",airline:"Qatar Airways",icon:"\uD83C\uDDF6\uD83C\uDDE6",from:"NBO",to:"NRT",price:"0.005 \u03C0",duration:"18h 30m",image:"assets/airlines/qatar-airways.webp"},
+  {id:"fl6",airline:"Turkish Airlines",icon:"\uD83C\uDDF9\uD83C\uDDF7",from:"DAR",to:"CDG",price:"0.004 \u03C0",duration:"12h 45m",image:"assets/airlines/turkish-airlines.webp"}
 ];
 
 var allCategories = ["All","Electronics","Fashion","Home & Garden","Cars","Real Estate","Hotels","Properties","Transport","Bills"];
@@ -497,6 +497,53 @@ function updateProductEmojiUI(container,p){
   if(likeBtn)likeBtn.textContent='❤️ '+formatCount(totals.likes);
   if(giftBtn)giftBtn.textContent='🎁 '+formatCount(totals.gifts);
 }
+function getShopSocialHandle(){
+  var handle='';
+  try{var prefs=JSON.parse(localStorage.getItem('omendaInstagramSocialPrefs')||'{}');handle=prefs.viewerHandle||''}catch(e){}
+  if(!handle&&window.piAuthUser&&piAuthUser.username)handle=piAuthUser.username;
+  if(!handle){var navName=document.getElementById('pi-username-display');handle=navName?navName.textContent:''}
+  handle=String(handle||'OmendaShopper').trim().replace(/^@/,'').replace(/[^A-Za-z0-9_.-]/g,'');
+  return '@'+(handle||'OmendaShopper');
+}
+function productSocialCaption(p){
+  var price=p.priceHigh?String(p.price)+' - '+String(p.priceHigh):String(p.price||'');
+  var parts=['Shop product: '+(p.title||'Omenda product')];
+  if(price)parts.push('Price '+price+' GCV');
+  if(p.brand)parts.push('Seller '+p.brand);
+  if(p.moq)parts.push('MOQ '+p.moq);
+  parts.push('Available from Omenda Marketplace.');
+  return parts.join(' · ').slice(0,275);
+}
+function setProductSocialButton(btn,text,disabled){
+  if(!btn)return;
+  btn.textContent=text;
+  btn.disabled=!!disabled;
+}
+async function handleProductSocialPost(pid,btn){
+  var p=marketProducts.find(function(x){return x.id===pid});
+  if(!p)return;
+  setProductSocialButton(btn,'Posting...',true);
+  var handle=getShopSocialHandle();
+  var payload={
+    handle:handle,
+    name:handle.replace('@',''),
+    image:p.image||(p.images&&p.images[0])||'',
+    caption:productSocialCaption(p),
+    postType:'photo',
+    label:'Marketplace product',
+    userSub:'Shared from Omenda Shop'
+  };
+  try{
+    var res=await fetch('/api/social/posts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    if(!res.ok)throw new Error('Post failed');
+    setProductSocialButton(btn,'Posted ✓',true);
+    setTimeout(function(){window.location.href='social.html'},650);
+  }catch(e){
+    try{localStorage.setItem('omendaPendingProductPost',JSON.stringify(payload))}catch(storageErr){}
+    setProductSocialButton(btn,'Open Social',false);
+    window.location.href='social.html';
+  }
+}
 function handleProductEmoji(pid,type,btn){
   var p=marketProducts.find(function(x){return x.id===pid});
   if(!p)return;
@@ -516,16 +563,20 @@ function bindProductEmojiEvents(){
     var pid=card.getAttribute('data-pid');
     var likeBtn=card.querySelector('.pc-like');
     var giftBtn=card.querySelector('.pc-gift');
+    var socialBtn=card.querySelector('.pc-social');
     if(likeBtn)likeBtn.onclick=function(e){e.stopPropagation();handleProductEmoji(pid,'like',likeBtn)};
     if(giftBtn)giftBtn.onclick=function(e){e.stopPropagation();handleProductEmoji(pid,'gift',giftBtn)};
+    if(socialBtn)socialBtn.onclick=function(e){e.stopPropagation();handleProductSocialPost(pid,socialBtn)};
   });
 }
 function bindModalProductEmojiEvents(){
   if(!selectedProduct)return;
   var likeBtn=document.getElementById('modal-like-btn');
   var giftBtn=document.getElementById('modal-gift-btn');
+  var socialBtn=document.getElementById('modal-social-btn');
   if(likeBtn)likeBtn.onclick=function(){handleProductEmoji(selectedProduct.id,'like',likeBtn)};
   if(giftBtn)giftBtn.onclick=function(){handleProductEmoji(selectedProduct.id,'gift',giftBtn)};
+  if(socialBtn)socialBtn.onclick=function(){handleProductSocialPost(selectedProduct.id,socialBtn)};
 }
 function parsePiPrice(p){return parseFloat(String(p).replace(/[^\d.]/g,""))||0}
 function doSearch(){var i=document.getElementById("searchInput");searchQuery=i?i.value:"";render()}
@@ -688,6 +739,7 @@ function render(){
       html+='<div class="pc-interactions" data-pid="'+item.id+'">';
       html+='<button class="pc-like" type="button" aria-label="Like '+esc(item.title)+'">❤️ '+formatCount(emojiTotals.likes)+'</button>';
       html+='<button class="pc-gift" type="button" aria-label="Send gift for '+esc(item.title)+'">🎁 '+formatCount(emojiTotals.gifts)+'</button>';
+      html+='<button class="pc-social" type="button" aria-label="Post '+esc(item.title)+' to social">📣 Social</button>';
       html+='</div>';
       if(item.rating) html+=renderStars(item.rating,item.reviews);
       if(item.responseTime||item.yrs){
@@ -796,12 +848,13 @@ function render(){
     html+='<div class="section"><div class="section-header"><div class="section-title">\uD83D\uDE97 Transport & Delivery</div><a href="ride.html" class="inline-style-19">🚀 City Rush</a></div><div class="trans-grid">';
     transportServices.forEach(function(s){
       var bs="";
+      var serviceUrl=(s.id==="tr9"||s.id==="tr10")?"delivery.html":"ride.html?service="+encodeURIComponent(s.id);
       if(s.badge==="Popular") bs="background:#fef3c7;color:#92400e";
       else if(s.badge==="Premium") bs="background:#ede9fe;color:#6d28d9";
       else if(s.badge) bs="background:#d1fae5;color:#065f46";
-      html+='<div class="trans-card inline-style-20" onclick="window.location.href=&quot;ride.html&quot;" ><div class="tc-top"><span class="tc-icon">'+s.icon+'</span>'+
+      html+='<a class="trans-card inline-style-20" href="'+serviceUrl+'"><div class="tc-top"><span class="tc-icon">'+s.icon+'</span>'+
         (s.badge?'<span class="tc-badge inline-style-21" >'+esc(s.badge)+'</span>':'')+
-        '</div><div class="tc-name">'+esc(s.name)+'</div><div class="tc-desc">'+esc(s.desc)+'</div><div class="tc-price">'+esc(s.price)+'</div></div>';
+        '</div><div class="tc-name">'+esc(s.name)+'</div><div class="tc-desc">'+esc(s.desc)+'</div><div class="tc-price">'+esc(s.price)+'</div></a>';
     });
     html+='</div>';
 
@@ -809,9 +862,10 @@ function render(){
     html+='<h3 class="inline-style-22">\u2708\uFE0F Flights</h3>'+
       '<div class="h-scroll hide-sb">';
     flights.forEach(function(f){
-      html+='<div class="fl-card"><div class="fl-air"><span class="fl-icon">'+f.icon+'</span><span class="fl-name">'+esc(f.airline)+'</span></div>'+
+      var flightUrl='flights.html?from='+encodeURIComponent(f.from)+'&to='+encodeURIComponent(f.to)+'&airline='+encodeURIComponent(f.airline);
+      html+='<a class="fl-card" href="'+flightUrl+'"><img class="fl-image" src="'+f.image+'" alt="'+esc(f.airline)+' aircraft" loading="lazy"><div class="fl-body"><div class="fl-air"><span class="fl-icon">'+f.icon+'</span><span class="fl-name">'+esc(f.airline)+'</span></div>'+
         '<div class="fl-route">'+esc(f.from)+' <span class="arr">\u2192</span> '+esc(f.to)+'</div>'+
-        '<div class="fl-dur">'+esc(f.duration)+'</div><div class="fl-price">'+esc(f.price)+'</div></div>';
+        '<div class="fl-dur">'+esc(f.duration)+'</div><div class="fl-price">'+esc(f.price)+'</div></div></a>';
     });
     html+='</div></div>';
   }
@@ -933,6 +987,7 @@ function renderModal(){
   h+='<div class="modal-interactions" id="modal-interaction-card">';
   h+='<button id="modal-like-btn" class="pc-like" type="button">❤️ '+formatCount(emojiTotals.likes)+'</button>';
   h+='<button id="modal-gift-btn" class="pc-gift" type="button">🎁 '+formatCount(emojiTotals.gifts)+'</button>';
+  h+='<button id="modal-social-btn" class="pc-social" type="button">📣 Post to Social</button>';
   h+='</div>';
 
   h+='<div id="modal-card-strip"></div>';

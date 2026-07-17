@@ -4,6 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>City Rush - Pi Ride Booking</title>
+  <script>
+    (function () {
+      var legacyPages = { '#deliveryOptions': 'delivery.html', '#flightOptions': 'flights.html' };
+      if (legacyPages[window.location.hash]) window.location.replace(legacyPages[window.location.hash]);
+    }());
+  </script>
   <link rel="preconnect" href="https://sdk.minepi.com">
   <script src="https://sdk.minepi.com/pi-sdk.js"></script>
   <script src="pi-sdk-helper.js"></script>
@@ -20,8 +26,8 @@
     </a>
     <nav class="topbar-nav">
       <a href="ride.html" class="active">Ride</a>
-      <a href="#deliveryOptions">Delivery</a>
-      <a href="#flightOptions">Flights</a>
+      <a href="delivery.html">Delivery</a>
+      <a href="flights.html">Flights</a>
       <a href="map.html">Map</a>
     </nav>
     <div class="topbar-actions">
@@ -30,16 +36,16 @@
   </header>
 
   <section class="page-shell">
-    <article class="hero">
+    <article class="hero" aria-label="City Rush transport with a ride car, motorbike, tuk-tuk, and airport van">
       <div>
-        <span class="eyebrow">Pi-powered mobility</span>
-        <h1>Book a ride, delivery, or airport transfer in minutes.</h1>
-        <p>City Rush brings Bolt-style route planning, clear service choices, and instant Pi checkout into one worldwide transport hub.</p>
+        <span class="eyebrow">Worldwide ride booking</span>
+        <h1>Plan, price, and follow your City Rush ride.</h1>
+        <p>Choose pickup and destination points, calculate road kilometers and fare, pay, then watch your driver move toward pickup.</p>
       </div>
       <div class="hero-metrics" aria-label="City Rush service highlights">
         <div><strong>2 min</strong><span>Fast pickup estimate</span></div>
         <div><strong>0.00001 π</strong><span>Rides from</span></div>
-        <div><strong>24/7</strong><span>Airport and delivery</span></div>
+        <div><strong>24/7</strong><span>Ride availability</span></div>
       </div>
     </article>
 
@@ -84,7 +90,20 @@
       </div>
       <div class="driver-preview">
         <div class="driver-avatar">CR</div>
-        <div><strong>Nearby drivers online</strong><span>Verified vehicles, delivery riders, and airport crews are matched after checkout.</span></div>
+        <div><strong id="availabilityTitle">Nearby drivers online</strong><span id="availabilityText">A verified vehicle is matched after checkout and shown moving toward your pickup.</span></div>
+      </div>
+      <div class="pickup-tracker hidden" id="pickupTracker" aria-live="polite">
+        <div class="tracker-head">
+          <span class="tracker-car">🚗</span>
+          <div><strong id="driverStatusLabel">Driver coming to pick you</strong><span id="driverDistanceLabel">Waiting for booking confirmation</span></div>
+        </div>
+        <div class="tracker-road" aria-hidden="true">
+          <span class="tracker-road-line"></span>
+          <span class="tracker-road-car" id="trackerRoadCar">🚗</span>
+          <span class="tracker-road-pin"></span>
+        </div>
+        <div class="tracker-progress"><span id="driverProgressFill"></span></div>
+        <div class="tracker-meta"><span id="driverEtaLabel">ETA --</span><span id="driverVehicleLabel">City Rush driver</span></div>
       </div>
       <div class="bottom-links">
         <a href="shop.html">Back to Dashboard</a>
@@ -99,20 +118,20 @@
             <span class="eyebrow">Where to?</span>
             <h2>Enter your route</h2>
           </div>
-          <div class="service-tabs" aria-label="Service type">
-            <button type="button" class="active">Ride</button>
-            <button type="button">Delivery</button>
-            <button type="button">Airport</button>
+          <div class="service-tabs" aria-label="City Rush service">
+            <a href="ride.html" class="active">Ride</a>
+            <a href="delivery.html">Delivery</a>
+            <button type="button" id="airportRideTab">Airport ride</button>
           </div>
         </div>
         <div class="route-fields">
-          <div class="field route-point pickup"><label>Pickup location</label><input id="pickupInput" type="text" placeholder="Enter pickup address or tap the map"></div>
-          <div class="field route-point dropoff"><label>Destination</label><input id="dropoffInput" type="text" placeholder="Where are you going?"></div>
+          <div class="field route-point pickup"><label>Pickup location</label><input id="pickupInput" type="text" list="pickupSuggestions" autocomplete="off" placeholder="Search any address worldwide"><datalist id="pickupSuggestions"></datalist></div>
+          <div class="field route-point dropoff"><label>Destination</label><input id="dropoffInput" type="text" list="dropoffSuggestions" autocomplete="off" placeholder="Search city, airport, or address"><datalist id="dropoffSuggestions"></datalist></div>
           <div class="field"><label>Ride note</label><input id="noteInput" type="text" placeholder="Add special instructions for the driver or charter crew"></div>
         </div>
         <div class="route-actions">
           <button type="button" id="locateBtn" class="secondary">Use my current location</button>
-          <span>Tap the map once for pickup, again for destination.</span>
+          <span id="locationSearchStatus">Search worldwide or tap the map for pickup and destination.</span>
         </div>
         <div class="ride-map-block">
           <div class="map-caption"><strong>Live route map</strong><span>Pickup, destination, and route line update instantly.</span></div>
@@ -120,24 +139,15 @@
         </div>
       </div>
 
-      <div class="panel-block ride-picker" id="deliveryOptions">
+      <div class="panel-block ride-picker" id="rideOptionsSection">
         <div class="panel-title-row compact">
           <div>
-            <span class="eyebrow">Choose your service</span>
-            <h2>Recommended options</h2>
+            <span class="eyebrow">Vehicle selection</span>
+            <h2>Choose your ride</h2>
           </div>
-          <span class="availability-pill">10 options nearby</span>
+          <span class="availability-pill">8 ride options</span>
         </div>
         <div class="options" id="rideOptions"></div>
-      </div>
-      <div class="panel-block">
-        <div class="panel-title-row compact">
-          <div>
-            <span class="eyebrow">Long distance</span>
-            <h2>Featured flights</h2>
-          </div>
-        </div>
-        <div class="flight-grid" id="flightOptions"></div>
       </div>
     </main>
   </section>
@@ -223,16 +233,14 @@
     }
 
     var rideServices = [
-      {id:'tr1',icon:'🚗',name:'Economy Ride',price:'0.00001-0.00003 π',desc:'Affordable everyday rides',badge:'Popular',eta:'2 min',capacity:'4 seats'},
-      {id:'tr2',icon:'🚙',name:'Comfort Plus',price:'0.00003-0.00005 π',desc:'Spacious SUVs, premium interiors',eta:'4 min',capacity:'6 seats'},
-      {id:'tr3',icon:'🏎️',name:'Premium',price:'0.00005-0.0001 π',desc:'Luxury executive transport',badge:'Premium',eta:'6 min',capacity:'4 seats'},
-      {id:'tr4',icon:'🚕',name:'City Taxi',price:'0.00001-0.00003 π',desc:'Licensed metered taxis',badge:'Popular',eta:'3 min',capacity:'Metered'},
-      {id:'tr5',icon:'✈️🚕',name:'Airport Transfer',price:'0.00003-0.00007 π',desc:'Reliable airport pickup & drop',eta:'12 min',capacity:'Flight tracking'},
-      {id:'tr6',icon:'🏍️',name:'Boda / Motorbike',price:'0.000003-0.00001 π',desc:'Quick motorcycle rides',eta:'1 min',capacity:'1 rider'},
-      {id:'tr7',icon:'🛺',name:'Tuk-Tuk',price:'0.000006-0.00002 π',desc:'Short city trips',badge:'New',eta:'5 min',capacity:'3 seats'},
-      {id:'tr8',icon:'👨‍✈️',name:'Daily Driver',price:'0.00006-0.0001 π/day',desc:'Personal driver for the day',eta:'30 min',capacity:'Day hire'},
-      {id:'tr9',icon:'📦',name:'Express Delivery',price:'0.000006-0.00002 π',desc:'Same-day delivery, under 2 hrs',badge:'Popular',eta:'8 min',capacity:'Parcel'},
-      {id:'tr10',icon:'🚛',name:'Heavy Cargo',price:'0.00003-0.0001 π',desc:'Furniture & large item transport',eta:'25 min',capacity:'Large load'}
+      {id:'tr1',icon:'🚗',image:'assets/ride/economy-car.webp',name:'Economy Ride',baseFare:0.000004,perKm:0.000003,minFare:0.000010,desc:'Affordable everyday rides',badge:'Popular',eta:'2 min',capacity:'4 seats'},
+      {id:'tr2',icon:'🚙',image:'assets/ride/comfort-suv.webp',name:'Comfort Plus',baseFare:0.000012,perKm:0.000005,minFare:0.000030,desc:'Spacious SUVs, premium interiors',eta:'4 min',capacity:'6 seats'},
+      {id:'tr3',icon:'🏎️',image:'assets/ride/premium-car.webp',name:'Premium',baseFare:0.000020,perKm:0.000010,minFare:0.000050,desc:'Luxury executive transport',badge:'Premium',eta:'6 min',capacity:'4 seats'},
+      {id:'tr4',icon:'🚕',image:'assets/ride/economy-car.webp',name:'City Taxi',baseFare:0.000006,perKm:0.000003,minFare:0.000010,desc:'Licensed metered taxis',badge:'Popular',eta:'3 min',capacity:'Metered'},
+      {id:'tr5',icon:'✈️🚕',image:'assets/ride/airport-transfer.webp',name:'Airport Transfer',baseFare:0.000020,perKm:0.000006,minFare:0.000030,desc:'Reliable airport pickup & drop',eta:'12 min',capacity:'Flight tracking'},
+      {id:'tr6',icon:'🏍️',image:'assets/ride/motorbike.webp',name:'Boda / Motorbike',baseFare:0.000001,perKm:0.000001,minFare:0.000003,desc:'Quick motorcycle rides',eta:'1 min',capacity:'1 rider'},
+      {id:'tr7',icon:'🛺',image:'assets/ride/tuk-tuk.webp',name:'Tuk-Tuk',baseFare:0.000002,perKm:0.000002,minFare:0.000006,desc:'Short city trips',badge:'New',eta:'5 min',capacity:'3 seats'},
+      {id:'tr8',icon:'🛩️',image:'assets/ride/small-airplane.webp',name:'Small Airplane Hire',baseFare:0.000500,perKm:0.000050,minFare:0.000700,desc:'Private regional charter flights',badge:'Charter',eta:'45 min',capacity:'6 seats',mode:'air'}
     ];
 
     var selectedService = null;
@@ -240,7 +248,6 @@
     var dropoffInput = document.getElementById('dropoffInput');
     var noteInput = document.getElementById('noteInput');
     var rideOptions = document.getElementById('rideOptions');
-    var flightOptionsList = document.getElementById('flightOptions');
     var paymentMethod = 'pi';
     var cardForm = document.getElementById('cardForm');
     var cardNumberInput = document.getElementById('cardNumber');
@@ -262,6 +269,9 @@
     var paymentStatus = document.getElementById('paymentStatus');
     var routeButton = document.getElementById('routeButton');
     var locateBtn = document.getElementById('locateBtn');
+    var pickupSuggestions = document.getElementById('pickupSuggestions');
+    var dropoffSuggestions = document.getElementById('dropoffSuggestions');
+    var locationSearchStatus = document.getElementById('locationSearchStatus');
     var rideMap = null;
     var rideMapMarkers = [];
     var rideMapMode = 'pickup';
@@ -269,12 +279,33 @@
     var currentLocationCircle = null;
     var watchId = null;
     var routeLine = null;
+    var routePoints = { pickup:null, dropoff:null };
+    var geocodeResults = { pickup:[], dropoff:[] };
+    var geocodeTimers = { pickup:null, dropoff:null };
+    var roadRouteDetails = null;
+    var routeLookupKey = '';
+    var routeRequestId = 0;
+    var routeLookupPending = false;
+    var driverMarker = null;
+    var driverTrackLine = null;
+    var driverTimer = null;
+    var driverTotalSeconds = 0;
+    var driverRemainingSeconds = 0;
+    var driverStartPoint = null;
+    var driverPickupPoint = null;
+    var pickupTracker = document.getElementById('pickupTracker');
+    var driverStatusLabel = document.getElementById('driverStatusLabel');
+    var driverDistanceLabel = document.getElementById('driverDistanceLabel');
+    var driverEtaLabel = document.getElementById('driverEtaLabel');
+    var driverVehicleLabel = document.getElementById('driverVehicleLabel');
+    var driverProgressFill = document.getElementById('driverProgressFill');
+    var trackerRoadCar = document.getElementById('trackerRoadCar');
+    var availabilityTitle = document.getElementById('availabilityTitle');
+    var availabilityText = document.getElementById('availabilityText');
 
-    var flightServices = [
-      {icon:'🇰🇪',airline:'Kenya Airways',route:'NBO → DXB',duration:'5h 20m',price:'0.002 π'},
-      {icon:'🇪🇹',airline:'Ethiopian Airlines',route:'ADD → LHR',duration:'8h 15m',price:'0.003 π'},
-      {icon:'🇦🇪',airline:'Emirates',route:'DXB → JFK',duration:'13h 40m',price:'0.004 π'}
-    ];
+    function formatPi(value) {
+      return Number(value || 0).toFixed(6);
+    }
 
     function createRideCards() {
       rideServices.forEach(function(service) {
@@ -282,29 +313,12 @@
         card.type = 'button';
         card.className = 'ride-card';
         card.id = service.id;
-        card.innerHTML = '<div class="ride-icon">'+service.icon+'</div>' +
+        card.innerHTML = '<div class="ride-visual"><img src="'+service.image+'" alt="" loading="lazy"><span class="ride-icon">'+service.icon+'</span></div>' +
           '<div class="ride-meta"><strong>'+service.name+'</strong><small>'+service.desc+'</small><span class="ride-facts"><em>'+service.eta+'</em><em>'+service.capacity+'</em></span>'+ (service.badge ? '<small class="ride-badge">'+service.badge+'</small>' : '') + '</div>' +
-          '<div class="ride-rate"><strong>'+service.price+'</strong><span>Est. fare</span></div>';
+          '<div class="ride-rate"><strong>'+formatPi(service.perKm)+' π/km</strong><span>+ '+formatPi(service.baseFare)+' π base</span></div>';
         card.addEventListener('click', function() { selectRide(service.id); });
         rideOptions.appendChild(card);
       });
-    }
-
-    function createFlightCards() {
-      if (!flightOptionsList) return;
-      flightServices.forEach(function(flight) {
-        var card = document.createElement('div');
-        card.className = 'flight-card';
-        card.innerHTML = '<div class="flight-meta"><div class="flight-icon">'+flight.icon+'</div><div><strong>'+flight.airline+'</strong><small>'+flight.route+'</small></div></div>' +
-          '<div class="flight-details"><span>'+flight.duration+'</span><strong>'+flight.price+'</strong></div>';
-        flightOptionsList.appendChild(card);
-      });
-    }
-
-    function parsePriceRange(value) {
-      var cleaned = value.replace(/[^0-9.\-]/g, '');
-      var parts = cleaned.split('-');
-      return { min: parseFloat(parts[0]) || 0, max: parseFloat(parts[1] || parts[0]) || parseFloat(parts[0]) || 0 };
     }
 
     function parseLatLng(text) {
@@ -316,9 +330,20 @@
       return null;
     }
 
+    function coordinateLabel(point) {
+      return 'Lat ' + point.lat.toFixed(5) + ', Lng ' + point.lng.toFixed(5);
+    }
+
+    function routeCoordinateKey(coords) {
+      if (!coords.pickup || !coords.dropoff) return '';
+      return [coords.pickup.lat, coords.pickup.lng, coords.dropoff.lat, coords.dropoff.lng].map(function(value) {
+        return Number(value).toFixed(5);
+      }).join(',');
+    }
+
     function getRouteCoordinates() {
-      var pickup = parseLatLng(pickupInput.value.trim());
-      var dropoff = parseLatLng(dropoffInput.value.trim());
+      var pickup = routePoints.pickup || parseLatLng(pickupInput.value.trim());
+      var dropoff = routePoints.dropoff || parseLatLng(dropoffInput.value.trim());
       return { pickup: pickup, dropoff: dropoff };
     }
 
@@ -333,38 +358,176 @@
 
     function estimateDuration(distance) {
       if (!distance) return null;
+      if (selectedService && selectedService.mode === 'air') return Math.max(30, Math.round((distance / 260) * 60 + 25));
+      if (roadRouteDetails && roadRouteDetails.key === routeCoordinateKey(getRouteCoordinates())) return roadRouteDetails.durationMinutes;
       var mins = Math.max(4, Math.round(distance * 3 + 5));
       return mins;
     }
 
     function calculateDistance() {
       var coords = getRouteCoordinates();
+      if (selectedService && selectedService.mode === 'air' && coords.pickup && coords.dropoff) {
+        return Math.max(1, parseFloat(haversineDistance(coords.pickup.lat, coords.pickup.lng, coords.dropoff.lat, coords.dropoff.lng).toFixed(2)));
+      }
+      if (roadRouteDetails && roadRouteDetails.key === routeCoordinateKey(coords)) return roadRouteDetails.distanceKm;
       if (coords.pickup && coords.dropoff) {
         return Math.max(0.5, parseFloat(haversineDistance(coords.pickup.lat, coords.pickup.lng, coords.dropoff.lat, coords.dropoff.lng).toFixed(2)));
       }
       var pickup = pickupInput.value.trim();
       var dropoff = dropoffInput.value.trim();
       if (!pickup || !dropoff) return null;
-      var score = pickup.length + dropoff.length;
-      var km = Math.max(2, Math.min(16, Math.round(score / 10 * 1.5)));
-      return km;
+      return null;
+    }
+
+    function setLocationSearchStatus(message, isError) {
+      if (!locationSearchStatus) return;
+      locationSearchStatus.textContent = message;
+      locationSearchStatus.classList.toggle('error', !!isError);
+    }
+
+    function renderGeocodeOptions(kind, results) {
+      var list = kind === 'pickup' ? pickupSuggestions : dropoffSuggestions;
+      list.innerHTML = '';
+      results.forEach(function(place) {
+        var option = document.createElement('option');
+        option.value = place.label;
+        list.appendChild(option);
+      });
+    }
+
+    function selectGeocodeResult(kind, place, keepInputValue) {
+      var input = kind === 'pickup' ? pickupInput : dropoffInput;
+      routePoints[kind] = { lat:Number(place.lat), lng:Number(place.lng), label:place.label };
+      if (!keepInputValue) input.value = place.label;
+      roadRouteDetails = null;
+      routeLookupKey = '';
+      routeLookupPending = false;
+      setLocationSearchStatus('Location found in ' + (place.countryCode || 'worldwide map') + '.');
+      updateSummary();
+    }
+
+    function searchWorldwideLocations(kind, query) {
+      var requestQuery = query.trim();
+      if (requestQuery.length < 3) return;
+      setLocationSearchStatus('Searching worldwide addresses...');
+      fetch('/api/geocode?q=' + encodeURIComponent(requestQuery))
+        .then(function(response) { return response.json(); })
+        .then(function(data) {
+          var input = kind === 'pickup' ? pickupInput : dropoffInput;
+          if (input.value.trim() !== requestQuery) return;
+          if (!data.success) throw new Error(data.error || 'Address search failed');
+          geocodeResults[kind] = data.results || [];
+          renderGeocodeOptions(kind, geocodeResults[kind]);
+          if (!geocodeResults[kind].length) {
+            setLocationSearchStatus('No matching place found. Add a city or country and try again.', true);
+            return;
+          }
+          selectGeocodeResult(kind, geocodeResults[kind][0], true);
+          setLocationSearchStatus(geocodeResults[kind].length + ' worldwide matches found. Choose the best suggestion.');
+        })
+        .catch(function(error) {
+          console.error('Address search error', error);
+          setLocationSearchStatus(error.message || 'Address search is temporarily unavailable.', true);
+        });
+    }
+
+    function handleLocationInput(kind) {
+      var input = kind === 'pickup' ? pickupInput : dropoffInput;
+      var exact = geocodeResults[kind].find(function(place) { return place.label === input.value.trim(); });
+      routePoints[kind] = null;
+      roadRouteDetails = null;
+      routeLookupKey = '';
+      routeLookupPending = false;
+      if (geocodeTimers[kind]) clearTimeout(geocodeTimers[kind]);
+      if (exact) {
+        selectGeocodeResult(kind, exact, true);
+        return;
+      }
+      updateSummary();
+      if (input.value.trim().length >= 3) {
+        geocodeTimers[kind] = setTimeout(function() { searchWorldwideLocations(kind, input.value); }, 550);
+      } else {
+        renderGeocodeOptions(kind, []);
+        setLocationSearchStatus('Search worldwide or tap the map for pickup and destination.');
+      }
+    }
+
+    function requestRoadRoute() {
+      if (selectedService && selectedService.mode === 'air') {
+        routeLookupPending = false;
+        return;
+      }
+      var coords = getRouteCoordinates();
+      var key = routeCoordinateKey(coords);
+      if (!key || routeLookupKey === key) return;
+      routeLookupKey = key;
+      routeLookupPending = true;
+      var requestId = ++routeRequestId;
+      setLocationSearchStatus('Calculating worldwide road route...');
+      var params = new URLSearchParams({
+        pickupLat:coords.pickup.lat,
+        pickupLng:coords.pickup.lng,
+        dropoffLat:coords.dropoff.lat,
+        dropoffLng:coords.dropoff.lng
+      });
+      fetch('/api/route?' + params.toString())
+        .then(function(response) { return response.json(); })
+        .then(function(data) {
+          if (requestId !== routeRequestId) return;
+          if (!data.success) throw new Error(data.error || 'Route calculation failed');
+          roadRouteDetails = {
+            key:key,
+            distanceKm:data.distanceKm,
+            durationMinutes:data.durationMinutes,
+            geometry:data.geometry || []
+          };
+          routeLookupPending = false;
+          setLocationSearchStatus('Road route ready: ' + data.distanceKm + ' km, about ' + data.durationMinutes + ' min.');
+          updateSummary();
+        })
+        .catch(function(error) {
+          if (requestId !== routeRequestId) return;
+          routeLookupPending = false;
+          console.warn('Road route fallback', error);
+          setLocationSearchStatus('Road route unavailable; using a direct-distance estimate.', true);
+          updateSummary();
+        });
     }
 
     function estimateFare(service) {
-      var range = parsePriceRange(service.price);
-      var distance = calculateDistance() || 4;
-      var factor = Math.min(1.5, Math.max(0.8, distance / 6));
+      var distance = calculateDistance();
+      if (!distance) return null;
+      var distanceCharge = distance * service.perKm;
+      var calculatedFare = service.baseFare + distanceCharge;
       return {
         distance: distance,
-        fare: (range.min + (range.max - range.min) * factor * 0.6).toFixed(6),
-        rangeMin: range.min.toFixed(6),
-        rangeMax: range.max.toFixed(6)
+        baseFare: formatPi(service.baseFare),
+        perKm: formatPi(service.perKm),
+        distanceCharge: formatPi(distanceCharge),
+        minimumFareApplied: calculatedFare < service.minFare,
+        fare: formatPi(Math.max(service.minFare, calculatedFare))
       };
     }
 
     function selectRide(id) {
+      var previousMode = selectedService && selectedService.mode || 'road';
       selectedService = rideServices.find(function(item){return item.id===id;});
+      var nextMode = selectedService && selectedService.mode || 'road';
+      if (previousMode !== nextMode) {
+        routeRequestId += 1;
+        routeLookupPending = false;
+        routeLookupKey = '';
+        roadRouteDetails = null;
+      }
       document.querySelectorAll('.ride-card').forEach(function(card){card.classList.toggle('active', card.id===id);});
+      if (nextMode === 'air') {
+        setLocationSearchStatus('Air charter selected. Fare uses direct flight distance between the two locations.');
+        availabilityTitle.textContent = 'Charter crews available';
+        availabilityText.textContent = 'A verified aircraft and crew are assigned after checkout and prepared for your departure.';
+      } else {
+        availabilityTitle.textContent = 'Nearby drivers online';
+        availabilityText.textContent = 'A verified vehicle is matched after checkout and shown moving toward your pickup.';
+      }
       updateSummary();
     }
 
@@ -397,7 +560,9 @@
       var coords = getRouteCoordinates();
       var distance = calculateDistance();
       var duration = estimateDuration(distance);
-      movementLabel.textContent = distance ? distance + ' km route' : 'No route calculated';
+      requestRoadRoute();
+      var isAirService = selectedService && selectedService.mode === 'air';
+      movementLabel.textContent = distance ? distance + (isAirService ? ' km direct flight' : ' km road route') : 'No route calculated';
       durationLabel.textContent = duration ? duration + ' min' : '-';
       if (!selectedService) {
         estimateTitle.textContent = 'Select a ride to view estimate';
@@ -413,16 +578,26 @@
       var estimate = estimateFare(selectedService);
       selectedService.estimate = estimate;
       serviceLabel.textContent = selectedService.name;
+      if (!estimate) {
+        distanceLabel.textContent = '- km';
+        fareLabel.textContent = '- π';
+        estimateTitle.textContent = 'Set pickup and destination';
+        estimateText.textContent = 'Select both addresses from the worldwide suggestions or tap both points on the map to calculate kilometers and payment.';
+        payButton.disabled = true;
+        payButton.textContent = 'Calculate route to pay';
+        authButton.disabled = paymentMethod !== 'pi' || !piSdkReady;
+        return;
+      }
       distanceLabel.textContent = estimate.distance + ' km';
       fareLabel.textContent = estimate.fare + ' π';
-      estimateTitle.textContent = 'Ready to book ' + selectedService.name;
-      estimateText.textContent = 'Estimated fare based on route and selected service: ' + estimate.rangeMin + '–' + estimate.rangeMax + ' π. Final price confirms with driver.';
+      estimateTitle.textContent = routeLookupPending ? 'Calculating road kilometers...' : 'Ready to book ' + selectedService.name;
+      estimateText.textContent = estimate.distance + ' km × ' + estimate.perKm + ' π/km + ' + estimate.baseFare + ' π base = ' + estimate.fare + ' π' + (estimate.minimumFareApplied ? ' minimum fare.' : '.');
       if (paymentMethod === 'card') {
-        payButton.disabled = !isCardFormValid();
-        payButton.textContent = 'Pay with Card';
+        payButton.disabled = routeLookupPending || !isCardFormValid();
+        payButton.textContent = routeLookupPending ? 'Calculating route...' : 'Pay ' + estimate.fare + ' π with Card';
       } else {
-        payButton.disabled = !piSdkReady;
-        payButton.textContent = piSdkReady ? ('Pay ' + estimate.fare + ' π with Pi') : 'Connect Pi to pay';
+        payButton.disabled = routeLookupPending || !piSdkReady;
+        payButton.textContent = routeLookupPending ? 'Calculating route...' : (piSdkReady ? ('Pay ' + estimate.fare + ' π with Pi') : 'Connect Pi to pay');
       }
       authButton.disabled = paymentMethod !== 'pi' || !piSdkReady;
     }
@@ -447,6 +622,109 @@
       paymentStatus.textContent = 'Pi sandbox mode ready. Open the Pi Sandbox app, then connect your test wallet.';
     }
 
+    function etaMinutesFromService(service) {
+      var match = String(service && service.eta || '4 min').match(/\d+/);
+      return Math.max(1, parseInt(match ? match[0] : 4, 10));
+    }
+
+    function interpolatePoint(from, to, progress) {
+      return {
+        lat: from.lat + (to.lat - from.lat) * progress,
+        lng: from.lng + (to.lng - from.lng) * progress
+      };
+    }
+
+    function makeDriverStartPoint(pickup) {
+      return { lat: pickup.lat + 0.012, lng: pickup.lng - 0.016 };
+    }
+
+    function getCurrentMapPoint() {
+      if (currentLocationMarker) {
+        var current = currentLocationMarker.getLatLng();
+        return { lat: current.lat, lng: current.lng };
+      }
+      if (rideMap && rideMap.getZoom && rideMap.getZoom() > 3) {
+        var center = rideMap.getCenter();
+        return { lat: center.lat, lng: center.lng };
+      }
+      return null;
+    }
+
+    function getDriverPickupPoint() {
+      var coords = getRouteCoordinates();
+      if (coords.pickup) return coords.pickup;
+      return getCurrentMapPoint() || { lat: 0, lng: 0 };
+    }
+
+    function clearDriverRoute() {
+      if (driverTimer) {
+        clearInterval(driverTimer);
+        driverTimer = null;
+      }
+      if (driverTrackLine && rideMap) {
+        rideMap.removeLayer(driverTrackLine);
+        driverTrackLine = null;
+      }
+    }
+
+    function updatePickupTracker(progress) {
+      var pct = Math.max(0, Math.min(100, Math.round(progress * 100)));
+      var isAirService = selectedService && selectedService.mode === 'air';
+      if (driverProgressFill) driverProgressFill.style.width = pct + '%';
+      if (trackerRoadCar) {
+        trackerRoadCar.textContent = isAirService ? '✈️' : '🚗';
+        trackerRoadCar.style.left = 'calc(' + pct + '% - 16px)';
+      }
+      if (pickupTracker) {
+        pickupTracker.style.setProperty('--driver-progress', pct + '%');
+        pickupTracker.classList.toggle('arrived', pct >= 100);
+      }
+      if (driverEtaLabel) driverEtaLabel.textContent = driverRemainingSeconds > 0 ? 'ETA ' + Math.ceil(driverRemainingSeconds / 60) + ' min' : (isAirService ? 'Aircraft ready' : 'Arrived now');
+      if (driverDistanceLabel) driverDistanceLabel.textContent = isAirService ? (driverRemainingSeconds > 0 ? 'Charter crew is preparing your aircraft' : 'Aircraft is ready for departure') : (driverRemainingSeconds > 0 ? 'Driver is moving toward your pickup' : 'Driver has arrived at your pickup point');
+      if (driverStatusLabel) driverStatusLabel.textContent = isAirService ? (driverRemainingSeconds > 0 ? 'Aircraft preparation in progress' : 'Aircraft ready') : (driverRemainingSeconds > 0 ? 'Driver coming to pick you' : 'Driver arrived');
+      if (driverVehicleLabel && selectedService) driverVehicleLabel.textContent = selectedService.name + ' · ' + selectedService.capacity;
+    }
+
+    function updateDriverMarker(progress) {
+      if (!rideMap) return;
+      if (selectedService && selectedService.mode === 'air') return;
+      if (!driverPickupPoint) driverPickupPoint = getDriverPickupPoint();
+      if (!driverStartPoint) driverStartPoint = makeDriverStartPoint(driverPickupPoint);
+      var current = interpolatePoint(driverStartPoint, driverPickupPoint, progress);
+      if (!driverMarker) {
+        driverMarker = L.marker([current.lat, current.lng], {
+          title: 'Your driver',
+          icon: L.divIcon({ className: 'driver-car-marker', html: '<span>🚗</span>', iconSize: [38, 38], iconAnchor: [19, 19] })
+        }).addTo(rideMap).bindPopup('<strong>Your driver</strong><br>Coming to pick you');
+      } else {
+        driverMarker.setLatLng([current.lat, current.lng]);
+      }
+      if (driverTrackLine) rideMap.removeLayer(driverTrackLine);
+      driverTrackLine = L.polyline([[current.lat, current.lng], [driverPickupPoint.lat, driverPickupPoint.lng]], { color:'#33d36b', weight:4, opacity:0.9 }).addTo(rideMap);
+      var bounds = L.latLngBounds([[current.lat, current.lng], [driverPickupPoint.lat, driverPickupPoint.lng]]);
+      rideMap.fitBounds(bounds, { padding:[70,70], maxZoom:14 });
+    }
+
+    function startDriverArrival() {
+      if (!selectedService) return;
+      clearDriverRoute();
+      if (pickupTracker) pickupTracker.classList.remove('hidden');
+      driverTotalSeconds = etaMinutesFromService(selectedService) * 60;
+      driverRemainingSeconds = driverTotalSeconds;
+      driverStartPoint = null;
+      driverPickupPoint = getDriverPickupPoint();
+      if (pickupTracker) pickupTracker.classList.remove('arrived');
+      updatePickupTracker(0);
+      if (selectedService.mode !== 'air') updateDriverMarker(0);
+      driverTimer = setInterval(function() {
+        driverRemainingSeconds = Math.max(0, driverRemainingSeconds - 10);
+        var progress = driverTotalSeconds ? 1 - (driverRemainingSeconds / driverTotalSeconds) : 1;
+        updatePickupTracker(progress);
+        if (selectedService.mode !== 'air') updateDriverMarker(progress);
+        if (driverRemainingSeconds <= 0) clearDriverRoute();
+      }, 1000);
+    }
+
     function openPiSandboxApp() {
       window.open(PI_SANDBOX_APP_URL, '_blank', 'noopener');
     }
@@ -457,12 +735,17 @@
       L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom:19, attribution:'&copy; OpenStreetMap contributors' }).addTo(rideMap);
       rideMap.on('click', function(e) {
         if (!pickupInput.value || rideMapMode === 'pickup') {
-          pickupInput.value = 'Lat ' + e.latlng.lat.toFixed(5) + ', Lng ' + e.latlng.lng.toFixed(5);
+          routePoints.pickup = { lat:e.latlng.lat, lng:e.latlng.lng };
+          pickupInput.value = coordinateLabel(routePoints.pickup);
           rideMapMode = 'dropoff';
         } else {
-          dropoffInput.value = 'Lat ' + e.latlng.lat.toFixed(5) + ', Lng ' + e.latlng.lng.toFixed(5);
+          routePoints.dropoff = { lat:e.latlng.lat, lng:e.latlng.lng };
+          dropoffInput.value = coordinateLabel(routePoints.dropoff);
           rideMapMode = 'pickup';
         }
+        roadRouteDetails = null;
+        routeLookupKey = '';
+        routeLookupPending = false;
         updateSummary();
       });
       updateRideMapMarkers();
@@ -475,30 +758,31 @@
       rideMapMarkers = [];
       var pickup = pickupInput.value.trim();
       var dropoff = dropoffInput.value.trim();
+      var coords = getRouteCoordinates();
       var bounds = [];
-      if (pickup) {
-        var parts = pickup.match(/Lat\s*([0-9\.-]+),\s*Lng\s*([0-9\.-]+)/);
-        if (parts) {
-          var marker = L.marker([parseFloat(parts[1]), parseFloat(parts[2])], { title:'Pickup' }).addTo(rideMap).bindPopup('<strong>Pickup</strong><br>' + pickup);
-          rideMapMarkers.push(marker);
-          bounds.push(marker.getLatLng());
-        }
+      if (pickup && coords.pickup) {
+        var marker = L.marker([coords.pickup.lat, coords.pickup.lng], { title:'Pickup' }).addTo(rideMap).bindPopup('<strong>Pickup</strong><br>' + pickup);
+        rideMapMarkers.push(marker);
+        bounds.push(marker.getLatLng());
       }
-      if (dropoff) {
-        var parts2 = dropoff.match(/Lat\s*([0-9\.-]+),\s*Lng\s*([0-9\.-]+)/);
-        if (parts2) {
-          var marker = L.marker([parseFloat(parts2[1]), parseFloat(parts2[2])], { title:'Dropoff' }).addTo(rideMap).bindPopup('<strong>Dropoff</strong><br>' + dropoff);
-          rideMapMarkers.push(marker);
-          bounds.push(marker.getLatLng());
-        }
+      if (dropoff && coords.dropoff) {
+        var marker2 = L.marker([coords.dropoff.lat, coords.dropoff.lng], { title:'Dropoff' }).addTo(rideMap).bindPopup('<strong>Dropoff</strong><br>' + dropoff);
+        rideMapMarkers.push(marker2);
+        bounds.push(marker2.getLatLng());
       }
       if (routeLine) {
         rideMap.removeLayer(routeLine);
         routeLine = null;
       }
       if (bounds.length === 2) {
-        routeLine = L.polyline(bounds, { color:'#22c55e', weight:4, opacity:0.9, dashArray:'8 6' }).addTo(rideMap);
-        rideMap.fitBounds(bounds, { padding:[60,60] });
+        var routePath = bounds;
+        var routeStyle = { color:'#22c55e', weight:4, opacity:0.9, dashArray:'8 6' };
+        if (roadRouteDetails && roadRouteDetails.key === routeCoordinateKey(coords) && roadRouteDetails.geometry.length) {
+          routePath = roadRouteDetails.geometry.map(function(point) { return [point[1], point[0]]; });
+          routeStyle.dashArray = null;
+        }
+        routeLine = L.polyline(routePath, routeStyle).addTo(rideMap);
+        rideMap.fitBounds(routeLine.getBounds(), { padding:[60,60] });
       } else if (bounds.length === 1) {
         rideMap.setView(bounds[0], 14);
       }
@@ -576,11 +860,19 @@
         showToast('Please enter both pickup and dropoff locations.', false);
         return;
       }
+      if (routeLookupPending) {
+        showToast('Please wait while road kilometers are calculated.', false);
+        return;
+      }
+      if (!selectedService.estimate) {
+        showToast('Select valid pickup and destination locations to calculate payment.', false);
+        return;
+      }
       if (!isCardFormValid()) {
         showToast('Please fill in valid card details.', false);
         return;
       }
-      var amount = selectedService.estimate ? selectedService.estimate.fare : '0.00001';
+      var amount = selectedService.estimate.fare;
       payButton.textContent = 'Processing card payment...';
       payButton.disabled = true;
       fetch('/api/card-pay', {
@@ -589,25 +881,34 @@
         body: JSON.stringify({
           amount: amount,
           merchant: 'City Rush',
-          note: selectedService.name + ' ride',
+          note: selectedService.name + (selectedService.mode === 'air' ? ' charter' : ' ride'),
           cardNumber: cardNumberInput.value.trim(),
           expiry: cardExpiryInput.value.trim(),
           cvv: cardCvvInput.value.trim(),
           name: cardNameInput.value.trim(),
-          metadata: { rideType: selectedService.name, pickup: pickup, dropoff: dropoff }
+          metadata: {
+            rideType: selectedService.name,
+            transportMode: selectedService.mode || 'road',
+            pickup: pickup,
+            dropoff: dropoff,
+            distanceKm: selectedService.estimate.distance,
+            perKmRate: selectedService.estimate.perKm,
+            baseFare: selectedService.estimate.baseFare
+          }
         })
       }).then(function(res){return res.json();}).then(function(data){
         if (data.success) {
-          showToast('Card payment approved! Ride confirmed.', true);
-          paymentStatus.textContent = 'Ride booked with card payment. Driver arriving shortly.';
-          payButton.textContent = 'Ride confirmed';
+          showToast(selectedService.mode === 'air' ? 'Card payment approved! Air charter confirmed.' : 'Card payment approved! Ride confirmed.', true);
+          paymentStatus.textContent = selectedService.mode === 'air' ? 'Air charter booked with card payment. The crew is preparing your aircraft.' : 'Ride booked with card payment. Driver arriving shortly.';
+          payButton.textContent = selectedService.mode === 'air' ? 'Charter confirmed' : 'Ride confirmed';
           payButton.disabled = true;
+          startDriverArrival();
         } else {
           throw new Error(data.error || 'Card payment failed');
         }
       }).catch(function(err){
         console.error('Card payment error', err);
-        payButton.textContent = 'Pay with Card';
+        payButton.textContent = 'Pay ' + selectedService.estimate.fare + ' π with Card';
         payButton.disabled = false;
         showToast(err.message || 'Card payment failed. Try again.', false);
       });
@@ -628,6 +929,14 @@
         showToast('Please enter both pickup and dropoff locations.', false);
         return;
       }
+      if (routeLookupPending) {
+        showToast('Please wait while road kilometers are calculated.', false);
+        return;
+      }
+      if (!selectedService.estimate) {
+        showToast('Select valid pickup and destination locations to calculate payment.', false);
+        return;
+      }
       if (!piSdkReady) {
         showToast('Pi SDK not available. Open this page in Pi Browser.', false);
         return;
@@ -644,18 +953,27 @@
         });
         return;
       }
-      var amount = selectedService.estimate ? selectedService.estimate.fare : '0.00001';
-      var memo = 'City Rush Ride: ' + selectedService.name + ' from ' + pickup + ' to ' + dropoff;
+      var amount = selectedService.estimate.fare;
+      var memo = 'City Rush ' + (selectedService.mode === 'air' ? 'Air Charter: ' : 'Ride: ') + selectedService.name + ' from ' + pickup + ' to ' + dropoff;
       payButton.textContent = 'Opening Pi pay...';
       payButton.disabled = true;
-      piCreatePayment(amount, memo, { rideType: selectedService.name, pickup: pickup, dropoff: dropoff }, function(paymentId, txid) {
-        showToast('Ride confirmed! Payment complete: ' + amount + ' π', true);
-        paymentStatus.textContent = 'Ride booked and paid with Pi. Driver arriving shortly.';
-        payButton.textContent = 'Ride confirmed';
+      piCreatePayment(amount, memo, {
+        rideType: selectedService.name,
+        transportMode: selectedService.mode || 'road',
+        pickup: pickup,
+        dropoff: dropoff,
+        distanceKm: selectedService.estimate.distance,
+        perKmRate: selectedService.estimate.perKm,
+        baseFare: selectedService.estimate.baseFare
+      }, function(paymentId, txid) {
+        showToast((selectedService.mode === 'air' ? 'Air charter confirmed! Payment complete: ' : 'Ride confirmed! Payment complete: ') + amount + ' π', true);
+        paymentStatus.textContent = selectedService.mode === 'air' ? 'Air charter booked and paid with Pi. The crew is preparing your aircraft.' : 'Ride booked and paid with Pi. Driver arriving shortly.';
+        payButton.textContent = selectedService.mode === 'air' ? 'Charter confirmed' : 'Ride confirmed';
         payButton.disabled = true;
+        startDriverArrival();
       }, function(error) {
         console.error('Pi payment error', error);
-        payButton.textContent = 'Pay ' + (selectedService.estimate ? selectedService.estimate.fare : '0.00001') + ' π with Pi';
+        payButton.textContent = 'Pay ' + selectedService.estimate.fare + ' π with Pi';
         payButton.disabled = false;
         showToast(typeof error === 'string' ? error : 'Payment failed. Please try again.', false);
       });
@@ -691,7 +1009,8 @@
       navigator.geolocation.getCurrentPosition(function(pos) {
         setCurrentLocation(pos.coords.latitude, pos.coords.longitude);
         if (!pickupInput.value.trim()) {
-          pickupInput.value = 'Lat ' + pos.coords.latitude.toFixed(5) + ', Lng ' + pos.coords.longitude.toFixed(5);
+          routePoints.pickup = { lat:pos.coords.latitude, lng:pos.coords.longitude };
+          pickupInput.value = coordinateLabel(routePoints.pickup);
         }
         updateSummary();
         showToast('Current location loaded.', true);
@@ -702,16 +1021,23 @@
 
     payButton.addEventListener('click', processPayment);
     routeButton.addEventListener('click', function() { openRideMapPage(); });
-    pickupInput.addEventListener('input', updateSummary);
-    dropoffInput.addEventListener('input', updateSummary);
+    pickupInput.addEventListener('input', function() { handleLocationInput('pickup'); });
+    dropoffInput.addEventListener('input', function() { handleLocationInput('dropoff'); });
     noteInput.addEventListener('input', updateSummary);
-
+    [cardNameInput, cardNumberInput, cardExpiryInput, cardCvvInput].forEach(function(input) {
+      input.addEventListener('input', updateSummary);
+    });
     createRideCards();
-    createFlightCards();
+    var initialServiceId = new URLSearchParams(window.location.search).get('service');
+    if (rideServices.some(function(service) { return service.id === initialServiceId; })) selectRide(initialServiceId);
     initRideMap();
     setPaymentMethod(piSdkReady ? 'pi' : 'card');
     updatePaymentStatus();
     updateSummary();
+    document.getElementById('airportRideTab').addEventListener('click', function() {
+      selectRide('tr5');
+      document.getElementById('rideOptionsSection').scrollIntoView({ behavior:'smooth', block:'start' });
+    });
   </script>
 </body>
 </html>

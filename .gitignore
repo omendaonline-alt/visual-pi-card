@@ -31,5 +31,7 @@ package-lock.json
 # Sensitive
 .env
 .env.local
+.delivery-admin-key
+data/*.json
 *.pem
 *.key

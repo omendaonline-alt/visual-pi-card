@@ -64,9 +64,16 @@
  }
 
  /* Emoji gift flow from omenda-ai.html */
- .emoji-inbox { background: #fff; border-radius: 24px; border: 1px solid rgba(15,23,42,.08); margin: 24px; padding: 22px 24px; box-shadow: 0 18px 35px rgba(15,23,42,.04); }
- .emoji-inbox h2 { margin: 0 0 6px; font-size: 1.15rem; }
- .emoji-inbox p.sub { margin: 0 0 14px; color: #64748b; font-size: 0.92rem; }
+ .emoji-overview { margin: 18px 24px 0; display: grid; gap: 10px; }
+ .emoji-overview-toggle { width: 100%; min-height: 54px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border: 1px solid rgba(15,23,42,.1); border-radius: 18px; background: #0f172a; color: #fff; padding: 12px 16px; font: inherit; font-weight: 900; cursor: pointer; box-shadow: 0 18px 35px rgba(15,23,42,.08); }
+ .emoji-overview-toggle span { display: inline-flex; align-items: center; gap: 8px; }
+ .emoji-overview-toggle small { color: #cbd5e1; font-size: .85rem; font-weight: 800; }
+ .emoji-overview-toggle:hover { background: #1e293b; }
+ .emoji-overview-panel { background: #fff; border-radius: 20px; border: 1px solid rgba(15,23,42,.08); padding: 16px; box-shadow: 0 18px 35px rgba(15,23,42,.04); }
+ .emoji-overview-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 12px; }
+ .emoji-overview-head h2 { margin: 0; font-size: 1.05rem; }
+ .emoji-overview-head a { color: #2563eb; text-decoration: none; font-weight: 900; }
+ .emoji-overview-head a:hover { text-decoration: underline; }
  .emoji-inbox-list { display: grid; gap: 10px; }
  .emoji-inbox-item { display: flex; align-items: center; gap: 14px; padding: 10px 12px; background: #f8fafc; border-radius: 14px; border: 1px solid rgba(148,163,184,.2); }
  .emoji-inbox-item .ei-emoji { font-size: 1.8rem; }
@@ -83,6 +90,66 @@
  @keyframes emojiTicker { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
  .live-badge{color:#16a34a;font-size:0.7rem;}
  .gift-link{color:#fbbf24;}
+ .story { cursor: pointer; }
+ .story.viewed img { border-color: rgba(148, 163, 184, .55); }
+ .quick-compose { margin: 22px 24px 0; background: #fff; border: 1px solid rgba(15, 23, 42, .08); border-radius: 24px; box-shadow: 0 18px 35px rgba(15,23,42,.04); padding: 16px; display: grid; gap: 14px; }
+ .compose-row { display: flex; align-items: center; gap: 12px; }
+ .compose-row .avatar { width: 44px; height: 44px; }
+ .viewer-avatar { background: #e2e8f0; }
+ .compose-open { flex: 1; min-height: 46px; border: 1px solid rgba(148,163,184,.28); border-radius: 999px; background: #f8fafc; color: #64748b; text-align: left; padding: 0 18px; font-weight: 700; cursor: pointer; }
+ .compose-actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+ .compose-actions button { border: 1px solid rgba(148,163,184,.25); background: #f8fafc; color: #334155; border-radius: 16px; min-height: 42px; font-weight: 800; cursor: pointer; }
+ .compose-actions button:hover, .compose-open:hover { background: #eff6ff; color: #1d4ed8; }
+ .social-account-row { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; gap: 10px; align-items: end; padding-top: 12px; border-top: 1px solid rgba(15,23,42,.08); }
+ .social-account-row label { display: grid; gap: 6px; color: #475569; font-size: .82rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; }
+ .social-account-row input { min-height: 42px; border: 1px solid rgba(148,163,184,.35); border-radius: 14px; padding: 0 12px; font: inherit; font-weight: 800; outline: none; }
+ .social-account-row input:focus { border-color: rgba(37,99,235,.45); box-shadow: 0 0 0 3px rgba(37,99,235,.12); }
+ .profile-photo-control { min-width: 128px; }
+ .profile-photo-picker { position: relative; min-height: 42px; display: inline-flex; align-items: center; gap: 8px; border: 1px solid rgba(37,99,235,.25); background: #eff6ff; color: #1d4ed8; border-radius: 999px; padding: 5px 12px 5px 5px; cursor: pointer; font-size: .82rem; font-weight: 900; text-transform: none; letter-spacing: 0; }
+ .profile-photo-picker input { position: absolute; inset: 0; opacity: 0; cursor: pointer; min-height: 0; padding: 0; }
+ .profile-photo-preview { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; background: #fff; border: 2px solid #fff; box-shadow: 0 6px 14px rgba(15,23,42,.12); }
+ .social-account-row button, .follow-author { border: 1px solid rgba(37,99,235,.25); background: #eff6ff; color: #1d4ed8; border-radius: 999px; min-height: 42px; padding: 0 14px; font-weight: 900; cursor: pointer; }
+ .social-sync-status { color: #16a34a; font-size: .88rem; font-weight: 900; white-space: nowrap; }
+ .follow-author { margin-left: auto; min-height: 34px; background: #0f172a; border-color: #0f172a; color: #fff; }
+ .follow-author.following { background: #fff; color: #0f172a; border-color: rgba(15,23,42,.18); }
+ .post-actions button.active, .post-actions .save.active { color: #e11d48; }
+ .status-post-body { margin: 0 20px 18px; padding: 22px; border-radius: 22px; background: linear-gradient(135deg,#0f172a,#1e293b); color: #f8fafc; font-size: clamp(1.15rem, 2vw, 1.6rem); line-height: 1.5; font-weight: 800; }
+ .post-card.status-post .post-image { display: none; }
+ .post-stats { padding: 0 20px 10px; display: flex; gap: 14px; flex-wrap: wrap; color: #475569; font-size: .94rem; font-weight: 700; }
+ .post-stats button { border: 0; background: none; color: #2563eb; cursor: pointer; padding: 0; font: inherit; font-weight: 800; }
+ .comment-drawer { padding: 0 20px 18px; display: grid; gap: 10px; }
+ .comment-row { display: flex; gap: 8px; line-height: 1.5; color: #334155; }
+ .comment-row strong { color: #0f172a; }
+ .comment-form { display: flex; gap: 10px; align-items: center; }
+ .comment-form input { flex: 1; min-width: 0; border: 1px solid rgba(148,163,184,.35); border-radius: 999px; padding: 11px 14px; outline: none; }
+ .comment-form input:focus { border-color: rgba(37,99,235,.45); box-shadow: 0 0 0 3px rgba(37,99,235,.12); }
+ .comment-form button, .modal-actions button { border: 0; border-radius: 999px; background: #0f172a; color: #fff; padding: 11px 16px; font-weight: 800; cursor: pointer; }
+ .social-modal { position: fixed; inset: 0; z-index: 80; display: none; align-items: center; justify-content: center; background: rgba(15,23,42,.64); padding: 18px; }
+ .social-modal.open { display: flex; }
+ .modal-card { width: min(620px, 100%); max-height: calc(100vh - 36px); overflow: auto; background: #fff; border-radius: 26px; box-shadow: 0 30px 80px rgba(15,23,42,.28); }
+ .modal-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 18px 20px; border-bottom: 1px solid rgba(15,23,42,.08); }
+ .modal-head h2 { margin: 0; font-size: 1.1rem; }
+ .modal-close { border: 0; background: #f1f5f9; border-radius: 50%; width: 38px; height: 38px; cursor: pointer; font-size: 1.2rem; }
+ .modal-body { padding: 18px 20px 20px; display: grid; gap: 14px; }
+ .modal-body label { display: grid; gap: 8px; color: #334155; font-weight: 800; }
+ .modal-body input, .modal-body textarea { width: 100%; border: 1px solid rgba(148,163,184,.35); border-radius: 16px; padding: 12px 14px; font: inherit; outline: none; }
+ .modal-body textarea { min-height: 110px; resize: vertical; }
+ .image-upload-box { border: 1px dashed rgba(37,99,235,.35); border-radius: 18px; padding: 14px; background: #f8fafc; display: grid; gap: 10px; }
+ .image-upload-box input { background: #fff; }
+ .image-upload-box span { color: #64748b; font-size: .9rem; font-weight: 700; }
+ .image-preview { display: none; width: 100%; max-height: 260px; object-fit: cover; border-radius: 16px; border: 1px solid rgba(15,23,42,.08); }
+ .image-preview.active { display: block; }
+ .post-type-note { color: #64748b; font-size: .9rem; font-weight: 800; }
+ .modal-actions { display: flex; justify-content: flex-end; gap: 10px; }
+ .story-viewer-card { width: min(430px, 100%); background: #020617; color: #fff; border-radius: 26px; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,.36); }
+ .story-viewer-card img { width: 100%; aspect-ratio: 9/13; object-fit: cover; display: block; }
+ .story-viewer-meta { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 16px; }
+ .story-viewer-meta strong { display: block; }
+ .story-viewer-meta span { color: #cbd5e1; font-size: .9rem; }
+ @media (max-width: 900px) {
+ .social-account-row { grid-template-columns: 1fr; align-items: stretch; }
+ .social-sync-status { white-space: normal; }
+ }
  </style>
 </head>
 <body class="page-social">
@@ -102,7 +169,7 @@
 
  <section class="story-strip" aria-label="Stories">
  <article class="story">
- <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=400&auto=format&fit=crop" alt="Omenda story">
+ <img id="viewerStoryImage" src="icon-192.svg" alt="Omenda story">
  <strong>Omenda</strong>
  <span>Brand</span>
  </article>
@@ -123,13 +190,45 @@
  </article>
  </section>
 
- <div class="emoji-flow-ticker" id="emojiFlowTicker"><div class="track" id="emojiFlowTickerTrack"><span>No emoji gifts yet — send one from <a href="omenda-ai.html" class="x-382888">Emoji AI</a></span></div></div>
+ <section class="quick-compose" aria-label="Create social post">
+ <div class="compose-row">
+ <img class="avatar viewer-avatar" id="viewerAvatar" src="icon-192.svg" alt="Your profile">
+ <button type="button" class="compose-open" id="composeOpen">Share a product, project, travel moment, or Pi update...</button>
+ </div>
+ <div class="compose-actions">
+ <button type="button" data-compose-kind="status">Status</button>
+ <button type="button" data-compose-kind="photo">Photo</button>
+ <button type="button" data-compose-kind="product">Product</button>
+ </div>
+ <div class="social-account-row">
+ <label class="profile-photo-control">Profile photo
+ <span class="profile-photo-picker">
+ <img id="viewerAvatarPreview" class="profile-photo-preview" src="icon-192.svg" alt="Selected profile photo">
+ <span>Change photo</span>
+ <input id="viewerAvatarFile" type="file" accept="image/png,image/jpeg,image/webp,image/gif" aria-label="Change profile photo">
+ </span>
+ </label>
+ <label>Your public account
+ <input id="viewerHandle" maxlength="32" value="@OmendaCreator" autocomplete="off">
+ </label>
+ <button type="button" id="syncProfile">Use account</button>
+ <span id="socialSyncStatus" class="social-sync-status">Connecting public feed...</span>
+ </div>
+ </section>
 
- <section class="emoji-inbox" aria-label="Emoji gift inbox">
+ <section class="emoji-overview" aria-label="Emoji gift overview">
+ <button type="button" class="emoji-overview-toggle" id="emojiOverviewToggle" aria-expanded="false" aria-controls="emojiOverviewPanel">
+ <span id="emojiOverviewTitle">🎁 Emoji overview</span>
+ <small id="emojiOverviewMeta">No gifts yet</small>
+ </button>
+ <div class="emoji-overview-panel" id="emojiOverviewPanel" hidden>
+ <div class="emoji-overview-head">
  <h2>Emoji gift inbox</h2>
- <p class="sub">Gifts sent from <a href="omenda-ai.html">Emoji AI</a> to social handles or posts show up here, newest first.</p>
+ <a href="omenda-ai.html">Open Emoji AI</a>
+ </div>
  <div class="emoji-inbox-list" id="emojiInboxList">
  <div class="emoji-inbox-empty">No emoji gifts yet.</div>
+ </div>
  </div>
  </section>
 
@@ -238,10 +337,295 @@
  </div>
  </section>
 
+ <div class="social-modal" id="storyViewer" aria-hidden="true">
+ <div class="story-viewer-card" role="dialog" aria-modal="true" aria-label="Story viewer">
+ <img id="storyViewerImage" src="" alt="Story preview">
+ <div class="story-viewer-meta">
+ <div><strong id="storyViewerName">Story</strong><span id="storyViewerLabel">Omenda Social</span></div>
+ <button type="button" class="modal-close" data-close-modal="storyViewer" aria-label="Close story">×</button>
+ </div>
+ </div>
+ </div>
+
+ <div class="social-modal" id="postModal" aria-hidden="true">
+ <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="postModalTitle">
+ <div class="modal-head">
+ <h2 id="postModalTitle">Create post</h2>
+ <button type="button" class="modal-close" data-close-modal="postModal" aria-label="Close create post">×</button>
+ </div>
+ <form class="modal-body" id="postForm">
+ <input id="postType" type="hidden" value="photo">
+ <div class="post-type-note" id="postTypeNote">Photo post</div>
+ <label>Handle
+ <input id="postHandle" maxlength="32" value="@OmendaCreator" autocomplete="off">
+ </label>
+ <label class="image-upload-box">Upload image
+ <input id="postImageFile" type="file" accept="image/png,image/jpeg,image/webp,image/gif">
+ <span>Choose a photo from your device.</span>
+ <img id="postImagePreview" class="image-preview" alt="Selected image preview">
+ </label>
+ <label>Caption
+ <textarea id="postCaption" maxlength="280" placeholder="Write a caption for your post..."></textarea>
+ </label>
+ <div class="modal-actions">
+ <button type="button" data-close-modal="postModal">Cancel</button>
+ <button type="submit">Post</button>
+ </div>
+ </form>
+ </div>
+ </div>
+
  <script>
+ (function omendaInstagramSocial() {
+ const STATE_KEY = 'omendaInstagramSocialState';
+ const defaultCounts = {
+ 'omenda-launch': { likes: 248, comments: 18 },
+ 'pi-travel-sunrise': { likes: 412, comments: 32 },
+ 'market-pulse': { likes: 176, comments: 14 }
+ };
+ let state = loadState();
+ function loadState() {
+ try {
+ const saved = JSON.parse(localStorage.getItem(STATE_KEY) || '{}');
+ return Object.assign({ likes: {}, saves: {}, comments: {}, posts: [], viewedStories: {} }, saved);
+ } catch (e) {
+ return { likes: {}, saves: {}, comments: {}, posts: [], viewedStories: {} };
+ }
+ }
+ function saveState() { localStorage.setItem(STATE_KEY, JSON.stringify(state)); }
+ function esc(value) { const el = document.createElement('div'); el.textContent = String(value || ''); return el.innerHTML; }
+ function formatCount(num) { return Number(num || 0).toLocaleString(); }
+ function baseFor(postId) { return defaultCounts[postId] || { likes: 0, comments: 0 }; }
+ function openModal(id) { const modal = document.getElementById(id); if (modal) { modal.classList.add('open'); modal.setAttribute('aria-hidden', 'false'); } }
+ function closeModal(id) { const modal = document.getElementById(id); if (modal) { modal.classList.remove('open'); modal.setAttribute('aria-hidden', 'true'); } }
+ function postTemplate(post) {
+ return `<article class="post-card user-created-post" data-post-id="${esc(post.id)}">
+ <div class="post-header">
+ <img class="avatar" src="${esc(post.avatar || 'icon-192.svg')}" alt="${esc(post.handle)} profile">
+ <div class="post-meta"><p class="user-name">${esc(post.handle)}</p><p class="user-sub">Omenda creator post</p></div>
+ <p class="post-time">just now</p>
+ </div>
+ <img class="post-image" src="${esc(post.image)}" alt="${esc(post.handle)} post">
+ <div class="post-actions">
+ <div class="action-buttons">
+ <button aria-label="Like post">❤️</button>
+ <button aria-label="Comment">💬</button>
+ <button aria-label="Share">📤</button>
+ </div>
+ <button class="save" aria-label="Save post">🔖</button>
+ </div>
+ <div class="post-summary"><strong>${esc(post.handle)}</strong> <span class="caption">${esc(post.caption)}</span><div class="label"><span>✨</span> Community post</div></div>
+ <div class="post-gifts" data-gifts-for="${esc(post.id)}"></div>
+ </article>`;
+ }
+ function renderCreatedPosts() {
+ const feed = document.querySelector('.feed');
+ if (!feed) return;
+ feed.querySelectorAll('.user-created-post').forEach(el => el.remove());
+ if (state.posts.length) feed.insertAdjacentHTML('afterbegin', state.posts.map(postTemplate).join(''));
+ }
+ function ensurePostUi(card) {
+ if (!card.querySelector('.post-stats')) card.querySelector('.post-actions').insertAdjacentHTML('afterend', '<div class="post-stats"></div>');
+ if (!card.querySelector('.comment-drawer')) card.querySelector('.post-summary').insertAdjacentHTML('afterend', '<div class="comment-drawer"></div>');
+ }
+ function renderPost(card) {
+ const postId = card.dataset.postId;
+ const base = baseFor(postId);
+ const liked = Boolean(state.likes[postId]);
+ const saved = Boolean(state.saves[postId]);
+ const comments = state.comments[postId] || [];
+ const likeCount = base.likes + (liked ? 1 : 0);
+ const commentCount = base.comments + comments.length;
+ const likeButton = card.querySelector('[aria-label="Like post"]');
+ const saveButton = card.querySelector('.save');
+ const stats = card.querySelector('.post-stats');
+ const drawer = card.querySelector('.comment-drawer');
+ if (likeButton) { likeButton.classList.toggle('active', liked); likeButton.textContent = liked ? '♥' : '♡'; }
+ if (saveButton) { saveButton.classList.toggle('active', saved); saveButton.textContent = saved ? '🔖' : '▱'; }
+ if (stats) stats.innerHTML = `<span>${formatCount(likeCount)} likes</span><button type="button" class="comment-focus">${formatCount(commentCount)} comments</button>`;
+ if (drawer) {
+ drawer.innerHTML = comments.slice(-3).map(c => `<div class="comment-row"><strong>${esc(c.handle)}</strong><span>${esc(c.text)}</span></div>`).join('') +
+ `<form class="comment-form"><input maxlength="140" placeholder="Add a comment..." aria-label="Add comment"><button type="submit">Post</button></form>`;
+ const form = drawer.querySelector('.comment-form');
+ form.addEventListener('submit', event => {
+ event.preventDefault();
+ const input = form.querySelector('input');
+ const text = input.value.trim();
+ if (!text) return;
+ if (!state.comments[postId]) state.comments[postId] = [];
+ state.comments[postId].push({ handle: '@You', text, ts: Date.now() });
+ input.value = '';
+ saveState();
+ renderPost(card);
+ });
+ const focus = stats && stats.querySelector('.comment-focus');
+ if (focus) focus.onclick = () => drawer.querySelector('input').focus();
+ }
+ }
+ function bindPost(card) {
+ ensurePostUi(card);
+ const postId = card.dataset.postId;
+ const likeButton = card.querySelector('[aria-label="Like post"]');
+ const commentButton = card.querySelector('[aria-label="Comment"]');
+ const shareButton = card.querySelector('[aria-label="Share"]');
+ const saveButton = card.querySelector('.save');
+ if (likeButton && !likeButton.dataset.bound) {
+ likeButton.dataset.bound = '1';
+ likeButton.onclick = () => { state.likes[postId] = !state.likes[postId]; saveState(); renderPost(card); };
+ }
+ if (saveButton && !saveButton.dataset.bound) {
+ saveButton.dataset.bound = '1';
+ saveButton.onclick = () => { state.saves[postId] = !state.saves[postId]; saveState(); renderPost(card); };
+ }
+ if (commentButton && !commentButton.dataset.bound) {
+ commentButton.dataset.bound = '1';
+ commentButton.onclick = () => card.querySelector('.comment-form input').focus();
+ }
+ if (shareButton && !shareButton.dataset.bound) {
+ shareButton.dataset.bound = '1';
+ shareButton.onclick = async () => {
+ const url = `${location.origin}${location.pathname}#${postId}`;
+ try { await navigator.clipboard.writeText(url); shareButton.textContent = '✓'; setTimeout(() => { shareButton.textContent = '📤'; }, 1100); }
+ catch (e) { location.hash = postId; }
+ };
+ }
+ renderPost(card);
+ }
+ function bindStories() {
+ document.querySelectorAll('.story').forEach((story, index) => {
+ const key = 'story-' + index;
+ if (state.viewedStories[key]) story.classList.add('viewed');
+ story.addEventListener('click', () => {
+ const img = story.querySelector('img');
+ document.getElementById('storyViewerImage').src = img.src;
+ document.getElementById('storyViewerName').textContent = story.querySelector('strong').textContent;
+ document.getElementById('storyViewerLabel').textContent = story.querySelector('span').textContent;
+ state.viewedStories[key] = true;
+ story.classList.add('viewed');
+ saveState();
+ openModal('storyViewer');
+ });
+ });
+ }
+ function bindCreatePost() {
+ const form = document.getElementById('postForm');
+ document.getElementById('composeOpen').onclick = () => openModal('postModal');
+ document.querySelectorAll('[data-compose-kind]').forEach(btn => btn.onclick = () => {
+ document.getElementById('postCaption').value = btn.dataset.composeKind === 'product' ? 'New Omenda product drop available in the marketplace.' : '';
+ openModal('postModal');
+ });
+ form.addEventListener('submit', event => {
+ event.preventDefault();
+ const handle = document.getElementById('postHandle').value.trim().replace(/^([^@])/, '@$1') || '@OmendaCreator';
+ const imageInput = document.getElementById('postImage');
+ const image = (imageInput && imageInput.value.trim()) || 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1200&auto=format&fit=crop';
+ const caption = document.getElementById('postCaption').value.trim() || 'New Omenda social post.';
+ state.posts.unshift({ id: 'post-' + Date.now(), handle, image, caption, avatar: 'icon-192.svg', ts: Date.now() });
+ saveState();
+ renderCreatedPosts();
+ document.querySelectorAll('.post-card').forEach(bindPost);
+ form.reset();
+ closeModal('postModal');
+ });
+ }
+ function init() {
+ renderCreatedPosts();
+ document.querySelectorAll('.post-card').forEach(bindPost);
+ bindStories();
+ bindCreatePost();
+ document.querySelectorAll('[data-close-modal]').forEach(btn => btn.addEventListener('click', () => closeModal(btn.dataset.closeModal)));
+ document.querySelectorAll('.social-modal').forEach(modal => modal.addEventListener('click', event => { if (event.target === modal) closeModal(modal.id); }));
+ }
+ if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+ })();
+
+ (function omendaPublicSocialBackend() {
+ const seedIds = ['omenda-launch', 'pi-travel-sunrise', 'market-pulse'];
+ const prefKey = 'omendaInstagramSocialPrefs';
+ const defaults = { 'omenda-launch': { likes: 248, comments: 18 }, 'pi-travel-sunrise': { likes: 412, comments: 32 }, 'market-pulse': { likes: 176, comments: 14 } };
+ let posts = [];
+ let postIndex = {};
+ function prefs() { try { return Object.assign({ viewerHandle: '@OmendaCreator', viewerAvatar: 'icon-192.svg' }, JSON.parse(localStorage.getItem(prefKey) || '{}')); } catch (e) { return { viewerHandle: '@OmendaCreator', viewerAvatar: 'icon-192.svg' }; } }
+ function savePrefs(next) { localStorage.setItem(prefKey, JSON.stringify(Object.assign(prefs(), next))); }
+ function normalizeHandle(value) { let h = String(value || '').trim().replace(/\s+/g, ''); if (!h) h = '@OmendaCreator'; if (!h.startsWith('@')) h = '@' + h; h = '@' + h.slice(1).replace(/[^a-zA-Z0-9_.-]/g, '').slice(0, 31); return h.length > 1 ? h : '@OmendaCreator'; }
+ function viewer() { const input = document.getElementById('viewerHandle'); const h = normalizeHandle(input ? input.value : prefs().viewerHandle); if (input) input.value = h; savePrefs({ viewerHandle: h }); return h; }
+ function viewerAvatar() { return prefs().viewerAvatar || 'icon-192.svg'; }
+ function applyViewerAvatar(src) { const avatar = src || 'icon-192.svg'; document.querySelectorAll('#viewerAvatar, #viewerAvatarPreview, #viewerStoryImage').forEach(img => { img.src = avatar; }); }
+ function esc(value) { const div = document.createElement('div'); div.textContent = String(value || ''); return div.innerHTML; }
+ function count(value) { return Number(value || 0).toLocaleString(); }
+ function timeAgo(value) { const diff = Math.max(0, Date.now() - new Date(value || Date.now()).getTime()); const min = Math.floor(diff / 60000); if (min < 1) return 'just now'; if (min < 60) return min + 'm ago'; const hr = Math.floor(min / 60); if (hr < 24) return hr + 'h ago'; return Math.floor(hr / 24) + 'd ago'; }
+ async function api(path, body) { const options = body ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) } : undefined; const res = await fetch(path, options); const data = await res.json(); if (!res.ok || data.success !== true) throw new Error(data.error || 'Social request failed'); return data; }
+ function fileToDataUrl(file) { return new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(String(reader.result || '')); reader.onerror = reject; reader.readAsDataURL(file); }); }
+ async function uploadImageFile(file) { if (!file) return ''; if (!/^image\/(png|jpe?g|webp|gif)$/i.test(file.type)) throw new Error('Unsupported image type'); if (file.size > 4 * 1024 * 1024) throw new Error('Image must be 4MB or smaller'); const imageData = await fileToDataUrl(file); const data = await api('/api/social/upload-image', { imageData, fileName: file.name }); return data.url; }
+ async function uploadSelectedImage() { const input = document.getElementById('postImageFile'); const file = input && input.files && input.files[0]; return uploadImageFile(file); }
+ function setStatus(text) { const status = document.getElementById('socialSyncStatus'); if (status) status.textContent = text; }
+ function mergePost(post) { if (!post || !post.id) return; postIndex[post.id] = post; posts = [post].concat(posts.filter(row => row.id !== post.id)); }
+ function postFor(card) { const id = card.dataset.postId; if (postIndex[id]) return postIndex[id]; const base = defaults[id] || { likes: 0, comments: 0 }; const handle = card.querySelector('.user-name') ? card.querySelector('.user-name').textContent.trim() : '@OmendaCreator'; return { id, handle, likeCount: base.likes, commentCount: base.comments, saveCount: 0, liked: false, saved: false, following: false, followerCount: 0, comments: [] }; }
+ function dynamicTemplate(post) {
+ const isStatus = post.postType === 'status' || !post.image;
+ return `<article class="post-card user-created-post ${isStatus ? 'status-post' : ''}" data-post-id="${esc(post.id)}">
+ <div class="post-header"><img class="avatar" src="${esc(post.avatar || 'icon-192.svg')}" alt="${esc(post.handle)} profile"><div class="post-meta"><p class="user-name">${esc(post.handle)}</p><p class="user-sub">${esc(post.userSub || 'Omenda creator post')}</p></div><p class="post-time">${esc(timeAgo(post.createdAt))}</p></div>
+ ${isStatus ? `<div class="status-post-body">${esc(post.caption)}</div>` : `<img class="post-image" src="${esc(post.image)}" alt="${esc(post.handle)} post">`}
+ <div class="post-actions"><div class="action-buttons"><button aria-label="Like post">♡</button><button aria-label="Comment">💬</button><button aria-label="Share">📤</button></div><button class="save" aria-label="Save post">▱</button></div>
+ <div class="post-summary"><strong>${esc(post.handle)}</strong> <span class="caption">${esc(post.caption)}</span><div class="label"><span>✨</span> ${esc(post.label || 'Community post')}</div></div><div class="post-gifts" data-gifts-for="${esc(post.id)}"></div></article>`;
+ }
+ function renderDynamicPosts() { const feed = document.querySelector('.feed'); if (!feed) return; feed.querySelectorAll('.user-created-post').forEach(el => el.remove()); const dynamic = posts.filter(post => seedIds.indexOf(post.id) === -1); if (dynamic.length) feed.insertAdjacentHTML('afterbegin', dynamic.map(dynamicTemplate).join('')); }
+ function ensurePostChrome(card) { if (!card.querySelector('.post-stats')) card.querySelector('.post-actions').insertAdjacentHTML('afterend', '<div class="post-stats"></div>'); if (!card.querySelector('.comment-drawer')) card.querySelector('.post-summary').insertAdjacentHTML('afterend', '<div class="comment-drawer"></div>'); if (!card.querySelector('.follow-author')) card.querySelector('.post-header').insertAdjacentHTML('beforeend', '<button type="button" class="follow-author">Follow</button>'); }
+ function renderPost(card) {
+ const post = postFor(card);
+ const like = card.querySelector('[aria-label="Like post"]');
+ const save = card.querySelector('.save');
+ const follow = card.querySelector('.follow-author');
+ const stats = card.querySelector('.post-stats');
+ const drawer = card.querySelector('.comment-drawer');
+ if (like) { like.classList.toggle('active', Boolean(post.liked)); like.textContent = post.liked ? '♥' : '♡'; }
+ if (save) { save.classList.toggle('active', Boolean(post.saved)); save.textContent = post.saved ? '🔖' : '▱'; }
+ if (follow) { const own = normalizeHandle(post.handle) === viewer(); follow.hidden = own; follow.classList.toggle('following', Boolean(post.following)); follow.textContent = post.following ? 'Following' : 'Follow'; follow.title = count(post.followerCount) + ' followers'; }
+ if (stats) stats.innerHTML = `<span>${count(post.likeCount)} likes</span><button type="button" class="comment-focus">${count(post.commentCount)} comments</button><span>${count(post.saveCount)} saves</span>`;
+ if (drawer) {
+ drawer.innerHTML = (post.comments || []).slice(-3).map(c => `<div class="comment-row"><strong>${esc(c.handle)}</strong><span>${esc(c.text)}</span></div>`).join('') + '<form class="comment-form"><input maxlength="140" placeholder="Add a comment..." aria-label="Add comment"><button type="submit">Post</button></form>';
+ const form = drawer.querySelector('.comment-form');
+ form.addEventListener('submit', async event => { event.preventDefault(); event.stopImmediatePropagation(); const input = form.querySelector('input'); const text = input.value.trim(); if (!text) return; try { const data = await api('/api/social/posts/' + encodeURIComponent(post.id) + '/comments', { handle: viewer(), text }); mergePost(data.post); } catch (e) { post.comments = (post.comments || []).concat({ handle: viewer(), text }); post.commentCount = Number(post.commentCount || 0) + 1; mergePost(post); } input.value = ''; renderPost(card); }, true);
+ const focus = stats && stats.querySelector('.comment-focus'); if (focus) focus.onclick = () => form.querySelector('input').focus();
+ }
+ }
+ function bindCard(card) {
+ ensurePostChrome(card);
+ const postId = card.dataset.postId;
+ const like = card.querySelector('[aria-label="Like post"]');
+ const save = card.querySelector('.save');
+ const comment = card.querySelector('[aria-label="Comment"]');
+ const share = card.querySelector('[aria-label="Share"]');
+ const follow = card.querySelector('.follow-author');
+ if (like && !like.dataset.serverBound) { like.dataset.serverBound = '1'; like.addEventListener('click', async event => { event.preventDefault(); event.stopImmediatePropagation(); try { const data = await api('/api/social/posts/' + encodeURIComponent(postId) + '/like', { handle: viewer() }); mergePost(data.post); } catch (e) { const post = postFor(card); post.liked = !post.liked; post.likeCount = Number(post.likeCount || 0) + (post.liked ? 1 : -1); mergePost(post); } renderPost(card); }, true); }
+ if (save && !save.dataset.serverBound) { save.dataset.serverBound = '1'; save.addEventListener('click', async event => { event.preventDefault(); event.stopImmediatePropagation(); try { const data = await api('/api/social/posts/' + encodeURIComponent(postId) + '/save', { handle: viewer() }); mergePost(data.post); } catch (e) { const post = postFor(card); post.saved = !post.saved; post.saveCount = Math.max(0, Number(post.saveCount || 0) + (post.saved ? 1 : -1)); mergePost(post); } renderPost(card); }, true); }
+ if (comment && !comment.dataset.serverBound) { comment.dataset.serverBound = '1'; comment.addEventListener('click', event => { event.preventDefault(); event.stopImmediatePropagation(); card.querySelector('.comment-form input').focus(); }, true); }
+ if (share && !share.dataset.serverBound) { share.dataset.serverBound = '1'; share.addEventListener('click', async event => { event.preventDefault(); event.stopImmediatePropagation(); const url = `${location.origin}${location.pathname}#${postId}`; try { await navigator.clipboard.writeText(url); share.textContent = '✓'; setTimeout(() => { share.textContent = '📤'; }, 1100); } catch (e) { location.hash = postId; } }, true); }
+ if (follow && !follow.dataset.serverBound) { follow.dataset.serverBound = '1'; follow.addEventListener('click', async event => { event.preventDefault(); event.stopImmediatePropagation(); const post = postFor(card); try { await api('/api/social/follow', { follower: viewer(), following: post.handle }); await loadFeed(); } catch (e) { post.following = !post.following; mergePost(post); renderPost(card); } }, true); }
+ renderPost(card);
+ }
+ function renderAll() { renderDynamicPosts(); document.querySelectorAll('.post-card').forEach(bindCard); }
+ async function loadFeed() { try { const data = await api('/api/social/feed?viewer=' + encodeURIComponent(viewer())); posts = Array.isArray(data.posts) ? data.posts : []; postIndex = {}; posts.forEach(post => { postIndex[post.id] = post; }); if (data.account && data.account.avatar) { savePrefs({ viewerAvatar: data.account.avatar }); applyViewerAvatar(data.account.avatar); } setStatus('Public feed synced'); } catch (e) { setStatus('Offline browser mode'); } renderAll(); }
+ function bindComposer() {
+ const viewerInput = document.getElementById('viewerHandle'); if (viewerInput) viewerInput.value = prefs().viewerHandle;
+ applyViewerAvatar(viewerAvatar());
+ const avatarFile = document.getElementById('viewerAvatarFile'); if (avatarFile && !avatarFile.dataset.previewBound) { avatarFile.dataset.previewBound = '1'; avatarFile.addEventListener('change', () => { const file = avatarFile.files && avatarFile.files[0]; if (!file) { applyViewerAvatar(viewerAvatar()); return; } const preview = URL.createObjectURL(file); applyViewerAvatar(preview); setStatus('Profile photo ready - tap Use account'); }); }
+ const imageFile = document.getElementById('postImageFile'); const imagePreview = document.getElementById('postImagePreview'); if (imageFile && imagePreview && !imageFile.dataset.previewBound) { imageFile.dataset.previewBound = '1'; imageFile.addEventListener('change', () => { const file = imageFile.files && imageFile.files[0]; if (!file) { imagePreview.classList.remove('active'); imagePreview.removeAttribute('src'); return; } imagePreview.src = URL.createObjectURL(file); imagePreview.classList.add('active'); }); }
+ const sync = document.getElementById('syncProfile'); if (sync) sync.addEventListener('click', async event => { event.preventDefault(); try { let avatar = viewerAvatar(); const file = avatarFile && avatarFile.files && avatarFile.files[0]; if (file) { setStatus('Uploading profile photo...'); avatar = await uploadImageFile(file); if (avatarFile) avatarFile.value = ''; } const handle = viewer(); savePrefs({ viewerAvatar: avatar }); applyViewerAvatar(avatar); await api('/api/social/accounts', { handle, name: handle.replace('@', ''), avatar }); await loadFeed(); } catch (e) { applyViewerAvatar(viewerAvatar()); setStatus(e.message || 'Offline browser mode'); } });
+ function setPostType(type) { const postType = document.getElementById('postType'); const note = document.getElementById('postTypeNote'); if (postType) postType.value = type === 'status' ? 'status' : 'photo'; if (note) note.textContent = type === 'status' ? 'Status post - image optional' : 'Photo post'; }
+ document.querySelectorAll('[data-compose-kind]').forEach(btn => { if (!btn.dataset.serverTypeBound) { btn.dataset.serverTypeBound = '1'; btn.addEventListener('click', event => { event.preventDefault(); event.stopImmediatePropagation(); setPostType(btn.dataset.composeKind === 'status' ? 'status' : 'photo'); if (btn.dataset.composeKind === 'status') document.getElementById('postCaption').value = ''; if (btn.dataset.composeKind === 'product') document.getElementById('postCaption').value = 'New Omenda product drop available in the marketplace.'; const modal = document.getElementById('postModal'); if (modal) { modal.classList.add('open'); modal.setAttribute('aria-hidden', 'false'); } }, true); } });
+ const composeOpen = document.getElementById('composeOpen'); if (composeOpen && !composeOpen.dataset.serverTypeBound) { composeOpen.dataset.serverTypeBound = '1'; composeOpen.addEventListener('click', () => setPostType('photo'), true); }
+ const form = document.getElementById('postForm');
+ if (form && !form.dataset.serverBound) { form.dataset.serverBound = '1'; form.addEventListener('submit', async event => { event.preventDefault(); event.stopImmediatePropagation(); const handle = normalizeHandle(document.getElementById('postHandle').value || viewer()); const postType = document.getElementById('postType').value === 'status' ? 'status' : 'photo'; const caption = document.getElementById('postCaption').value.trim() || (postType === 'status' ? 'New status update.' : 'New Omenda social post.'); let image = ''; try { image = postType === 'status' ? await uploadSelectedImage() : (await uploadSelectedImage() || 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1200&auto=format&fit=crop'); const data = await api('/api/social/posts', { handle, image, caption, postType, label: postType === 'status' ? 'Status update' : 'Community post', name: handle.replace('@', '') }); mergePost(data.post); } catch (e) { image = postType === 'status' ? image : (image || 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1200&auto=format&fit=crop'); mergePost({ id: 'post-' + Date.now(), handle, image, caption, postType, label: postType === 'status' ? 'Status update' : 'Community post', avatar: 'icon-192.svg', createdAt: new Date().toISOString(), likeCount: 0, commentCount: 0, saveCount: 0, comments: [] }); setStatus(e.message || 'Post saved in offline mode'); } form.reset(); setPostType('photo'); if (imagePreview) { imagePreview.classList.remove('active'); imagePreview.removeAttribute('src'); } document.getElementById('postHandle').value = viewer(); const modal = document.getElementById('postModal'); if (modal) { modal.classList.remove('open'); modal.setAttribute('aria-hidden', 'true'); } renderAll(); }, true); }
+ }
+ function init() { bindComposer(); loadFeed(); }
+ if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+ })();
+
  (function emojiGiftFlow() {
  const KEY = 'omendaSocialInbox';
  let serverGifts = [];
+ let serverGiftUnavailable = false;
  function loadLocal() { try { return JSON.parse(localStorage.getItem(KEY) || '[]'); } catch { return []; } }
  function mergedGifts() {
  const local = loadLocal().map(g => ({
@@ -288,6 +672,16 @@
  </div>`;
  }).join('');
  }
+ function renderOverview(gifts) {
+ const title = document.getElementById('emojiOverviewTitle');
+ const meta = document.getElementById('emojiOverviewMeta');
+ if (!title || !meta) return;
+ const count = gifts.length;
+ const total = gifts.reduce((sum, g) => sum + (Number(g.value) || 0), 0);
+ const latest = gifts[0] && gifts[0].recipient ? ` · latest @${gifts[0].recipient}` : '';
+ title.textContent = count ? `🎁 Emoji overview · ${count} gift${count === 1 ? '' : 's'}` : '🎁 Emoji overview';
+ meta.textContent = count ? `π${fmtPi(total)}${latest}` : 'No gifts yet';
+ }
  function renderTicker(gifts) {
  const track = document.getElementById('emojiFlowTickerTrack');
  if (!track) return;
@@ -309,14 +703,16 @@
  }
  function renderAll() {
  const gifts = mergedGifts();
+ renderOverview(gifts);
  renderInbox(gifts);
  renderTicker(gifts);
  renderPostBadges(gifts);
  }
  async function fetchServer() {
+ if (serverGiftUnavailable) return;
  try {
  const res = await fetch('/api/emoji/gifts?limit=100', { credentials: 'same-origin' });
- if (!res.ok) return;
+ if (!res.ok) { if (res.status === 404) serverGiftUnavailable = true; return; }
  const data = await res.json();
  if (Array.isArray(data.gifts)) {
  const prevLen = serverGifts.length;
@@ -333,6 +729,16 @@
  setTimeout(() => { tk.style.boxShadow = ''; }, 1200);
  }
  async function init() {
+ const toggle = document.getElementById('emojiOverviewToggle');
+ const panel = document.getElementById('emojiOverviewPanel');
+ if (toggle && panel && !toggle.dataset.bound) {
+ toggle.dataset.bound = '1';
+ toggle.addEventListener('click', () => {
+ const open = panel.hidden;
+ panel.hidden = !open;
+ toggle.setAttribute('aria-expanded', String(open));
+ });
+ }
  await fetchServer();
  renderAll();
  }

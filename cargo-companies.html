@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cargo Companies - City Rush Delivery</title>
+  <meta name="description" content="Create cargo shipment requests and register cargo companies with City Rush Delivery.">
+  <link rel="icon" type="image/svg+xml" href="icon-192.svg">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="page-delivery-network" data-delivery-page="cargo">
+  <header class="delivery-topbar">
+    <a class="delivery-brand" href="delivery.html"><img src="icon-192.svg" alt="Omenda Pi Pays Logo"><span>City Rush Delivery</span></a>
+    <nav aria-label="Delivery navigation">
+      <a href="delivery.html">Delivery</a>
+      <a href="cargo-companies.html" class="active">Cargo Companies</a>
+      <a href="local-agents.html">Local Agents</a>
+      <a href="cargo-operations.html">Cargo Operations</a>
+      <a href="shop.html">Marketplace</a>
+    </nav>
+  </header>
+
+  <main class="delivery-workspace">
+    <section class="delivery-workspace-head">
+      <div><span class="delivery-eyebrow">Worldwide cargo desk</span><h1>Cargo companies and shipment requests</h1><p>Request air, ocean, road, rail, parcel, or heavy-cargo service and route the job to a preferred company.</p></div>
+      <div class="delivery-head-actions"><a href="#shipmentRequest">New shipment</a><a href="#trackingLookup" class="secondary">Track cargo</a><a href="#companyRegistration" class="secondary">Register company</a></div>
+    </section>
+
+    <section class="delivery-metrics" aria-label="Cargo network status">
+      <div><strong id="cargoCompanyCount">0</strong><span>Registered companies</span></div>
+      <div><strong>6</strong><span>Transport modes</span></div>
+      <div><strong>Global</strong><span>Route coverage</span></div>
+    </section>
+
+    <section class="delivery-section" id="trackingLookup">
+      <div class="delivery-section-head"><div><span class="delivery-eyebrow">Cargo tracking</span><h2>Track a shipment</h2></div><span class="delivery-state">Checksum protected</span></div>
+      <form class="cargo-tracking-form" id="cargoTrackingForm">
+        <label for="cargoTrackingInput">Tracking number</label>
+        <div><input id="cargoTrackingInput" type="text" autocomplete="off" placeholder="CRT-YYMMDD-XXXXXXXXXX-X" required><button type="submit">Track cargo</button></div>
+        <p id="cargoTrackingStatus" aria-live="polite">Enter the CRT tracking number provided with the shipment request.</p>
+      </form>
+      <div class="cargo-tracking-result hidden" id="cargoTrackingResult">
+        <div class="cargo-tracking-head"><div><span>Tracking number</span><strong id="trackedNumber">CRT-PENDING</strong></div><em id="trackedStatus">Quote pending</em></div>
+        <div class="cargo-tracking-route"><strong id="trackedOrigin">Origin</strong><span>&rarr;</span><strong id="trackedDestination">Destination</strong></div>
+        <div class="cargo-tracking-facts"><span id="trackedCargoType">Cargo</span><span id="trackedWeight">0 kg</span><span id="trackedCompany">Any cargo company</span></div>
+        <ol class="cargo-tracking-events" id="cargoTrackingEvents"></ol>
+      </div>
+    </section>
+
+    <section class="delivery-section" id="shipmentRequest">
+      <div class="delivery-section-head"><div><span class="delivery-eyebrow">Shipment request</span><h2>Send cargo through the network</h2></div><span class="delivery-state">Quote required before payment</span></div>
+      <form class="delivery-form" id="shipmentForm">
+        <div class="delivery-field"><label for="shipmentSender">Sender name</label><input id="shipmentSender" name="senderName" type="text" autocomplete="name" required></div>
+        <div class="delivery-field"><label for="shipmentContact">Email or phone</label><input id="shipmentContact" name="contact" type="text" required></div>
+        <div class="delivery-field"><label for="shipmentOrigin">Origin</label><input id="shipmentOrigin" name="origin" type="text" placeholder="City, port, airport, or full address" required></div>
+        <div class="delivery-field"><label for="shipmentDestination">Destination</label><input id="shipmentDestination" name="destination" type="text" placeholder="City, port, airport, or full address" required></div>
+        <div class="delivery-field"><label for="shipmentCargoType">Cargo type</label><select id="shipmentCargoType" name="cargoType"><option>General cargo</option><option>Parcel</option><option>Perishable goods</option><option>Vehicle</option><option>Construction materials</option><option>Machinery</option><option>Container</option><option>Other</option></select></div>
+        <div class="delivery-field"><label for="shipmentWeight">Weight (kg)</label><input id="shipmentWeight" name="weightKg" type="number" min="0.1" max="1000000" step="0.1" required></div>
+        <div class="delivery-field full"><label for="shipmentCompany">Preferred cargo company</label><input id="shipmentCompany" name="companyPreference" type="text" list="cargoCompanyNames" placeholder="Any available cargo company"></div>
+        <div class="delivery-field full"><label for="shipmentDetails">Cargo details</label><textarea id="shipmentDetails" name="details" rows="4" placeholder="Dimensions, quantity, handling, customs, temperature, insurance, or collection notes"></textarea></div>
+        <button class="delivery-submit full" type="submit">Create shipment request</button>
+        <p class="delivery-form-status full" id="shipmentStatus" aria-live="polite">No shipment request created yet.</p>
+      </form>
+      <div class="delivery-reference hidden" id="shipmentReference"><span>Shipment reference</span><strong id="shipmentReferenceId">CRS-PENDING</strong><p id="shipmentReferenceRoute">Waiting for route</p><p class="delivery-tracking-number">Tracking: <code id="shipmentTrackingNumber">CRT-PENDING</code></p><em>Quote pending</em></div>
+    </section>
+
+    <section class="delivery-section" id="companyDirectory">
+      <div class="delivery-section-head"><div><span class="delivery-eyebrow">Company directory</span><h2>Cargo operators</h2></div><input class="delivery-search" id="companySearch" type="search" placeholder="Search company, city, country, or service"></div>
+      <div class="delivery-directory" id="companyDirectoryList"></div>
+      <datalist id="cargoCompanyNames"></datalist>
+    </section>
+
+    <section class="delivery-section" id="companyRegistration">
+      <div class="delivery-section-head"><div><span class="delivery-eyebrow">Company onboarding</span><h2>Register a cargo company</h2></div><a href="local-agents.html" class="delivery-inline-link">Register a local agent</a></div>
+      <form class="delivery-form" id="companyForm">
+        <div class="delivery-field"><label for="companyName">Company name</label><input id="companyName" name="name" type="text" required></div>
+        <div class="delivery-field"><label for="companyContact">Business email or phone</label><input id="companyContact" name="contact" type="text" required></div>
+        <div class="delivery-field"><label for="companyCountry">Country</label><input id="companyCountry" name="country" type="text" required></div>
+        <div class="delivery-field"><label for="companyCity">Base city</label><input id="companyCity" name="city" type="text" required></div>
+        <div class="delivery-field"><label for="companyService">Primary service</label><select id="companyService" name="serviceType"><option>Air cargo</option><option>Ocean freight</option><option>Road freight</option><option>Rail freight</option><option>Parcel courier</option><option>Heavy cargo</option></select></div>
+        <div class="delivery-field"><label for="companyCoverage">Service coverage</label><input id="companyCoverage" name="coverage" type="text" placeholder="Countries, regions, ports, or routes" required></div>
+        <button class="delivery-submit full" type="submit">Submit company for review</button>
+        <p class="delivery-form-status full" id="companyStatus" aria-live="polite">Business contact is stored privately and excluded from the public directory API.</p>
+      </form>
+    </section>
+  </main>
+  <script src="delivery-network.js"></script>
+</body>
+</html>
