@@ -1,4 +1,4 @@
-name: FTP Deploy to cPanel
+name: Deploy to cPanel
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
       - omendaonline-alt
 
 jobs:
-  ftp-deploy:
+  ssh-deploy:
     name: Deploy to omendapipaysglobel.online
     runs-on: ubuntu-latest
 
@@ -15,23 +15,30 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Deploy site via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.0
+      - name: Prepare deploy files
+        run: |
+          mkdir -p deploy
+          rsync -av \
+            --exclude '.git*' \
+            --exclude '.github*' \
+            --exclude 'node_modules*' \
+            --exclude 'package-lock.json' \
+            --exclude '.vscode*' \
+            --exclude 'README.md' \
+            --exclude 'deploy.ps1' \
+            --exclude 'git-deploy.ps1' \
+            --exclude '.env*' \
+            --exclude 'Pi network visual card/**' \
+            ./ deploy/
+
+      - name: Deploy site via SSH
+        uses: appleboy/scp-action@v1
         with:
-          server: omendapipaysglobel.online
+          host: omendapipaysglobel.online
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ftp
-          local-dir: './'
-          server-dir: '/public_html/'
-          exclude: |
-            .git*
-            .github*
-            node_modules*
-            package-lock.json
-            .vscode*
-            README.md
-            deploy.ps1
-            git-deploy.ps1
-            .env*
-            Pi network visual card/**
+          port: 22
+          source: deploy
+          target: public_html/
+          strip_components: 1
+          overwrite: true
