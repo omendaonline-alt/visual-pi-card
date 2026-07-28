@@ -90,6 +90,7 @@ const mapResponseCache = new Map();
 const MAP_CACHE_TTL_MS = 15 * 60 * 1000;
 const FLIGHT_BOOKINGS_PATH = path.join(__dirname, 'data', 'flight-bookings.json');
 const DELIVERY_NETWORK_PATH = path.join(__dirname, 'data', 'delivery-network.json');
+const INSURANCE_REQUESTS_PATH = path.join(__dirname, 'data', 'insurance-requests.json');
 const DELIVERY_ADMIN_KEY_PATH = path.join(__dirname, '.delivery-admin-key');
 const DELIVERY_ADMIN_KEY = process.env.DELIVERY_ADMIN_KEY || (() => {
     try {
@@ -106,6 +107,30 @@ function generateTxId() {
 
 function formatDate(d) {
     return new Date(d).toISOString();
+}
+
+function readInsuranceRequests() {
+    try {
+        if (!fs.existsSync(INSURANCE_REQUESTS_PATH)) return [];
+        const requests = JSON.parse(fs.readFileSync(INSURANCE_REQUESTS_PATH, 'utf8'));
+        return Array.isArray(requests) ? requests : [];
+    } catch (err) {
+        console.error('Insurance request store read error:', err.message);
+        return [];
+    }
+}
+
+function saveInsuranceRequest(request) {
+    const requests = readInsuranceRequests();
+    if (requests.some(item => item.paymentId === request.paymentId)) {
+        return requests.find(item => item.paymentId === request.paymentId);
+    }
+    requests.unshift(request);
+    fs.mkdirSync(path.dirname(INSURANCE_REQUESTS_PATH), { recursive: true });
+    const temporaryPath = INSURANCE_REQUESTS_PATH + '.tmp';
+    fs.writeFileSync(temporaryPath, JSON.stringify(requests.slice(0, 5000), null, 2));
+    fs.renameSync(temporaryPath, INSURANCE_REQUESTS_PATH);
+    return request;
 }
 
 function sanitizeFlightText(value, maxLength) {
@@ -411,6 +436,32 @@ function getAllSocialPosts(store) {
     return [...store.posts, ...socialSeedPosts].sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
 }
 
+async function socialPiIdentity(req) {
+    const accessToken = String(req.headers.authorization || '').replace(/^Bearer\s+/i, '').trim();
+    if (!accessToken) return null;
+    try {
+        const response = await fetch('https://api.minepi.com/v2/me', {
+            headers: { Authorization: 'Bearer ' + accessToken, Accept: 'application/json' }
+        });
+        if (!response.ok) return null;
+        const user = await response.json();
+        const username = sanitizeSocialText(user && user.username, 31);
+        if (!username) return null;
+        return {
+            uid: sanitizeSocialText(user.uid, 80),
+            username,
+            handle: normalizeSocialHandle(username)
+        };
+    } catch (err) {
+        console.error('Social Pi authentication error:', err.message);
+        return null;
+    }
+}
+
+function socialUnauthorized(res) {
+    return res.status(401).json({ success: false, error: 'Connect and authenticate your Pi account to continue.' });
+}
+
 // --------------- Language catalog ---------------
 const languageCatalog = {
     en: {
@@ -698,7 +749,13 @@ app.post('/api/flight-bookings', (req, res) => {
 
     const booking = {
         reference: generateFlightReference(),
-        status: 'airline_confirmation_pending',
+        status: 'request_received',
+        workflow: [
+            { step: 1, key: 'request', label: 'Request', status: 'current' },
+            { step: 2, key: 'agent_review', label: 'Agent review', status: 'pending' },
+            { step: 3, key: 'airline_review', label: 'Airline review', status: 'pending' },
+            { step: 4, key: 'e_ticket', label: 'E-ticket', status: 'pending' }
+        ],
         passengerName,
         fromAirport,
         toAirport,
@@ -947,24 +1004,31 @@ app.get('/api/languages', (req, res) => {
     res.json({ success: true, languages: langs });
 });
 
-app.get('/api/social/feed', (req, res) => {
+app.get('/api/social/feed', async (req, res) => {
     const store = readSocialStore();
-    const viewer = normalizeSocialHandle(req.query.viewer || '@OmendaCreator');
-    ensureSocialAccount(store, viewer, {});
-    writeSocialStore(store);
+    const identity = await socialPiIdentity(req);
+    const viewer = identity ? identity.handle : '@OmendaGuest';
+    if (identity) {
+        ensureSocialAccount(store, viewer, { name: identity.username });
+        writeSocialStore(store);
+    }
     const posts = getAllSocialPosts(store).map(post => buildSocialPost(store, post, viewer));
     const following = listSocialUsers((store.follows || {})[viewer]);
-    res.json({ success: true, viewer, account: store.accounts[viewer], following, posts });
+    res.json({ success: true, authenticated: Boolean(identity), viewer, account: store.accounts[viewer] || null, following, posts });
 });
 
-app.post('/api/social/accounts', (req, res) => {
+app.post('/api/social/accounts', async (req, res) => {
+    const identity = await socialPiIdentity(req);
+    if (!identity) return socialUnauthorized(res);
     const store = readSocialStore();
-    const account = ensureSocialAccount(store, req.body && req.body.handle, req.body || {});
+    const account = ensureSocialAccount(store, identity.handle, Object.assign({}, req.body, { name: identity.username }));
     writeSocialStore(store);
     res.json({ success: true, account });
 });
 
-app.post('/api/social/upload-image', (req, res) => {
+app.post('/api/social/upload-image', async (req, res) => {
+    const identity = await socialPiIdentity(req);
+    if (!identity) return socialUnauthorized(res);
     const imageData = String((req.body && req.body.imageData) || '');
     const match = imageData.match(/^data:image\/(png|jpe?g|webp|gif);base64,([a-zA-Z0-9+/=]+)$/);
     if (!match) return res.status(400).json({ success: false, error: 'PNG, JPG, WEBP, or GIF image is required' });
@@ -982,13 +1046,18 @@ app.post('/api/social/upload-image', (req, res) => {
     res.json({ success: true, url: '/uploads/social/' + fileName });
 });
 
-app.post('/api/social/posts', (req, res) => {
+app.post('/api/social/posts', async (req, res) => {
+    const identity = await socialPiIdentity(req);
+    if (!identity) return socialUnauthorized(res);
     const store = readSocialStore();
-    const handle = normalizeSocialHandle(req.body && req.body.handle);
+    const handle = identity.handle;
     const caption = sanitizeSocialText(req.body && req.body.caption, 280) || 'New Omenda social post.';
-    const postType = sanitizeSocialText(req.body && req.body.postType, 24) === 'status' ? 'status' : 'photo';
+    const requestedPostType = sanitizeSocialText(req.body && req.body.postType, 24);
+    const postType = requestedPostType === 'status' ? 'status' : (requestedPostType === 'product' ? 'product' : 'photo');
     const image = postType === 'status' ? '' : (sanitizeSocialText(req.body && req.body.image, 500) || 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1200&auto=format&fit=crop');
-    const account = ensureSocialAccount(store, handle, req.body || {});
+    const projectUrl = sanitizeSocialText(req.body && req.body.projectUrl, 160);
+    const safeProjectUrl = postType === 'product' && /^contracts\/[a-z0-9-]+\.html$/.test(projectUrl) ? projectUrl : '';
+    const account = ensureSocialAccount(store, handle, Object.assign({}, req.body, { name: identity.username }));
     const post = {
         id: 'post_' + crypto.randomBytes(8).toString('hex'),
         postType,
@@ -999,6 +1068,8 @@ app.post('/api/social/posts', (req, res) => {
         caption,
         label: sanitizeSocialText(req.body && req.body.label, 80) || 'Community post',
         userSub: sanitizeSocialText(req.body && req.body.userSub, 80) || 'Omenda creator post',
+        projectTitle: postType === 'product' ? sanitizeSocialText(req.body && req.body.projectTitle, 80) : '',
+        projectUrl: safeProjectUrl,
         createdAt: new Date().toISOString(),
         baseLikes: 0,
         baseComments: 0
@@ -1009,9 +1080,11 @@ app.post('/api/social/posts', (req, res) => {
     res.json({ success: true, post: buildSocialPost(store, post, handle) });
 });
 
-app.post('/api/social/posts/:postId/like', (req, res) => {
+app.post('/api/social/posts/:postId/like', async (req, res) => {
+    const identity = await socialPiIdentity(req);
+    if (!identity) return socialUnauthorized(res);
     const store = readSocialStore();
-    const handle = normalizeSocialHandle(req.body && req.body.handle);
+    const handle = identity.handle;
     const postId = sanitizeSocialText(req.params.postId, 80);
     const post = getAllSocialPosts(store).find(row => row.id === postId);
     if (!post) return res.status(404).json({ success: false, error: 'Post not found' });
@@ -1023,9 +1096,11 @@ app.post('/api/social/posts/:postId/like', (req, res) => {
     res.json({ success: true, post: buildSocialPost(store, post, handle) });
 });
 
-app.post('/api/social/posts/:postId/save', (req, res) => {
+app.post('/api/social/posts/:postId/save', async (req, res) => {
+    const identity = await socialPiIdentity(req);
+    if (!identity) return socialUnauthorized(res);
     const store = readSocialStore();
-    const handle = normalizeSocialHandle(req.body && req.body.handle);
+    const handle = identity.handle;
     const postId = sanitizeSocialText(req.params.postId, 80);
     const post = getAllSocialPosts(store).find(row => row.id === postId);
     if (!post) return res.status(404).json({ success: false, error: 'Post not found' });
@@ -1037,9 +1112,11 @@ app.post('/api/social/posts/:postId/save', (req, res) => {
     res.json({ success: true, post: buildSocialPost(store, post, handle) });
 });
 
-app.post('/api/social/posts/:postId/comments', (req, res) => {
+app.post('/api/social/posts/:postId/comments', async (req, res) => {
+    const identity = await socialPiIdentity(req);
+    if (!identity) return socialUnauthorized(res);
     const store = readSocialStore();
-    const handle = normalizeSocialHandle(req.body && req.body.handle);
+    const handle = identity.handle;
     const postId = sanitizeSocialText(req.params.postId, 80);
     const text = sanitizeSocialText(req.body && req.body.text, 180);
     const post = getAllSocialPosts(store).find(row => row.id === postId);
@@ -1054,9 +1131,11 @@ app.post('/api/social/posts/:postId/comments', (req, res) => {
     res.json({ success: true, comment, post: buildSocialPost(store, post, handle) });
 });
 
-app.post('/api/social/follow', (req, res) => {
+app.post('/api/social/follow', async (req, res) => {
+    const identity = await socialPiIdentity(req);
+    if (!identity) return socialUnauthorized(res);
     const store = readSocialStore();
-    const follower = normalizeSocialHandle(req.body && req.body.follower);
+    const follower = identity.handle;
     const following = normalizeSocialHandle(req.body && req.body.following);
     ensureSocialAccount(store, follower, {});
     ensureSocialAccount(store, following, {});
@@ -1398,6 +1477,85 @@ app.post('/api/card-type', (req, res) => {
 
     user.cardType = cardType;
     res.json({ success: true, cardType: user.cardType });
+});
+
+// --------------- Insurance Routes ---------------
+
+app.post('/api/insurance/requests', async (req, res) => {
+    const identity = await socialPiIdentity(req);
+    if (!identity) return socialUnauthorized(res);
+
+    const body = req.body || {};
+    const paymentId = sanitizeSocialText(body.paymentId, 120);
+    const txid = sanitizeSocialText(body.txid, 160);
+    const insuranceType = sanitizeSocialText(body.insuranceType, 80);
+    const plan = sanitizeSocialText(body.plan, 24);
+    const applicantName = sanitizeSocialText(body.applicantName, 100);
+    const email = sanitizeSocialText(body.email, 160);
+    const details = sanitizeSocialText(body.details, 1500);
+    const counterparty = sanitizeSocialText(body.counterparty, 42).replace(/^@/, '');
+    const protectedAmount = Number(body.protectedAmount || 0);
+    const exchangeType = sanitizeSocialText(body.exchangeType, 80);
+    const agreementReference = sanitizeSocialText(body.agreementReference, 100);
+    const allowedTypes = new Set([
+        'Transaction Insurance', 'Peer-to-Peer Insurance', 'Health Insurance', 'Life Insurance',
+        'Motor Insurance', 'Property Insurance', 'Travel Insurance', 'Business Insurance', 'Cargo Insurance'
+    ]);
+    const planPrices = { Essential: 0.5, Plus: 2, Premium: 5 };
+    const allowedPaymentTypes = new Set([
+        'Peer-to-Peer', 'Online Shopping', 'In-Store', 'Bill Payments', 'Cross-Border',
+        'Mobile Top-Up', 'Food & Drinks', 'Rent & Utilities', 'Subscriptions'
+    ]);
+
+    if (!paymentId || !txid || !allowedTypes.has(insuranceType) || !planPrices[plan] || !applicantName || !email || !details) {
+        return res.status(400).json({ success: false, error: 'Incomplete or invalid insurance request.' });
+    }
+    if (insuranceType === 'Peer-to-Peer Insurance') {
+        if (!counterparty || !Number.isFinite(protectedAmount) || protectedAmount <= 0 || !allowedPaymentTypes.has(exchangeType) || !agreementReference) {
+            return res.status(400).json({ success: false, error: 'Complete all Peer-to-Peer transaction details.' });
+        }
+        if (counterparty.toLowerCase() === identity.username.toLowerCase()) {
+            return res.status(400).json({ success: false, error: 'The counterparty must be a different Pi user.' });
+        }
+    }
+
+    if (PI_API_KEY) {
+        try {
+            const result = await piApiCall('GET', '/payments/' + encodeURIComponent(paymentId));
+            const payment = result.data || {};
+            const completed = payment.status && payment.status.developer_completed;
+            const ownerMatches = !payment.user_uid || payment.user_uid === identity.uid;
+            const amountMatches = Number(payment.amount) === planPrices[plan];
+            if (result.status !== 200 || !completed || !ownerMatches || !amountMatches) {
+                return res.status(400).json({ success: false, error: 'The Pi payment could not be verified for this request.' });
+            }
+        } catch (err) {
+            return res.status(502).json({ success: false, error: 'Pi payment verification failed.' });
+        }
+    }
+
+    const request = saveInsuranceRequest({
+        id: 'INS-' + Date.now().toString(36).toUpperCase() + '-' + crypto.randomBytes(2).toString('hex').toUpperCase(),
+        createdAt: new Date().toISOString(),
+        status: 'review_pending',
+        piUid: identity.uid,
+        piUsername: identity.username,
+        paymentId,
+        txid,
+        premiumPi: planPrices[plan],
+        insuranceType,
+        plan,
+        applicantName,
+        email,
+        details,
+        peerToPeer: insuranceType === 'Peer-to-Peer Insurance' ? {
+            counterparty,
+            protectedAmount,
+            exchangeType,
+            agreementReference
+        } : null
+    });
+    res.status(201).json({ success: true, request });
 });
 
 // --------------- Pi Network API Routes ---------------

@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Insurance Center | Omenda Pi Pays Global</title>
+  <meta name="description" content="Compare insurance types and request protection for transactions, health, life, vehicles, property, travel, business, and cargo.">
+  <link rel="icon" type="image/svg+xml" href="icon-192.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+  <script src="pi-sdk-helper.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="page-insurance">
+  <header class="insurance-topbar">
+    <a class="insurance-brand" href="index.html">
+      <img src="icon-192.svg" alt="Omenda Pi Pays Global">
+      <span>Omenda Insurance</span>
+    </a>
+    <nav aria-label="Insurance navigation">
+      <a href="#types">Insurance types</a>
+      <a href="#plans">Plans</a>
+      <a href="#quote">Get a quote</a>
+      <a class="insurance-market-link" href="shop.html">Marketplace</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="insurance-hero">
+      <div class="insurance-hero-copy">
+        <span class="insurance-eyebrow">Protection for everyday life</span>
+        <h1>One place to protect what matters.</h1>
+        <p>Explore flexible protection for your Pi transactions, health, family, journeys, property, vehicles, business, and cargo.</p>
+        <div class="insurance-actions">
+          <a class="insurance-primary" href="#quote">Get a quote</a>
+          <a class="insurance-secondary" href="#types">Explore coverage</a>
+        </div>
+        <div class="insurance-trust">
+          <span>✓ Clear coverage</span>
+          <span>✓ Flexible payments</span>
+          <span>✓ Fast claim support</span>
+        </div>
+      </div>
+      <aside class="insurance-hero-card" aria-label="Protection summary">
+        <div class="insurance-shield">🛡️</div>
+        <span>Omenda Protection</span>
+        <strong>9 insurance types</strong>
+        <p>Choose individual protection or combine cover for better peace of mind.</p>
+        <div><span>Support</span><b>24/7</b></div>
+        <div><span>Quote request</span><b>Free</b></div>
+      </aside>
+    </section>
+
+    <section class="insurance-section" id="types">
+      <div class="insurance-heading">
+        <span class="insurance-eyebrow">Insurance types</span>
+        <h2>Coverage designed around you</h2>
+        <p>Select a type to prefill the quote request.</p>
+      </div>
+      <div class="insurance-type-grid">
+        <button class="insurance-type" data-type="Transaction Insurance"><span>💳</span><b>Transaction</b><small>Fraud, failed delivery, and eligible payment disputes.</small></button>
+        <button class="insurance-type insurance-type-p2p" id="startP2pFlow" type="button" data-type="Peer-to-Peer Insurance" aria-controls="insuranceP2pFields"><span>👥</span><b>Peer-to-Peer</b><small>Protection for eligible direct trades, transfers, and exchanges between verified users.</small><em>Start P2P protection →</em></button>
+        <button class="insurance-type" data-type="Health Insurance"><img src="assets/insurance/health-insurance.png" alt=""><span>❤️</span><b>Health</b><small>Medical visits, treatment, hospitalization, and emergencies.</small></button>
+        <button class="insurance-type" data-type="Life Insurance"><img src="assets/insurance/life-insurance.png" alt=""><span>👨‍👩‍👧</span><b>Life</b><small>Financial support for the people who depend on you.</small></button>
+        <button class="insurance-type" data-type="Motor Insurance"><img src="assets/insurance/motor-insurance.png" alt=""><span>🚗</span><b>Motor</b><small>Cover for cars, motorcycles, accidents, and theft.</small></button>
+        <button class="insurance-type" data-type="Property Insurance"><img src="assets/insurance/property-insurance.png" alt=""><span>🏠</span><b>Property</b><small>Protection for homes, buildings, equipment, and contents.</small></button>
+        <button class="insurance-type" data-type="Travel Insurance"><img src="assets/insurance/travel-insurance.png" alt=""><span>✈️</span><b>Travel</b><small>Medical emergencies, cancellation, delay, and baggage.</small></button>
+        <button class="insurance-type" data-type="Business Insurance"><img src="assets/insurance/business-insurance.png" alt=""><span>🏢</span><b>Business</b><small>Liability, interruption, workers, and business assets.</small></button>
+        <button class="insurance-type" data-type="Cargo Insurance"><img src="assets/insurance/cargo-insurance.png" alt=""><span>🚢</span><b>Cargo</b><small>Goods in transit by road, sea, rail, or air.</small></button>
+      </div>
+      <div class="insurance-supported-payments">
+        <div class="insurance-supported-heading">
+          <span class="insurance-eyebrow">Supported Pi Payments</span>
+          <h3>Choose a payment to protect</h3>
+          <p>Each option opens the Peer-to-Peer protection flow with the payment type preselected.</p>
+        </div>
+        <div class="insurance-payment-flow-grid">
+          <button type="button" data-payment-flow="Peer-to-Peer"><span>👥</span><b>Peer-to-Peer</b></button>
+          <button type="button" data-payment-flow="Online Shopping"><span>🛒</span><b>Online Shopping</b></button>
+          <button type="button" data-payment-flow="In-Store"><span>🏦</span><b>In-Store</b></button>
+          <button type="button" data-payment-flow="Bill Payments"><span>💳</span><b>Bill Payments</b></button>
+          <button type="button" data-payment-flow="Cross-Border"><span>🌐</span><b>Cross-Border</b></button>
+          <button type="button" data-payment-flow="Mobile Top-Up"><span>📱</span><b>Mobile Top-Up</b></button>
+          <button type="button" data-payment-flow="Food &amp; Drinks"><span>☕</span><b>Food &amp; Drinks</b></button>
+          <button type="button" data-payment-flow="Rent &amp; Utilities"><span>🏠</span><b>Rent &amp; Utilities</b></button>
+          <button type="button" data-payment-flow="Subscriptions"><span>📚</span><b>Subscriptions</b></button>
+        </div>
+      </div>
+      <figure class="insurance-coverage-visual">
+        <img src="assets/insurance/insurance-coverage-types.png" alt="A customer speaking with a health professional near a home, vehicle, traveler, and cargo transport">
+        <figcaption>
+          <span>Connected protection</span>
+          <strong>From your health and home to every journey and delivery.</strong>
+        </figcaption>
+      </figure>
+    </section>
+
+    <section class="insurance-plans" id="plans">
+      <div class="insurance-heading">
+        <span class="insurance-eyebrow">Simple plans</span>
+        <h2>Start with the protection you need</h2>
+      </div>
+      <div class="insurance-plan-grid">
+        <article class="insurance-plan">
+          <span>Basic</span><h3>Essential</h3><p>Core protection for individuals and everyday transactions.</p>
+          <ul><li>Standard claim support</li><li>Single coverage type</li><li>Digital policy record</li></ul>
+          <button data-plan="Essential">Choose Essential</button>
+        </article>
+        <article class="insurance-plan featured">
+          <span>Most popular</span><h3>Plus</h3><p>Broader limits and extra support for active households.</p>
+          <ul><li>Priority claim support</li><li>Up to three coverage types</li><li>Flexible payment schedule</li></ul>
+          <button data-plan="Plus">Choose Plus</button>
+        </article>
+        <article class="insurance-plan">
+          <span>Complete</span><h3>Premium</h3><p>High-limit protection for families and growing businesses.</p>
+          <ul><li>Dedicated claim adviser</li><li>Custom combined coverage</li><li>Business and cargo options</li></ul>
+          <button data-plan="Premium">Choose Premium</button>
+        </article>
+      </div>
+    </section>
+
+    <section class="insurance-quote" id="quote">
+      <div>
+        <span class="insurance-eyebrow">Free quote request</span>
+        <h2>Tell us what you want to protect.</h2>
+        <p>Connect your Pi account, submit your details, and authorize the selected plan payment from Pi Wallet. Coverage is activated only after review and policy approval.</p>
+      </div>
+      <form id="insuranceForm">
+        <div class="insurance-pi-connect">
+          <div>
+            <span>Pi Wallet account</span>
+            <strong id="insurancePiUser">Not connected</strong>
+          </div>
+          <button id="insuranceConnectPi" type="button">Connect Pi Wallet</button>
+        </div>
+        <div class="insurance-form-grid">
+          <label>Full name<input name="name" type="text" autocomplete="name" required placeholder="Your full name"></label>
+          <label>Email address<input name="email" type="email" autocomplete="email" required placeholder="you@example.com"></label>
+          <label>Pi username<input id="insuranceUsername" name="piUsername" type="text" readonly required placeholder="Connect Pi Wallet"></label>
+          <label>Insurance type
+            <select id="insuranceType" name="type" required>
+              <option value="">Choose a type</option>
+              <option>Transaction Insurance</option><option>Peer-to-Peer Insurance</option><option>Health Insurance</option><option>Life Insurance</option>
+              <option>Motor Insurance</option><option>Property Insurance</option><option>Travel Insurance</option>
+              <option>Business Insurance</option><option>Cargo Insurance</option>
+            </select>
+          </label>
+          <label>Preferred plan
+            <select id="insurancePlan" name="plan"><option>Essential</option><option selected>Plus</option><option>Premium</option></select>
+          </label>
+          <label class="insurance-full">Coverage details<textarea name="details" rows="4" required placeholder="Describe the person, trip, vehicle, property, transaction, business, or cargo you want to protect."></textarea></label>
+        </div>
+        <fieldset class="insurance-p2p-fields" id="insuranceP2pFields" hidden>
+          <legend><span id="insuranceP2pTitle">Peer-to-Peer</span> protection details</legend>
+          <ol class="insurance-p2p-steps" aria-label="Peer-to-Peer protection steps">
+            <li><b>1</b><span>Connect Pi Wallet</span></li>
+            <li><b>2</b><span>Add exchange details</span></li>
+            <li><b>3</b><span>Pay and submit</span></li>
+          </ol>
+          <div class="insurance-form-grid">
+            <label><span id="p2pCounterpartyLabel">Other Pi username</span><input id="p2pCounterparty" name="p2pCounterparty" type="text" placeholder="@pioneer" pattern="@?[A-Za-z0-9._-]{2,40}"></label>
+            <label>Protected amount<input id="p2pAmount" name="p2pAmount" type="number" min="0.01" step="0.01" placeholder="10.00"></label>
+            <label>Payment type
+              <select id="p2pExchangeType" name="p2pExchangeType">
+                <option value="">Choose a payment type</option>
+                <option>Peer-to-Peer</option><option>Online Shopping</option><option>In-Store</option>
+                <option>Bill Payments</option><option>Cross-Border</option><option>Mobile Top-Up</option>
+                <option>Food &amp; Drinks</option><option>Rent &amp; Utilities</option><option>Subscriptions</option>
+              </select>
+            </label>
+            <label><span id="p2pReferenceLabel">Transaction reference</span><input id="p2pReference" name="p2pReference" type="text" maxlength="80" placeholder="Payment ID or agreement reference"></label>
+          </div>
+          <p id="p2pFlowNote">The counterparty must be a different Pi user. Omenda Insurance protects only eligible, documented exchanges.</p>
+        </fieldset>
+        <div class="insurance-payment-summary">
+          <div><span>Selected plan</span><strong id="insurancePlanSummary">Plus</strong></div>
+          <div><span>Payment type</span><strong id="insurancePaymentTypeSummary">Peer-to-Peer</strong></div>
+          <div><span>Pi Wallet payment</span><strong id="insuranceAmount">2 π</strong></div>
+        </div>
+        <div class="insurance-onramp">
+          <div>
+            <span>Need Pi for this payment?</span>
+            <strong>Fund through the official Pi Wallet on-ramp</strong>
+            <small>Provider and payment-method availability depends on your country.</small>
+          </div>
+          <button id="insuranceOnramp" type="button">Open On-ramp</button>
+        </div>
+        <label class="insurance-consent"><input type="checkbox" required> I agree to be contacted about this request and authorize the displayed Pi Wallet payment.</label>
+        <button class="insurance-submit" id="insuranceSubmit" type="submit">Pay 2 π &amp; submit request</button>
+        <p class="insurance-form-status" id="insuranceStatus" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+  </main>
+
+  <footer class="insurance-footer">
+    <span>© 2026 Omenda Pi Pays Global</span>
+    <span>Coverage is subject to eligibility, policy terms, limits, and exclusions.</span>
+  </footer>
+
+  <script>
+    (function () {
+      var typeSelect = document.getElementById('insuranceType');
+      var planSelect = document.getElementById('insurancePlan');
+      var form = document.getElementById('insuranceForm');
+      var connectButton = document.getElementById('insuranceConnectPi');
+      var submitButton = document.getElementById('insuranceSubmit');
+      var usernameInput = document.getElementById('insuranceUsername');
+      var userDisplay = document.getElementById('insurancePiUser');
+      var status = document.getElementById('insuranceStatus');
+      var planSummary = document.getElementById('insurancePlanSummary');
+      var amountDisplay = document.getElementById('insuranceAmount');
+      var onrampButton = document.getElementById('insuranceOnramp');
+      var p2pFields = document.getElementById('insuranceP2pFields');
+      var p2pInputs = Array.prototype.slice.call(p2pFields.querySelectorAll('input, select'));
+      var detailsInput = form.querySelector('[name="details"]');
+      var paymentFlowConfig = {
+        'Peer-to-Peer': {
+          partyLabel: 'Other Pi username', partyPlaceholder: '@pioneer',
+          referenceLabel: 'Transaction or agreement reference', referencePlaceholder: 'Payment ID or agreement reference',
+          detailsPlaceholder: 'Describe the direct trade, transfer, or exchange being protected.'
+        },
+        'Online Shopping': {
+          partyLabel: 'Seller Pi username', partyPlaceholder: '@seller',
+          referenceLabel: 'Order reference', referencePlaceholder: 'Order number or checkout reference',
+          detailsPlaceholder: 'Describe the product, delivery promise, and online seller.'
+        },
+        'In-Store': {
+          partyLabel: 'Merchant Pi username', partyPlaceholder: '@merchant',
+          referenceLabel: 'Receipt reference', referencePlaceholder: 'Receipt, till, or payment reference',
+          detailsPlaceholder: 'Describe the store purchase and item being protected.'
+        },
+        'Bill Payments': {
+          partyLabel: 'Biller Pi username', partyPlaceholder: '@provider',
+          referenceLabel: 'Bill reference', referencePlaceholder: 'Invoice or customer account number',
+          detailsPlaceholder: 'Describe the bill, provider, billing period, and due date.'
+        },
+        'Cross-Border': {
+          partyLabel: 'Recipient Pi username', partyPlaceholder: '@recipient',
+          referenceLabel: 'Transfer reference', referencePlaceholder: 'Transfer or remittance reference',
+          detailsPlaceholder: 'Describe the international transfer, destination country, and purpose.'
+        },
+        'Mobile Top-Up': {
+          partyLabel: 'Provider Pi username', partyPlaceholder: '@mobileprovider',
+          referenceLabel: 'Mobile number or top-up reference', referencePlaceholder: '+255… or top-up reference',
+          detailsPlaceholder: 'Describe the mobile network, recipient number, and top-up package.'
+        },
+        'Food & Drinks': {
+          partyLabel: 'Restaurant Pi username', partyPlaceholder: '@restaurant',
+          referenceLabel: 'Order reference', referencePlaceholder: 'Table, receipt, or delivery order',
+          detailsPlaceholder: 'Describe the food order, restaurant, and delivery or collection terms.'
+        },
+        'Rent & Utilities': {
+          partyLabel: 'Landlord or provider Pi username', partyPlaceholder: '@landlord',
+          referenceLabel: 'Property or account reference', referencePlaceholder: 'Lease, meter, or customer reference',
+          detailsPlaceholder: 'Describe the rent or utility payment, property, and payment period.'
+        },
+        'Subscriptions': {
+          partyLabel: 'Service Pi username', partyPlaceholder: '@service',
+          referenceLabel: 'Subscription reference', referencePlaceholder: 'Account, plan, or invoice reference',
+          detailsPlaceholder: 'Describe the subscription service, plan, and billing period.'
+        }
+      };
+      var planPrices = { Essential: 0.5, Plus: 2, Premium: 5 };
+      var authenticatedUser = null;
+
+      function setStatus(message, kind) {
+        status.textContent = message;
+        status.className = 'insurance-form-status' + (kind ? ' ' + kind : '');
+      }
+
+      function paymentAmount() {
+        return planPrices[planSelect.value] || planPrices.Plus;
+      }
+
+      function updatePaymentSummary() {
+        var amount = paymentAmount();
+        planSummary.textContent = planSelect.value;
+        amountDisplay.textContent = amount + ' π';
+        submitButton.textContent = 'Pay ' + amount + ' π & submit request';
+      }
+
+      function updateTypeFlow() {
+        var isP2p = typeSelect.value === 'Peer-to-Peer Insurance';
+        p2pFields.hidden = !isP2p;
+        p2pInputs.forEach(function (field) {
+          field.required = isP2p;
+          if (!isP2p) field.value = '';
+        });
+        if (!isP2p) {
+          document.querySelectorAll('[data-payment-flow]').forEach(function (button) {
+            button.classList.remove('selected');
+          });
+        }
+        document.querySelectorAll('[data-type]').forEach(function (button) {
+          button.classList.toggle('selected', button.dataset.type === typeSelect.value);
+        });
+      }
+
+      function connectPi() {
+        connectButton.disabled = true;
+        connectButton.textContent = 'Connecting…';
+        setStatus('Approve the connection in Pi Wallet.', 'pending');
+        return window.piAuthenticate(null, ['username', 'payments', 'wallet_address'])
+          .then(function (auth) {
+            if (!auth || !auth.user || !auth.user.username) throw new Error('Pi username was not returned.');
+            authenticatedUser = auth.user;
+            usernameInput.value = '@' + auth.user.username.replace(/^@/, '');
+            userDisplay.textContent = usernameInput.value;
+            connectButton.textContent = 'Connected';
+            connectButton.classList.add('connected');
+            setStatus('Pi Wallet connected. Complete the form to continue.', 'success');
+            return auth.user;
+          })
+          .catch(function (error) {
+            authenticatedUser = null;
+            usernameInput.value = '';
+            userDisplay.textContent = 'Not connected';
+            connectButton.disabled = false;
+            connectButton.textContent = 'Connect Pi Wallet';
+            setStatus(error && error.message ? error.message : 'Open this page in Pi Browser to connect your wallet.', 'error');
+            throw error;
+        });
+      }
+
+      function openOfficialOnramp() {
+        var walletWindow = window.open('about:blank', '_blank');
+        if (!walletWindow) {
+          setStatus('Allow pop-ups, then select Open On-ramp again.', 'error');
+          return;
+        }
+        try { walletWindow.opener = null; } catch (ignore) {}
+
+        function openWallet() {
+          walletWindow.location.replace('https://wallet.pinet.com');
+          setStatus('Pi Wallet opened. Choose its on-ramp option, complete funding, then return here to pay.', 'pending');
+        }
+
+        if (authenticatedUser) {
+          openWallet();
+          return;
+        }
+        setStatus('Connect your Pi account before opening the on-ramp.', 'pending');
+        connectPi().then(openWallet).catch(function () {
+          try { walletWindow.close(); } catch (ignore) {}
+        });
+      }
+
+      function configurePaymentFlow(paymentType) {
+        var config = paymentFlowConfig[paymentType] || paymentFlowConfig['Peer-to-Peer'];
+        document.getElementById('insuranceP2pTitle').textContent = paymentType;
+        document.getElementById('p2pCounterpartyLabel').textContent = config.partyLabel;
+        document.getElementById('p2pCounterparty').placeholder = config.partyPlaceholder;
+        document.getElementById('p2pReferenceLabel').textContent = config.referenceLabel;
+        document.getElementById('p2pReference').placeholder = config.referencePlaceholder;
+        detailsInput.placeholder = config.detailsPlaceholder;
+        document.getElementById('insurancePaymentTypeSummary').textContent = paymentType;
+        document.getElementById('p2pFlowNote').textContent =
+          'Use a different, verified Pi username and keep supporting records. Only eligible documented ' + paymentType.toLowerCase() + ' payments can be protected.';
+      }
+
+      function launchP2pFlow(paymentType) {
+        typeSelect.value = 'Peer-to-Peer Insurance';
+        updateTypeFlow();
+        if (paymentType) {
+          document.getElementById('p2pExchangeType').value = paymentType;
+          configurePaymentFlow(paymentType);
+          document.querySelectorAll('[data-payment-flow]').forEach(function (button) {
+            button.classList.toggle('selected', button.dataset.paymentFlow === paymentType);
+          });
+        }
+        setStatus(
+          authenticatedUser ? 'Add the ' + (paymentType || 'exchange') + ' details, then authorize payment.' : 'Step 1: Connect your Pi Wallet to protect this payment.',
+          'pending'
+        );
+        document.getElementById('quote').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        window.setTimeout(function () {
+          if (authenticatedUser) {
+            document.getElementById('p2pCounterparty').focus();
+          } else {
+            connectButton.focus();
+          }
+        }, 500);
+      }
+
+      document.querySelectorAll('[data-type]').forEach(function (button) {
+        button.addEventListener('click', function () {
+          if (button.dataset.type === 'Peer-to-Peer Insurance') {
+            launchP2pFlow('Peer-to-Peer');
+            return;
+          }
+          typeSelect.value = button.dataset.type;
+          updateTypeFlow();
+          document.getElementById('quote').scrollIntoView({ behavior: 'smooth' });
+        });
+      });
+      document.querySelectorAll('[data-payment-flow]').forEach(function (button) {
+        button.addEventListener('click', function () {
+          launchP2pFlow(button.dataset.paymentFlow);
+        });
+      });
+      document.querySelectorAll('[data-plan]').forEach(function (button) {
+        button.addEventListener('click', function () {
+          planSelect.value = button.dataset.plan;
+          updatePaymentSummary();
+          document.getElementById('quote').scrollIntoView({ behavior: 'smooth' });
+        });
+      });
+      planSelect.addEventListener('change', updatePaymentSummary);
+      typeSelect.addEventListener('change', updateTypeFlow);
+      document.getElementById('p2pExchangeType').addEventListener('change', function (event) {
+        configurePaymentFlow(event.target.value || 'Peer-to-Peer');
+        document.querySelectorAll('[data-payment-flow]').forEach(function (button) {
+          button.classList.toggle('selected', button.dataset.paymentFlow === event.target.value);
+        });
+      });
+      connectButton.addEventListener('click', function () {
+        connectPi().catch(function () {});
+      });
+      onrampButton.addEventListener('click', openOfficialOnramp);
+      form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        if (!authenticatedUser || !usernameInput.value) {
+          setStatus('Connect and authenticate your Pi Wallet before submitting.', 'error');
+          connectPi().catch(function () {});
+          return;
+        }
+
+        var formData = new FormData(form);
+        var name = String(formData.get('name') || '').trim();
+        var type = String(formData.get('type') || '');
+        var plan = String(formData.get('plan') || 'Plus');
+        var p2pCounterparty = String(formData.get('p2pCounterparty') || '').trim();
+        var p2pAmount = Number(formData.get('p2pAmount') || 0);
+        var p2pExchangeType = String(formData.get('p2pExchangeType') || '');
+        var p2pReference = String(formData.get('p2pReference') || '').trim();
+        if (type === 'Peer-to-Peer Insurance' &&
+            p2pCounterparty.replace(/^@/, '').toLowerCase() === authenticatedUser.username.replace(/^@/, '').toLowerCase()) {
+          setStatus('The other Pi username must be different from your connected account.', 'error');
+          document.getElementById('p2pCounterparty').focus();
+          return;
+        }
+        var amount = paymentAmount();
+        var reference = 'INS-' + Date.now().toString(36).toUpperCase();
+        submitButton.disabled = true;
+        connectButton.disabled = true;
+        setStatus('Waiting for Pi Wallet payment authorization…', 'pending');
+
+        window.piCreatePayment(
+          amount,
+          'Omenda Insurance ' + plan + ' plan — ' + type,
+          {
+            service: 'omenda-insurance',
+            reference: reference,
+            insuranceType: type,
+            plan: plan,
+            piUsername: authenticatedUser.username,
+            applicantName: name,
+            counterparty: p2pCounterparty,
+            protectedAmount: p2pAmount,
+            exchangeType: p2pExchangeType,
+            agreementReference: p2pReference
+          },
+          function (paymentId, txid) {
+            setStatus('Payment confirmed. Saving your protected exchange…', 'pending');
+            fetch('/api/insurance/requests', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + window.piAccessToken
+              },
+              body: JSON.stringify({
+                paymentId: paymentId,
+                txid: txid,
+                insuranceType: type,
+                plan: plan,
+                applicantName: name,
+                email: String(formData.get('email') || '').trim(),
+                details: String(formData.get('details') || '').trim(),
+                counterparty: p2pCounterparty,
+                protectedAmount: p2pAmount,
+                exchangeType: p2pExchangeType,
+                agreementReference: p2pReference
+              })
+            }).then(function (response) {
+              return response.json().then(function (data) {
+                if (!response.ok || !data.success) throw new Error(data.error || 'The request could not be saved.');
+                return data;
+              });
+            }).then(function (data) {
+              setStatus(
+                'Protected exchange submitted. Request ' + data.request.id + ' is pending review.' +
+                (type === 'Peer-to-Peer Insurance' ? ' ' + p2pAmount + ' π with @' + p2pCounterparty.replace(/^@/, '') + '.' : '') +
+                ' Payment: ' + paymentId + (txid ? ' • Transaction: ' + txid : ''),
+                'success'
+              );
+              submitButton.textContent = 'Request submitted';
+              form.querySelectorAll('input, select, textarea').forEach(function (field) {
+                field.disabled = true;
+              });
+            }).catch(function (error) {
+              connectButton.disabled = false;
+              submitButton.textContent = 'Payment completed';
+              setStatus('Your Pi payment completed, but saving failed: ' + error.message + ' Keep payment ID ' + paymentId + ' and contact support. You will not be charged again.', 'error');
+            });
+          },
+          function (error) {
+            submitButton.disabled = false;
+            connectButton.disabled = false;
+            var message = error === 'cancelled' ? 'Payment was cancelled. No request was submitted.' :
+              (error && error.message ? error.message : String(error || 'Payment failed.'));
+            setStatus(message, 'error');
+            updatePaymentSummary();
+          }
+        );
+      });
+      updatePaymentSummary();
+      updateTypeFlow();
+      configurePaymentFlow('Peer-to-Peer');
+    }());
+  </script>
+</body>
+</html>

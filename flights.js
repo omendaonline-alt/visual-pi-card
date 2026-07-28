@@ -59,6 +59,26 @@
     document.getElementById(id).textContent = value;
   }
 
+  var workflow = {
+    request_received: { step:1, label:'Request received', message:'Your request was received and is waiting for a City Rush flight agent.' },
+    agent_review_pending: { step:2, label:'Agent review pending', message:'A City Rush flight agent is checking the passenger details, route, and travel dates.' },
+    airline_review_pending: { step:3, label:'Airline review pending', message:'The selected airline is confirming availability, schedule, and fare.' },
+    e_ticket_issued: { step:4, label:'E-ticket issued', message:'The airline has issued the e-ticket. It is ready to print.' }
+  };
+
+  function renderWorkflow(booking) {
+    var current = workflow[booking.status] || workflow.request_received;
+    document.querySelectorAll('[data-flight-step]').forEach(function (step, index) {
+      var number = index + 1;
+      step.classList.toggle('completed', number < current.step);
+      step.classList.toggle('active', number === current.step);
+      if (number === current.step) step.setAttribute('aria-current', 'step');
+      else step.removeAttribute('aria-current');
+    });
+    setText('ticketStatus', current.label);
+    status.textContent = booking.reference + ': ' + current.message;
+  }
+
   function renderTicket(booking) {
     setText('ticketReference', booking.reference);
     setText('ticketFrom', booking.fromAirport);
@@ -69,8 +89,8 @@
     setText('ticketPassengers', String(booking.passengers));
     setText('ticketCabin', booking.cabin);
     setText('ticketAirline', booking.airline);
+    renderWorkflow(booking);
     result.classList.remove('hidden');
-    status.textContent = 'Request ' + booking.reference + ' was created. An agent must now confirm schedule and fare.';
     result.scrollIntoView({ behavior:'smooth', block:'nearest' });
   }
 
@@ -166,6 +186,7 @@
     form.reset();
     setTripType('one-way');
     result.classList.add('hidden');
+    renderWorkflow({ status:'request_received', reference:'New request' });
     status.classList.remove('error');
     status.textContent = 'Schedule and fare require airline confirmation. This request is not yet a paid or issued ticket.';
     departure.min = localDateValue(new Date());

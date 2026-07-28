@@ -1,11 +1,13 @@
 // Visual Pi Card - Service Worker v1.0
 // omendapipaysglobel.online - Offline support & caching
 
-var CACHE_NAME = 'pivisualcard-v3';
+var CACHE_NAME = 'pivisualcard-v4';
 var URLS_TO_CACHE = [
     '/',
     '/index.html',
     '/manifest.json',
+    '/styles.css',
+    '/insurance.html',
     '/card-visa.html',
     '/card-mastercard.html',
     '/card-gold.html',

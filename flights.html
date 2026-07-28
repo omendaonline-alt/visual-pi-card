@@ -26,11 +26,11 @@
   <main class="page-shell">
     <section class="flight-page-head">
       <div><span class="eyebrow">Worldwide flight agent</span><h1>Request a ticket from any airport.</h1><p>Enter the passenger and route once. A flight agent checks schedules and fares with the requested airline before an e-ticket is issued.</p></div>
-      <div class="flight-flow" aria-label="Flight request progress">
-        <div><strong>1</strong><span>Request</span></div>
-        <div><strong>2</strong><span>Agent review</span></div>
-        <div><strong>3</strong><span>Airline review</span></div>
-        <div><strong>4</strong><span>E-ticket</span></div>
+      <div class="flight-flow" id="flightFlow" aria-label="Flight request progress">
+        <div class="active" data-flight-step="request" aria-current="step"><strong>1</strong><span>Request</span></div>
+        <div data-flight-step="agent_review"><strong>2</strong><span>Agent review</span></div>
+        <div data-flight-step="airline_review"><strong>3</strong><span>Airline review</span></div>
+        <div data-flight-step="e_ticket"><strong>4</strong><span>E-ticket</span></div>
       </div>
     </section>
 
@@ -68,7 +68,7 @@
       <section class="flight-agent-result hidden" id="flightAgentResult" aria-live="polite">
         <div class="agent-ticket-head">
           <div><span>City Rush Flight Agent</span><strong id="ticketReference">CRF-PENDING</strong></div>
-          <span class="ticket-status">Airline confirmation pending</span>
+          <span class="ticket-status" id="ticketStatus">Request received</span>
         </div>
         <div class="agent-ticket-route"><strong id="ticketFrom">From airport</strong><span>&rarr;</span><strong id="ticketTo">Destination airport</strong></div>
         <div class="agent-ticket-details">

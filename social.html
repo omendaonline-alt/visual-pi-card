@@ -10,6 +10,8 @@
  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
  <link rel="stylesheet" href="styles.css">
+ <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+ <script src="pi-sdk-helper.js"></script>
  <style>
  body { margin: 0; font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f5f7fb; color: #0f172a; }
  .page-social { max-width: 1200px; margin: 0 auto; padding-bottom: 60px; }
@@ -140,6 +142,9 @@
  .image-preview { display: none; width: 100%; max-height: 260px; object-fit: cover; border-radius: 16px; border: 1px solid rgba(15,23,42,.08); }
  .image-preview.active { display: block; }
  .post-type-note { color: #64748b; font-size: .9rem; font-weight: 800; }
+ .project-post-picker[hidden], .image-upload-box[hidden] { display: none; }
+ .project-post-picker select { width: 100%; border: 1px solid rgba(148,163,184,.35); border-radius: 16px; padding: 12px 14px; background: #fff; font: inherit; font-weight: 800; }
+ .project-post-link { display: inline-flex; margin-top: 12px; padding: 10px 14px; border-radius: 999px; background: #eff6ff; color: #1d4ed8; text-decoration: none; font-weight: 900; }
  .modal-actions { display: flex; justify-content: flex-end; gap: 10px; }
  .story-viewer-card { width: min(430px, 100%); background: #020617; color: #fff; border-radius: 26px; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,.36); }
  .story-viewer-card img { width: 100%; aspect-ratio: 9/13; object-fit: cover; display: block; }
@@ -208,11 +213,11 @@
  <input id="viewerAvatarFile" type="file" accept="image/png,image/jpeg,image/webp,image/gif" aria-label="Change profile photo">
  </span>
  </label>
- <label>Your public account
- <input id="viewerHandle" maxlength="32" value="@OmendaCreator" autocomplete="off">
+ <label>Your Pi account
+ <input id="viewerHandle" maxlength="32" value="Not connected" autocomplete="off" readonly aria-readonly="true">
  </label>
- <button type="button" id="syncProfile">Use account</button>
- <span id="socialSyncStatus" class="social-sync-status">Connecting public feed...</span>
+ <button type="button" id="syncProfile">Connect Pi account</button>
+ <span id="socialSyncStatus" class="social-sync-status">Connect Pi to create your personal account.</span>
  </div>
  </section>
 
@@ -357,7 +362,16 @@
  <input id="postType" type="hidden" value="photo">
  <div class="post-type-note" id="postTypeNote">Photo post</div>
  <label>Handle
- <input id="postHandle" maxlength="32" value="@OmendaCreator" autocomplete="off">
+ <input id="postHandle" maxlength="32" value="Pi account required" autocomplete="off" readonly aria-readonly="true">
+ </label>
+ <label class="project-post-picker" id="projectPostPicker" hidden>Omenda Pi Pays project
+ <select id="postProject">
+ <option value="contracts/house-building.html" data-title="House Building" data-image="assets/contracts/house-building-projects.png" data-caption="Homes, apartments, estates, and verified building project teams.">House Building</option>
+ <option value="contracts/road-contracts.html" data-title="Road Contracts" data-image="assets/contracts/road-urban-roads.png" data-caption="Roads, drainage, bridges, access routes, and contractor packages.">Road Contracts</option>
+ <option value="contracts/industry-projects.html" data-title="Industry Projects" data-image="assets/contracts/industry-operate.png" data-caption="Factories, warehouses, machinery, energy, and production-line projects.">Industry Projects</option>
+ <option value="contracts/mining-minerals.html" data-title="Mining & Minerals" data-image="assets/contracts/mining-machinery-extraction.png" data-caption="Exploration, equipment, processing, logistics, and verified mineral services.">Mining & Minerals</option>
+ <option value="contracts/tourism-projects.html" data-title="Tourism Projects" data-image="assets/contracts/tourism-request-services.png" data-caption="Tanzania and Zanzibar hotels, tours, guides, transport, and destination packages.">Tourism Projects</option>
+ </select>
  </label>
  <label class="image-upload-box">Upload image
  <input id="postImageFile" type="file" accept="image/png,image/jpeg,image/webp,image/gif">
@@ -532,7 +546,6 @@
  renderCreatedPosts();
  document.querySelectorAll('.post-card').forEach(bindPost);
  bindStories();
- bindCreatePost();
  document.querySelectorAll('[data-close-modal]').forEach(btn => btn.addEventListener('click', () => closeModal(btn.dataset.closeModal)));
  document.querySelectorAll('.social-modal').forEach(modal => modal.addEventListener('click', event => { if (event.target === modal) closeModal(modal.id); }));
  }
@@ -545,16 +558,18 @@
  const defaults = { 'omenda-launch': { likes: 248, comments: 18 }, 'pi-travel-sunrise': { likes: 412, comments: 32 }, 'market-pulse': { likes: 176, comments: 14 } };
  let posts = [];
  let postIndex = {};
+ let authenticatedHandle = '';
  function prefs() { try { return Object.assign({ viewerHandle: '@OmendaCreator', viewerAvatar: 'icon-192.svg' }, JSON.parse(localStorage.getItem(prefKey) || '{}')); } catch (e) { return { viewerHandle: '@OmendaCreator', viewerAvatar: 'icon-192.svg' }; } }
  function savePrefs(next) { localStorage.setItem(prefKey, JSON.stringify(Object.assign(prefs(), next))); }
  function normalizeHandle(value) { let h = String(value || '').trim().replace(/\s+/g, ''); if (!h) h = '@OmendaCreator'; if (!h.startsWith('@')) h = '@' + h; h = '@' + h.slice(1).replace(/[^a-zA-Z0-9_.-]/g, '').slice(0, 31); return h.length > 1 ? h : '@OmendaCreator'; }
- function viewer() { const input = document.getElementById('viewerHandle'); const h = normalizeHandle(input ? input.value : prefs().viewerHandle); if (input) input.value = h; savePrefs({ viewerHandle: h }); return h; }
+ function viewer() { return authenticatedHandle || '@OmendaGuest'; }
  function viewerAvatar() { return prefs().viewerAvatar || 'icon-192.svg'; }
  function applyViewerAvatar(src) { const avatar = src || 'icon-192.svg'; document.querySelectorAll('#viewerAvatar, #viewerAvatarPreview, #viewerStoryImage').forEach(img => { img.src = avatar; }); }
  function esc(value) { const div = document.createElement('div'); div.textContent = String(value || ''); return div.innerHTML; }
  function count(value) { return Number(value || 0).toLocaleString(); }
  function timeAgo(value) { const diff = Math.max(0, Date.now() - new Date(value || Date.now()).getTime()); const min = Math.floor(diff / 60000); if (min < 1) return 'just now'; if (min < 60) return min + 'm ago'; const hr = Math.floor(min / 60); if (hr < 24) return hr + 'h ago'; return Math.floor(hr / 24) + 'd ago'; }
- async function api(path, body) { const options = body ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) } : undefined; const res = await fetch(path, options); const data = await res.json(); if (!res.ok || data.success !== true) throw new Error(data.error || 'Social request failed'); return data; }
+ async function api(path, body) { const headers = {}; if (body) headers['Content-Type'] = 'application/json'; if (window.piAccessToken) headers.Authorization = 'Bearer ' + window.piAccessToken; const options = { headers }; if (body) { options.method = 'POST'; options.body = JSON.stringify(body); } const res = await fetch(path, options); const data = await res.json(); if (!res.ok || data.success !== true) throw new Error(data.error || 'Social request failed'); return data; }
+ async function connectPiAccount() { if (!window.piSdkReady) throw new Error('Open Omenda in Pi Browser to connect your account.'); const auth = await window.piAuthenticate(null, ['username']); if (!auth || !auth.user || !auth.user.username || !auth.accessToken) throw new Error('Pi authentication did not return an account.'); authenticatedHandle = normalizeHandle(auth.user.username); const input = document.getElementById('viewerHandle'); if (input) input.value = authenticatedHandle; savePrefs({ viewerHandle: authenticatedHandle }); return auth; }
  function fileToDataUrl(file) { return new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(String(reader.result || '')); reader.onerror = reject; reader.readAsDataURL(file); }); }
  async function uploadImageFile(file) { if (!file) return ''; if (!/^image\/(png|jpe?g|webp|gif)$/i.test(file.type)) throw new Error('Unsupported image type'); if (file.size > 4 * 1024 * 1024) throw new Error('Image must be 4MB or smaller'); const imageData = await fileToDataUrl(file); const data = await api('/api/social/upload-image', { imageData, fileName: file.name }); return data.url; }
  async function uploadSelectedImage() { const input = document.getElementById('postImageFile'); const file = input && input.files && input.files[0]; return uploadImageFile(file); }
@@ -567,7 +582,7 @@
  <div class="post-header"><img class="avatar" src="${esc(post.avatar || 'icon-192.svg')}" alt="${esc(post.handle)} profile"><div class="post-meta"><p class="user-name">${esc(post.handle)}</p><p class="user-sub">${esc(post.userSub || 'Omenda creator post')}</p></div><p class="post-time">${esc(timeAgo(post.createdAt))}</p></div>
  ${isStatus ? `<div class="status-post-body">${esc(post.caption)}</div>` : `<img class="post-image" src="${esc(post.image)}" alt="${esc(post.handle)} post">`}
  <div class="post-actions"><div class="action-buttons"><button aria-label="Like post">♡</button><button aria-label="Comment">💬</button><button aria-label="Share">📤</button></div><button class="save" aria-label="Save post">▱</button></div>
- <div class="post-summary"><strong>${esc(post.handle)}</strong> <span class="caption">${esc(post.caption)}</span><div class="label"><span>✨</span> ${esc(post.label || 'Community post')}</div></div><div class="post-gifts" data-gifts-for="${esc(post.id)}"></div></article>`;
+ <div class="post-summary"><strong>${esc(post.handle)}</strong> <span class="caption">${esc(post.caption)}</span><div class="label"><span>✨</span> ${esc(post.label || 'Community post')}</div>${post.projectUrl ? `<a class="project-post-link" href="${esc(post.projectUrl)}">Open ${esc(post.projectTitle || 'project')}</a>` : ''}</div><div class="post-gifts" data-gifts-for="${esc(post.id)}"></div></article>`;
  }
  function renderDynamicPosts() { const feed = document.querySelector('.feed'); if (!feed) return; feed.querySelectorAll('.user-created-post').forEach(el => el.remove()); const dynamic = posts.filter(post => seedIds.indexOf(post.id) === -1); if (dynamic.length) feed.insertAdjacentHTML('afterbegin', dynamic.map(dynamicTemplate).join('')); }
  function ensurePostChrome(card) { if (!card.querySelector('.post-stats')) card.querySelector('.post-actions').insertAdjacentHTML('afterend', '<div class="post-stats"></div>'); if (!card.querySelector('.comment-drawer')) card.querySelector('.post-summary').insertAdjacentHTML('afterend', '<div class="comment-drawer"></div>'); if (!card.querySelector('.follow-author')) card.querySelector('.post-header').insertAdjacentHTML('beforeend', '<button type="button" class="follow-author">Follow</button>'); }
@@ -605,18 +620,21 @@
  renderPost(card);
  }
  function renderAll() { renderDynamicPosts(); document.querySelectorAll('.post-card').forEach(bindCard); }
- async function loadFeed() { try { const data = await api('/api/social/feed?viewer=' + encodeURIComponent(viewer())); posts = Array.isArray(data.posts) ? data.posts : []; postIndex = {}; posts.forEach(post => { postIndex[post.id] = post; }); if (data.account && data.account.avatar) { savePrefs({ viewerAvatar: data.account.avatar }); applyViewerAvatar(data.account.avatar); } setStatus('Public feed synced'); } catch (e) { setStatus('Offline browser mode'); } renderAll(); }
+ async function loadFeed() { try { const data = await api('/api/social/feed'); posts = Array.isArray(data.posts) ? data.posts : []; postIndex = {}; posts.forEach(post => { postIndex[post.id] = post; }); if (data.viewer && data.authenticated) { authenticatedHandle = normalizeHandle(data.viewer); const input = document.getElementById('viewerHandle'); if (input) input.value = authenticatedHandle; } if (data.account && data.account.avatar) { savePrefs({ viewerAvatar: data.account.avatar }); applyViewerAvatar(data.account.avatar); } setStatus(data.authenticated ? 'Connected as ' + authenticatedHandle : 'Public feed · connect Pi to interact'); } catch (e) { setStatus('Feed temporarily unavailable'); } renderAll(); }
  function bindComposer() {
- const viewerInput = document.getElementById('viewerHandle'); if (viewerInput) viewerInput.value = prefs().viewerHandle;
+ const viewerInput = document.getElementById('viewerHandle'); if (viewerInput) viewerInput.value = 'Not connected';
  applyViewerAvatar(viewerAvatar());
  const avatarFile = document.getElementById('viewerAvatarFile'); if (avatarFile && !avatarFile.dataset.previewBound) { avatarFile.dataset.previewBound = '1'; avatarFile.addEventListener('change', () => { const file = avatarFile.files && avatarFile.files[0]; if (!file) { applyViewerAvatar(viewerAvatar()); return; } const preview = URL.createObjectURL(file); applyViewerAvatar(preview); setStatus('Profile photo ready - tap Use account'); }); }
  const imageFile = document.getElementById('postImageFile'); const imagePreview = document.getElementById('postImagePreview'); if (imageFile && imagePreview && !imageFile.dataset.previewBound) { imageFile.dataset.previewBound = '1'; imageFile.addEventListener('change', () => { const file = imageFile.files && imageFile.files[0]; if (!file) { imagePreview.classList.remove('active'); imagePreview.removeAttribute('src'); return; } imagePreview.src = URL.createObjectURL(file); imagePreview.classList.add('active'); }); }
- const sync = document.getElementById('syncProfile'); if (sync) sync.addEventListener('click', async event => { event.preventDefault(); try { let avatar = viewerAvatar(); const file = avatarFile && avatarFile.files && avatarFile.files[0]; if (file) { setStatus('Uploading profile photo...'); avatar = await uploadImageFile(file); if (avatarFile) avatarFile.value = ''; } const handle = viewer(); savePrefs({ viewerAvatar: avatar }); applyViewerAvatar(avatar); await api('/api/social/accounts', { handle, name: handle.replace('@', ''), avatar }); await loadFeed(); } catch (e) { applyViewerAvatar(viewerAvatar()); setStatus(e.message || 'Offline browser mode'); } });
- function setPostType(type) { const postType = document.getElementById('postType'); const note = document.getElementById('postTypeNote'); if (postType) postType.value = type === 'status' ? 'status' : 'photo'; if (note) note.textContent = type === 'status' ? 'Status post - image optional' : 'Photo post'; }
- document.querySelectorAll('[data-compose-kind]').forEach(btn => { if (!btn.dataset.serverTypeBound) { btn.dataset.serverTypeBound = '1'; btn.addEventListener('click', event => { event.preventDefault(); event.stopImmediatePropagation(); setPostType(btn.dataset.composeKind === 'status' ? 'status' : 'photo'); if (btn.dataset.composeKind === 'status') document.getElementById('postCaption').value = ''; if (btn.dataset.composeKind === 'product') document.getElementById('postCaption').value = 'New Omenda product drop available in the marketplace.'; const modal = document.getElementById('postModal'); if (modal) { modal.classList.add('open'); modal.setAttribute('aria-hidden', 'false'); } }, true); } });
+ const sync = document.getElementById('syncProfile'); if (sync) sync.addEventListener('click', async event => { event.preventDefault(); try { setStatus('Connecting to Pi...'); await connectPiAccount(); let avatar = viewerAvatar(); const file = avatarFile && avatarFile.files && avatarFile.files[0]; if (file) { setStatus('Uploading profile photo...'); avatar = await uploadImageFile(file); if (avatarFile) avatarFile.value = ''; } savePrefs({ viewerAvatar: avatar }); applyViewerAvatar(avatar); await api('/api/social/accounts', { avatar }); sync.textContent = 'Update profile'; await loadFeed(); } catch (e) { applyViewerAvatar(viewerAvatar()); setStatus(e.message || 'Pi connection failed'); } });
+ function setPostType(type) { const safeType = type === 'status' ? 'status' : (type === 'product' ? 'product' : 'photo'); const postType = document.getElementById('postType'); const note = document.getElementById('postTypeNote'); const picker = document.getElementById('projectPostPicker'); const upload = document.querySelector('.image-upload-box'); if (postType) postType.value = safeType; if (note) note.textContent = safeType === 'status' ? 'Status post - image optional' : (safeType === 'product' ? 'Omenda project post' : 'Photo post'); if (picker) picker.hidden = safeType !== 'product'; if (upload) upload.hidden = safeType === 'product'; }
+ function selectedProject() { const select = document.getElementById('postProject'); const option = select && select.options[select.selectedIndex]; return option ? { url:option.value, title:option.dataset.title, image:option.dataset.image, caption:option.dataset.caption } : null; }
+ function applySelectedProject() { const project = selectedProject(); if (!project) return; document.getElementById('postCaption').value = project.caption; }
+ document.querySelectorAll('[data-compose-kind]').forEach(btn => { if (!btn.dataset.serverTypeBound) { btn.dataset.serverTypeBound = '1'; btn.addEventListener('click', event => { event.preventDefault(); event.stopImmediatePropagation(); setPostType(btn.dataset.composeKind); if (btn.dataset.composeKind === 'status') document.getElementById('postCaption').value = ''; if (btn.dataset.composeKind === 'product') applySelectedProject(); const modal = document.getElementById('postModal'); if (modal) { modal.classList.add('open'); modal.setAttribute('aria-hidden', 'false'); } }, true); } });
+ const projectSelect = document.getElementById('postProject'); if (projectSelect) projectSelect.addEventListener('change', applySelectedProject);
  const composeOpen = document.getElementById('composeOpen'); if (composeOpen && !composeOpen.dataset.serverTypeBound) { composeOpen.dataset.serverTypeBound = '1'; composeOpen.addEventListener('click', () => setPostType('photo'), true); }
  const form = document.getElementById('postForm');
- if (form && !form.dataset.serverBound) { form.dataset.serverBound = '1'; form.addEventListener('submit', async event => { event.preventDefault(); event.stopImmediatePropagation(); const handle = normalizeHandle(document.getElementById('postHandle').value || viewer()); const postType = document.getElementById('postType').value === 'status' ? 'status' : 'photo'; const caption = document.getElementById('postCaption').value.trim() || (postType === 'status' ? 'New status update.' : 'New Omenda social post.'); let image = ''; try { image = postType === 'status' ? await uploadSelectedImage() : (await uploadSelectedImage() || 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1200&auto=format&fit=crop'); const data = await api('/api/social/posts', { handle, image, caption, postType, label: postType === 'status' ? 'Status update' : 'Community post', name: handle.replace('@', '') }); mergePost(data.post); } catch (e) { image = postType === 'status' ? image : (image || 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1200&auto=format&fit=crop'); mergePost({ id: 'post-' + Date.now(), handle, image, caption, postType, label: postType === 'status' ? 'Status update' : 'Community post', avatar: 'icon-192.svg', createdAt: new Date().toISOString(), likeCount: 0, commentCount: 0, saveCount: 0, comments: [] }); setStatus(e.message || 'Post saved in offline mode'); } form.reset(); setPostType('photo'); if (imagePreview) { imagePreview.classList.remove('active'); imagePreview.removeAttribute('src'); } document.getElementById('postHandle').value = viewer(); const modal = document.getElementById('postModal'); if (modal) { modal.classList.remove('open'); modal.setAttribute('aria-hidden', 'true'); } renderAll(); }, true); }
+ if (form && !form.dataset.serverBound) { form.dataset.serverBound = '1'; form.addEventListener('submit', async event => { event.preventDefault(); event.stopImmediatePropagation(); if (!window.piAccessToken || !authenticatedHandle) { setStatus('Connect your Pi account before posting.'); return; } const postType = document.getElementById('postType').value; const project = postType === 'product' ? selectedProject() : null; const caption = document.getElementById('postCaption').value.trim() || (postType === 'status' ? 'New status update.' : 'New Omenda social post.'); let image = ''; try { image = project ? project.image : (postType === 'status' ? await uploadSelectedImage() : (await uploadSelectedImage() || 'icon-192.svg')); const data = await api('/api/social/posts', { image, caption, postType, label: project ? project.title : (postType === 'status' ? 'Status update' : 'Community post'), projectTitle:project && project.title, projectUrl:project && project.url }); mergePost(data.post); } catch (e) { setStatus(e.message || 'Unable to publish post'); return; } form.reset(); setPostType('photo'); if (imagePreview) { imagePreview.classList.remove('active'); imagePreview.removeAttribute('src'); } document.getElementById('postHandle').value = viewer(); const modal = document.getElementById('postModal'); if (modal) { modal.classList.remove('open'); modal.setAttribute('aria-hidden', 'true'); } renderAll(); }, true); }
  }
  function init() { bindComposer(); loadFeed(); }
  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
