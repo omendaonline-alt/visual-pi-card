@@ -1,46 +1,90 @@
-name: FTP Deploy to cPanel
+name: Deploy Website to Nginx
 
 on:
   push:
     branches:
       - main
       - omendaonline-alt
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nginx-production
+  cancel-in-progress: true
 
 jobs:
-  ftp-deploy:
-    name: Deploy to omendapipaysglobel.online
+  deploy:
     runs-on: ubuntu-latest
+    environment: production
+
     env:
-      FTP_DEPLOY_USERNAME: ${{ secrets.FTP_USERNAME || secrets.FTP_USER }}
+      SSH_HOST: ${{ secrets.SSH_HOST }}
+      SSH_PORT: ${{ secrets.SSH_PORT }}
+      SSH_USER: ${{ secrets.SSH_USER }}
+      WEB_ROOT: ${{ secrets.NGINX_WEB_ROOT }}
 
     steps:
-      - name: Checkout repository
+      - name: Checkout website
         uses: actions/checkout@v4
 
-      - name: Validate FTP credentials
+      - name: Validate configuration
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        shell: bash
         run: |
-          if [ -z "${FTP_DEPLOY_USERNAME}" ]; then
-            echo "::error::Missing FTP username secret. Configure FTP_USERNAME or FTP_USER for this repository."
+          [ -n "$SSH_PORT" ] || echo "SSH_PORT=22" >> "$GITHUB_ENV"
+
+          for variable in SSH_HOST SSH_USER WEB_ROOT SSH_PRIVATE_KEY; do
+            if [ -z "${!variable}" ]; then
+              echo "::error::Missing GitHub secret: $variable"
+              exit 1
+            fi
+          done
+
+          if [ "$WEB_ROOT" = "/" ]; then
+            echo "::error::NGINX_WEB_ROOT cannot be /"
             exit 1
           fi
 
-      - name: Deploy site via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.0
-        with:
-          server: ftp.omendapipaysglobel.online
-          username: ${{ env.FTP_DEPLOY_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ftp
-          local-dir: './'
-          server-dir: '/public_html'
-          exclude: |
-            .git*
-            .github*
-            node_modules*
-            package-lock.json
-            .vscode*
-            README.md
-            deploy.ps1
-            git-deploy.ps1
-            .env*
-            Pi network visual card/**
+      - name: Configure SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          install -d -m 700 "$HOME/.ssh"
+          printf '%s\n' "$SSH_PRIVATE_KEY" > "$HOME/.ssh/deploy_key"
+          chmod 600 "$HOME/.ssh/deploy_key"
+
+          ssh-keyscan -p "$SSH_PORT" -H "$SSH_HOST" \
+            >> "$HOME/.ssh/known_hosts"
+          chmod 600 "$HOME/.ssh/known_hosts"
+
+      - name: Verify server
+        run: |
+          ssh -i "$HOME/.ssh/deploy_key" \
+            -p "$SSH_PORT" \
+            -o BatchMode=yes \
+            "$SSH_USER@$SSH_HOST" \
+            "mkdir -p '$WEB_ROOT' && test -w '$WEB_ROOT'"
+
+      - name: Deploy website
+        run: |
+          rsync --archive --compress --delete \
+            --exclude='.git/' \
+            --exclude='.github/' \
+            --exclude='.vscode/' \
+            --exclude='node_modules/' \
+            --exclude='.env*' \
+            --exclude='README.md' \
+            --exclude='package-lock.json' \
+            --exclude='deploy.ps1' \
+            --exclude='git-deploy.ps1' \
+            --exclude='Pi network visual card/' \
+            -e "ssh -i $HOME/.ssh/deploy_key -p $SSH_PORT" \
+            ./ "$SSH_USER@$SSH_HOST:$WEB_ROOT/"
+
+      - name: Report deployment
+        run: |
+          echo "### Deployment successful" >> "$GITHUB_STEP_SUMMARY"
+          echo "https://omendapipaysglobel.online" >> "$GITHUB_STEP_SUMMARY"
