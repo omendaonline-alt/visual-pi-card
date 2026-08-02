@@ -13432,28 +13432,11 @@ body.page-ride .agent-ticket-actions
 .house-project-grid article strong
 {margin-top:auto;color:#245c3c;font-size:.85rem;}
 
-.house-project-grid article:nth-child(1){--gallery-image:url('assets/contracts/project-01-family-home-gallery.png');}
-.house-project-grid article:nth-child(2){--gallery-image:url('assets/contracts/project-02-starter-home-gallery.png');}
-.house-project-grid article:nth-child(3){--gallery-image:url('assets/contracts/project-03-apartment-gallery.png');}
-.house-project-grid article:nth-child(4){--gallery-image:url('assets/contracts/project-04-estate-gallery.png');}
-.house-project-grid article:nth-child(5){--gallery-image:url('assets/contracts/project-05-townhouse-gallery.png');}
-.house-project-grid article:nth-child(6){--gallery-image:url('assets/contracts/project-06-villa-gallery.png');}
-.house-project-grid article:nth-child(7){--gallery-image:url('assets/contracts/project-07-mixed-use-gallery.png');}
-.house-project-grid article:nth-child(8){--gallery-image:url('assets/contracts/project-08-lodge-gallery.png');}
-.house-project-grid article:nth-child(9){--gallery-image:url('assets/contracts/project-09-renovation-gallery.png');}
-.house-project-grid article:nth-child(10){--gallery-image:url('assets/contracts/project-10-residences-gallery.png');}
-
 .project-gallery
-{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;margin-top:18px;border-radius:14px;overflow:hidden;}
+{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-top:18px;}
 
-.project-gallery i
-{display:block;aspect-ratio:3/4;background-image:var(--gallery-image);background-repeat:no-repeat;background-size:500% 100%;background-position-y:center;}
-
-.project-gallery i:nth-child(1){background-position-x:0;}
-.project-gallery i:nth-child(2){background-position-x:25%;}
-.project-gallery i:nth-child(3){background-position-x:50%;}
-.project-gallery i:nth-child(4){background-position-x:75%;}
-.project-gallery i:nth-child(5){background-position-x:100%;}
+.project-gallery img
+{display:block;width:100%;aspect-ratio:2/5;object-fit:cover;border:1px solid rgba(24,33,27,.12);border-radius:10px;background:#e8eee5;}
 
 .process-grid div
 {padding:20px;border-radius:20px;background:#fbfaf5;border:1px solid rgba(24,33,27,.08);}
@@ -16767,4 +16750,95 @@ to{opacity:1}
   .page-insurance .insurance-onramp{align-items:stretch;flex-direction:column;}
   .page-insurance .insurance-p2p-steps{grid-template-columns:1fr;}
   .page-insurance .insurance-footer{flex-direction:column;}
+}
+
+/* Shared site navigation and footer */
+.omenda-site-bar, .omenda-site-bar *
+{box-sizing:border-box;}
+
+.omenda-site-bar
+{position:relative;z-index:10000;width:100%;border-bottom:1px solid rgba(255,255,255,.13);background:#17233b;color:#f8fafc;font-family:"Trebuchet MS","Segoe UI",sans-serif;box-shadow:0 8px 24px rgba(15,23,42,.14);}
+
+.omenda-site-bar-inner
+{display:flex;align-items:center;gap:22px;width:min(100%,1440px);min-height:62px;margin:0 auto;padding:8px 22px;}
+
+.omenda-site-brand
+{display:inline-flex;flex:0 0 auto;align-items:center;gap:10px;color:#fff!important;text-decoration:none!important;}
+
+.omenda-site-brand img
+{display:block;width:34px;height:34px;object-fit:contain;}
+
+.omenda-site-brand span
+{display:grid;line-height:1.05;}
+
+.omenda-site-brand strong
+{font-size:.98rem;letter-spacing:0;}
+
+.omenda-site-brand small
+{margin-top:3px;color:#b8c6db;font-size:.68rem;font-weight:700;letter-spacing:0;}
+
+.omenda-site-nav
+{display:flex;min-width:0;flex:1;align-items:center;justify-content:flex-end;gap:4px;overflow-x:auto;}
+
+.omenda-site-nav::-webkit-scrollbar
+{display:none;}
+
+.omenda-site-nav a
+{display:inline-flex;min-height:40px;flex:0 0 auto;align-items:center;justify-content:center;padding:9px 11px;border:1px solid transparent;border-radius:7px;color:#dce6f4!important;text-decoration:none!important;font-size:.78rem;font-weight:800;letter-spacing:0;transition:background-color .18s,border-color .18s,color .18s;}
+
+.omenda-site-nav a:hover
+{border-color:rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#fff!important;}
+
+.omenda-site-nav a.active
+{border-color:#e7c35a;background:#e7c35a;color:#17233b!important;}
+
+.omenda-site-nav .omenda-account-link
+{margin-left:5px;border-color:rgba(231,195,90,.55);color:#f7dc86!important;}
+
+.omenda-menu-button
+{display:none;min-height:40px;margin-left:auto;padding:8px 13px;border:1px solid rgba(255,255,255,.2);border-radius:7px;background:transparent;color:#fff;font:800 .8rem/1 "Trebuchet MS","Segoe UI",sans-serif;cursor:pointer;}
+
+.omenda-skip-link
+{position:absolute;top:8px;left:12px;z-index:2;padding:10px 14px;border-radius:6px;background:#fff;color:#17233b!important;font-weight:900;text-decoration:none;transform:translateY(-160%);transition:transform .15s;}
+
+.omenda-skip-link:focus
+{transform:translateY(0);}
+
+.omenda-site-bar a:focus-visible, .omenda-site-bar button:focus-visible, .omenda-site-footer a:focus-visible, .omenda-site-footer-links a:focus-visible
+{outline:3px solid #65d6ad;outline-offset:2px;}
+
+.omenda-site-footer
+{display:flex;align-items:center;justify-content:space-between;gap:20px;width:100%;margin:0;padding:24px clamp(18px,4vw,56px);border-top:1px solid #d9e1ea;background:#f7f9fc;color:#536176;font:700 .78rem/1.5 "Trebuchet MS","Segoe UI",sans-serif;}
+
+.omenda-site-footer-links
+{display:flex;align-items:center;justify-content:flex-end;gap:6px 18px;flex-wrap:wrap;}
+
+.omenda-site-footer-links a
+{color:#31425a!important;text-decoration:none!important;}
+
+.omenda-site-footer-links a:hover
+{text-decoration:underline!important;text-underline-offset:3px;}
+
+footer:not(.omenda-site-footer) .omenda-site-footer-links
+{margin-left:auto;}
+
+@media(max-width:1040px){
+        .omenda-site-bar-inner{gap:12px;padding-inline:16px;}
+        .omenda-site-brand small{display:none;}
+        .omenda-site-nav a{padding-inline:8px;font-size:.74rem;}
+}
+
+@media(max-width:760px){
+        .omenda-site-bar-inner{min-height:58px;flex-wrap:wrap;}
+        .omenda-menu-button{display:inline-flex;align-items:center;justify-content:center;}
+        .omenda-site-nav{display:none;order:3;width:100%;flex:1 0 100%;padding:4px 0 10px;overflow:visible;grid-template-columns:repeat(2,minmax(0,1fr));}
+        .omenda-site-bar.menu-open .omenda-site-nav{display:grid;}
+        .omenda-site-nav a{width:100%;min-height:42px;white-space:normal;text-align:center;}
+        .omenda-site-nav .omenda-account-link{margin-left:0;}
+        .omenda-site-footer, footer:not(.omenda-site-footer):has(.omenda-site-footer-links){align-items:flex-start;flex-direction:column;}
+        footer:not(.omenda-site-footer) .omenda-site-footer-links{margin-left:0;justify-content:flex-start;}
+}
+
+@media(prefers-reduced-motion:reduce){
+        .omenda-site-bar *, .omenda-site-footer *{scroll-behavior:auto!important;transition:none!important;}
 }

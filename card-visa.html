@@ -48,6 +48,7 @@ function piA2UPayment(amount,memo,metadata,onSuccess,onError){
 </script>
 
     <link rel="stylesheet" href="styles.css">
+    <script src="site-shell.js" defer></script>
 </head>
 <body class="page-card-visa">
 <!-- Card Content -->
@@ -172,11 +173,11 @@ function piA2UPayment(amount,memo,metadata,onSuccess,onError){
         <div class="atm-box">
             <div class="atm-row">
                 <div class="inline-style-9">
-                    <label>Amount (π)</label>
+                    <label for="atmAmount">Amount (π)</label>
                     <input type="number" id="atmAmount" placeholder="0.00" min="0.01" step="0.01">
                 </div>
                 <div class="inline-style-9">
-                    <label>Currency</label>
+                    <label for="atmCurrency">Currency</label>
                     <select id="atmCurrency">
                         <option value="USD">USD — US Dollar</option>
                         <option value="EUR">EUR — Euro</option>
@@ -205,11 +206,11 @@ function piA2UPayment(amount,memo,metadata,onSuccess,onError){
         <div class="swap-box">
             <div class="atm-row">
                 <div class="inline-style-9">
-                    <label>Amount</label>
+                    <label for="swapAmount">Amount</label>
                     <input type="number" id="swapAmount" placeholder="0.00" min="0.01" step="0.01">
                 </div>
                 <div class="inline-style-9">
-                    <label>From</label>
+                    <label for="swapFrom">From</label>
                     <select id="swapFrom">
                         <option value="PI">Pi (π)</option>
                         <option value="BTC">Bitcoin (BTC)</option>
@@ -223,7 +224,7 @@ function piA2UPayment(amount,memo,metadata,onSuccess,onError){
             <div class="swap-arrow">⇅</div>
             <div class="atm-row">
                 <div class="inline-style-9">
-                    <label>To</label>
+                    <label for="swapTo">To</label>
                     <select id="swapTo">
                         <option value="USD">USD</option>
                         <option value="EUR">EUR</option>

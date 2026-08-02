@@ -1,19 +1,21 @@
-// Visual Pi Card - Service Worker v1.0
+// Visual Pi Card - Service Worker v1.1
 // omendapipaysglobel.online - Offline support & caching
 
-var CACHE_NAME = 'pivisualcard-v4';
+var CACHE_NAME = 'pivisualcard-v6';
 var URLS_TO_CACHE = [
     '/',
     '/index.html',
     '/manifest.json',
     '/styles.css',
+    '/site-shell.js',
+    '/icon-192.svg',
+    '/shop.html',
+    '/cards.html',
     '/insurance.html',
-    '/card-visa.html',
-    '/card-mastercard.html',
-    '/card-gold.html',
-    '/card-platinum.html',
-    '/card-black.html',
-    '/card-amex.html'
+    '/ride.html',
+    '/delivery.html',
+    '/contracts.html',
+    '/social.html'
 ];
 
 // Install: cache core files
@@ -39,20 +41,44 @@ self.addEventListener('activate', function(event) {
     self.clients.claim();
 });
 
-// Fetch: network first, fallback to cache
+// Fetch: fresh navigation with offline fallback; fast static assets with refresh
 self.addEventListener('fetch', function(event) {
-    event.respondWith(
-        fetch(event.request).then(function(response) {
-            // Cache successful responses
-            if (response && response.status === 200) {
-                var clone = response.clone();
-                caches.open(CACHE_NAME).then(function(cache) {
-                    cache.put(event.request, clone);
+    if (event.request.method !== 'GET') return;
+
+    var requestUrl = new URL(event.request.url);
+    if (requestUrl.origin !== self.location.origin) return;
+
+    if (event.request.mode === 'navigate') {
+        event.respondWith(
+            fetch(event.request).then(function(response) {
+                if (response.ok) {
+                    var copy = response.clone();
+                    event.waitUntil(caches.open(CACHE_NAME).then(function(cache) {
+                        return cache.put(event.request, copy);
+                    }));
+                }
+                return response;
+            }).catch(function() {
+                return caches.match(event.request).then(function(cached) {
+                    return cached || caches.match('/index.html');
                 });
-            }
-            return response;
-        }).catch(function() {
-            return caches.match(event.request);
+            })
+        );
+        return;
+    }
+
+    event.respondWith(
+        caches.match(event.request).then(function(cached) {
+            var refresh = fetch(event.request).then(function(response) {
+                if (response.ok) {
+                    var copy = response.clone();
+                    event.waitUntil(caches.open(CACHE_NAME).then(function(cache) {
+                        return cache.put(event.request, copy);
+                    }));
+                }
+                return response;
+            });
+            return cached || refresh;
         })
     );
 });
