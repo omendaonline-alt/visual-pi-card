@@ -21,7 +21,7 @@ jobs:
 
     env:
       SSH_HOST: ${{ secrets.SSH_HOST }}
-      SSH_PORT: ${{ secrets.SSH_PORT }}
+      SSH_PORT: ${{ secrets.SSH_PORT || '22' }}
       SSH_USER: ${{ secrets.SSH_USER }}
       WEB_ROOT: ${{ secrets.NGINX_WEB_ROOT }}
 
@@ -34,30 +34,36 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         shell: bash
         run: |
-          [ -n "$SSH_PORT" ] || echo "SSH_PORT=22" >> "$GITHUB_ENV"
+          set -euo pipefail
 
-          for variable in SSH_HOST SSH_USER WEB_ROOT SSH_PRIVATE_KEY; do
-            if [ -z "${!variable}" ]; then
-              echo "::error::Missing GitHub secret: $variable"
+          for variable in SSH_HOST SSH_PORT SSH_USER WEB_ROOT SSH_PRIVATE_KEY; do
+            if [ -z "${!variable:-}" ]; then
+              echo "::error::Missing production secret: $variable"
               exit 1
             fi
           done
 
-          if [ "$WEB_ROOT" = "/" ]; then
-            echo "::error::NGINX_WEB_ROOT cannot be /"
-            exit 1
-          fi
+          case "$WEB_ROOT" in
+            /var/www/*) ;;
+            *)
+              echo "::error::NGINX_WEB_ROOT must be under /var/www/"
+              exit 1
+              ;;
+          esac
 
       - name: Configure SSH
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        shell: bash
         run: |
+          set -euo pipefail
+
           install -d -m 700 "$HOME/.ssh"
           printf '%s\n' "$SSH_PRIVATE_KEY" > "$HOME/.ssh/deploy_key"
           chmod 600 "$HOME/.ssh/deploy_key"
 
-          ssh-keyscan -p "$SSH_PORT" -H "$SSH_HOST" \
-            >> "$HOME/.ssh/known_hosts"
+          ssh-keyscan -T 15 -p "$SSH_PORT" -H "$SSH_HOST" \
+            > "$HOME/.ssh/known_hosts"
           chmod 600 "$HOME/.ssh/known_hosts"
 
       - name: Verify server
