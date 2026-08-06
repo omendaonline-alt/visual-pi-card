@@ -1,4 +1,4 @@
-name: Deploy to cPanel
+name: Deploy to VPS
 
 on:
   push:
@@ -27,8 +27,12 @@ jobs:
             --exclude 'README.md' \
             --exclude 'deploy.ps1' \
             --exclude 'git-deploy.ps1' \
+            --exclude 'deploy.sh' \
+            --exclude 'deploy.zip' \
             --exclude '.env*' \
-            --exclude 'Pi network visual card/**' \
+            --exclude 'ecosystem.config.js' \
+            --exclude 'data/**' \
+            --exclude 'uploads/**' \
             ./ deploy/
 
       - name: Deploy site via SSH
@@ -38,7 +42,18 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
-          source: deploy
-          target: public_html/
+          source: deploy/*
+          target: /var/www/pivisualcard
           strip_components: 1
           overwrite: true
+
+      - name: Fix ownership and restart app
+        uses: appleboy/ssh-action@v1
+        with:
+          host: omendapipaysglobel.online
+          username: ${{ secrets.FTP_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
+            chown -R www-data:www-data /var/www/pivisualcard
+            pm2 restart pivisualcard --update-env || true
