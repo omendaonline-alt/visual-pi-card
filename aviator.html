@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Omenda Aviator - Demo Flight Game</title>
+  <meta name="description" content="Play the Omenda Aviator demo flight game with a shared Omenda Sport test wallet and responsible limits.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&amp;family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
+  <script src="https://sdk.minepi.com/pi-sdk.js" defer></script>
+  <script src="pi-sdk-helper.js" defer></script>
+  <link rel="stylesheet" href="sports.css">
+  <link rel="stylesheet" href="aviator.css">
+  <script src="aviator.js" defer></script>
+</head>
+<body class="sport-page aviator-page">
+  <header class="sport-header">
+    <a class="sport-brand" href="sports.html" aria-label="Omenda Sport home">
+      <span class="brand-mark"><i data-lucide="trophy"></i></span>
+      <span><strong>OMENDA SPORT</strong><small>Sport Future</small></span>
+    </a>
+    <nav class="sport-nav" aria-label="Sports navigation">
+      <a href="sports.html">Sportsbook</a>
+      <a class="active" href="aviator.html">Aviator</a>
+      <a href="sports.html#my-bets">My bets</a>
+    </nav>
+    <div class="header-actions">
+      <div class="demo-balance"><span>Demo wallet</span><strong id="walletBalance">50.00 &pi;</strong></div>
+      <button class="icon-button header-withdraw" id="headerWithdrawButton" type="button" aria-label="Withdraw to Pi Wallet" title="Withdraw to Pi Wallet"><i data-lucide="wallet-cards"></i></button>
+      <button class="icon-button" id="limitsButton" type="button" aria-label="Responsible betting limits" title="Betting limits"><i data-lucide="shield-check"></i></button>
+      <a class="icon-button" href="shop.html" aria-label="Back to Marketplace" title="Marketplace"><i data-lucide="store"></i></a>
+    </div>
+  </header>
+
+  <div class="aviator-strip">
+    <span><i data-lucide="plane"></i> Aviator demo</span>
+    <span>Secure local random rounds</span>
+    <span>Shared Omenda Sport test wallet</span>
+    <strong>No real Pi wagers</strong>
+  </div>
+
+  <main class="aviator-shell">
+    <section class="flight-column">
+      <div class="flight-card">
+        <div class="round-bar">
+          <div><span class="round-dot" id="roundDot"></span><strong id="roundStatus">Ready for takeoff</strong></div>
+          <div class="round-seed"><span>Round seed</span><code id="roundSeed">Generated at takeoff</code></div>
+        </div>
+
+        <div class="flight-stage" id="flightStage">
+          <div class="stage-grid"></div>
+          <div class="altitude-labels" aria-hidden="true"><span>25x</span><span>10x</span><span>5x</span><span>2x</span><span>1x</span></div>
+          <div class="flight-trail" id="flightTrail"></div>
+          <div class="aviator-plane" id="aviatorPlane"><i data-lucide="plane"></i></div>
+          <div class="multiplier-panel">
+            <span id="roundMessage">Place a demo bet to launch</span>
+            <strong id="multiplier">1.00x</strong>
+          </div>
+          <div class="countdown" id="countdown" hidden>3</div>
+        </div>
+
+        <div class="round-history">
+          <span>Recent flights</span>
+          <div id="multiplierHistory"><em>No completed rounds yet</em></div>
+        </div>
+      </div>
+
+      <section class="aviator-records">
+        <div class="records-heading"><div><h1>Flight history</h1><p>Your demo rounds are stored on this device</p></div><button id="clearHistoryButton" type="button">Clear history</button></div>
+        <div id="flightRecords"></div>
+      </section>
+    </section>
+
+    <aside class="aviator-console" aria-label="Aviator bet controls">
+      <div class="console-heading">
+        <div><span>Demo flight</span><strong id="consoleState">Waiting for bet</strong></div>
+        <i data-lucide="gauge"></i>
+      </div>
+
+      <label for="stakeInput">Stake <span>Demo &pi;</span></label>
+      <div class="aviator-input"><span>&pi;</span><input id="stakeInput" type="number" min="0.10" step="0.10" value="1.00" inputmode="decimal"></div>
+      <div class="quick-stakes aviator-stakes">
+        <button type="button" data-stake="1">1 &pi;</button>
+        <button type="button" data-stake="2">2 &pi;</button>
+        <button type="button" data-stake="5">5 &pi;</button>
+        <button type="button" data-stake="max">Max</button>
+      </div>
+
+      <div class="auto-heading"><div><strong>Auto cash-out</strong><span>Optional</span></div><label class="switch"><input id="autoEnabled" type="checkbox" aria-label="Enable auto cash-out"><span></span></label></div>
+      <div class="aviator-input auto-input"><span>x</span><input id="autoCashoutInput" type="number" min="1.10" max="20" step="0.10" value="2.00" inputmode="decimal" aria-label="Auto cash-out multiplier" disabled></div>
+
+      <div class="bet-preview">
+        <div><span>Stake limit</span><strong id="stakeLimit">20.00 &pi;</strong></div>
+        <div><span>At 2.00x</span><strong id="returnPreview">2.00 &pi;</strong></div>
+      </div>
+
+      <div class="wallet-withdrawal">
+        <div><span>Available demo balance</span><strong id="withdrawableBalance">50.00 &pi;</strong><small>Pi Sandbox wallet connection</small></div>
+        <button id="openWithdrawButton" type="button"><i data-lucide="wallet-cards"></i><span>Withdraw</span></button>
+      </div>
+
+      <button class="flight-action" id="flightAction" type="button"><i data-lucide="plane-takeoff"></i><span>Place demo bet</span></button>
+      <p class="aviator-disclaimer">Simulation only. Results use browser-generated randomness. No blockchain transaction occurs.</p>
+
+      <div class="aviator-responsible">
+        <i data-lucide="shield-check"></i>
+        <div><strong>18+ and play with limits</strong><span id="responsibleStatus">Maximum 20.00 &pi; per flight</span></div>
+      </div>
+    </aside>
+  </main>
+
+  <div class="age-gate" id="ageGate" role="dialog" aria-modal="true" aria-labelledby="ageTitle">
+    <div class="age-panel">
+      <span class="age-mark">18+</span>
+      <p>Responsible access</p>
+      <h2 id="ageTitle">Are you old enough to continue?</h2>
+      <p>Omenda Aviator is a simulated crash-style game. You must be 18 or meet the legal gambling age in your location.</p>
+      <button class="confirm-age" id="confirmAgeButton" type="button">I meet the legal age requirement</button>
+      <a href="sports.html">Return to Sportsbook</a>
+      <small>Demo only. No real-money or real-Pi wagers.</small>
+    </div>
+  </div>
+
+  <div class="limits-modal" id="limitsModal" role="dialog" aria-modal="true" aria-labelledby="limitsTitle" hidden>
+    <div class="limits-panel">
+      <button class="modal-close" id="closeLimitsButton" type="button" aria-label="Close limits"><i data-lucide="x"></i></button>
+      <i class="limits-icon" data-lucide="shield-check"></i>
+      <h2 id="limitsTitle">Responsible limits</h2>
+      <p>These settings are shared with the Omenda Sportsbook on this device.</p>
+      <label for="maxStakeInput">Maximum stake per game (&pi;)</label>
+      <input id="maxStakeInput" type="number" min="0.10" max="100" step="0.10">
+      <label class="pause-control"><input id="pauseBettingInput" type="checkbox"><span>Pause all new demo bets</span></label>
+      <button class="save-limits" id="saveLimitsButton" type="button">Save limits</button>
+    </div>
+  </div>
+
+  <div class="withdraw-modal" id="withdrawModal" role="dialog" aria-modal="true" aria-labelledby="withdrawTitle" hidden>
+    <div class="withdraw-panel">
+      <button class="modal-close" id="closeWithdrawButton" type="button" aria-label="Close withdrawal"><i data-lucide="x"></i></button>
+      <span class="sandbox-badge">Pi Sandbox</span>
+      <i class="withdraw-icon" data-lucide="wallet-cards"></i>
+      <h2 id="withdrawTitle">Withdraw to Pi Wallet</h2>
+      <p>Connect your Pi account to record a sandbox withdrawal from this device's demo balance.</p>
+      <div class="withdraw-balance"><span>Available</span><strong id="modalWalletBalance">50.00 &pi;</strong></div>
+      <label for="withdrawAmount">Withdrawal amount (&pi;)</label>
+      <div class="withdraw-input"><span>&pi;</span><input id="withdrawAmount" type="number" min="0.10" max="100" step="0.10" inputmode="decimal" value="1.00"></div>
+      <p class="withdraw-status" id="withdrawStatus" role="status">Pi authentication is required to continue.</p>
+      <button class="confirm-withdraw" id="confirmWithdrawButton" type="button"><i data-lucide="shield-check"></i><span>Connect Pi Wallet</span></button>
+      <small class="withdraw-warning">Sandbox only. Demo credits have no cash value and no real Pi is transferred.</small>
+    </div>
+  </div>
+
+  <div class="sport-toast" id="sportToast" role="status"></div>
+</body>
+</html>

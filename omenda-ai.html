@@ -9,15 +9,21 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
 <link rel="stylesheet" href="styles.css">
+<style>
+.page-omenda-ai{padding:0;background:#f6f7f4;color:#17211d;--ai-ink:#17211d;--ai-muted:#68746f;--ai-line:#dfe5e1;--ai-green:#126a4a;--ai-gold:#d9f467;font-family:Inter,sans-serif}.page-omenda-ai .container{max-width:none}.page-omenda-ai .ai-shell{min-height:100vh;gap:0}.page-omenda-ai .ai-header{height:66px;padding:0 22px;border-bottom:1px solid var(--ai-line);background:#fff;align-items:center}.page-omenda-ai .ai-kicker{margin:0;color:var(--ai-green);font-size:.68rem}.page-omenda-ai .ai-header h1{font-size:1.22rem;line-height:1.1}.page-omenda-ai .ai-header p{display:none}.page-omenda-ai .back-link,.page-omenda-ai .ai-ghost-btn{min-height:38px;padding:8px 11px;border-color:var(--ai-line);background:#fff;color:#27342f;border-radius:6px;font-size:.78rem}.page-omenda-ai .ai-layout{grid-template-columns:260px minmax(0,1fr);gap:0;min-height:calc(100vh - 66px)}.page-omenda-ai .ai-sidebar{padding:18px 14px;border-right:1px solid var(--ai-line);background:#0d3d2f;color:#fff;gap:12px}.page-omenda-ai .ai-panel,.page-omenda-ai .ai-chat-card{border-radius:7px;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none}.page-omenda-ai .ai-panel{border-color:rgba(255,255,255,.12);background:rgba(255,255,255,.06)}.page-omenda-ai .ai-panel button{border-color:rgba(255,255,255,.1);background:rgba(4,30,22,.42);font-size:.76rem}.page-omenda-ai .ai-panel button:hover{background:rgba(217,244,103,.12);border-color:rgba(217,244,103,.45)}.page-omenda-ai .ai-status-card dt{color:#9db8ad}.page-omenda-ai .ai-chat-card{min-height:0;border:0;background:#fff;display:grid;grid-template-rows:auto minmax(0,1fr) auto}.page-omenda-ai .ai-chat-toolbar{padding:12px 18px;border-color:var(--ai-line);background:#fff}.page-omenda-ai .ai-chat-toolbar span{color:var(--ai-green)}.ai-toolbar-actions{display:flex!important;align-items:center;gap:8px;flex-direction:row!important}.ai-provider-select{height:38px;padding:0 31px 0 10px;border:1px solid var(--ai-line);border-radius:6px;background:#fff;color:#26342e;font:700 .76rem Inter,sans-serif}.page-omenda-ai .ai-messages{padding:26px max(22px,calc((100% - 830px)/2));gap:22px}.page-omenda-ai .ai-message{grid-template-columns:34px minmax(0,1fr);gap:11px;width:100%;max-width:830px}.page-omenda-ai .ai-message.user{align-self:center;grid-template-columns:34px minmax(0,1fr)}.page-omenda-ai .ai-message.user .ai-avatar{grid-column:1;grid-row:1;background:#dae5df;color:#25483a}.page-omenda-ai .ai-message.user .ai-bubble{grid-column:2;grid-row:1;background:#f2f5f3;border-color:#e5eae7}.page-omenda-ai .ai-avatar{width:34px;height:34px;border-radius:7px;background:#0f6849;color:#fff}.page-omenda-ai .ai-bubble{padding:11px 13px;border:0;background:transparent;color:#26312d;line-height:1.7;box-shadow:none;white-space:normal}.page-omenda-ai .ai-bubble pre{overflow:auto;padding:13px;border-radius:6px;background:#17221e;color:#eaf3ef}.page-omenda-ai .ai-bubble code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}.page-omenda-ai .ai-sources{color:#748079;border-color:var(--ai-line);font-size:.73rem}.ai-message-actions{display:flex;gap:4px;margin-top:7px}.ai-message-actions button{width:29px;height:29px;border:0;border-radius:5px;background:transparent;color:#78827d;cursor:pointer}.ai-message-actions button:hover{background:#edf1ef;color:#183d2f}.ai-message-actions svg{width:15px}.ai-welcome{max-width:720px;margin:auto;padding:30px;text-align:center}.ai-welcome-mark{width:56px;height:56px;margin:0 auto 18px;border-radius:14px;display:grid;place-items:center;background:#0f6849;color:#fff}.ai-welcome-mark svg{width:27px}.ai-welcome h2{margin:0;font-size:1.7rem;letter-spacing:0}.ai-welcome p{margin:9px auto 20px;color:var(--ai-muted);line-height:1.55}.ai-starters{display:grid;grid-template-columns:1fr 1fr;gap:9px;text-align:left}.ai-starters button{padding:13px;border:1px solid var(--ai-line);border-radius:7px;background:#fff;color:#2b3732;cursor:pointer;text-align:left}.ai-starters button:hover{border-color:#78a793;background:#f6faf8}.ai-starters strong{display:block;margin-bottom:3px;font-size:.82rem}.ai-starters span{color:var(--ai-muted);font-size:.72rem}.page-omenda-ai .ai-composer{padding:12px max(18px,calc((100% - 850px)/2)) 18px;border-color:var(--ai-line);background:#fff}.ai-composer-box{border:1px solid #ccd7d1;border-radius:9px;padding:9px;background:#fff;box-shadow:0 8px 26px rgba(26,54,43,.08)}.page-omenda-ai .ai-composer textarea{min-height:54px;max-height:160px;padding:7px;border:0;background:#fff;color:#17211d;resize:none}.page-omenda-ai .ai-composer textarea:focus{border:0;box-shadow:none}.page-omenda-ai .ai-composer-actions{margin-top:4px;flex-direction:row;align-items:center}.composer-tools{display:flex;align-items:center;gap:6px}.composer-icon{width:35px;height:35px;border:0;border-radius:6px;background:#f0f4f2;color:#31433b;display:grid;place-items:center;cursor:pointer}.composer-icon:hover{background:#e3ebe7}.composer-icon svg{width:17px}.page-omenda-ai .ai-composer-actions button#sendButton{min-width:82px;min-height:36px;border-radius:6px;background:#116848;color:#fff;box-shadow:none}.ai-attachment-list{display:flex;gap:7px;flex-wrap:wrap;padding:0 7px}.ai-attachment{display:flex;align-items:center;gap:6px;max-width:240px;padding:6px 8px;border-radius:5px;background:#edf3f0;color:#405048;font-size:.7rem}.ai-attachment button{border:0;background:none;color:#6b7771;cursor:pointer}.ai-notice{padding:9px 11px;border:1px solid #eedb9c;border-radius:6px;background:#fff9df;color:#705b18;font-size:.72rem}.ai-suggestion-row{display:flex;gap:7px;flex-wrap:wrap;margin:8px 0 0 45px}.ai-suggestion-row button{padding:7px 9px;border:1px solid var(--ai-line);border-radius:5px;background:#fff;color:#51605a;font-size:.7rem;cursor:pointer}.ai-thinking{display:flex;gap:4px;padding:8px}.ai-thinking i{width:6px;height:6px;border-radius:50%;background:#6c8178;animation:aiPulse 1s infinite}.ai-thinking i:nth-child(2){animation-delay:.16s}.ai-thinking i:nth-child(3){animation-delay:.32s}@keyframes aiPulse{0%,70%,100%{opacity:.3;transform:translateY(0)}35%{opacity:1;transform:translateY(-3px)}}
+.page-omenda-ai .ai-composer-actions .composer-icon{width:35px;min-width:35px;height:35px;min-height:35px;flex:0 0 35px;background:#f0f4f2;color:#31433b}
+@media(max-width:860px){.page-omenda-ai{padding:0}.page-omenda-ai .ai-shell{min-height:100vh}.page-omenda-ai .ai-header{padding:0 12px}.page-omenda-ai .ai-header .ai-kicker{display:none}.page-omenda-ai .ai-header h1{font-size:1rem}.page-omenda-ai .back-link{display:none}.page-omenda-ai .ai-layout{display:block}.page-omenda-ai .ai-sidebar{display:none}.page-omenda-ai .ai-chat-card{height:calc(100vh - 66px)}.page-omenda-ai .ai-message,.page-omenda-ai .ai-message.user{grid-template-columns:30px minmax(0,1fr)}.page-omenda-ai .ai-avatar{width:30px;height:30px}.page-omenda-ai .ai-messages{padding:18px 12px}.page-omenda-ai .ai-composer{padding:9px 10px calc(10px + env(safe-area-inset-bottom))}.page-omenda-ai .ai-composer-actions{flex-direction:row}.page-omenda-ai .ai-composer-actions button#sendButton{width:auto}.ai-provider-select{max-width:145px}.ai-starters{grid-template-columns:1fr}.ai-welcome{padding:16px 4px}.ai-top-actions{flex-wrap:nowrap}.ai-suggestion-row{margin-left:41px}}
+</style>
 </head>
 <body class="page-omenda-ai">
 <div class="container ai-shell">
   <header class="header ai-header">
     <div>
       <span class="ai-kicker">Omenda AI</span>
-      <h1>Chat with Omenda AI</h1>
-      <p>Ask about Pi payments, Visual Pi Cards, marketplace products, contracts, tourism, mining, roads, deployment, and Pi Browser setup.</p>
+      <h1>Omenda AI</h1>
+      <p>Research, create, analyze, and work across Omenda services with Gemini or GPT.</p>
     </div>
     <div class="ai-top-actions">
       <a href="shop.html" class="back-link">Back to Marketplace</a>
@@ -50,18 +56,16 @@
       <div class="ai-chat-toolbar">
         <div>
           <strong>Omenda assistant</strong>
-          <span id="aiConnection">Ready</span>
+          <span id="aiConnection">Checking models...</span>
         </div>
-        <button type="button" class="ai-ghost-btn" onclick="exportChat()">Export</button>
+        <div class="ai-toolbar-actions"><select class="ai-provider-select" id="aiProvider" aria-label="AI model provider"><option value="auto">Auto select</option><option value="gemini">Google Gemini</option><option value="openai">OpenAI GPT</option><option value="local">Omenda Local</option></select><button type="button" class="ai-ghost-btn" onclick="exportChat()">Export</button></div>
       </div>
 
       <div id="chatMessages" class="ai-messages" aria-live="polite"></div>
 
       <form class="ai-composer" onsubmit="sendMessage(event)">
-        <textarea id="aiPrompt" rows="3" placeholder="Message Omenda AI..." aria-label="Message Omenda AI"></textarea>
-        <div class="ai-composer-actions">
-          <span>Omenda Pi Pays Global</span>
-          <button id="sendButton" type="submit">Send</button>
+        <div class="ai-composer-box"><div class="ai-attachment-list" id="attachmentList"></div><textarea id="aiPrompt" rows="2" placeholder="Ask anything..." aria-label="Message Omenda AI"></textarea>
+          <div class="ai-composer-actions"><div class="composer-tools"><button class="composer-icon" type="button" onclick="document.getElementById('aiFile').click()" aria-label="Attach file" title="Attach image or text file"><i data-lucide="paperclip"></i></button><input id="aiFile" type="file" accept="image/png,image/jpeg,image/webp,text/plain,text/csv,.md,.json" multiple hidden><span id="composerHint">Enter to send</span></div><button id="sendButton" type="submit">Send</button></div>
         </div>
       </form>
     </section>
@@ -71,6 +75,9 @@
 <script>
 var CHAT_KEY = 'omendaAiChatHistory';
 var chatHistory = [];
+var pendingAttachments = [];
+var currentRequest = null;
+var isBusy = false;
 var fallbackTopics = [
   {title:'Omenda Pi Pays Global', keys:['omenda','platform','dashboard','global'], answer:'Omenda Pi Pays Global combines Pi payments, Visual Pi Cards, marketplace, City Rush, maps, social tools, contracts, and Omenda AI in one Pi Browser app.'},
   {title:'Pi Browser Payments', keys:['pi browser','payment','wallet','domain','validation','mainnet'], answer:'Use the deployed production URL for Pi Browser auth and payment. The production domain is https://omendapipaysglobel.online and domain ownership is validated with validation-key.txt.'},
@@ -89,15 +96,18 @@ function escapeHtml(value){
 }
 
 function formatReply(text){
-  return escapeHtml(text).replace(/\n/g,'<br>');
+  var safe=escapeHtml(text);
+  safe=safe.replace(/```([\s\S]*?)```/g,function(match,code){return '<pre><code>'+code.trim()+'</code></pre>'});
+  safe=safe.replace(/`([^`]+)`/g,'<code>$1</code>');
+  safe=safe.replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>');
+  safe=safe.replace(/^### (.+)$/gm,'<strong>$1</strong>');
+  safe=safe.replace(/^[-*] (.+)$/gm,'• $1');
+  return safe.replace(/\n/g,'<br>');
 }
 
 function loadChat(){
   try{chatHistory=JSON.parse(localStorage.getItem(CHAT_KEY)||'[]')}catch(e){chatHistory=[]}
   if(!Array.isArray(chatHistory))chatHistory=[];
-  if(!chatHistory.length){
-    chatHistory.push({role:'assistant',content:'Hello, I am Omenda AI. Ask me about Pi payments, cards, marketplace, contracts, deployment, or Pi Browser setup.',sources:['Omenda AI']});
-  }
   renderChat();
 }
 
@@ -107,12 +117,24 @@ function saveChat(){
 
 function renderChat(){
   var box=document.getElementById('chatMessages');
+  if(!chatHistory.length){
+    box.innerHTML='<section class="ai-welcome"><div class="ai-welcome-mark"><i data-lucide="sparkles"></i></div><h2>What can I help you accomplish?</h2><p>Use Gemini, GPT, or Omenda local knowledge to research, write, plan, analyze, and work with your marketplace.</p><div class="ai-starters"><button type="button" onclick="quickPrompt(\'Compare comprehensive vehicle insurance options for a family car\')"><strong>Compare insurance</strong><span>Review protection and tradeoffs</span></button><button type="button" onclick="quickPrompt(\'Write a professional product description for my marketplace listing\')"><strong>Create marketplace content</strong><span>Draft clear selling copy</span></button><button type="button" onclick="quickPrompt(\'Explain how Pi payments work in simple steps\')"><strong>Understand Pi payments</strong><span>Learn authentication and checkout</span></button><button type="button" onclick="quickPrompt(\'Plan a five day Tanzania and Zanzibar trip\')"><strong>Plan a trip</strong><span>Build an itinerary and budget</span></button></div></section>';
+    document.getElementById('aiMemoryCount').textContent='0 messages';
+    lucide.createIcons();
+    return;
+  }
   box.innerHTML=chatHistory.map(function(message){
     var sources=message.sources&&message.sources.length?'<div class="ai-sources">Sources: '+message.sources.map(escapeHtml).join(', ')+'</div>':'';
-    return '<article class="ai-message '+(message.role==='user'?'user':'assistant')+'"><div class="ai-avatar">'+(message.role==='user'?'You':'AI')+'</div><div class="ai-bubble">'+formatReply(message.content)+sources+'</div></article>';
+    var files=message.attachments&&message.attachments.length?'<div class="ai-sources">Attachments: '+message.attachments.map(escapeHtml).join(', ')+'</div>':'';
+    return '<article class="ai-message '+(message.role==='user'?'user':'assistant')+'"><div class="ai-avatar">'+(message.role==='user'?'You':'AI')+'</div><div class="ai-bubble">'+formatReply(message.content)+files+sources+'<div class="ai-message-actions"><button type="button" onclick="copyMessage('+chatHistory.indexOf(message)+')" aria-label="Copy message" title="Copy"><i data-lucide="copy"></i></button>'+(message.role==='assistant'?'<button type="button" onclick="regenerateMessage('+chatHistory.indexOf(message)+')" aria-label="Regenerate response" title="Regenerate"><i data-lucide="refresh-cw"></i></button>':'')+'</div></div></article>';
   }).join('');
+  var latest=chatHistory[chatHistory.length-1];
+  if(latest&&latest.role==='assistant'&&latest.suggestions&&latest.suggestions.length){
+    box.innerHTML+='<div class="ai-suggestion-row">'+latest.suggestions.slice(0,4).map(function(suggestion){return '<button type="button" onclick="quickPrompt(this.textContent)">'+escapeHtml(suggestion)+'</button>'}).join('')+'</div>';
+  }
   box.scrollTop=box.scrollHeight;
   document.getElementById('aiMemoryCount').textContent=chatHistory.length+' messages';
+  lucide.createIcons();
 }
 
 function localReply(prompt){
@@ -130,40 +152,50 @@ function localReply(prompt){
 }
 
 function setBusy(isBusy){
-  document.getElementById('sendButton').disabled=isBusy;
-  document.getElementById('sendButton').textContent=isBusy?'Thinking...':'Send';
-  document.getElementById('aiConnection').textContent=isBusy?'Thinking':'Ready';
+  window.isBusy=isBusy;
+  document.getElementById('sendButton').textContent=isBusy?'Stop':'Send';
+  document.getElementById('aiConnection').textContent=isBusy?'Thinking...':'Ready';
 }
 
-function appendMessage(role, content, sources){
-  chatHistory.push({role:role,content:content,sources:sources||[],ts:new Date().toISOString()});
+function appendMessage(role, content, sources, extra){
+  chatHistory.push(Object.assign({role:role,content:content,sources:sources||[],ts:new Date().toISOString()},extra||{}));
   saveChat();
   renderChat();
 }
 
 function sendMessage(event){
   if(event)event.preventDefault();
+  if(window.isBusy){if(currentRequest)currentRequest.abort();return}
   var input=document.getElementById('aiPrompt');
   var prompt=input.value.trim();
+  if(!prompt&&pendingAttachments.length)prompt='Analyze the attached file'+(pendingAttachments.length>1?'s':'')+'.';
   if(!prompt)return;
+  var requestAttachments=pendingAttachments.slice();
   input.value='';
-  appendMessage('user',prompt);
+  pendingAttachments=[];
+  renderAttachments();
+  appendMessage('user',prompt,[],{attachments:requestAttachments.map(function(file){return file.name})});
   setBusy(true);
+  currentRequest=new AbortController();
   fetch('/api/omenda-ai/chat',{
     method:'POST',
     headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({message:prompt,history:chatHistory.slice(-8)})
+    signal:currentRequest.signal,
+    body:JSON.stringify({message:prompt,history:chatHistory.slice(-16),provider:document.getElementById('aiProvider').value,attachments:requestAttachments})
   }).then(function(response){
-    if(!response.ok)throw new Error('AI endpoint unavailable');
+    if(!response.ok)return response.json().then(function(data){throw new Error(data.error||'AI endpoint unavailable')});
     return response.json();
   }).then(function(data){
     document.getElementById('aiMode').textContent=data.mode||'Omenda AI';
-    appendMessage('assistant',data.reply||'Omenda AI is ready.',data.sources||[]);
-  }).catch(function(){
+    appendMessage('assistant',data.reply||'Omenda AI is ready.',data.sources||[],{suggestions:data.suggestions||[],notice:data.notice||''});
+    if(data.notice)showComposerNotice(data.notice);
+  }).catch(function(error){
+    if(error.name==='AbortError'){document.getElementById('aiConnection').textContent='Stopped';return}
     var fallback=localReply(prompt);
     document.getElementById('aiMode').textContent=fallback.mode;
     appendMessage('assistant',fallback.reply,fallback.sources);
-  }).finally(function(){setBusy(false)});
+    showComposerNotice('The server AI endpoint is unavailable. Using browser fallback.');
+  }).finally(function(){currentRequest=null;setBusy(false)});
 }
 
 function quickPrompt(prompt){
@@ -173,8 +205,69 @@ function quickPrompt(prompt){
 
 function clearChat(){
   chatHistory=[];
+  pendingAttachments=[];
   try{localStorage.removeItem(CHAT_KEY)}catch(e){}
+  renderAttachments();
   loadChat();
+}
+
+function copyMessage(index){
+  var message=chatHistory[index];if(!message)return;
+  navigator.clipboard.writeText(message.content).then(function(){showComposerNotice('Message copied.')}).catch(function(){});
+}
+
+function regenerateMessage(index){
+  var userIndex=index-1;
+  while(userIndex>=0&&chatHistory[userIndex].role!=='user')userIndex--;
+  if(userIndex<0)return;
+  var prompt=chatHistory[userIndex].content;
+  chatHistory=chatHistory.slice(0,userIndex);
+  saveChat();renderChat();
+  document.getElementById('aiPrompt').value=prompt;
+  sendMessage();
+}
+
+function showComposerNotice(message){
+  var old=document.querySelector('.ai-notice');if(old)old.remove();
+  var notice=document.createElement('div');notice.className='ai-notice';notice.textContent=message;
+  document.querySelector('.ai-composer').prepend(notice);
+  setTimeout(function(){notice.remove()},5000);
+}
+
+function readAttachment(file){
+  return new Promise(function(resolve,reject){
+    var image=/^image\/(png|jpeg|webp)$/.test(file.type);
+    var text=/^(text\/|application\/json)/.test(file.type)||/\.(md|json|csv|txt)$/i.test(file.name);
+    if(!image&&!text)return reject(new Error('Use PNG, JPEG, WebP, TXT, CSV, Markdown, or JSON files.'));
+    if(file.size>(image?4*1024*1024:250*1024))return reject(new Error('That file is too large.'));
+    var reader=new FileReader();
+    reader.onload=function(){resolve({name:file.name.slice(0,120),type:file.type||'text/plain',kind:image?'image':'text',data:String(reader.result)})};
+    reader.onerror=function(){reject(new Error('Could not read '+file.name))};
+    if(image)reader.readAsDataURL(file);else reader.readAsText(file);
+  });
+}
+
+function renderAttachments(){
+  document.getElementById('attachmentList').innerHTML=pendingAttachments.map(function(file,index){return '<span class="ai-attachment"><i data-lucide="'+(file.kind==='image'?'image':'file-text')+'"></i><span>'+escapeHtml(file.name)+'</span><button type="button" onclick="removeAttachment('+index+')" aria-label="Remove '+escapeHtml(file.name)+'">×</button></span>'}).join('');
+  lucide.createIcons();
+}
+
+function removeAttachment(index){pendingAttachments.splice(index,1);renderAttachments()}
+
+function handleAttachments(files){
+  Promise.all(Array.from(files).slice(0,3).map(readAttachment)).then(function(items){pendingAttachments=pendingAttachments.concat(items).slice(0,3);renderAttachments()}).catch(function(error){showComposerNotice(error.message)});
+}
+
+function loadProviderStatus(){
+  fetch('/api/omenda-ai/status').then(function(response){if(!response.ok)throw new Error();return response.json()}).then(function(data){
+    var providers=data.providers||{};
+    var gemini=document.querySelector('#aiProvider option[value="gemini"]');
+    var openai=document.querySelector('#aiProvider option[value="openai"]');
+    if(gemini&&!providers.gemini.configured)gemini.textContent='Google Gemini · setup required';
+    if(openai&&!providers.openai.configured)openai.textContent='OpenAI GPT · setup required';
+    var active=[];if(providers.gemini&&providers.gemini.configured)active.push('Gemini');if(providers.openai&&providers.openai.configured)active.push('GPT');
+    document.getElementById('aiConnection').textContent=active.length?active.join(' + ')+' ready':'Local mode ready';
+  }).catch(function(){document.getElementById('aiConnection').textContent='Local browser mode'});
 }
 
 function exportChat(){
@@ -194,8 +287,13 @@ document.getElementById('aiPrompt').addEventListener('keydown',function(event){
     sendMessage();
   }
 });
+document.getElementById('aiFile').addEventListener('change',function(){handleAttachments(this.files);this.value=''});
+document.getElementById('aiProvider').addEventListener('change',function(){try{localStorage.setItem('omendaAiProvider',this.value)}catch(e){};document.getElementById('aiMode').textContent=this.options[this.selectedIndex].textContent});
+try{document.getElementById('aiProvider').value=localStorage.getItem('omendaAiProvider')||'auto'}catch(e){}
 
 loadChat();
+loadProviderStatus();
+lucide.createIcons();
 </script>
 </body>
 </html>

@@ -29,9 +29,13 @@ try { Pi.init({ version: "2.0", sandbox: PI_SANDBOX_MODE }); piSdkReady = true; 
 
 <!-- ── TOP HEADER ── -->
 <div class="top-header">
-  <img src="icon-192.svg" alt="Omenda Pi Pays Global Logo" onerror="this.style.background='#7c3aed';this.alt='π'">
-  <h1>Omenda Pi Pays Global</h1>
-  <p class="handle" id="pi-handle"><button class="join-pi-btn" id="join-pi-btn" type="button" onclick="joinPiNow()">Join with Pi</button></p>
+  <div class="brand-logo-lockup">
+    <div class="brand-logo-art">
+      <img src="assets/omenda-pi-pays-logo.jpeg" width="1056" height="1062" alt="Omenda Pi Pays logo" onerror="this.onerror=null;this.src='icon-192.svg'">
+      <h1 aria-label="OMENDA PI PAYS global"><span>global</span></h1>
+    </div>
+  </div>
+  <p class="handle" id="pi-handle" aria-live="polite">@Omfidxx</p>
   <p class="pi-join-status" id="pi-join-status"></p>
 </div>
 
@@ -41,6 +45,7 @@ try { Pi.init({ version: "2.0", sandbox: PI_SANDBOX_MODE }); piSdkReady = true; 
   <a href="map.html" id="navMapLink">Map</a>
   <a href="ride.html">🚀 City Rush</a>
   <a href="contracts.html">Contracts</a>
+  <a href="insurance.html">Insurance</a>
   <a href="social.html">Social</a>
   <span class="spacer"></span>
   <select id="langSelect" class="lang-select" onchange="setLanguage(this.value)" aria-label="Select language">
@@ -324,6 +329,227 @@ var marketProducts = [
   {id:"re10",title:"Shopping Mall Retail Unit 200sqm",price:"\u03C020.0",stat:"Prime Location",brand:"MallSpace Ltd",moq:"1 Unit",audited:true,secured:true,inStock:false,yrs:"15yrs",responseTime:"\u22641h",image:"https://images.unsplash.com/photo-1567449303078-57ad995bd329?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1567449303078-57ad995bd329?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1524758631624-e2822e304c36?q=80&w=400&auto=format&fit=crop"],tag:"Investment",tagColor:"#059669",category:"Real Estate"}
 ];
 
+/* Abarth showroom: front, left side, right side, dashboard, and interior. */
+(function addAbarthShowroom(){
+  var interiorViews=[
+    "https://upload.wikimedia.org/wikipedia/commons/7/71/ABARTH_595_turismo_%28ABA-312142%29_interior.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/9/91/The_interior_of_ABARTH_595_competizione_as_a_demo_car_of_MUSEO_CINQUECENTO_RACING_TEAM.JPG"
+  ];
+  var combustionViews=[
+    "https://upload.wikimedia.org/wikipedia/commons/2/23/Abarth_595_Competizione_front_1.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/b/b4/Abarth_595_Competizione_2020.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/3/3f/Abarth_595_Competizione_rear_1.jpg"
+  ].concat(interiorViews);
+  var electric500Views=[
+    "https://upload.wikimedia.org/wikipedia/commons/c/ce/2023_Abarth_500e_Turismo.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/c/ca/Abarth_500e_1X7A2519.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/8/8a/Abarth_500e_IMG_7996.jpg"
+  ].concat(interiorViews);
+  var electric600Views=[
+    "https://upload.wikimedia.org/wikipedia/commons/e/ec/Abarth_600e_Scorpionissima_Auto_Zuerich_2024_DSC_6149.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/6/6a/Abarth_600e_Scorpionissima_Auto_Zuerich_2024_DSC_6151.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/7/7c/Abarth_600e_Scorpionissima_Auto_Zuerich_2025_DSC_2984.jpg"
+  ].concat(interiorViews);
+  var modelCovers=[
+    "https://upload.wikimedia.org/wikipedia/commons/4/4e/Abarth_595.JPG",
+    "https://upload.wikimedia.org/wikipedia/commons/e/ea/Abarth_595_Turismo_-_50840873302.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/b/b4/Abarth_595_Competizione_2020.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/f/fa/Fiat_Abarth_695_%282013-09-15_Spu%29.JPG",
+    "https://upload.wikimedia.org/wikipedia/commons/c/cd/Fiat_Abarth_695_%282014-06-15_Sp_r%29.JPG",
+    "https://upload.wikimedia.org/wikipedia/commons/e/e3/Abarth_695_Esseesse_Leonberg_2022_1X7A0519.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/3/3f/Fiat_Abarth_595_esseesse_IMG_3014.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/7/70/Abarth_124_Spider_front.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/c/c4/2019_Abarth_124_Spider_Multiair_Auto.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/6/62/Abarth_124_Spider_%2816%29.JPG",
+    "https://upload.wikimedia.org/wikipedia/commons/8/8a/Abarth_500e_IMG_7996.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/4/46/Abarth_500e_Cabrio_Auto_Zuerich_2023_1X7A1164.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/c/ce/2023_Abarth_500e_Turismo.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/e/ec/Abarth_600e_Scorpionissima_Auto_Zuerich_2024_DSC_6149.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/7/7c/Abarth_600e_Scorpionissima_Auto_Zuerich_2025_DSC_2984.jpg"
+  ];
+  var models=[
+    ["ab1","Abarth 595 Hatchback","\u03C00.072","1.4L Turbo","2025-01-15","Petrol · 165 hp","New arrival"],
+    ["ab2","Abarth 595 Turismo","\u03C00.079","1.4L Turbo","2025-02-10","Petrol · 165 hp","Touring trim"],
+    ["ab3","Abarth 595 Competizione","\u03C00.086","1.4L Turbo","2025-02-26","Petrol · 180 hp","Performance"],
+    ["ab4","Abarth 695 Hatchback","\u03C00.091","1.4L Turbo","2025-03-08","Petrol · 180 hp","New arrival"],
+    ["ab5","Abarth 695 Turismo","\u03C00.096","1.4L Turbo","2025-03-19","Petrol · 180 hp","Touring trim"],
+    ["ab6","Abarth 695 Competizione","\u03C00.102","1.4L Turbo","2025-04-04","Petrol · 180 hp","Performance"],
+    ["ab7","Abarth 695 Esseesse","\u03C00.108","1.4L Turbo","2025-04-21","Petrol · 180 hp","Limited edition"],
+    ["ab8","Abarth 124 Spider","\u03C00.112","1.4L MultiAir Turbo","2024-11-14","Petrol · 170 hp","Roadster"],
+    ["ab9","Abarth 124 Spider Turismo","\u03C00.119","1.4L MultiAir Turbo","2024-12-06","Petrol · 170 hp","Roadster touring"],
+    ["ab10","Abarth 124 Spider GT","\u03C00.126","1.4L MultiAir Turbo","2025-01-28","Petrol · 170 hp","GT roadster"],
+    ["ab11","Abarth 500e Hatchback","\u03C00.094","42 kWh · 114 kW","2025-02-18","Electric · 155 hp","Electric"],
+    ["ab12","Abarth 500e Cabrio","\u03C00.101","42 kWh · 114 kW","2025-03-12","Electric · 155 hp","Electric cabrio"],
+    ["ab13","Abarth 500e Turismo","\u03C00.106","42 kWh · 114 kW","2025-04-09","Electric · 155 hp","Electric touring"],
+    ["ab14","Abarth 600e Turismo","\u03C00.128","54 kWh · 175 kW","2025-05-16","Electric · 240 hp","Electric crossover"],
+    ["ab15","Abarth 600e Scorpionissima","\u03C00.143","54 kWh · 207 kW","2025-06-03","Electric · 280 hp","Electric performance"]
+  ];
+  var viewLabels=["Front showroom view","Left-side showroom view","Right-side showroom view","Dashboard view","Interior cabin view"];
+  models.forEach(function(model,index){
+    var familyViews=index>=13?electric600Views:(index>=10?electric500Views:combustionViews);
+    var images=[modelCovers[index]].concat(familyViews.slice(1));
+    marketProducts.push({id:model[0],title:model[1],price:model[2],stat:model[6],brand:"Abarth Showroom",showroomCompany:"Abarth",moq:"1 Car",audited:true,secured:true,inStock:true,yrs:"Official",responseTime:"\u22641h",image:images[0],images:images,imageLabels:viewLabels,capacity:model[3],manufactured:model[4],powertrain:model[5],category:"Cars",tag:index>=10?"Electric":"New Abarth",tagColor:index>=10?"#047857":"#c0392b"});
+  });
+})();
+
+/* Build a company-verified showroom only when that company is selected. */
+function carShowroomKey(value){
+  return String(value||"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+}
+function carShowroomNumber(value){
+  var hash=0;
+  String(value||"").split("").forEach(function(character){hash=(hash*31+character.charCodeAt(0))>>>0});
+  return hash;
+}
+function normalizeCarMediaText(value){
+  return String(value||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
+}
+function carMediaNamesCompany(title,company){
+  var normalizedTitle=" "+normalizeCarMediaText(title)+" ";
+  var normalizedCompany=" "+normalizeCarMediaText(company)+" ";
+  return normalizedTitle.indexOf(normalizedCompany)!==-1;
+}
+function carMediaNamesOtherCompany(title,company){
+  return carCompanies.slice(1).some(function(other){return other!==company&&carMediaNamesCompany(title,other)});
+}
+var nonVehicleMediaPattern=/\b(wild|wildlife|animal|ibex|chamois|chough|bird|butterfl|insect|flower|flora|plant|tree|forest|jungle|scenery|panorama|mountain|terrain|garden|lake|river|ski|skier|boot|airbus|helicopter|aircraft|rescue|barn|church|castle|statue|memorial|portrait|politician|president|musician|actor|football|baseball|smartphone|phone|tablet|computer|chair|bicycle|motorcycle|sheep|goat|cat|dog)\b/;
+var automotiveMediaPattern=/\b(car|cars|auto|automobile|automotive|vehicle|motorcar|sedan|saloon|coupe|convertible|cabrio|roadster|suv|crossover|wagon|hatchback|pickup|truck|van|prototype|concept|racing|race)\b/;
+var ambiguousCarCompanyModels={
+  "Alpine":/\b(berlinette|a 110|a110|a 290|a290|a 390|a390|a 610|a610|gta)\b/,
+  "Dodge":/\b(challenger|charger|durango|viper|hornet|dart|journey|caliber|avenger|caravan)\b/,
+  "Ford":/\b(mustang|focus|fiesta|mondeo|escort|bronco|explorer|expedition|raptor|ranger|maverick|transit|f 150|f150)\b/,
+  "Genesis":/\b(g70|g80|g90|gv60|gv70|gv80|electrified|x gran|mint concept)\b/,
+  "Great Wall":/\b(wingle|poer|cannon|steed|pao|hover|coolbear|voleex)\b/,
+  "Jaguar":/\b(xe|xf|xj|xk|x type|s type|f type|f pace|e pace|i pace)\b/,
+  "Lincoln":/\b(continental|navigator|aviator|nautilus|corsair|zephyr|town car|mkc|mks|mkt|mkx|mkz)\b/,
+  "Lotus":/\b(elise|exige|emira|evora|eletre|emeya|europa|esprit|elan|carlton|eleven)\b/,
+  "Lucid":/\b(lucid air|lucid gravity|air sapphire|air pure|air touring|air grand touring)\b/,
+  "MG":/\b(mga|mgb|mgf|mgtf|mg3|mg4|mg5|mg6|mg7|mg zs|mg hs|mg rx|cyberster)\b/,
+  "Mini":/\b(cooper|clubman|countryman|paceman|aceman|john cooper works|mini one|mini electric)\b/,
+  "Polestar":/\b(polestar 1|polestar 2|polestar 3|polestar 4|polestar 5|polestar 6|precept|o2 concept)\b/,
+  "Proton":/\b(saga|persona|x50|x70|x90|iriz|waja|exora|satria|perdana|preve|suprima)\b/,
+  "Ram":/\b(ram 1500|ram 2500|ram 3500|promaster|trx|rebel|power wagon)\b/,
+  "Rox":/\b(rox 01|stone 01)\b/,
+  "Seat":/\b(ibiza|leon|ateca|arona|tarraco|alhambra|toledo|cordoba|mii|exeo)\b/,
+  "Smart":/\b(fortwo|forfour|roadster|brabus|smart 1|smart 3|smart 5)\b/,
+  "Tesla":/\b(model 3|model s|model x|model y|cybertruck|cybercab|roadster|semi)\b/
+};
+function carMediaHasAutomotiveEvidence(title,company){
+  var text=normalizeCarMediaText(title);
+  if(nonVehicleMediaPattern.test(text))return false;
+  var modelPattern=ambiguousCarCompanyModels[company];
+  return !modelPattern||automotiveMediaPattern.test(text)||modelPattern.test(text);
+}
+function carMediaMetadataIsUsable(entry){
+  var metadata=normalizeCarMediaText((entry.categories||"")+" "+(entry.description||""));
+  if(!metadata)return true;
+  return !/\b(motorcycle|motorcycles|motorbike|motorbikes|scooter|scooters|bicycle|bicycles|aircraft|airplane|airplanes|helicopter|helicopters|building|buildings|architecture|museum|museums|factory|factories|headquarters|office|offices|animal|animals|mammal|mammals|bird|birds|insect|insects|butterfly|butterflies|plant|plants|flora|landscape|landscapes|mountain|mountains|scenery|portrait|portraits|hood ornament|hood ornaments|mascot|mascots|amusement park|theme park|roller coaster|roller coasters)\b/.test(metadata);
+}
+function carMediaIsUsable(entry,company){
+  if(!entry||!entry.url||!carMediaNamesCompany(entry.title,company)||carMediaNamesOtherCompany(entry.title,company)||!carMediaHasAutomotiveEvidence(entry.title,company)||!carMediaMetadataIsUsable(entry))return false;
+  return !/\b(logo|badge|emblem|wheel|engine|motor|dashboard|cockpit|interior|showroom|sign|map|display|parking|factory|building|museum|museo|welt|headquarters|visitor center|dealership|office|advert|brochure|poster|toy|scale model|hood ornament|mascot|kuhlerfigur)\b/i.test(normalizeCarMediaText(entry.title));
+}
+function carMediaModelNames(entry,company){
+  var companyPrefix=normalizeCarMediaText(company)+" ";
+  return String(entry.categories||"").split("|").map(function(category){return category.trim()}).filter(function(category){
+    var normalized=normalizeCarMediaText(category);
+    if(normalized.indexOf(companyPrefix)!==0)return false;
+    var remainder=normalized.slice(companyPrefix.length);
+    return !/^(automobile|automobiles|car|cars|vehicle|vehicles|coupe|coupes|convertible|convertibles|sedan|sedans|saloon|saloons|suv|suvs|roadster|roadsters|hatchback|hatchbacks|wagon|wagons)\b/.test(remainder);
+  }).sort(function(a,b){return a.length-b.length});
+}
+function carMediaModelName(entry,company){
+  var modelNames=carMediaModelNames(entry,company);
+  if(modelNames.length)return modelNames[0];
+  return String(entry.title||company+" vehicle").replace(/^File:/i,"").replace(/\.(jpe?g|png|webp|gif|tiff?)$/i,"").replace(/_/g," ").trim();
+}
+function carMediaModelKey(entry,company){
+  var modelNames=carMediaModelNames(entry,company);
+  return normalizeCarMediaText(modelNames[0]||carMediaModelName(entry,company));
+}
+function decodeCarMedia(url){
+  return new Promise(function(resolve){
+    var image=new Image();
+    var timer=setTimeout(function(){resolve(false)},10000);
+    image.onload=function(){clearTimeout(timer);resolve(image.naturalWidth>0)};
+    image.onerror=function(){clearTimeout(timer);resolve(false)};
+    image.src=url;
+  });
+}
+async function fetchCarMediaCandidates(company){
+  var entries=[];
+  var offset=0;
+  for(var pageNumber=0;pageNumber<5&&entries.length<60;pageNumber++){
+    var params=new URLSearchParams({action:"query",generator:"search",gsrsearch:'intitle:"'+company+'" filetype:bitmap',gsrnamespace:"6",gsrlimit:"50",gsroffset:String(offset),prop:"imageinfo",iiprop:"url|extmetadata",iiurlwidth:"800",format:"json",origin:"*"});
+    var response=await fetch("https://commons.wikimedia.org/w/api.php?"+params.toString());
+    if(!response.ok)throw new Error("Media search failed");
+    var data=await response.json();
+    var pages=data.query&&data.query.pages?Object.values(data.query.pages):[];
+    pages.sort(function(a,b){return (a.index||0)-(b.index||0)}).forEach(function(page){
+      var info=page.imageinfo&&page.imageinfo[0];
+      if(!info)return;
+      var metadata=info.extmetadata||{};
+      var entry={title:page.title||"",url:info.thumburl||info.url||"",categories:metadata.Categories&&metadata.Categories.value||"",description:metadata.ImageDescription&&metadata.ImageDescription.value||""};
+      if(carMediaIsUsable(entry,company)&&!entries.some(function(current){return current.url===entry.url}))entries.push(entry);
+    });
+    if(!data.continue||data.continue.gsroffset==null)break;
+    offset=data.continue.gsroffset;
+  }
+  return entries.slice(0,60);
+}
+async function fetchVerifiedCarMedia(company){
+  var entries=await fetchCarMediaCandidates(company);
+  var decoded=await Promise.all(entries.slice(0,60).map(function(entry){return decodeCarMedia(entry.url)}));
+  return entries.slice(0,60).filter(function(entry,index){return decoded[index]});
+}
+async function ensureCarCompanyShowroom(company){
+  if(!company||company==="All companies")return true;
+  if(marketProducts.some(function(product){return product.showroomCompany===company}))return true;
+  var verifiedMedia=await fetchVerifiedCarMedia(company);
+  if(verifiedMedia.length<15)verifiedMedia=await fetchVerifiedCarMedia(company);
+  if(!verifiedMedia.length)throw new Error("No verified "+company+" vehicle images were found");
+  var key=carShowroomKey(company);
+  var seed=carShowroomNumber(company);
+  var modelGroups=[];
+  verifiedMedia.forEach(function(entry){
+    var modelKey=carMediaModelKey(entry,company);
+    var group=modelGroups.find(function(current){return current.key===modelKey});
+    if(group)group.media.push(entry);
+    else modelGroups.push({key:modelKey,name:carMediaModelName(entry,company),media:[entry]});
+  });
+  if(!modelGroups.length)throw new Error("No distinct verified "+company+" models were found");
+  modelGroups.slice(0,15).forEach(function(group,index){
+    var modelNumber=String(index+1).padStart(2,"0");
+    var gallery=group.media.slice(0,5);
+    var images=gallery.map(function(entry){return entry.url});
+    var imageLabels=gallery.map(function(entry){return "Verified "+group.name+": "+entry.title.replace(/^File:/,"")});
+    var electric=/\b(electric|ev|bev)\b/.test(normalizeCarMediaText(group.name+" "+group.media[0].categories+" "+group.media[0].description));
+    marketProducts.push({
+      id:"showroom-"+key+"-"+modelNumber,
+      title:group.name,
+      price:"\u03C0"+(0.055+((seed+index*7)%125)/1000).toFixed(3),
+      stat:electric?"Verified electric model":"Verified model",
+      brand:company+" Showroom",
+      showroomCompany:company,
+      moq:"1 Car",
+      audited:true,
+      secured:true,
+      inStock:true,
+      yrs:"Official",
+      responseTime:"\u22641h",
+      image:images[0],
+      images:images,
+      imageLabels:imageLabels,
+      mediaVerified:true,
+      mediaSource:"Wikimedia Commons",
+      category:"Cars",
+      tag:electric?"Electric":"Verified "+company,
+      tagColor:electric?"#047857":"#c0392b"
+    });
+  });
+  return true;
+}
+
 /* Assign star ratings (1-5, supports .5) & review counts */
 (function(){
   var ratings={
@@ -331,7 +557,7 @@ var marketProducts = [
     e7:[3.5,23],e8:[4,48],e9:[4.5,341],e10:[4,88],e11:[5,45],e12:[4.5,160],
     f1:[4,40],f2:[4.5,85],f3:[4,60],f4:[3.5,30],f5:[3,15],f6:[5,30],f7:[4,22],f8:[5,18],f9:[4,45],f10:[4.5,70],
     hg1:[4,28],hg2:[4.5,52],hg3:[4,25],hg4:[4.5,38],hg5:[3.5,10],hg6:[4,55],hg7:[4.5,18],hg8:[4,55],hg9:[5,12],hg10:[4,200],
-    c1:[5,14],c2:[4,20],c3:[4.5,9],c4:[4,16],c5:[4.5,7],c6:[5,3],c7:[3.5,5],c8:[5,11],
+    c1:[5,14],c2:[4,20],c3:[4.5,9],c4:[4,16],c5:[4.5,7],c6:[5,3],c7:[3.5,5],c8:[5,11],c9:[4.5,8],c10:[4,12],c11:[4,10],c12:[4,9],c13:[4.5,7],c14:[4,6],c15:[4.5,8],c16:[4,7],c17:[5,5],c18:[4,6],c19:[4.5,4],c20:[5,3],
     re1:[4.5,42],re2:[5,18],re3:[4,35],re4:[4.5,12],re5:[5,8],re6:[4,27],re7:[4,15],re8:[4.5,33],re9:[3.5,9],re10:[5,6]
   };
   marketProducts.forEach(function(p){var r=ratings[p.id];if(r){p.rating=r[0];p.reviews=r[1]}else{p.rating=4;p.reviews=0}});
@@ -405,9 +631,14 @@ var flights = [
 ];
 
 var allCategories = ["All","Electronics","Fashion","Home & Garden","Cars","Real Estate","Hotels","Properties","Transport","Bills"];
+var carCompanies = [
+  "All companies","Abarth","Acura","Alfa Romeo","Alpine","Aston Martin","Audi","Baojun","Bentley","BMW","Bugatti","Buick","BYD","Cadillac","Changan","Chevrolet","Chery","Chrysler","Citroen","Cupra","Dacia","Daihatsu","Dodge","Dongfeng","FAW","Ferrari","Fiat","Ford","Geely","Genesis","GMC","Great Wall","Haval","Honda","Hongqi","Hyundai","Infiniti","Isuzu","JAC","Jaguar","Jeep","Jetour","Kia","Koenigsegg","Lada","Lamborghini","Land Rover","Leapmotor","Lexus","Lincoln","Lotus","Lucid","Mahindra","Maserati","Mazda","McLaren","Mercedes-Benz","MG","Mini","Mitsubishi","Nio","Nissan","Opel","Pagani","Perodua","Peugeot","Polestar","Porsche","Proton","Ram","Renault","Rivian","Rolls-Royce","Rox","Seat","Skoda","Smart","Subaru","Suzuki","Tata","Tesla","Toyota","Vauxhall","VinFast","Volkswagen","Volvo","XPeng","Zeekr"
+];
 
 /* ── STATE ── */
 var activeTab = "All";
+var activeCarCompany = "All companies";
+var carCompanyLoadMessage = "";
 var searchQuery = "";
 var modalImgIdx = 0;
 var selectedProduct = null;
@@ -456,13 +687,13 @@ function syncSellerProducts(){
       title:row.title,
       price:price,
       stat:'Seller post',
-      brand:'Local Seller',
+      brand:row.brand||'Independent seller',
       moq:'1 Piece',
       audited:false,
       secured:false,
       inStock:true,
-      image:'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=400&auto=format&fit=crop',
-      images:['https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=400&auto=format&fit=crop'],
+      image:row.image||'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=400&auto=format&fit=crop',
+      images:[row.image||'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=400&auto=format&fit=crop'],
       category:row.category||'Electronics',
       owner:'local-seller',
       description:row.description||''
@@ -519,20 +750,42 @@ function setProductSocialButton(btn,text,disabled){
   btn.textContent=text;
   btn.disabled=!!disabled;
 }
+async function socialProductImage(p){
+  var image=p.image||(p.images&&p.images[0])||'';
+  if(image.indexOf('data:image/')!==0)return image;
+  var upload=await fetch('/api/social/upload-image',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({imageData:image})});
+  var data=await upload.json();
+  if(!upload.ok||!data.url)throw new Error(data.error||'Image upload failed');
+  return data.url;
+}
 async function handleProductSocialPost(pid,btn){
   var p=marketProducts.find(function(x){return x.id===pid});
   if(!p)return;
-  setProductSocialButton(btn,'Posting...',true);
+  var selecting=new URLSearchParams(window.location.search).get('socialSelect')==='1';
+  setProductSocialButton(btn,selecting?'Choosing...':'Posting...',true);
   var handle=getShopSocialHandle();
+  var productPrice=p.priceHigh?String(p.price)+' - '+String(p.priceHigh):String(p.price||'');
+  var productImage='';
+  try{productImage=await socialProductImage(p)}catch(e){productImage=''}
   var payload={
     handle:handle,
     name:handle.replace('@',''),
-    image:p.image||(p.images&&p.images[0])||'',
+    image:productImage,
     caption:productSocialCaption(p),
     postType:'photo',
     label:'Marketplace product',
-    userSub:'Shared from Omenda Shop'
+    userSub:'Shared from Omenda Shop',
+    productId:String(p.id||''),
+    productTitle:String(p.title||'Omenda product'),
+    productBrand:String(p.brand||p.owner||'Independent seller'),
+    productPrice:productPrice,
+    productCategory:String(p.category||'Marketplace')
   };
+  if(selecting){
+    try{localStorage.setItem('omendaSelectedShopProduct',JSON.stringify(payload))}catch(e){}
+    window.location.href='social.html?compose=product';
+    return;
+  }
   try{
     var res=await fetch('/api/social/posts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
     if(!res.ok)throw new Error('Post failed');
@@ -600,9 +853,13 @@ function render(){
   var q=searchQuery.toLowerCase();
   var filtered=marketProducts.filter(function(p){
     var mt=activeTab==="All"||p.category===activeTab;
-    var ms=!q||p.title.toLowerCase().indexOf(q)!==-1;
-    return mt&&ms;
+    var ms=!q||p.title.toLowerCase().indexOf(q)!==-1||(p.brand||"").toLowerCase().indexOf(q)!==-1;
+    var mc=activeTab!=="Cars"||activeCarCompany==="All companies"||getCarCompany(p)===activeCarCompany;
+    return mt&&ms&&mc;
   });
+  if(activeTab==="Cars"&&activeCarCompany!=="All companies"&&filtered.some(function(product){return product.showroomCompany===activeCarCompany})){
+    filtered=filtered.filter(function(product){return product.showroomCompany===activeCarCompany});
+  }
 
   var showHotels=activeTab==="All"||activeTab==="Hotels";
   var showProps=activeTab==="All"||activeTab==="Properties";
@@ -623,6 +880,14 @@ function render(){
 
   var html="";
 
+  if(activeTab==="Cars"){
+    html+='<section class="car-company-panel" aria-label="Car companies"><div class="car-company-heading"><h2>Car companies</h2><div class="car-company-tools"><span>'+(carCompanies.length-1)+' brands</span><button type="button" class="car-company-arrow" id="car-company-prev" onclick="scrollCarCompanies(-1)" aria-label="Show previous car companies" title="Previous companies" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button><button type="button" class="car-company-arrow" id="car-company-next" onclick="scrollCarCompanies(1)" aria-label="Show more car companies" title="More companies"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button></div></div><div class="car-company-list hide-sb" id="car-company-list">';
+    carCompanies.forEach(function(company){
+      html+='<button type="button" onclick="setCarCompany(\''+company.replace(/'/g,"\\'")+'\')" class="'+(company===activeCarCompany?'active':'')+'">'+esc(company)+'</button>';
+    });
+    html+='</div></section>';
+  }
+
   /* ── Trust Badges (Audited Supplier / Secured Trading) ── */
   if(activeTab==="All"&&!searchQuery){
     html+='<div class="trust-row">';
@@ -637,7 +902,7 @@ function render(){
     html+='<div class="hub-row">';
     html+='<a class="hub-card" href="map.html"><div class="hub-icon inline-style-4" >🗺️</div><div class="hub-title">Worldwide Map</div><div class="hub-sub">Explore global business locations and markets.</div></a>';
     html+='<a class="hub-card" href="omenda-ai.html"><div class="hub-icon inline-style-4" >⚙️</div><div class="hub-title">Omenda AI</div><div class="hub-sub">Access all Omenda AI services, offers and tools.</div></a>';
-    html+='<a class="hub-card" href="index.html"><div class="hub-icon inline-style-1" >🤖</div><div class="hub-title">Omenda Sport</div><div class="hub-sub">Sport Future</div></a>';
+    html+='<a class="hub-card" href="sports.html"><div class="hub-icon inline-style-1" >🏆</div><div class="hub-title">Omenda Sport</div><div class="hub-sub">Live scores and demo betting</div></a>';
     html+='<a class="hub-card" href="contracts.html"><div class="hub-icon inline-style-4" >🏗️</div><div class="hub-title">Contracts Hub</div><div class="hub-sub">House building, roads, industry, mining, minerals, and tourism contracts.</div></a>';
     html+='<a class="hub-card" href="social.html"><div class="hub-icon inline-style-5" >👥</div><div class="hub-title">Community</div><div class="hub-sub">Connect with buyers, sellers, and Pi groups.</div></a>';
     html+='</div>';
@@ -652,17 +917,19 @@ function render(){
     html+='</div>';
     html+='<aside class="hub-sidebar">';
     html+='<h3>Sport Game List</h3>';
-    html+='<select class="sports-dropdown">';
-    html+='<option>Football Betting</option>';
-    html+='<option>Aviéta Crush</option>';
-    html+='<option>Hot Games</option>';
-    html+='<option>Trading</option>';
+    html+='<select class="sports-dropdown" onchange="if(this.value)window.location.href=this.value" aria-label="Open Omenda Sport">';
+    html+='<option value="sports.html">Football</option>';
+    html+='<option value="aviator.html">Aviator</option>';
+    html+='<option value="sports.html">Basketball</option>';
+    html+='<option value="sports.html">Tennis</option>';
+    html+='<option value="sports.html">Cricket</option>';
     html+='</select>';
     html+='<ul class="sports-list">';
-    html+='<li>Football Betting</li>';
-    html+='<li>Aviéta Crush</li>';
-    html+='<li>Hot Games</li>';
-    html+='<li>Trading</li>';
+    html+='<li><a href="sports.html">Football</a></li>';
+    html+='<li><a href="aviator.html">Aviator</a></li>';
+    html+='<li><a href="sports.html">Basketball</a></li>';
+    html+='<li><a href="sports.html">Tennis</a></li>';
+    html+='<li><a href="sports.html">Cricket</a></li>';
     html+='</ul>';
     html+='</aside>';
     html+='</div>';
@@ -731,6 +998,7 @@ function render(){
       if(item.moq) html+='<div class="pc-moq">'+esc(item.moq)+' (MOQ)</div>';
       html+='<div class="pc-name">'+esc(item.title)+'</div>';
       if(item.brand) html+='<div class="pc-brand">'+esc(item.brand)+'</div>';
+      if(item.capacity||item.manufactured) html+='<div class="pc-car-specs"><span>'+esc(item.capacity||'Capacity pending')+'</span><span>'+esc(item.manufactured||'Date pending')+'</span></div>';
       html+='<div class="pc-badges">';
       if(item.audited) html+='<span class="badge-a"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> Audited</span>';
       if(item.secured) html+='<span class="badge-s">\uD83D\uDEE1\uFE0F Secured Trading</span>';
@@ -739,7 +1007,7 @@ function render(){
       html+='<div class="pc-interactions" data-pid="'+item.id+'">';
       html+='<button class="pc-like" type="button" aria-label="Like '+esc(item.title)+'">❤️ '+formatCount(emojiTotals.likes)+'</button>';
       html+='<button class="pc-gift" type="button" aria-label="Send gift for '+esc(item.title)+'">🎁 '+formatCount(emojiTotals.gifts)+'</button>';
-      html+='<button class="pc-social" type="button" aria-label="Post '+esc(item.title)+' to social">📣 Social</button>';
+      html+='<button class="pc-social" type="button" aria-label="'+(new URLSearchParams(window.location.search).get('socialSelect')==='1'?'Choose ':'Post ')+esc(item.title)+(new URLSearchParams(window.location.search).get('socialSelect')==='1'?' for social':' to social')+'">'+(new URLSearchParams(window.location.search).get('socialSelect')==='1'?'✓ Choose':'📣 Social')+'</button>';
       html+='</div>';
       if(item.rating) html+=renderStars(item.rating,item.reviews);
       if(item.responseTime||item.yrs){
@@ -793,6 +1061,10 @@ function render(){
       html+='</div></div></article>';
     });
     html+='</div></div>';
+  }
+
+  if(activeTab==="Cars"&&filtered.length===0){
+    html+='<div class="car-company-empty"><h3>'+esc(carCompanyLoadMessage||('No verified '+activeCarCompany+' cars available'))+'</h3><p>'+(carCompanyLoadMessage?'Please wait or choose another company.':'Cars are shown only when their image is verified for this manufacturer.')+'</p></div>';
   }
 
   /* ── Hotels ── */
@@ -909,6 +1181,7 @@ function render(){
   if(sb){sb.onclick=function(e){e.preventDefault();handleSellClick(e);}}
 
   bindProductEmojiEvents();
+  bindCarCompanySlider();
   startAutoSwipe();
 }
 
@@ -923,7 +1196,52 @@ function renderDashboardMap(){
   });
 }
 
-function setTab(t){activeTab=t;render()}
+function getCarCompany(product){
+  if(product.showroomCompany)return product.showroomCompany;
+  var value=((product.title||"")+" "+(product.brand||"")).toLowerCase();
+  var aliases={"Land Rover":["land rover","landrover","range rover"],"Mercedes-Benz":["mercedes","benz"],"Rox":["rox ","yhe-motors"]};
+  for(var company in aliases){
+    if(aliases[company].some(function(alias){return value.indexOf(alias)!==-1}))return company;
+  }
+  for(var i=1;i<carCompanies.length;i++){
+    if(value.indexOf(carCompanies[i].toLowerCase())!==-1)return carCompanies[i];
+  }
+  return "Other";
+}
+function updateCarCompanyArrows(){
+  var list=document.getElementById('car-company-list');
+  var previous=document.getElementById('car-company-prev');
+  var next=document.getElementById('car-company-next');
+  if(!list||!previous||!next)return;
+  previous.disabled=list.scrollLeft<=2;
+  next.disabled=list.scrollLeft+list.clientWidth>=list.scrollWidth-2;
+}
+function scrollCarCompanies(direction){
+  var list=document.getElementById('car-company-list');
+  if(!list)return;
+  list.scrollBy({left:direction*Math.max(220,list.clientWidth*.7),behavior:'smooth'});
+}
+function bindCarCompanySlider(){
+  var list=document.getElementById('car-company-list');
+  if(!list)return;
+  list.addEventListener('scroll',updateCarCompanyArrows,{passive:true});
+  updateCarCompanyArrows();
+}
+async function setCarCompany(company){
+  activeCarCompany=company;
+  carCompanyLoadMessage=company==="All companies"?"":"Verifying "+company+" vehicle images...";
+  render();
+  if(company==="All companies")return;
+  try{
+    await ensureCarCompanyShowroom(company);
+    carCompanyLoadMessage="";
+  }catch(error){
+    carCompanyLoadMessage="Verified "+company+" showroom unavailable";
+    console.warn(error);
+  }
+  if(activeCarCompany===company)render();
+}
+function setTab(t){activeTab=t;if(t!=="Cars")activeCarCompany="All companies";render()}
 
 /* ══════════════════════════════════════════════════════════════
    MODAL
@@ -953,26 +1271,38 @@ function renderModal(){
   h+='<button class="close-btn" onclick="closeModal()"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg></button>';
 
   /* Carousel */
-  h+='<div class="carousel"><img src="'+imgs[modalImgIdx]+'" alt="'+esc(p.title)+' '+(modalImgIdx+1)+'">';
-  h+='<button class="nav-arrow left" onclick="event.stopPropagation();prevModalImg()"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg></button>';
-  h+='<button class="nav-arrow right" onclick="event.stopPropagation();nextModalImg()"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>';
-  h+='<span class="counter">'+(modalImgIdx+1)+'/'+imgs.length+'</span>';
-  h+='<div class="dots">';
-  for(var i=0;i<imgs.length;i++){h+='<button onclick="event.stopPropagation();setModalImg('+i+')" class="'+(i===modalImgIdx?"active":"")+'"></button>'}
-  h+='</div></div>';
+  h+='<div class="carousel"><img src="'+imgs[modalImgIdx]+'" alt="'+esc(p.title)+' '+esc((p.imageLabels&&p.imageLabels[modalImgIdx])||('view '+(modalImgIdx+1)))+'">';
+  if(imgs.length>1){
+    h+='<button class="nav-arrow left" onclick="event.stopPropagation();prevModalImg()"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg></button>';
+    h+='<button class="nav-arrow right" onclick="event.stopPropagation();nextModalImg()"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>';
+    h+='<span class="counter">'+(modalImgIdx+1)+'/'+imgs.length+'</span>';
+    h+='<div class="dots">';
+    for(var i=0;i<imgs.length;i++){h+='<button onclick="event.stopPropagation();setModalImg('+i+')" class="'+(i===modalImgIdx?"active":"")+'"></button>'}
+    h+='</div>';
+  }
+  h+='</div>';
 
   /* Thumbnails */
-  h+='<div class="thumbs hide-sb">';
-  imgs.forEach(function(src,i){
-    h+='<button onclick="event.stopPropagation();setModalImg('+i+')" class="'+(i===modalImgIdx?"active":"")+'"><img src="'+src+'" alt="Thumb '+(i+1)+'"></button>';
-  });
-  h+='</div>';
+  if(imgs.length>1){
+    h+='<div class="thumbs hide-sb">';
+    imgs.forEach(function(src,i){
+      h+='<button onclick="event.stopPropagation();setModalImg('+i+')" class="'+(i===modalImgIdx?"active":"")+'" aria-label="Show '+esc((p.imageLabels&&p.imageLabels[i])||('view '+(i+1)))+'"><img src="'+src+'" alt="'+esc((p.imageLabels&&p.imageLabels[i])||('View '+(i+1)))+'"></button>';
+    });
+    h+='</div>';
+  }
 
   /* Detail */
   h+='<div class="detail">';
   if(p.tag) h+='<span class="tag-badge">'+esc(p.tag)+'</span>';
   h+='<h2>'+esc(p.title)+'</h2>';
   h+='<div class="meta-line">'+esc(p.category)+' \u00B7 '+esc(p.stat)+'</div>';
+  if(p.capacity||p.manufactured||p.powertrain){
+    h+='<div class="vehicle-spec-grid">';
+    if(p.capacity)h+='<div><span>Engine / motor capacity</span><strong>'+esc(p.capacity)+'</strong></div>';
+    if(p.powertrain)h+='<div><span>Powertrain</span><strong>'+esc(p.powertrain)+'</strong></div>';
+    if(p.manufactured)h+='<div><span>Manufacture date</span><strong>'+esc(p.manufactured)+'</strong></div>';
+    h+='</div>';
+  }
   if(p.rating) h+=renderStars(p.rating,p.reviews);
   h+='<div class="price-row"><span class="price">'+esc(p.price)+'</span>';
   if(p.priceHigh) h+='<span class="high">\u2013 '+esc(p.priceHigh)+'</span>';
@@ -987,7 +1317,7 @@ function renderModal(){
   h+='<div class="modal-interactions" id="modal-interaction-card">';
   h+='<button id="modal-like-btn" class="pc-like" type="button">❤️ '+formatCount(emojiTotals.likes)+'</button>';
   h+='<button id="modal-gift-btn" class="pc-gift" type="button">🎁 '+formatCount(emojiTotals.gifts)+'</button>';
-  h+='<button id="modal-social-btn" class="pc-social" type="button">📣 Post to Social</button>';
+  h+='<button id="modal-social-btn" class="pc-social" type="button">'+(new URLSearchParams(window.location.search).get('socialSelect')==='1'?'✓ Choose Product':'📣 Post to Social')+'</button>';
   h+='</div>';
 
   h+='<div id="modal-card-strip"></div>';
@@ -1468,34 +1798,37 @@ function updateUsernameUI(username) {
   if (dotEl) dotEl.textContent = username.charAt(0).toUpperCase();
 }
 
-function joinPiNow(){
-  var btn=document.getElementById('join-pi-btn');
-  if(piAuthReady&&piAuthUser&&piAuthUser.username){
+var piUsernameLoadStarted=false;
+function loadPiUsername(){
+  if(piAuthUser&&piAuthUser.username){
     var readyName=normalizePiUsername(piAuthUser.username);
     updateUsernameUI(readyName);
-    setPiJoinStatus('Connected as @'+readyName,'ok');
+    setPiJoinStatus('','');
     return;
   }
   if(isLocalPiPreview()){
     updateUsernameUI(DEFAULT_PI_USERNAME);
-    setPiJoinStatus('Preview account @'+DEFAULT_PI_USERNAME+'. Open the deployed Pi app URL in Pi Browser to authenticate with Pi.','');
+    setPiJoinStatus('','');
     return;
   }
-  if(btn){btn.disabled=true;btn.textContent='Connecting...'}
-  setPiJoinStatus('Waiting for Pi Browser approval...','');
-  piDebug('Join with Pi clicked');
+  if(piUsernameLoadStarted)return;
+  piUsernameLoadStarted=true;
+  setPiJoinStatus('Loading Pi username...','');
+  piDebug('Automatic Pi username authentication started');
   authenticateWithPi(['username','payments']).then(function(auth){
     savePiAuth(auth);
     if(auth.user&&auth.user.username){
-      setPiJoinStatus('Connected as @'+normalizePiUsername(auth.user.username),'ok');
+      setPiJoinStatus('','');
     }else{
-      setPiJoinStatus('Connected with Pi','ok');
+      updateUsernameUI(DEFAULT_PI_USERNAME);
+      setPiJoinStatus('','');
     }
   }).catch(function(err){
-    piDebug('Join with Pi failed: '+(err&&err.message?err.message:String(err)));
-    setPiJoinStatus('Pi connection failed. Open in Pi Browser and try again.','err');
+    piDebug('Automatic Pi username authentication failed: '+(err&&err.message?err.message:String(err)));
+    updateUsernameUI(DEFAULT_PI_USERNAME);
+    setPiJoinStatus('','');
   }).finally(function(){
-    if(btn){btn.disabled=false;btn.textContent='Join with Pi'}
+    piUsernameLoadStarted=false;
   });
 }
 
@@ -1639,12 +1972,11 @@ var isPiBrowser=/PiBrowser/i.test(navigator.userAgent)||typeof window.Pi!=="unde
       if (u && u.username) {
         piAuthUser=u;
         updateUsernameUI(u.username);
-        setPiJoinStatus('Saved account @'+normalizePiUsername(u.username),'ok');
       }
     }
   } catch(e){}
   piDebug('Page load: piSdkReady='+piSdkReady+', isPiBrowser='+isPiBrowser);
-  /* Do NOT call Pi.authenticate on page load — it requires user gesture in Pi Browser */
+  loadPiUsername();
 })();
 
 /* ── AUTO-SWIPE: cycle product images & shake at 3/5/7s ── */
@@ -1689,7 +2021,7 @@ function startAutoSwipe(){
   cards.forEach(function(card){
     var pid=card.getAttribute('data-pid');
     var p=marketProducts.find(function(x){return x.id===pid});
-    if(!p||p.images.length<2)return;
+    if(!p||p.images.length<2||p.showroomCompany)return;
     scheduleCard(pid);
   });
 }
@@ -1784,6 +2116,8 @@ function loadLanguage() {
 /* ── INIT ── */
 loadLanguage();
 render();
+var linkedProductId=new URLSearchParams(window.location.search).get('product');
+if(linkedProductId&&marketProducts.some(function(product){return product.id===linkedProductId}))openModal(linkedProductId);
 startAutoSwipe();
 startCatSweep();
 </script>

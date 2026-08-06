@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Omenda Sport - Live Scores and Demo Betting</title>
+  <meta name="description" content="Follow sample sports fixtures, build a demo bet slip, and track test bets with Omenda Sport.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&amp;family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
+  <script src="https://sdk.minepi.com/pi-sdk.js" defer></script>
+  <script src="pi-sdk-helper.js" defer></script>
+  <link rel="stylesheet" href="sports.css">
+  <script src="sports.js" defer></script>
+</head>
+<body class="sport-page">
+  <header class="sport-header">
+    <a class="sport-brand" href="sports.html" aria-label="Omenda Sport home">
+      <span class="brand-mark"><i data-lucide="trophy"></i></span>
+      <span><strong>OMENDA SPORT</strong><small>Sport Future</small></span>
+    </a>
+    <nav class="sport-nav" aria-label="Sports navigation">
+      <button class="active" type="button" data-view="sportsbook">Sportsbook</button>
+      <a href="aviator.html">Aviator</a>
+      <button type="button" data-view="my-bets">My bets <span id="betCount">0</span></button>
+    </nav>
+    <div class="header-actions">
+      <div class="demo-balance"><span>Demo wallet</span><strong id="walletBalance">50.00 &pi;</strong></div>
+      <button class="icon-button header-withdraw" id="headerWithdrawButton" type="button" aria-label="Withdraw to Pi Wallet" title="Withdraw to Pi Wallet"><i data-lucide="wallet-cards"></i></button>
+      <button class="icon-button" id="limitsButton" type="button" aria-label="Responsible betting limits" title="Betting limits"><i data-lucide="shield-check"></i></button>
+      <a class="icon-button" href="shop.html" aria-label="Back to Marketplace" title="Marketplace"><i data-lucide="store"></i></a>
+    </div>
+  </header>
+
+  <div class="sport-ticker" aria-label="Sports headlines">
+    <span class="ticker-live"><i data-lucide="radio"></i> Live center</span>
+    <div><strong>Football</strong> 3 sample matches live</div>
+    <div><strong>Basketball</strong> fourth quarter markets open</div>
+    <div><strong>Tennis</strong> match winner and set markets</div>
+    <span class="ticker-note">Demo odds only</span>
+  </div>
+
+  <main class="sports-layout">
+    <aside class="sports-sidebar" aria-label="Sport filters">
+      <div class="sidebar-title">Sports</div>
+      <button class="sport-filter active" type="button" data-sport="all"><i data-lucide="layout-grid"></i><span>All sports</span><strong>8</strong></button>
+      <button class="sport-filter" type="button" data-sport="football"><i data-lucide="circle-dot"></i><span>Football</span><strong>4</strong></button>
+      <button class="sport-filter" type="button" data-sport="basketball"><i data-lucide="circle"></i><span>Basketball</span><strong>1</strong></button>
+      <button class="sport-filter" type="button" data-sport="tennis"><i data-lucide="disc-3"></i><span>Tennis</span><strong>1</strong></button>
+      <button class="sport-filter" type="button" data-sport="cricket"><i data-lucide="target"></i><span>Cricket</span><strong>1</strong></button>
+      <button class="sport-filter" type="button" data-sport="motorsport"><i data-lucide="flag-triangle-right"></i><span>Motorsport</span><strong>1</strong></button>
+      <div class="sidebar-divider"></div>
+      <button class="side-action" id="liveOnlyButton" type="button"><i data-lucide="radio"></i><span>Live now</span></button>
+      <button class="side-action" id="favoritesButton" type="button"><i data-lucide="star"></i><span>Favorites</span></button>
+      <div class="responsible-note">
+        <i data-lucide="heart-handshake"></i>
+        <strong>Play with limits</strong>
+        <span>18+ demo environment. No real Pi is staked.</span>
+      </div>
+    </aside>
+
+    <section class="sports-content" aria-live="polite">
+      <div id="sportsbookView">
+        <section class="match-feature" aria-label="Featured match">
+          <div class="feature-copy">
+            <span class="live-pill"><i data-lucide="radio"></i> Live 67'</span>
+            <p>Featured match</p>
+            <div class="feature-teams">
+              <div><strong>North London</strong><span>Home</span></div>
+              <b>1</b><em>:</em><b>1</b>
+              <div><strong>West London</strong><span>Away</span></div>
+            </div>
+            <small>Sample Premier League fixture</small>
+          </div>
+          <button type="button" class="feature-action" data-jump-event="football-1">View markets <i data-lucide="arrow-right"></i></button>
+        </section>
+
+        <div class="content-tools">
+          <div>
+            <h1>Match center</h1>
+            <p>Live scores, upcoming fixtures, and sample markets</p>
+          </div>
+          <label class="event-search">
+            <i data-lucide="search"></i>
+            <input id="eventSearch" type="search" placeholder="Search team or league" aria-label="Search teams and leagues">
+          </label>
+        </div>
+
+        <div class="mobile-sports" id="mobileSports" aria-label="Choose sport"></div>
+        <div class="event-summary"><span id="eventSummary">8 events</span><span><i data-lucide="activity"></i> Odds update locally</span></div>
+        <div class="events-list" id="eventsList"></div>
+        <div class="empty-state" id="emptyState" hidden><i data-lucide="search-x"></i><h2>No events found</h2><p>Try another team, league, or sport.</p></div>
+      </div>
+
+      <section id="myBetsView" class="my-bets-view" hidden>
+        <div class="content-tools">
+          <div><h1>My bets</h1><p>Your demo tickets are stored on this device</p></div>
+          <button class="text-button" id="clearSettledButton" type="button">Clear settled</button>
+        </div>
+        <div id="betHistory"></div>
+      </section>
+    </section>
+
+    <aside class="bet-slip" aria-label="Bet slip">
+      <div class="slip-heading">
+        <div><span>Bet slip</span><strong id="selectionCount">0 selections</strong></div>
+        <button id="clearSlipButton" type="button" title="Clear bet slip" aria-label="Clear bet slip"><i data-lucide="trash-2"></i></button>
+      </div>
+      <div class="sports-wallet">
+        <div><span>Available demo balance</span><strong id="withdrawableBalance">50.00 &pi;</strong><small>Pi Sandbox wallet connection</small></div>
+        <button id="openWithdrawButton" type="button"><i data-lucide="wallet-cards"></i><span>Withdraw</span></button>
+      </div>
+      <div id="slipSelections" class="slip-selections"></div>
+      <div class="slip-empty" id="slipEmpty">
+        <span><i data-lucide="ticket-plus"></i></span>
+        <strong>Your slip is empty</strong>
+        <p>Select an odd from any event to start a demo bet.</p>
+      </div>
+      <div class="slip-calculator" id="slipCalculator" hidden>
+        <div class="slip-row"><span>Combined odds</span><strong id="combinedOdds">1.00</strong></div>
+        <label for="stakeInput">Stake <span>Demo &pi;</span></label>
+        <div class="stake-input"><span>&pi;</span><input id="stakeInput" type="number" min="0.10" step="0.10" value="1.00" inputmode="decimal"></div>
+        <div class="quick-stakes">
+          <button type="button" data-stake="1">1 &pi;</button>
+          <button type="button" data-stake="5">5 &pi;</button>
+          <button type="button" data-stake="10">10 &pi;</button>
+          <button type="button" data-stake="max">Max</button>
+        </div>
+        <div class="return-row"><span>Potential return</span><strong id="potentialReturn">0.00 &pi;</strong></div>
+        <button class="place-bet" id="placeBetButton" type="button"><i data-lucide="check-circle-2"></i> Place demo bet</button>
+        <p class="slip-disclaimer">Simulation only. No payment or blockchain transaction occurs.</p>
+      </div>
+    </aside>
+  </main>
+
+  <div class="age-gate" id="ageGate" role="dialog" aria-modal="true" aria-labelledby="ageTitle">
+    <div class="age-panel">
+      <span class="age-mark">18+</span>
+      <p>Responsible access</p>
+      <h2 id="ageTitle">Are you old enough to continue?</h2>
+      <p>Omenda Sport contains a simulated betting experience. You must be 18 or meet the legal gambling age in your location.</p>
+      <button class="confirm-age" id="confirmAgeButton" type="button">I meet the legal age requirement</button>
+      <a href="shop.html">Leave Omenda Sport</a>
+      <small>Demo only. No real-money or real-Pi wagers.</small>
+    </div>
+  </div>
+
+  <div class="limits-modal" id="limitsModal" role="dialog" aria-modal="true" aria-labelledby="limitsTitle" hidden>
+    <div class="limits-panel">
+      <button class="modal-close" id="closeLimitsButton" type="button" aria-label="Close limits"><i data-lucide="x"></i></button>
+      <i class="limits-icon" data-lucide="shield-check"></i>
+      <h2 id="limitsTitle">Responsible limits</h2>
+      <p>Set a maximum stake for each demo ticket or pause betting on this device.</p>
+      <label for="maxStakeInput">Maximum stake per bet (&pi;)</label>
+      <input id="maxStakeInput" type="number" min="0.10" max="100" step="0.10">
+      <label class="pause-control"><input id="pauseBettingInput" type="checkbox"><span>Pause new bets</span></label>
+      <button class="save-limits" id="saveLimitsButton" type="button">Save limits</button>
+    </div>
+  </div>
+
+  <div class="withdraw-modal" id="withdrawModal" role="dialog" aria-modal="true" aria-labelledby="withdrawTitle" hidden>
+    <div class="withdraw-panel">
+      <button class="modal-close" id="closeWithdrawButton" type="button" aria-label="Close withdrawal"><i data-lucide="x"></i></button>
+      <span class="sandbox-badge">Pi Sandbox</span>
+      <i class="withdraw-icon" data-lucide="wallet-cards"></i>
+      <h2 id="withdrawTitle">Withdraw to Pi Wallet</h2>
+      <p>Connect your Pi account to record a sandbox withdrawal from this device's demo balance.</p>
+      <div class="withdraw-balance"><span>Available</span><strong id="modalWalletBalance">50.00 &pi;</strong></div>
+      <label for="withdrawAmount">Withdrawal amount (&pi;)</label>
+      <div class="withdraw-input"><span>&pi;</span><input id="withdrawAmount" type="number" min="0.10" max="100" step="0.10" inputmode="decimal" value="1.00"></div>
+      <p class="withdraw-status" id="withdrawStatus" role="status">Pi authentication is required to continue.</p>
+      <button class="confirm-withdraw" id="confirmWithdrawButton" type="button"><i data-lucide="shield-check"></i><span>Connect Pi Wallet</span></button>
+      <small class="withdraw-warning">Sandbox only. Demo credits have no cash value and no real Pi is transferred.</small>
+    </div>
+  </div>
+
+  <div class="sport-toast" id="sportToast" role="status"></div>
+</body>
+</html>

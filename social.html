@@ -8,7 +8,8 @@
  <link rel="icon" type="image/svg+xml" href="icon-192.svg">
  <link rel="preconnect" href="https://fonts.googleapis.com">
  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
- <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+ <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Pacifico&display=swap" rel="stylesheet">
+ <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
  <link rel="stylesheet" href="styles.css">
  <style>
  body { margin: 0; font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f5f7fb; color: #0f172a; }
@@ -130,15 +131,24 @@
  .modal-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 18px 20px; border-bottom: 1px solid rgba(15,23,42,.08); }
  .modal-head h2 { margin: 0; font-size: 1.1rem; }
  .modal-close { border: 0; background: #f1f5f9; border-radius: 50%; width: 38px; height: 38px; cursor: pointer; font-size: 1.2rem; }
- .modal-body { padding: 18px 20px 20px; display: grid; gap: 14px; }
+ .modal-body { padding: 18px 20px 20px; display: grid; gap: 14px; overflow-x:hidden; }
  .modal-body label { display: grid; gap: 8px; color: #334155; font-weight: 800; }
- .modal-body input, .modal-body textarea { width: 100%; border: 1px solid rgba(148,163,184,.35); border-radius: 16px; padding: 12px 14px; font: inherit; outline: none; }
+ .modal-body input, .modal-body textarea { box-sizing:border-box; min-width:0; width:100%; border:1px solid rgba(148,163,184,.35); border-radius:16px; padding:12px 14px; font:inherit; outline:none; }
  .modal-body textarea { min-height: 110px; resize: vertical; }
  .image-upload-box { border: 1px dashed rgba(37,99,235,.35); border-radius: 18px; padding: 14px; background: #f8fafc; display: grid; gap: 10px; }
  .image-upload-box input { background: #fff; }
  .image-upload-box span { color: #64748b; font-size: .9rem; font-weight: 700; }
  .image-preview { display: none; width: 100%; max-height: 260px; object-fit: cover; border-radius: 16px; border: 1px solid rgba(15,23,42,.08); }
  .image-preview.active { display: block; }
+ .shop-product-picker { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 14px; border:1px solid rgba(0,149,246,.3); border-radius:10px; background:#f5fbff; }
+ .shop-product-picker span { color:#334155; font-size:.88rem; font-weight:700; }
+ .shop-product-picker a { flex:none; border-radius:7px; background:#0095f6; color:#fff; padding:9px 12px; font-size:.82rem; font-weight:700; text-decoration:none; }
+ .selected-shop-product { display:none; align-items:center; gap:11px; padding:10px; border:1px solid #dbdbdb; border-radius:8px; }
+ .selected-shop-product.active { display:flex; }
+ .selected-shop-product img { width:58px; height:58px; border-radius:6px; object-fit:cover; }
+ .selected-shop-product div { display:grid; min-width:0; gap:3px; }
+ .selected-shop-product strong, .selected-shop-product span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+ .selected-shop-product span { color:#737373; font-size:.78rem; }
  .post-type-note { color: #64748b; font-size: .9rem; font-weight: 800; }
  .modal-actions { display: flex; justify-content: flex-end; gap: 10px; }
  .story-viewer-card { width: min(430px, 100%); background: #020617; color: #fff; border-radius: 26px; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,.36); }
@@ -149,6 +159,101 @@
  @media (max-width: 900px) {
  .social-account-row { grid-template-columns: 1fr; align-items: stretch; }
  .social-sync-status { white-space: normal; }
+ }
+
+ /* OmendaSocial app shell */
+ body.page-social { --social-border:#dbdbdb; --social-muted:#737373; --social-blue:#0095f6; max-width:none; min-height:100vh; padding:0 0 74px; background:#fafafa; color:#0a0a0a; font-family:"DM Sans",sans-serif; letter-spacing:0; }
+ .page-social .top-bar { height:60px; padding:0 20px; background:rgba(255,255,255,.96); border-bottom:1px solid var(--social-border); gap:18px; }
+ .page-social .brand { display:block; min-width:0; }
+ .page-social .logo { font-family:"Pacifico",cursive; font-size:1.65rem; font-weight:400; letter-spacing:0; }
+ .page-social .tagline { display:none; }
+ .page-social .nav-links { margin-left:auto; gap:22px; flex-wrap:nowrap; }
+ .page-social .nav-links a { padding:0; border:0; border-radius:0; background:transparent; color:#0a0a0a; font-size:.9rem; }
+ .page-social .nav-links a:hover, .page-social .nav-links a.active { border:0; background:transparent; color:var(--social-blue); }
+ .social-top-actions { display:flex; align-items:center; gap:4px; }
+ .social-top-actions button, .social-top-actions a { display:grid; place-items:center; width:42px; height:42px; padding:0; border:0; background:transparent; color:#0a0a0a; cursor:pointer; text-decoration:none; }
+ .social-top-actions svg, .social-bottom-nav svg { width:24px; height:24px; stroke-width:2; }
+ .page-social .story-strip { max-width:630px; margin:0 auto; padding:16px 14px 14px; gap:16px; background:#fff; border-bottom:1px solid var(--social-border); }
+ .page-social .story { min-width:68px; max-width:68px; gap:7px; overflow:hidden; }
+ .page-social .story img { box-sizing:border-box; width:64px; height:64px; margin:2px auto; border:2px solid #fff; outline:2px solid #df2a7b; box-shadow:none; }
+ .page-social .story.viewed img { outline-color:#c7c7c7; }
+ .page-social .story strong { overflow:hidden; font-size:.72rem; font-weight:500; line-height:1.15; text-overflow:ellipsis; white-space:nowrap; }
+ .page-social .story span { display:none; }
+ .page-social .quick-compose { max-width:630px; margin:0 auto; padding:12px 14px; gap:10px; border:0; border-bottom:1px solid var(--social-border); border-radius:0; box-shadow:none; }
+ .page-social .compose-row { gap:10px; }
+ .page-social .compose-row .avatar { width:36px; height:36px; }
+ .page-social .compose-open { min-height:38px; border:0; border-radius:0; background:transparent; padding:0; color:var(--social-muted); font-weight:500; }
+ .page-social .compose-open:hover { background:transparent; color:#0a0a0a; }
+ .page-social .compose-actions { grid-template-columns:repeat(4,1fr); gap:0; border-top:1px solid #efefef; }
+ .page-social .compose-actions button { min-height:36px; border:0; border-right:1px solid #efefef; border-radius:0; background:#fff; color:#4b4b4b; font-size:.76rem; font-weight:600; }
+ .page-social .compose-actions button:last-child { border-right:0; }
+ .page-social .compose-actions button:hover { background:#fafafa; color:var(--social-blue); }
+ .page-social .social-account-row { display:none; grid-template-columns:1fr 1.4fr auto; align-items:end; margin-top:2px; padding:12px 0 0; }
+ .page-social .quick-compose.profile-open .social-account-row { display:grid; }
+ .page-social .social-account-row label { letter-spacing:0; text-transform:none; }
+ .page-social .social-account-row input, .page-social .profile-photo-picker, .page-social .social-account-row button { border-radius:6px; }
+ .page-social .emoji-overview { max-width:630px; margin:0 auto; padding:10px 14px; background:#fff; border-bottom:1px solid var(--social-border); }
+ .page-social .emoji-overview-toggle { min-height:40px; padding:0; border:0; border-radius:0; background:#fff; color:#0a0a0a; box-shadow:none; font-size:.82rem; }
+ .page-social .emoji-overview-toggle:hover { background:#fff; }
+ .page-social .emoji-overview-toggle small { color:var(--social-muted); font-size:.74rem; }
+ .page-social .emoji-overview-panel { border-radius:8px; box-shadow:none; }
+ .page-social .feed { max-width:630px; margin:0 auto; padding:0; gap:0; background:#fff; }
+ .page-social .post-card { border:0; border-bottom:1px solid var(--social-border); border-radius:0; box-shadow:none; }
+ .page-social .post-header { min-height:60px; gap:10px; padding:10px 14px; }
+ .page-social .post-header .avatar { width:34px; height:34px; border:0; box-shadow:none; }
+ .page-social .post-meta { min-width:0; gap:1px; }
+ .page-social .user-name { font-size:.86rem; font-weight:700; }
+ .page-social .user-sub { overflow:hidden; color:#3b3b3b; font-size:.72rem; text-overflow:ellipsis; white-space:nowrap; }
+ .page-social .post-time { margin-left:auto; color:var(--social-muted); font-size:.72rem; white-space:nowrap; }
+ .page-social .follow-author { margin-left:8px; padding:0; border:0; border-radius:0; background:transparent; color:var(--social-blue); font-size:.78rem; }
+ .page-social .follow-author.following { border:0; background:transparent; color:var(--social-muted); }
+ .page-social .post-image { display:block; width:100%; height:auto; max-height:none; aspect-ratio:1/1; object-fit:cover; background:#efefef; }
+ .page-social .post-actions { padding:10px 12px 5px; gap:8px; }
+ .page-social .action-buttons { gap:14px; }
+ .page-social .post-actions button, .page-social .post-actions .save { display:grid; place-items:center; min-width:30px; height:30px; padding:0; color:#0a0a0a; font-size:1.65rem; line-height:1; }
+ .page-social .post-actions button:hover, .page-social .post-actions .save:hover { color:#5f5f5f; }
+ .page-social .post-actions button.active, .page-social .post-actions .save.active { color:#ed4956; }
+ .page-social .post-stats { padding:0 14px 6px; gap:10px; color:#0a0a0a; font-size:.8rem; font-weight:700; }
+ .page-social .post-stats button { color:var(--social-muted); font-weight:500; }
+ .page-social .post-summary { padding:0 14px 10px; color:#262626; font-size:.84rem; line-height:1.45; }
+ .page-social .post-summary strong { margin-right:4px; }
+ .page-social .caption { display:inline; margin:0; color:#262626; font-size:inherit; }
+ .page-social .label { margin-top:6px; color:#00376b; font-size:.78rem; }
+ .page-social .product-attachment { display:flex; align-items:center; justify-content:space-between; gap:14px; margin:0 14px 10px; padding:11px 12px; border:1px solid var(--social-border); border-radius:7px; color:#0a0a0a; text-decoration:none; }
+ .page-social .product-attachment-copy { display:grid; min-width:0; gap:2px; }
+ .page-social .product-attachment-copy strong { overflow:hidden; font-size:.84rem; text-overflow:ellipsis; white-space:nowrap; }
+ .page-social .product-attachment-copy span { overflow:hidden; color:var(--social-muted); font-size:.72rem; text-overflow:ellipsis; white-space:nowrap; }
+ .page-social .product-attachment-action { flex:none; color:var(--social-blue); font-size:.76rem; font-weight:700; }
+ .page-social .post-gifts { padding:0 14px 8px; }
+ .page-social .comment-drawer { padding:0 14px 12px; gap:7px; }
+ .page-social .comment-row { font-size:.8rem; }
+ .page-social .comment-form { border-top:1px solid #efefef; gap:8px; padding-top:8px; }
+ .page-social .comment-form input { border:0; border-radius:0; padding:7px 0; font-size:.8rem; }
+ .page-social .comment-form input:focus { box-shadow:none; }
+ .page-social .comment-form button { padding:6px 0; border-radius:0; background:transparent; color:var(--social-blue); font-size:.8rem; }
+ .page-social .trending-panel { max-width:630px; padding:24px 14px; background:#fff; }
+ .page-social .trending-panel h2 { font-size:1rem; }
+ .page-social .trending-panel > p { margin-top:5px; color:var(--social-muted); font-size:.8rem; line-height:1.4; }
+ .page-social .trending-grid { grid-auto-flow:column; grid-auto-columns:76%; grid-template-columns:none; gap:10px; overflow-x:auto; padding-bottom:4px; }
+ .page-social .trending-card { border:1px solid var(--social-border); border-radius:8px; box-shadow:none; }
+ .page-social .trending-card img { height:130px; }
+ .page-social .trending-card-body { padding:12px; }
+ .page-social .trending-card p { font-size:.78rem; line-height:1.4; }
+ .social-bottom-nav { position:fixed; right:0; bottom:0; left:0; z-index:50; display:none; grid-template-columns:repeat(5,1fr); height:52px; padding-bottom:env(safe-area-inset-bottom); border-top:1px solid var(--social-border); background:rgba(255,255,255,.97); }
+ .social-bottom-nav a, .social-bottom-nav button { display:grid; place-items:center; border:0; background:transparent; color:#0a0a0a; text-decoration:none; cursor:pointer; }
+ .social-bottom-nav .active svg { fill:#0a0a0a; }
+ .social-sr-only { position:absolute; width:1px; height:1px; padding:0; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+ @media (max-width:767px) {
+	 .page-social .top-bar { padding:0 14px; }
+	 .page-social .nav-links { display:none; }
+	 .social-bottom-nav { display:grid; }
+	 .page-social .social-account-row { grid-template-columns:1fr; }
+	 .page-social .feed, .page-social .story-strip, .page-social .quick-compose, .page-social .emoji-overview, .page-social .trending-panel { width:100%; box-sizing:border-box; }
+ }
+ @media (min-width:768px) {
+	 body.page-social { padding-bottom:24px; }
+	 .page-social .top-bar { padding-right:max(24px,calc((100vw - 975px)/2)); padding-left:max(24px,calc((100vw - 975px)/2)); }
+	 .page-social .story-strip, .page-social .quick-compose, .page-social .emoji-overview, .page-social .feed, .page-social .trending-panel { border-right:1px solid var(--social-border); border-left:1px solid var(--social-border); }
  }
  </style>
 </head>
@@ -164,6 +269,10 @@
  <a href="map.html">Map</a>
  <a href="ride.html">City Rush</a>
  <a href="omenda-ai.html">Emoji AI</a>
+ </div>
+ <div class="social-top-actions">
+ <button type="button" data-open-compose aria-label="Create post" title="Create post"><i data-lucide="square-plus" aria-hidden="true"></i></button>
+ <a href="omenda-ai.html" aria-label="Messages" title="Messages"><i data-lucide="message-circle" aria-hidden="true"></i></a>
  </div>
  </div>
 
@@ -199,6 +308,7 @@
  <button type="button" data-compose-kind="status">Status</button>
  <button type="button" data-compose-kind="photo">Photo</button>
  <button type="button" data-compose-kind="product">Product</button>
+ <button type="button" id="profileToggle" aria-expanded="false">Profile</button>
  </div>
  <div class="social-account-row">
  <label class="profile-photo-control">Profile photo
@@ -337,6 +447,14 @@
  </div>
  </section>
 
+ <nav class="social-bottom-nav" aria-label="Social navigation">
+ <a href="social.html" class="active" aria-label="Home" title="Home"><i data-lucide="house" aria-hidden="true"></i><span class="social-sr-only">Home</span></a>
+ <a href="shop.html" aria-label="Marketplace" title="Marketplace"><i data-lucide="search" aria-hidden="true"></i><span class="social-sr-only">Marketplace</span></a>
+ <button type="button" data-open-compose aria-label="Create post" title="Create post"><i data-lucide="square-plus" aria-hidden="true"></i><span class="social-sr-only">Create post</span></button>
+ <a href="omenda-ai.html" aria-label="Emoji AI" title="Emoji AI"><i data-lucide="sparkles" aria-hidden="true"></i><span class="social-sr-only">Emoji AI</span></a>
+ <a href="about.html" aria-label="Profile" title="Profile"><i data-lucide="circle-user-round" aria-hidden="true"></i><span class="social-sr-only">Profile</span></a>
+ </nav>
+
  <div class="social-modal" id="storyViewer" aria-hidden="true">
  <div class="story-viewer-card" role="dialog" aria-modal="true" aria-label="Story viewer">
  <img id="storyViewerImage" src="" alt="Story preview">
@@ -356,6 +474,14 @@
  <form class="modal-body" id="postForm">
  <input id="postType" type="hidden" value="photo">
  <div class="post-type-note" id="postTypeNote">Photo post</div>
+ <div class="shop-product-picker">
+ <span>Share a marketplace product</span>
+ <a href="shop.html?socialSelect=1">Choose from Shop</a>
+ </div>
+ <div class="selected-shop-product" id="selectedShopProduct" aria-live="polite">
+ <img id="selectedShopProductImage" alt="Selected shop product">
+ <div><strong id="selectedShopProductTitle"></strong><span id="selectedShopProductMeta"></span></div>
+ </div>
  <label>Handle
  <input id="postHandle" maxlength="32" value="@OmendaCreator" autocomplete="off">
  </label>
@@ -563,11 +689,13 @@
  function postFor(card) { const id = card.dataset.postId; if (postIndex[id]) return postIndex[id]; const base = defaults[id] || { likes: 0, comments: 0 }; const handle = card.querySelector('.user-name') ? card.querySelector('.user-name').textContent.trim() : '@OmendaCreator'; return { id, handle, likeCount: base.likes, commentCount: base.comments, saveCount: 0, liked: false, saved: false, following: false, followerCount: 0, comments: [] }; }
  function dynamicTemplate(post) {
  const isStatus = post.postType === 'status' || !post.image;
+ const product = post.product;
+ const productAttachment = product && product.id && product.title ? `<a class="product-attachment" href="shop.html?product=${encodeURIComponent(product.id)}"><span class="product-attachment-copy"><strong>${esc(product.title)}</strong><span>${esc(product.brand || 'Independent seller')} · ${esc(product.category || 'Marketplace')}${product.price ? ` · ${esc(product.price)}` : ''}</span></span><span class="product-attachment-action">View product</span></a>` : '';
  return `<article class="post-card user-created-post ${isStatus ? 'status-post' : ''}" data-post-id="${esc(post.id)}">
  <div class="post-header"><img class="avatar" src="${esc(post.avatar || 'icon-192.svg')}" alt="${esc(post.handle)} profile"><div class="post-meta"><p class="user-name">${esc(post.handle)}</p><p class="user-sub">${esc(post.userSub || 'Omenda creator post')}</p></div><p class="post-time">${esc(timeAgo(post.createdAt))}</p></div>
  ${isStatus ? `<div class="status-post-body">${esc(post.caption)}</div>` : `<img class="post-image" src="${esc(post.image)}" alt="${esc(post.handle)} post">`}
  <div class="post-actions"><div class="action-buttons"><button aria-label="Like post">♡</button><button aria-label="Comment">💬</button><button aria-label="Share">📤</button></div><button class="save" aria-label="Save post">▱</button></div>
- <div class="post-summary"><strong>${esc(post.handle)}</strong> <span class="caption">${esc(post.caption)}</span><div class="label"><span>✨</span> ${esc(post.label || 'Community post')}</div></div><div class="post-gifts" data-gifts-for="${esc(post.id)}"></div></article>`;
+ <div class="post-summary"><strong>${esc(post.handle)}</strong> <span class="caption">${esc(post.caption)}</span><div class="label"><span>✨</span> ${esc(post.label || 'Community post')}</div></div>${productAttachment}<div class="post-gifts" data-gifts-for="${esc(post.id)}"></div></article>`;
  }
  function renderDynamicPosts() { const feed = document.querySelector('.feed'); if (!feed) return; feed.querySelectorAll('.user-created-post').forEach(el => el.remove()); const dynamic = posts.filter(post => seedIds.indexOf(post.id) === -1); if (dynamic.length) feed.insertAdjacentHTML('afterbegin', dynamic.map(dynamicTemplate).join('')); }
  function ensurePostChrome(card) { if (!card.querySelector('.post-stats')) card.querySelector('.post-actions').insertAdjacentHTML('afterend', '<div class="post-stats"></div>'); if (!card.querySelector('.comment-drawer')) card.querySelector('.post-summary').insertAdjacentHTML('afterend', '<div class="comment-drawer"></div>'); if (!card.querySelector('.follow-author')) card.querySelector('.post-header').insertAdjacentHTML('beforeend', '<button type="button" class="follow-author">Follow</button>'); }
@@ -606,19 +734,24 @@
  }
  function renderAll() { renderDynamicPosts(); document.querySelectorAll('.post-card').forEach(bindCard); }
  async function loadFeed() { try { const data = await api('/api/social/feed?viewer=' + encodeURIComponent(viewer())); posts = Array.isArray(data.posts) ? data.posts : []; postIndex = {}; posts.forEach(post => { postIndex[post.id] = post; }); if (data.account && data.account.avatar) { savePrefs({ viewerAvatar: data.account.avatar }); applyViewerAvatar(data.account.avatar); } setStatus('Public feed synced'); } catch (e) { setStatus('Offline browser mode'); } renderAll(); }
+ async function importPendingProduct() { let pending = null; try { pending = JSON.parse(localStorage.getItem('omendaPendingProductPost') || 'null'); } catch (e) {} if (!pending || !pending.productId) return; try { const data = await api('/api/social/posts', pending); mergePost(data.post); localStorage.removeItem('omendaPendingProductPost'); } catch (e) { mergePost({ id: 'pending-' + pending.productId, handle: pending.handle || viewer(), image: pending.image || '', caption: pending.caption || '', postType: 'photo', label: pending.label || 'Marketplace product', userSub: pending.userSub || 'Shared from Omenda Shop', avatar: viewerAvatar(), createdAt: new Date().toISOString(), likeCount: 0, commentCount: 0, saveCount: 0, comments: [], product: { id: pending.productId, title: pending.productTitle, brand: pending.productBrand, price: pending.productPrice, category: pending.productCategory } }); setStatus('Product ready in offline mode'); } }
  function bindComposer() {
+ let selectedProduct = null;
  const viewerInput = document.getElementById('viewerHandle'); if (viewerInput) viewerInput.value = prefs().viewerHandle;
  applyViewerAvatar(viewerAvatar());
  const avatarFile = document.getElementById('viewerAvatarFile'); if (avatarFile && !avatarFile.dataset.previewBound) { avatarFile.dataset.previewBound = '1'; avatarFile.addEventListener('change', () => { const file = avatarFile.files && avatarFile.files[0]; if (!file) { applyViewerAvatar(viewerAvatar()); return; } const preview = URL.createObjectURL(file); applyViewerAvatar(preview); setStatus('Profile photo ready - tap Use account'); }); }
- const imageFile = document.getElementById('postImageFile'); const imagePreview = document.getElementById('postImagePreview'); if (imageFile && imagePreview && !imageFile.dataset.previewBound) { imageFile.dataset.previewBound = '1'; imageFile.addEventListener('change', () => { const file = imageFile.files && imageFile.files[0]; if (!file) { imagePreview.classList.remove('active'); imagePreview.removeAttribute('src'); return; } imagePreview.src = URL.createObjectURL(file); imagePreview.classList.add('active'); }); }
+ const imageFile = document.getElementById('postImageFile'); const imagePreview = document.getElementById('postImagePreview');
+ function showSelectedProduct(product) { selectedProduct = product; const box = document.getElementById('selectedShopProduct'); if (!box) return; box.classList.toggle('active', Boolean(product)); if (!product) return; document.getElementById('selectedShopProductImage').src = product.image || ''; document.getElementById('selectedShopProductTitle').textContent = product.productTitle || 'Marketplace product'; document.getElementById('selectedShopProductMeta').textContent = [product.productBrand, product.productCategory, product.productPrice].filter(Boolean).join(' · '); imagePreview.src = product.image || ''; imagePreview.classList.toggle('active', Boolean(product.image)); document.getElementById('postCaption').value = product.caption || ''; }
+ try { const chosen = JSON.parse(localStorage.getItem('omendaSelectedShopProduct') || 'null'); if (chosen && chosen.productId) { showSelectedProduct(chosen); localStorage.removeItem('omendaSelectedShopProduct'); const modal = document.getElementById('postModal'); modal.classList.add('open'); modal.setAttribute('aria-hidden', 'false'); } } catch (e) {}
+ if (imageFile && imagePreview && !imageFile.dataset.previewBound) { imageFile.dataset.previewBound = '1'; imageFile.addEventListener('change', () => { const file = imageFile.files && imageFile.files[0]; if (!file) { imagePreview.classList.remove('active'); imagePreview.removeAttribute('src'); return; } showSelectedProduct(null); imagePreview.src = URL.createObjectURL(file); imagePreview.classList.add('active'); }); }
  const sync = document.getElementById('syncProfile'); if (sync) sync.addEventListener('click', async event => { event.preventDefault(); try { let avatar = viewerAvatar(); const file = avatarFile && avatarFile.files && avatarFile.files[0]; if (file) { setStatus('Uploading profile photo...'); avatar = await uploadImageFile(file); if (avatarFile) avatarFile.value = ''; } const handle = viewer(); savePrefs({ viewerAvatar: avatar }); applyViewerAvatar(avatar); await api('/api/social/accounts', { handle, name: handle.replace('@', ''), avatar }); await loadFeed(); } catch (e) { applyViewerAvatar(viewerAvatar()); setStatus(e.message || 'Offline browser mode'); } });
  function setPostType(type) { const postType = document.getElementById('postType'); const note = document.getElementById('postTypeNote'); if (postType) postType.value = type === 'status' ? 'status' : 'photo'; if (note) note.textContent = type === 'status' ? 'Status post - image optional' : 'Photo post'; }
  document.querySelectorAll('[data-compose-kind]').forEach(btn => { if (!btn.dataset.serverTypeBound) { btn.dataset.serverTypeBound = '1'; btn.addEventListener('click', event => { event.preventDefault(); event.stopImmediatePropagation(); setPostType(btn.dataset.composeKind === 'status' ? 'status' : 'photo'); if (btn.dataset.composeKind === 'status') document.getElementById('postCaption').value = ''; if (btn.dataset.composeKind === 'product') document.getElementById('postCaption').value = 'New Omenda product drop available in the marketplace.'; const modal = document.getElementById('postModal'); if (modal) { modal.classList.add('open'); modal.setAttribute('aria-hidden', 'false'); } }, true); } });
  const composeOpen = document.getElementById('composeOpen'); if (composeOpen && !composeOpen.dataset.serverTypeBound) { composeOpen.dataset.serverTypeBound = '1'; composeOpen.addEventListener('click', () => setPostType('photo'), true); }
  const form = document.getElementById('postForm');
- if (form && !form.dataset.serverBound) { form.dataset.serverBound = '1'; form.addEventListener('submit', async event => { event.preventDefault(); event.stopImmediatePropagation(); const handle = normalizeHandle(document.getElementById('postHandle').value || viewer()); const postType = document.getElementById('postType').value === 'status' ? 'status' : 'photo'; const caption = document.getElementById('postCaption').value.trim() || (postType === 'status' ? 'New status update.' : 'New Omenda social post.'); let image = ''; try { image = postType === 'status' ? await uploadSelectedImage() : (await uploadSelectedImage() || 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1200&auto=format&fit=crop'); const data = await api('/api/social/posts', { handle, image, caption, postType, label: postType === 'status' ? 'Status update' : 'Community post', name: handle.replace('@', '') }); mergePost(data.post); } catch (e) { image = postType === 'status' ? image : (image || 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1200&auto=format&fit=crop'); mergePost({ id: 'post-' + Date.now(), handle, image, caption, postType, label: postType === 'status' ? 'Status update' : 'Community post', avatar: 'icon-192.svg', createdAt: new Date().toISOString(), likeCount: 0, commentCount: 0, saveCount: 0, comments: [] }); setStatus(e.message || 'Post saved in offline mode'); } form.reset(); setPostType('photo'); if (imagePreview) { imagePreview.classList.remove('active'); imagePreview.removeAttribute('src'); } document.getElementById('postHandle').value = viewer(); const modal = document.getElementById('postModal'); if (modal) { modal.classList.remove('open'); modal.setAttribute('aria-hidden', 'true'); } renderAll(); }, true); }
+ if (form && !form.dataset.serverBound) { form.dataset.serverBound = '1'; form.addEventListener('submit', async event => { event.preventDefault(); event.stopImmediatePropagation(); const handle = normalizeHandle(document.getElementById('postHandle').value || viewer()); const postType = document.getElementById('postType').value === 'status' ? 'status' : 'photo'; const caption = document.getElementById('postCaption').value.trim() || (postType === 'status' ? 'New status update.' : 'New Omenda social post.'); let image = ''; const productFields = selectedProduct ? { productId: selectedProduct.productId, productTitle: selectedProduct.productTitle, productBrand: selectedProduct.productBrand, productPrice: selectedProduct.productPrice, productCategory: selectedProduct.productCategory } : {}; try { image = selectedProduct && selectedProduct.image ? selectedProduct.image : (postType === 'status' ? await uploadSelectedImage() : (await uploadSelectedImage() || 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1200&auto=format&fit=crop')); const payload = Object.assign({ handle, image, caption, postType, label: selectedProduct ? 'Marketplace product' : (postType === 'status' ? 'Status update' : 'Community post'), userSub: selectedProduct ? 'Shared from Omenda Shop' : 'Omenda creator post', name: handle.replace('@', '') }, productFields); const data = await api('/api/social/posts', payload); mergePost(data.post); } catch (e) { image = postType === 'status' ? image : (image || 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1200&auto=format&fit=crop'); mergePost({ id: 'post-' + Date.now(), handle, image, caption, postType, label: selectedProduct ? 'Marketplace product' : (postType === 'status' ? 'Status update' : 'Community post'), avatar: 'icon-192.svg', createdAt: new Date().toISOString(), likeCount: 0, commentCount: 0, saveCount: 0, comments: [], product: selectedProduct ? { id: selectedProduct.productId, title: selectedProduct.productTitle, brand: selectedProduct.productBrand, price: selectedProduct.productPrice, category: selectedProduct.productCategory } : undefined }); setStatus(e.message || 'Post saved in offline mode'); } form.reset(); showSelectedProduct(null); setPostType('photo'); if (imagePreview) { imagePreview.classList.remove('active'); imagePreview.removeAttribute('src'); } document.getElementById('postHandle').value = viewer(); const modal = document.getElementById('postModal'); if (modal) { modal.classList.remove('open'); modal.setAttribute('aria-hidden', 'true'); } renderAll(); }, true); }
  }
- function init() { bindComposer(); loadFeed(); }
+ async function init() { bindComposer(); await importPendingProduct(); await loadFeed(); }
  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
  })();
 
@@ -748,6 +881,24 @@
  if (e.key === 'omendaSocialPing') fetchServer();
  });
  setInterval(fetchServer, 3000);
+ })();
+
+ (function omendaSocialShell() {
+ function init() {
+ if (window.lucide) window.lucide.createIcons();
+ const composeButton = document.getElementById('composeOpen');
+ document.querySelectorAll('[data-open-compose]').forEach(button => {
+ button.addEventListener('click', () => composeButton.click());
+ });
+ const profileToggle = document.getElementById('profileToggle');
+ const composer = document.querySelector('.quick-compose');
+ profileToggle.addEventListener('click', () => {
+ const isOpen = composer.classList.toggle('profile-open');
+ profileToggle.setAttribute('aria-expanded', String(isOpen));
+ profileToggle.textContent = isOpen ? 'Close' : 'Profile';
+ });
+ }
+ if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
  })();
  </script>
 </body>
