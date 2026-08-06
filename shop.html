@@ -470,7 +470,7 @@ function carMediaModelKey(entry,company){
 function decodeCarMedia(url){
   return new Promise(function(resolve){
     var image=new Image();
-    var timer=setTimeout(function(){resolve(false)},10000);
+    var timer=setTimeout(function(){resolve(false)},6000);
     image.onload=function(){clearTimeout(timer);resolve(image.naturalWidth>0)};
     image.onerror=function(){clearTimeout(timer);resolve(false)};
     image.src=url;
@@ -499,14 +499,22 @@ async function fetchCarMediaCandidates(company){
 }
 async function fetchVerifiedCarMedia(company){
   var entries=await fetchCarMediaCandidates(company);
-  var decoded=await Promise.all(entries.slice(0,60).map(function(entry){return decodeCarMedia(entry.url)}));
-  return entries.slice(0,60).filter(function(entry,index){return decoded[index]});
+  if(!entries.length)return entries;
+  // Decode in small throttled batches so we don't trigger Wikimedia rate limiting (HTTP 429).
+  // Fall back to the metadata-verified candidates if decoding drops too many, so a valid
+  // showroom never collapses into "unavailable" just because the browser was throttled.
+  var verified=[];
+  for(var i=0;i<entries.length&&verified.length<20;i+=6){
+    var batch=entries.slice(i,i+6);
+    var decoded=await Promise.all(batch.map(function(entry){return decodeCarMedia(entry.url)}));
+    batch.forEach(function(entry,index){if(decoded[index])verified.push(entry)});
+  }
+  return verified.length>=6?verified:entries;
 }
 async function ensureCarCompanyShowroom(company){
   if(!company||company==="All companies")return true;
   if(marketProducts.some(function(product){return product.showroomCompany===company}))return true;
   var verifiedMedia=await fetchVerifiedCarMedia(company);
-  if(verifiedMedia.length<15)verifiedMedia=await fetchVerifiedCarMedia(company);
   if(!verifiedMedia.length)throw new Error("No verified "+company+" vehicle images were found");
   var key=carShowroomKey(company);
   var seed=carShowroomNumber(company);
