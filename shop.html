@@ -329,6 +329,127 @@ var marketProducts = [
   {id:"re10",title:"Shopping Mall Retail Unit 200sqm",price:"\u03C020.0",stat:"Prime Location",brand:"MallSpace Ltd",moq:"1 Unit",audited:true,secured:true,inStock:false,yrs:"15yrs",responseTime:"\u22641h",image:"https://images.unsplash.com/photo-1567449303078-57ad995bd329?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1567449303078-57ad995bd329?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1524758631624-e2822e304c36?q=80&w=400&auto=format&fit=crop"],tag:"Investment",tagColor:"#059669",category:"Real Estate"}
 ];
 
+(function addAircraftMarketplace(){
+  var viewLabels=["Exterior view","Left-side view","Right-side view","Flight view","Cockpit / inspection view"];
+  var fallbackImages=["assets/aircraft/cessna-172.webp","assets/aircraft/piper-pa28.webp","assets/aircraft/bush-plane.webp","assets/aircraft/ultralight.webp","assets/aircraft/cirrus-sr22.webp","assets/aircraft/robinson-r44.jpg"];
+  var aircraft=[
+    ["air-cessna-172","Cessna 172 Skyhawk","\u03C00.42","Single engine","4 seats","2018","1,185 km","Lycoming IO-360-L2A · 180 hp","Textron Aviation · Cessna","Savanna Air Sales","Nairobi, Kenya",["assets/aircraft/cessna-172.webp","https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Cessna172-CatalinaTakeOff.JPG/960px-Cessna172-CatalinaTakeOff.JPG","https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Cessna_172S_Skyhawk_%E2%80%98G-JMKE%E2%80%99_%2845077563364%29.jpg/960px-Cessna_172S_Skyhawk_%E2%80%98G-JMKE%E2%80%99_%2845077563364%29.jpg","https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/N448CP_20201006_KCON_corrected_2000px.png/960px-N448CP_20201006_KCON_corrected_2000px.png","https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/OK-EKR_zespodu.jpg/960px-OK-EKR_zespodu.jpg"]],
+    ["air-piper-pa28","Piper PA-28 Cherokee","\u03C00.35","Trainer","4 seats","2016","1,000 km","Lycoming O-360-A4M · 180 hp","Piper Aircraft","East Africa Flight Centre","Arusha, Tanzania",["assets/aircraft/piper-pa28.webp","https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/PIPER_PA28_181_CHEROKEE_ARCHER_III.jpg/960px-PIPER_PA28_181_CHEROKEE_ARCHER_III.jpg","https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Piper_PA28-181_Archer_II_%E2%80%98G-BXEX%E2%80%99_%2844034123880%29.jpg/960px-Piper_PA28-181_Archer_II_%E2%80%98G-BXEX%E2%80%99_%2844034123880%29.jpg","https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Piper_Archer%2C_Trebbin_%28P1090112%29.jpg/960px-Piper_Archer%2C_Trebbin_%28P1090112%29.jpg","https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Cockpit_Piper_PA-28_C-FGMX2.jpg/960px-Cockpit_Piper_PA-28_C-FGMX2.jpg"]],
+    ["air-cub","Piper PA-18 Super Cub","\u03C00.28","Bush plane","2 seats","2021","740 km","Lycoming O-320 · 150 hp","Piper Aircraft","Rift Aviation","Naivasha, Kenya",["assets/aircraft/bush-plane.webp","https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Piper_Super_Cub_1_1998-07-07.jpg/960px-Piper_Super_Cub_1_1998-07-07.jpg","https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/PA-18_135-150_HP_Super_Cub_OO-LFM.jpg/960px-PA-18_135-150_HP_Super_Cub_OO-LFM.jpg","https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Piper_PA-18-150_Super_Cub_lands_RIAT_Fairford_13July2017_arp.jpg/960px-Piper_PA-18-150_Super_Cub_lands_RIAT_Fairford_13July2017_arp.jpg","https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/JA3117_%2810794648475%29.jpg/960px-JA3117_%2810794648475%29.jpg"]],
+    ["air-ultralight","Aeroprakt A-22 Foxbat","\u03C00.14","Ultralight","2 seats","2022","520 km","Rotax 912 ULS · 100 hp","Aeroprakt","Coastal Light Aircraft","Mombasa, Kenya",["assets/aircraft/ultralight.webp","https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Aeroprakt_22_AN0191549.jpg/960px-Aeroprakt_22_AN0191549.jpg","https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Aeroprakt_22_AN0191215.jpg/960px-Aeroprakt_22_AN0191215.jpg","https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Aeroprakt-22L_in_flight_%287400304928%29.jpg/960px-Aeroprakt-22L_in_flight_%287400304928%29.jpg","https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/24-4883_Aeroprakt_A22L_Foxbat_%2810668282663%29.jpg/960px-24-4883_Aeroprakt_A22L_Foxbat_%2810668282663%29.jpg"]],
+    ["air-cirrus-sr22","Cirrus SR22 Touring","\u03C00.78","Single engine","5 seats","2019","2,166 km","Continental IO-550-N · 310 hp","Cirrus Aircraft","Global Wings","Kigali, Rwanda",["assets/aircraft/cirrus-sr22.webp","https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Cirrus_SR-22_G3_GTS_AN1594917.jpg/960px-Cirrus_SR-22_G3_GTS_AN1594917.jpg","https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/SR22_N456DC_Over_North_Las_Vegas_Neighborhood.jpg/960px-SR22_N456DC_Over_North_Las_Vegas_Neighborhood.jpg","https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Cirrus_Design_Corp_%28N20GH%29_Cirrus_SR22T_G7_GTS_taxiing_at_Wagga_Wagga_Airport.jpg/960px-Cirrus_Design_Corp_%28N20GH%29_Cirrus_SR22T_G7_GTS_taxiing_at_Wagga_Wagga_Airport.jpg","https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Cirrus_SR22_interior.jpg/960px-Cirrus_SR22_interior.jpg"]],
+    ["air-robinson-r44","Robinson R44 Raven","\u03C00.69","Helicopter","4 seats","2017","560 km","Lycoming IO-540-AE1A5 · 245 hp","Robinson Helicopter Company","Lake Region Rotorcraft","Kampala, Uganda",["assets/aircraft/robinson-r44.jpg","https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Robinson_R44_Raven_II_Bakoma.JPG/960px-Robinson_R44_Raven_II_Bakoma.JPG","https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Robinson_R44_Stra%C5%BC_Graniczna_Polish_Border_Guard.jpg/960px-Robinson_R44_Stra%C5%BC_Graniczna_Polish_Border_Guard.jpg","https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/2021-10-26_R44_Helicopter_001.jpg/960px-2021-10-26_R44_Helicopter_001.jpg","https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Robinson_R44_cockpit.JPG/960px-Robinson_R44_cockpit.JPG"]]
+  ];
+  var additionalAircraft=[
+    ["cessna-150","Cessna 150","\u03C00.18","Trainer","2 seats","1977","780 km","Continental O-200-A · 100 hp","Cessna Aircraft","Savanna Air Sales","Nairobi, Kenya"],
+    ["cessna-152","Cessna 152","\u03C00.22","Trainer","2 seats","1985","768 km","Lycoming O-235-L2C · 110 hp","Cessna Aircraft","East Africa Flight Centre","Arusha, Tanzania"],
+    ["cessna-182t","Cessna 182T Skylane","\u03C00.64","Single engine","4 seats","2020","1,695 km","Lycoming IO-540-AB1A5 · 230 hp","Textron Aviation · Cessna","Savanna Air Sales","Nairobi, Kenya"],
+    ["cessna-206h","Cessna 206H Stationair","\u03C00.71","Utility aircraft","6 seats","2019","1,350 km","Lycoming IO-540-AC1A5 · 300 hp","Textron Aviation · Cessna","Rift Aviation","Naivasha, Kenya"],
+    ["cessna-caravan","Cessna 208B Grand Caravan EX","\u03C02.40","Utility turboprop","14 seats","2021","1,689 km","Pratt & Whitney PT6A-140 · 867 shp","Textron Aviation · Cessna","Global Wings","Kigali, Rwanda"],
+    ["piper-archer-dx","Piper Archer DX","\u03C00.52","Trainer","4 seats","2021","1,185 km","Continental CD-155 · 155 hp","Piper Aircraft","East Africa Flight Centre","Arusha, Tanzania"],
+    ["piper-seminole","Piper PA-44 Seminole","\u03C00.83","Multi-engine trainer","4 seats","2020","1,630 km","2× Lycoming L/O-360 · 180 hp each","Piper Aircraft","Lake Region Rotorcraft","Kampala, Uganda"],
+    ["piper-seneca-v","Piper Seneca V","\u03C01.15","Twin piston","6 seats","2019","1,534 km","2× Continental TSIO-360 · 220 hp each","Piper Aircraft","Global Wings","Kigali, Rwanda"],
+    ["piper-m350","Piper M350","\u03C01.42","Single engine","6 seats","2020","2,487 km","Lycoming TIO-540-AE2A · 350 hp","Piper Aircraft","Savanna Air Sales","Nairobi, Kenya"],
+    ["piper-m500","Piper M500","\u03C02.18","Turboprop","6 seats","2021","1,852 km","Pratt & Whitney PT6A-42A · 500 shp","Piper Aircraft","Global Wings","Kigali, Rwanda"],
+    ["piper-m600","Piper M600 SLS","\u03C03.05","Turboprop","6 seats","2022","3,071 km","Pratt & Whitney PT6A-42A · 600 shp","Piper Aircraft","Global Wings","Kigali, Rwanda"],
+    ["beech-bonanza-g36","Beechcraft Bonanza G36","\u03C00.91","Single engine","6 seats","2020","1,700 km","Continental IO-550-B · 300 hp","Textron Aviation · Beechcraft","Savanna Air Sales","Nairobi, Kenya"],
+    ["beech-baron-g58","Beechcraft Baron G58","\u03C01.48","Twin piston","6 seats","2021","2,741 km","2× Continental IO-550-C · 300 hp each","Textron Aviation · Beechcraft","Global Wings","Kigali, Rwanda"],
+    ["king-air-260","Beechcraft King Air 260","\u03C05.90","Turboprop","9 seats","2022","3,185 km","2× Pratt & Whitney PT6A-52 · 850 shp each","Textron Aviation · Beechcraft","Continental Aircraft Sales","Johannesburg, South Africa"],
+    ["king-air-360","Beechcraft King Air 360","\u03C08.10","Turboprop","11 seats","2022","3,345 km","2× Pratt & Whitney PT6A-60A · 1,050 shp each","Textron Aviation · Beechcraft","Continental Aircraft Sales","Johannesburg, South Africa"],
+    ["diamond-da20","Diamond DA20-C1","\u03C00.31","Trainer","2 seats","2019","972 km","Continental IO-240-B · 125 hp","Diamond Aircraft","East Africa Flight Centre","Arusha, Tanzania"],
+    ["diamond-da40","Diamond DA40 NG","\u03C00.58","Trainer","4 seats","2021","1,741 km","Austro Engine AE300 · 168 hp","Diamond Aircraft","Savanna Air Sales","Nairobi, Kenya"],
+    ["diamond-da42","Diamond DA42-VI","\u03C00.96","Twin piston","4 seats","2020","2,250 km","2× Austro Engine AE300 · 168 hp each","Diamond Aircraft","Global Wings","Kigali, Rwanda"],
+    ["diamond-da50","Diamond DA50 RG","\u03C01.28","Single engine","5 seats","2022","1,389 km","Continental CD-300 · 300 hp","Diamond Aircraft","Global Wings","Kigali, Rwanda"],
+    ["diamond-da62","Diamond DA62","\u03C01.62","Twin piston","7 seats","2021","2,376 km","2× Austro Engine AE330 · 180 hp each","Diamond Aircraft","Continental Aircraft Sales","Johannesburg, South Africa"],
+    ["cirrus-sr20","Cirrus SR20","\u03C00.61","Trainer","5 seats","2020","1,454 km","Lycoming IO-390-C3B6 · 215 hp","Cirrus Aircraft","Global Wings","Kigali, Rwanda"],
+    ["cirrus-vision-jet","Cirrus Vision Jet SF50","\u03C03.25","Personal jet","7 seats","2022","2,361 km","Williams FJ33-5A · 1,846 lbf","Cirrus Aircraft","Continental Aircraft Sales","Johannesburg, South Africa"],
+    ["tecnam-p2002","Tecnam P2002 Sierra","\u03C00.24","Light sport","2 seats","2020","1,065 km","Rotax 912 S2 · 100 hp","Tecnam Aircraft","Coastal Light Aircraft","Mombasa, Kenya"],
+    ["tecnam-p2006t","Tecnam P2006T","\u03C00.72","Multi-engine trainer","4 seats","2021","1,239 km","2× Rotax 912 S3 · 100 hp each","Tecnam Aircraft","East Africa Flight Centre","Arusha, Tanzania"],
+    ["tecnam-p2010","Tecnam P2010","\u03C00.53","Single engine","4 seats","2021","1,222 km","Lycoming IO-390-C3B6 · 215 hp","Tecnam Aircraft","Savanna Air Sales","Nairobi, Kenya"],
+    ["tecnam-p2012","Tecnam P2012 Traveller","\u03C02.35","Commuter aircraft","11 seats","2022","1,763 km","2× Lycoming TEO-540-C1A · 375 hp each","Tecnam Aircraft","Regional Air Traders","Dar es Salaam, Tanzania"],
+    ["pilatus-pc6","Pilatus PC-6 Porter","\u03C01.75","Bush plane","10 seats","2018","1,612 km","Pratt & Whitney PT6A-27 · 550 shp","Pilatus Aircraft","Rift Aviation","Naivasha, Kenya"],
+    ["pilatus-pc12","Pilatus PC-12 NGX","\u03C05.65","Turboprop","10 seats","2022","3,417 km","Pratt & Whitney PT6E-67XP · 1,200 shp","Pilatus Aircraft","Continental Aircraft Sales","Johannesburg, South Africa"],
+    ["pilatus-pc24","Pilatus PC-24","\u03C10.70","Business jet","11 seats","2022","3,704 km","2× Williams FJ44-4A · 3,420 lbf each","Pilatus Aircraft","Continental Aircraft Sales","Johannesburg, South Africa"],
+    ["daher-tbm960","Daher TBM 960","\u03C04.80","Turboprop","6 seats","2023","3,204 km","Pratt & Whitney PT6E-66XT · 850 shp","Daher","Global Wings","Kigali, Rwanda"],
+    ["daher-kodiak100","Daher Kodiak 100","\u03C02.65","Bush plane","10 seats","2021","2,096 km","Pratt & Whitney PT6A-34 · 750 shp","Daher","Rift Aviation","Naivasha, Kenya"],
+    ["daher-kodiak900","Daher Kodiak 900","\u03C03.55","Utility turboprop","10 seats","2023","2,083 km","Pratt & Whitney PT6A-140A · 900 shp","Daher","Regional Air Traders","Dar es Salaam, Tanzania"],
+    ["phenom-100ev","Embraer Phenom 100EV","\u03C04.95","Light jet","7 seats","2021","2,182 km","2× Pratt & Whitney PW617F1-E · 1,730 lbf","Embraer Executive Jets","Continental Aircraft Sales","Johannesburg, South Africa"],
+    ["phenom-300e","Embraer Phenom 300E","\u03C11.20","Light jet","10 seats","2022","3,724 km","2× Pratt & Whitney PW535E1 · 3,478 lbf","Embraer Executive Jets","Continental Aircraft Sales","Johannesburg, South Africa"],
+    ["hondajet-elite-ii","HondaJet Elite II","\u03C07.15","Light jet","8 seats","2023","2,865 km","2× GE Honda HF120 · 2,050 lbf","Honda Aircraft Company","Continental Aircraft Sales","Johannesburg, South Africa"],
+    ["gulfstream-g280","Gulfstream G280","\u03C24.50","Business jet","19 seats","2021","6,667 km","2× Honeywell HTF7250G · 7,624 lbf","Gulfstream Aerospace","Executive Air Africa","Cape Town, South Africa"],
+    ["challenger-3500","Bombardier Challenger 3500","\u03C27.80","Business jet","10 seats","2023","6,297 km","2× Honeywell HTF7350 · 7,323 lbf","Bombardier Aviation","Executive Air Africa","Cape Town, South Africa"],
+    ["robinson-r22","Robinson R22 Beta II","\u03C00.32","Helicopter","2 seats","2019","463 km","Lycoming O-360-J2A · 131 hp","Robinson Helicopter Company","Lake Region Rotorcraft","Kampala, Uganda"],
+    ["robinson-r66","Robinson R66 Turbine","\u03C01.18","Helicopter","5 seats","2021","648 km","Rolls-Royce RR300 · 300 shp","Robinson Helicopter Company","Lake Region Rotorcraft","Kampala, Uganda"],
+    ["airbus-h125","Airbus H125","\u03C02.85","Helicopter","7 seats","2021","630 km","Safran Arriel 2D · 952 shp","Airbus Helicopters","Lake Region Rotorcraft","Kampala, Uganda"],
+    ["airbus-h130","Airbus H130","\u03C03.25","Helicopter","8 seats","2022","610 km","Safran Arriel 2D · 952 shp","Airbus Helicopters","Regional Rotorcraft","Nairobi, Kenya"],
+    ["bell-505","Bell 505 Jet Ranger X","\u03C01.45","Helicopter","5 seats","2021","617 km","Safran Arrius 2R · 505 shp","Bell Textron","Regional Rotorcraft","Nairobi, Kenya"],
+    ["bell-407gxi","Bell 407GXi","\u03C03.35","Helicopter","7 seats","2022","624 km","Rolls-Royce 250-C47E/4 · 862 shp","Bell Textron","Regional Rotorcraft","Nairobi, Kenya"],
+    ["cabri-g2","Guimbal Cabri G2","\u03C00.46","Helicopter trainer","2 seats","2020","700 km","Lycoming O-360-J2A · 145 hp","Hélicoptères Guimbal","East Africa Flight Centre","Arusha, Tanzania"]
+  ];
+  additionalAircraft.forEach(function(item,index){
+    var images=[];
+    for(var imageIndex=0;imageIndex<5;imageIndex++)images.push(fallbackImages[(index+imageIndex)%fallbackImages.length]);
+    aircraft.push(["air-"+item[0],item[1],item[2],item[3],item[4],item[5],item[6],item[7],item[8],item[9],item[10],images,item[1]]);
+  });
+  aircraft.forEach(function(item){
+    marketProducts.push({id:item[0],title:item[1],price:item[2],stat:item[3]+" · "+item[4]+" · "+item[6],brand:item[8],seller:item[9],moq:"1 Aircraft",audited:true,secured:true,inStock:true,yrs:item[9],responseTime:"\u22641h",image:item[11][0],images:item[11],imageLabels:viewLabels,capacity:item[7],powertrain:item[3]+" · "+item[4]+" · "+item[6],manufactured:item[5],manufacturingLocation:item[10],galleryQuery:item[12]||"",category:"Aircraft",tag:"Aircraft sale",tagColor:"#176b52"});
+  });
+  var galleryCacheKey="omendaAircraftGallery:v1";
+  var galleryAliases={
+    "air-piper-m600":"Piper M600",
+    "air-beech-bonanza-g36":"Beechcraft Bonanza",
+    "air-king-air-360":"Beechcraft King Air",
+    "air-diamond-da50":"Diamond DA50",
+    "air-cirrus-vision-jet":"Cirrus Vision Jet",
+    "air-daher-kodiak100":"Quest Kodiak",
+    "air-daher-kodiak900":"Daher Kodiak",
+    "air-phenom-100ev":"Embraer Phenom 100"
+  };
+  function loadGalleryCache(){try{return JSON.parse(localStorage.getItem(galleryCacheKey)||"{}")}catch(error){return{}}}
+  function saveGalleryCache(cache){try{localStorage.setItem(galleryCacheKey,JSON.stringify(cache))}catch(error){}}
+  function requestAircraftModelImages(query){
+    var params=new URLSearchParams({action:"query",generator:"search",gsrsearch:'"'+query+'" filetype:bitmap',gsrnamespace:"6",gsrlimit:"24",prop:"imageinfo",iiprop:"url",iiurlwidth:"960",format:"json",origin:"*"});
+    return fetch("https://commons.wikimedia.org/w/api.php?"+params.toString()).then(function(response){return response.ok?response.json():null}).then(function(data){
+      var pages=data&&data.query&&data.query.pages?Object.values(data.query.pages):[];
+      var urls=[];
+      pages.forEach(function(page){
+        var info=page.imageinfo&&page.imageinfo[0];
+        var url=info&&(info.thumburl||info.url);
+        if(!url||/\b(logo|diagram|drawing|silhouette|toy|model kit)\b/i.test(page.title||"")||urls.indexOf(url)!==-1)return;
+        urls.push(url);
+      });
+      return urls.slice(0,5);
+    }).catch(function(){return[]});
+  }
+  function fetchAircraftModelGallery(product){
+    return requestAircraftModelImages(product.galleryQuery).then(function(images){
+      var alias=galleryAliases[product.id];
+      if(images.length===5||!alias)return images;
+      return requestAircraftModelImages(alias).then(function(aliasImages){
+        aliasImages.forEach(function(url){if(images.indexOf(url)===-1)images.push(url)});
+        return images.slice(0,5);
+      });
+    });
+  }
+  function hydrateAircraftModelGalleries(){
+    var cache=loadGalleryCache();
+    var pending=marketProducts.filter(function(product){
+      if(product.category!=="Aircraft"||!product.galleryQuery)return false;
+      if(Array.isArray(cache[product.id])&&cache[product.id].length===5){product.images=cache[product.id];product.image=cache[product.id][0];return false}
+      return true;
+    });
+    if(!pending.length){if(activeTab==="Aircraft")render();return}
+    var batchIndex=0;
+    function nextBatch(){
+      var batch=pending.slice(batchIndex,batchIndex+4);
+      if(!batch.length){saveGalleryCache(cache);if(activeTab==="Aircraft")render();return}
+      Promise.all(batch.map(function(product){return fetchAircraftModelGallery(product).then(function(images){if(images.length===5){product.images=images;product.image=images[0];cache[product.id]=images}})})).then(function(){batchIndex+=4;saveGalleryCache(cache);nextBatch()});
+    }
+    nextBatch();
+  }
+  window.setTimeout(hydrateAircraftModelGalleries,50);
+})();
+
 /* Abarth showroom: front, left side, right side, dashboard, and interior. */
 (function addAbarthShowroom(){
   var abarthGalleries={
@@ -1093,7 +1214,7 @@ var flights = [
   {id:"fl6",airline:"Turkish Airlines",icon:"\uD83C\uDDF9\uD83C\uDDF7",from:"DAR",to:"CDG",price:"0.004 \u03C0",duration:"12h 45m",image:"assets/airlines/turkish-airlines.webp"}
 ];
 
-var allCategories = ["All","Electronics","Fashion","Home & Garden","Cars","Real Estate","Hotels","Properties","Transport","Bills"];
+var allCategories = ["All","Electronics","Fashion","Home & Garden","Cars","Aircraft","Real Estate","Hotels","Properties","Transport","Bills"];
 var carCompanies = [
   "All companies","Abarth","Acura","Alfa Romeo","Alpine","Aston Martin","Audi","Baojun","Bentley","BMW","Bugatti","Buick","BYD","Cadillac","Changan","Chevrolet","Chery","Chrysler","Citroen","Cupra","Dacia","Daihatsu","Dodge","Dongfeng","FAW","Ferrari","Fiat","Ford","Geely","Genesis","GMC","Great Wall","Haval","Honda","Hongqi","Hyundai","Infiniti","Isuzu","JAC","Jaguar","Jeep","Jetour","Kia","Koenigsegg","Lada","Lamborghini","Land Rover","Leapmotor","Lexus","Lincoln","Lotus","Lucid","Mahindra","Maserati","Mazda","McLaren","Mercedes-Benz","MG","Mini","Mitsubishi","Nio","Nissan","Opel","Pagani","Perodua","Peugeot","Polestar","Porsche","Proton","Ram","Renault","Rivian","Rolls-Royce","Rox","Seat","Skoda","Smart","Subaru","Suzuki","Tata","Tesla","Toyota","Vauxhall","VinFast","Volkswagen","Volvo","XPeng","Zeekr"
 ];
@@ -1102,6 +1223,7 @@ var carCompanies = [
 var activeTab = "All";
 var activeCarCompany = "All companies";
 var carCompanyLoadMessage = "";
+var cachedCarShowroomsRestored = false;
 var searchQuery = "";
 var modalImgIdx = 0;
 var selectedProduct = null;
@@ -1145,18 +1267,25 @@ function syncSellerProducts(){
     if(marketProducts.some(function(p){return p.id===id}))return;
     var price=String(row.price||'0').trim();
     if(price.charAt(0)!=='π')price='π'+price;
+    var sellerImages=Array.isArray(row.images)&&row.images.length?row.images.filter(Boolean):[row.image].filter(Boolean);
+    var fallbackImage='https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=400&auto=format&fit=crop';
+    if(!sellerImages.length)sellerImages=[fallbackImage];
     marketProducts.unshift({
       id:id,
       title:row.title,
       price:price,
       stat:'Seller post',
       brand:row.brand||'Independent seller',
-      moq:'1 Piece',
+      moq:row.category==='Aircraft'?'1 Aircraft':'1 Piece',
       audited:false,
       secured:false,
       inStock:true,
-      image:row.image||'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=400&auto=format&fit=crop',
-      images:[row.image||'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=400&auto=format&fit=crop'],
+      image:sellerImages[0],
+      images:sellerImages,
+      capacity:row.engine||'',
+      powertrain:row.category==='Aircraft'?[row.aircraftType,row.seats,row.range].filter(Boolean).join(' · '):'',
+      manufactured:row.year||'',
+      manufacturingLocation:row.location||'',
       category:row.category||'Electronics',
       owner:'local-seller',
       description:row.description||''
@@ -1307,11 +1436,51 @@ function renderStars(r,cnt){
 }
 var bmActiveCat='All';
 function setBmCat(c){bmActiveCat=c;render()}
+function mixProductsByGroup(products,getGroup){
+  var groupOrder=[];
+  var groupedProducts={};
+  products.forEach(function(product){
+    var group=getGroup(product)||'Other';
+    if(!groupedProducts[group]){
+      groupedProducts[group]=[];
+      groupOrder.push(group);
+    }
+    groupedProducts[group].push(product);
+  });
+  var mixed=[];
+  var productIndex=0;
+  var added=true;
+  while(added){
+    added=false;
+    groupOrder.forEach(function(group){
+      if(groupedProducts[group][productIndex]){
+        mixed.push(groupedProducts[group][productIndex]);
+        added=true;
+      }
+    });
+    productIndex++;
+  }
+  return mixed;
+}
+function mixProductsByCategory(products){
+  return mixProductsByGroup(products,function(product){return product.category});
+}
+function mixProductsByCarCompany(products){
+  return mixProductsByGroup(products,getCarCompany);
+}
+function mixCarsWithinProducts(products){
+  var mixedCars=mixProductsByCarCompany(products.filter(function(product){return product.category==='Cars'}));
+  var carIndex=0;
+  return products.map(function(product){
+    return product.category==='Cars'?mixedCars[carIndex++]:product;
+  });
+}
 
 /* ══════════════════════════════════════════════════════════════
    RENDER
    ══════════════════════════════════════════════════════════════ */
 function render(){
+  if(activeTab==="All"||activeTab==="Cars")restoreCachedCarShowrooms();
   syncSellerProducts();
   var q=searchQuery.toLowerCase();
   var filtered=marketProducts.filter(function(p){
@@ -1323,6 +1492,8 @@ function render(){
   if(activeTab==="Cars"&&activeCarCompany!=="All companies"&&filtered.some(function(product){return product.showroomCompany===activeCarCompany})){
     filtered=filtered.filter(function(product){return product.showroomCompany===activeCarCompany});
   }
+  if(activeTab==="Cars"&&activeCarCompany==="All companies")filtered=mixProductsByCarCompany(filtered);
+  if(activeTab==="All")filtered=mixProductsByCategory(mixCarsWithinProducts(filtered));
 
   var showHotels=activeTab==="All"||activeTab==="Hotels";
   var showProps=activeTab==="All"||activeTab==="Properties";
@@ -1501,7 +1672,7 @@ function render(){
     var bmFiltered=bmActiveCat==='All'?marketProducts:marketProducts.filter(function(p){return p.category===bmActiveCat});
     html+='<div class="big-market"><div class="bm-header"><h2>\uD83C\uDFEA Highlights</h2><span class="bm-see">See All <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></span></div>';
     html+='<div class="bm-cats hide-sb">';
-    ['All','Electronics','Fashion','Home & Garden','Cars','Real Estate'].forEach(function(c){
+    ['All','Electronics','Fashion','Home & Garden','Cars','Aircraft','Real Estate'].forEach(function(c){
       html+='<button class="'+(bmActiveCat===c?'active':'')+'" onclick="setBmCat(\''+c.replace(/'/g,"\\'")+'\')">'+esc(c)+'</button>';
     });
     html+='</div><div class="bm-scroll hide-sb">';
@@ -1650,6 +1821,7 @@ function render(){
   bindProductEmojiEvents();
   bindCarCompanySlider();
   startAutoSwipe();
+  startCarCompanyRotation();
 }
 
 function renderDashboardMap(){
@@ -1674,6 +1846,11 @@ function getCarCompany(product){
     if(value.indexOf(carCompanies[i].toLowerCase())!==-1)return carCompanies[i];
   }
   return "Other";
+}
+function restoreCachedCarShowrooms(){
+  if(cachedCarShowroomsRestored)return;
+  carCompanies.slice(1).forEach(function(company){restoreCarShowroom(company)});
+  cachedCarShowroomsRestored=true;
 }
 function updateCarCompanyArrows(){
   var list=document.getElementById('car-company-list');
@@ -2456,6 +2633,48 @@ var cardImgState={};
 var cardTimers={};
 var cardSwipeObserver=null;
 var swipeIntervals=[3000,5000,7000];
+var carCompanyRotationTimer=null;
+var CAR_COMPANY_ROTATION_MS=17000;
+function carCompanyRotationIsActive(){
+  return activeTab==="All"||(activeTab==="Cars"&&activeCarCompany==="All companies");
+}
+function rotateCarCompanyCards(){
+  var cards=Array.prototype.filter.call(document.querySelectorAll('.prod-grid .prod-card'),function(card){
+    var product=marketProducts.find(function(item){return item.id===card.getAttribute('data-pid')});
+    return product&&product.category==="Cars";
+  });
+  var companies=[];
+  cards.forEach(function(card){
+    var product=marketProducts.find(function(item){return item.id===card.getAttribute('data-pid')});
+    var company=product&&getCarCompany(product);
+    if(company&&companies.indexOf(company)===-1)companies.push(company);
+  });
+  if(cards.length<2||companies.length<2)return false;
+  var placeholders=cards.map(function(card){
+    var placeholder=document.createComment('car-company-position');
+    card.parentNode.insertBefore(placeholder,card);
+    return placeholder;
+  });
+  placeholders.forEach(function(placeholder,index){
+    placeholder.parentNode.replaceChild(cards[(index+1)%cards.length],placeholder);
+  });
+  cards.forEach(function(card){
+    card.classList.remove('shaking');
+    void card.offsetWidth;
+    card.classList.add('shaking');
+  });
+  setTimeout(function(){cards.forEach(function(card){card.classList.remove('shaking')})},400);
+  return true;
+}
+function startCarCompanyRotation(){
+  if(carCompanyRotationTimer)clearTimeout(carCompanyRotationTimer);
+  carCompanyRotationTimer=null;
+  if(document.hidden||!carCompanyRotationIsActive())return;
+  carCompanyRotationTimer=setTimeout(function(){
+    rotateCarCompanyCards();
+    startCarCompanyRotation();
+  },CAR_COMPANY_ROTATION_MS);
+}
 function swipeCard(pid){
   var card=document.querySelector('[data-pid="'+pid+'"]');
   if(!card)return;
@@ -2509,8 +2728,8 @@ function startAutoSwipe(){
   });
 }
 document.addEventListener('visibilitychange',function(){
-  if(document.hidden){Object.keys(cardTimers).forEach(function(pid){clearTimeout(cardTimers[pid])});cardTimers={}}
-  else startAutoSwipe();
+  if(document.hidden){Object.keys(cardTimers).forEach(function(pid){clearTimeout(cardTimers[pid])});cardTimers={};if(carCompanyRotationTimer)clearTimeout(carCompanyRotationTimer)}
+  else{startAutoSwipe();startCarCompanyRotation()}
 });
 
 /* ── AUTO-CATEGORY: sweep right & left every 5 min ── */

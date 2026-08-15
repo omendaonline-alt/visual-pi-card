@@ -25,8 +25,17 @@
       <label>Product name<input id="title" required placeholder="Example: Solar charger"></label>
       <label>Brand or seller name<input id="brand" required placeholder="Example: Omenda Solar"></label>
       <label>Price in Pi<input id="price" required placeholder="0.001"></label>
-      <label>Category<select id="category"><option>Electronics</option><option>Fashion</option><option>Home & Garden</option><option>Cars</option><option>Real Estate</option></select></label>
-      <label>Product image<input id="productImage" type="file" accept="image/png,image/jpeg,image/webp" required></label>
+      <label>Category<select id="category"><option>Electronics</option><option>Fashion</option><option>Home & Garden</option><option>Cars</option><option>Aircraft</option><option>Real Estate</option></select></label>
+      <label id="aircraftTypeField" hidden>Aircraft type<select id="aircraftType"><option>Single engine</option><option>Trainer</option><option>Bush plane</option><option>Ultralight</option><option>Helicopter</option><option>Business aircraft</option><option>Other</option></select></label>
+      <div id="aircraftDetails" hidden>
+        <label>Aircraft manufacturer<input id="aircraftManufacturer" placeholder="Example: Cessna / Textron Aviation"></label>
+        <label>Engine capacity<input id="aircraftEngine" placeholder="Example: Lycoming IO-360 · 180 hp"></label>
+        <label>Seats<input id="aircraftSeats" placeholder="Example: 4 seats"></label>
+        <label>Model year<input id="aircraftYear" placeholder="Example: 2020"></label>
+        <label>Range<input id="aircraftRange" placeholder="Example: 1,185 km"></label>
+        <label>Seller location<input id="aircraftLocation" placeholder="City, Country"></label>
+      </div>
+      <label>Product images<input id="productImage" type="file" accept="image/png,image/jpeg,image/webp" multiple required></label>
       <img id="imagePreview" alt="Selected product image preview">
       <label>Description<textarea id="description" rows="4" placeholder="Describe your product"></textarea></label>
       <button type="submit">Save Product Locally</button>
@@ -36,6 +45,14 @@
   <script>
     var imageInput=document.getElementById('productImage');
     var imagePreview=document.getElementById('imagePreview');
+    var categoryInput=document.getElementById('category');
+    var aircraftTypeField=document.getElementById('aircraftTypeField');
+    var aircraftDetails=document.getElementById('aircraftDetails');
+    function updateCategoryFields(){var aircraft=categoryInput.value==='Aircraft';aircraftTypeField.hidden=!aircraft;aircraftDetails.hidden=!aircraft}
+    categoryInput.onchange=updateCategoryFields;
+    var requestedCategory=new URLSearchParams(window.location.search).get('category');
+    if(requestedCategory&&Array.prototype.some.call(categoryInput.options,function(option){return option.value===requestedCategory}))categoryInput.value=requestedCategory;
+    updateCategoryFields();
     imageInput.onchange=function(){
       var file=this.files&&this.files[0];
       if(!file){imagePreview.style.display='none';imagePreview.removeAttribute('src');return;}
@@ -45,15 +62,17 @@
     function imageDataUrl(file){return new Promise(function(resolve,reject){var reader=new FileReader();reader.onload=function(){resolve(String(reader.result||''))};reader.onerror=reject;reader.readAsDataURL(file)})}
     document.getElementById('productForm').onsubmit=async function(e){
       e.preventDefault();
-      var file=imageInput.files&&imageInput.files[0];
-      if(!file||file.size>4*1024*1024){alert('Choose a product image up to 4MB.');return;}
+      var files=Array.prototype.slice.call(imageInput.files||[]);
+      if(!files.length||files.length>5||files.some(function(file){return file.size>4*1024*1024})){alert('Choose up to 5 product images, each up to 4MB.');return;}
       var rows=[];
       try{rows=JSON.parse(localStorage.getItem('omendaSellerProducts')||'[]')}catch(err){}
-      var image=await imageDataUrl(file);
-      rows.unshift({title:document.getElementById('title').value.trim(),brand:document.getElementById('brand').value.trim(),price:document.getElementById('price').value.trim(),category:document.getElementById('category').value,description:document.getElementById('description').value.trim(),image:image,createdAt:new Date().toISOString()});
+      var images=await Promise.all(files.map(imageDataUrl));
+      var aircraft=categoryInput.value==='Aircraft';
+      rows.unshift({title:document.getElementById('title').value.trim(),brand:document.getElementById('brand').value.trim(),price:document.getElementById('price').value.trim(),category:categoryInput.value,aircraftType:aircraft?document.getElementById('aircraftType').value:'',manufacturer:aircraft?document.getElementById('aircraftManufacturer').value.trim():'',engine:aircraft?document.getElementById('aircraftEngine').value.trim():'',seats:aircraft?document.getElementById('aircraftSeats').value.trim():'',year:aircraft?document.getElementById('aircraftYear').value.trim():'',range:aircraft?document.getElementById('aircraftRange').value.trim():'',location:aircraft?document.getElementById('aircraftLocation').value.trim():'',description:document.getElementById('description').value.trim(),image:images[0],images:images,createdAt:new Date().toISOString()});
       localStorage.setItem('omendaSellerProducts',JSON.stringify(rows.slice(0,50)));
       document.getElementById('msg').style.display='block';
       this.reset();
+      updateCategoryFields();
       imagePreview.style.display='none';imagePreview.removeAttribute('src');
     };
   </script>
