@@ -14138,7 +14138,7 @@ body.page-ride .agent-ticket-actions
 
 .page-shop /* ── Category Tabs ── */
 .cat-tabs
-{display:flex;overflow-x:auto;background:#fff;border-bottom:1px solid #eee;padding:0 4px;gap:0}
+{display:flex;overflow-x:auto;background:#fff;border-bottom:1px solid #eee;padding:0 4px;gap:0;position:sticky;top:68px;z-index:99;box-shadow:0 3px 10px rgba(0,0,0,.06);scroll-padding-inline:16px}
 
 
 .page-shop .cat-tabs button
@@ -14173,6 +14173,18 @@ body.page-ride .agent-ticket-actions
 {display:flex;align-items:center;gap:7px}
 
 
+.page-shop .car-company-map-link
+{display:flex;align-items:center;gap:5px;min-height:32px;padding:0 9px;border:1px solid #c0392b;border-radius:6px;color:#a52f24;text-decoration:none;font-size:.75rem;font-weight:800;white-space:nowrap}
+
+
+.page-shop .car-company-map-link:hover
+{background:#fff5f3}
+
+
+.page-shop .car-company-map-link svg
+{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+
 .page-shop .car-company-arrow
 {display:grid;place-items:center;width:32px;height:32px;padding:0;border:1px solid #d8d8d8;border-radius:50%;background:#fff;color:#333;cursor:pointer}
 
@@ -14194,7 +14206,7 @@ body.page-ride .agent-ticket-actions
 
 
 .page-shop .car-company-list button
-{flex:0 0 auto;border:1px solid #d8d8d8;border-radius:6px;background:#fff;color:#444;padding:8px 12px;font-family:inherit;font-size:.78rem;font-weight:700;cursor:pointer;white-space:nowrap;scroll-snap-align:start}
+{flex:0 0 auto;border:1px solid #d8d8d8;border-radius:6px;background:#fff;color:#444;padding:8px 12px;font-family:inherit;font-size:.78rem;font-weight:700;cursor:pointer;white-space:nowrap;scroll-snap-align:start;touch-action:manipulation}
 
 
 .page-shop .car-company-list button:hover
@@ -14381,6 +14393,10 @@ body.page-ride .agent-ticket-actions
 
 .page-shop .section-arrow
 {width:20px;height:20px;color:#ccc}
+
+
+.page-shop #app > *
+{content-visibility:auto;contain-intrinsic-size:auto 500px}
 
 
 

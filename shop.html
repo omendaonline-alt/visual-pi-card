@@ -11,19 +11,28 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<script src="https://sdk.minepi.com/pi-sdk.js"></script>
 <script src="pi-sdk-helper.js"></script>
 <script>
 /* Pi SDK init — must match index.html exactly */
 var piSdkReady = false;
 var PI_SANDBOX_MODE = true;
-try { Pi.init({ version: "2.0", sandbox: PI_SANDBOX_MODE }); piSdkReady = true; } catch(e) { console.warn('Pi SDK not available:', e); }
+function initializeShopPiSdk(){
+  try {
+    Pi.init({ version: "2.0", sandbox: PI_SANDBOX_MODE });
+    piSdkReady = true;
+    if(typeof loadPiUsername==="function"){
+      piUsernameLoadStarted=false;
+      loadPiUsername();
+    }
+  } catch(e) { console.warn('Pi SDK not available:', e); }
+}
 </script>
+<script defer src="https://sdk.minepi.com/pi-sdk.js" onload="initializeShopPiSdk()"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons/css/flag-icons.min.css">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" onload="renderDashboardMap()"></script>
 
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=6">
 </head>
 <body class="page-shop">
 
@@ -307,15 +316,6 @@ var marketProducts = [
   {id:"hg8",title:"Stainless Steel Cookware 12-Piece",price:"\u03C00.0006",stat:"55+ sold",brand:"ChefPro",moq:"1 Set",audited:true,secured:false,inStock:true,yrs:"3yrs",image:"https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1584990347449-a4f5eb10e6e0?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1585515320310-259814833e62?q=80&w=400&auto=format&fit=crop"],category:"Home & Garden"},
   {id:"hg9",title:"Air Purifier HEPA H13 Quiet",price:"\u03C00.0008",stat:"12+ sold",brand:"PureAir",moq:"1 Piece",audited:true,secured:true,inStock:true,yrs:"2yrs",responseTime:"\u22641h",image:"https://images.unsplash.com/photo-1585771724684-38269d6639fd?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1585771724684-38269d6639fd?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1573790387438-4da905039392?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1558997519-83ea9252edf8?q=80&w=400&auto=format&fit=crop"],category:"Home & Garden"},
   {id:"hg10",title:"Outdoor Solar LED String Lights",price:"\u03C00.00002",priceHigh:"0.00005",stat:"200+ sold",brand:"SolarGlow",moq:"50 Pieces",audited:true,secured:false,inStock:true,yrs:"1yr",image:"https://images.unsplash.com/photo-1513694203232-719a280e022f?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1513694203232-719a280e022f?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1534105615256-13940a56ff44?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1573790387438-4da905039392?q=80&w=400&auto=format&fit=crop"],category:"Home & Garden"},
-  // ── Cars ──
-  {id:"c1",title:"Mercedes-Benz GLE 350 AMG Line",price:"\u03C00.19",stat:"Premium",brand:"Benz Official",moq:"1 Piece",audited:true,secured:true,inStock:false,yrs:"5yrs",responseTime:"\u22641h",image:"https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1617531653332-bd46c24f2068?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1563720223185-11003d516935?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1619682817481-e994891cd1f5?q=80&w=400&auto=format&fit=crop"],category:"Cars"},
-  {id:"c2",title:"Toyota Camry SE 2018 Clean Title",price:"\u03C00.08",stat:"Clean title",brand:"Toyota Motors",moq:"1 Piece",audited:true,secured:false,inStock:false,yrs:"3yrs",image:"https://images.unsplash.com/photo-1550355291-bbee04a92027?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1550355291-bbee04a92027?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1590362891991-f776e747a588?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1549317661-bd32c8ce0afa?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1580273916550-e323be2ae537?q=80&w=400&auto=format&fit=crop"],category:"Cars"},
-  {id:"c3",title:"Range Rover Evoque 2019 Automatic",price:"\u03C00.17",stat:"Automatic",brand:"LandRover",moq:"1 Piece",audited:true,secured:true,inStock:false,yrs:"4yrs",responseTime:"\u22641h",image:"https://images.unsplash.com/photo-1511919884226-fd3cad34687c?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1511919884226-fd3cad34687c?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1606611013016-969c19ba27a5?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1544636331-e26879cd4d9b?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?q=80&w=400&auto=format&fit=crop"],category:"Cars"},
-  {id:"c4",title:"Honda Civic 2021 Low Mileage",price:"\u03C00.09",stat:"Low mileage",brand:"Honda Auto",moq:"1 Piece",audited:true,secured:false,inStock:false,yrs:"2yrs",image:"https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1494976388531-d1058494cdd8?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1550355291-bbee04a92027?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1580273916550-e323be2ae537?q=80&w=400&auto=format&fit=crop"],category:"Cars"},
-  {id:"c5",title:"2025 Chery iCar Electric SUV",price:"\u03C00.05",priceHigh:"0.06",stat:"1 Piece (MOQ)",brand:"Chery Auto",moq:"1 Piece",audited:true,secured:true,inStock:false,yrs:"3yrs",image:"https://images.unsplash.com/photo-1560958089-b8a1929cea89?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1560958089-b8a1929cea89?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1619682817481-e994891cd1f5?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1606611013016-969c19ba27a5?q=80&w=400&auto=format&fit=crop"],category:"Cars"},
-  {id:"c6",title:"Tesla Model Y Long Range 2024",price:"\u03C00.13",priceHigh:"0.15",stat:"3 Pieces (MOQ)",brand:"Tesla Inc",moq:"3 Pieces",audited:true,secured:true,inStock:false,yrs:"2yrs",responseTime:"\u22641h",image:"https://images.unsplash.com/photo-1560958089-b8a1929cea89?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1560958089-b8a1929cea89?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1617886903355-9354cee8d02b?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1606611013016-969c19ba27a5?q=80&w=400&auto=format&fit=crop"],tag:"Hot Deal",tagColor:"#c0392b",category:"Cars"},
-  {id:"c7",title:"Rox 01 2024 Exclusive 6-Seat SUV",price:"\u03C00.17",priceHigh:"0.19",stat:"1 Piece (MOQ)",brand:"YHE-MOTORS",moq:"1 Piece",audited:true,secured:false,inStock:false,yrs:"1yr",image:"https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1544636331-e26879cd4d9b?q=80&w=400&auto=format&fit=crop"],category:"Cars"},
-  {id:"c8",title:"BMW X5 xDrive40i 2023",price:"\u03C00.22",stat:"Premium Import",brand:"BMW Group",moq:"1 Piece",audited:true,secured:true,inStock:false,yrs:"4yrs",responseTime:"\u22641h",image:"https://images.unsplash.com/photo-1555215695-3004980ad54e?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1555215695-3004980ad54e?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1617531653332-bd46c24f2068?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1563720223185-11003d516935?q=80&w=400&auto=format&fit=crop"],category:"Cars"},
   // ── Real Estate ──
   {id:"re1",title:"Modern 3BR Apartment Downtown",price:"\u03C05.0",priceHigh:"6.5",stat:"Hot Listing",brand:"Prime Realty",moq:"1 Unit",audited:true,secured:true,inStock:true,yrs:"8yrs",responseTime:"\u22641h",image:"https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1600573472592-401b489a3cdc?q=80&w=400&auto=format&fit=crop"],tag:"Featured",tagColor:"#c0392b",category:"Real Estate"},
   {id:"re2",title:"Beachfront Villa 5BR Pool & Garden",price:"\u03C015.0",priceHigh:"18.0",stat:"Premium",brand:"Coastal Homes",moq:"1 Unit",audited:true,secured:true,inStock:false,yrs:"12yrs",responseTime:"\u22641h",image:"https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1613977257363-707ba9348227?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1600585154526-990dced4db0d?q=80&w=400&auto=format&fit=crop"],tag:"Luxury",tagColor:"#7c3aed",category:"Real Estate"},
@@ -331,42 +331,23 @@ var marketProducts = [
 
 /* Abarth showroom: front, left side, right side, dashboard, and interior. */
 (function addAbarthShowroom(){
-  var interiorViews=[
-    "https://upload.wikimedia.org/wikipedia/commons/7/71/ABARTH_595_turismo_%28ABA-312142%29_interior.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/9/91/The_interior_of_ABARTH_595_competizione_as_a_demo_car_of_MUSEO_CINQUECENTO_RACING_TEAM.JPG"
-  ];
-  var combustionViews=[
-    "https://upload.wikimedia.org/wikipedia/commons/2/23/Abarth_595_Competizione_front_1.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/b/b4/Abarth_595_Competizione_2020.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/3/3f/Abarth_595_Competizione_rear_1.jpg"
-  ].concat(interiorViews);
-  var electric500Views=[
-    "https://upload.wikimedia.org/wikipedia/commons/c/ce/2023_Abarth_500e_Turismo.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/c/ca/Abarth_500e_1X7A2519.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/8/8a/Abarth_500e_IMG_7996.jpg"
-  ].concat(interiorViews);
-  var electric600Views=[
-    "https://upload.wikimedia.org/wikipedia/commons/e/ec/Abarth_600e_Scorpionissima_Auto_Zuerich_2024_DSC_6149.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/6/6a/Abarth_600e_Scorpionissima_Auto_Zuerich_2024_DSC_6151.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/7/7c/Abarth_600e_Scorpionissima_Auto_Zuerich_2025_DSC_2984.jpg"
-  ].concat(interiorViews);
-  var modelCovers=[
-    "https://upload.wikimedia.org/wikipedia/commons/4/4e/Abarth_595.JPG",
-    "https://upload.wikimedia.org/wikipedia/commons/e/ea/Abarth_595_Turismo_-_50840873302.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/b/b4/Abarth_595_Competizione_2020.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/f/fa/Fiat_Abarth_695_%282013-09-15_Spu%29.JPG",
-    "https://upload.wikimedia.org/wikipedia/commons/c/cd/Fiat_Abarth_695_%282014-06-15_Sp_r%29.JPG",
-    "https://upload.wikimedia.org/wikipedia/commons/e/e3/Abarth_695_Esseesse_Leonberg_2022_1X7A0519.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/3/3f/Fiat_Abarth_595_esseesse_IMG_3014.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/7/70/Abarth_124_Spider_front.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/c/c4/2019_Abarth_124_Spider_Multiair_Auto.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/6/62/Abarth_124_Spider_%2816%29.JPG",
-    "https://upload.wikimedia.org/wikipedia/commons/8/8a/Abarth_500e_IMG_7996.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/4/46/Abarth_500e_Cabrio_Auto_Zuerich_2023_1X7A1164.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/c/ce/2023_Abarth_500e_Turismo.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/e/ec/Abarth_600e_Scorpionissima_Auto_Zuerich_2024_DSC_6149.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/7/7c/Abarth_600e_Scorpionissima_Auto_Zuerich_2025_DSC_2984.jpg"
-  ];
+  var abarthGalleries={
+    ab1:["https://upload.wikimedia.org/wikipedia/commons/2/26/1969_Fiat_500_L_Abarth_595_1.jpg","https://upload.wikimedia.org/wikipedia/commons/7/7d/1969_Fiat_Abarth_595_%2825099056339%29.jpg","https://upload.wikimedia.org/wikipedia/commons/b/b8/2013_Abarth_595_Turismo.jpg","https://upload.wikimedia.org/wikipedia/commons/d/d9/2014_Abarth_595_Turismo.jpg","https://upload.wikimedia.org/wikipedia/commons/7/71/ABARTH_595_turismo_%28ABA-312142%29_interior.jpg"],
+    ab2:["https://upload.wikimedia.org/wikipedia/commons/9/9c/2016_Abarth_595_Turismo.jpg","https://upload.wikimedia.org/wikipedia/commons/5/5a/2016_Abarth_595_Turismo_1.jpg","https://upload.wikimedia.org/wikipedia/commons/8/89/2017_Abarth_595_Competizione_2.jpg","https://upload.wikimedia.org/wikipedia/commons/3/39/2018_Abarth_595_Competizione.jpg","https://upload.wikimedia.org/wikipedia/commons/a/ad/2018_Abarth_595_Turismo.jpg"],
+    ab3:["https://upload.wikimedia.org/wikipedia/commons/a/ad/2019_Abarth_595_Competizione.jpg","https://upload.wikimedia.org/wikipedia/commons/1/15/2019_Abarth_595_Competizione_1.jpg","https://upload.wikimedia.org/wikipedia/commons/f/f9/2019_Abarth_595_Esseesse.jpg","https://upload.wikimedia.org/wikipedia/commons/2/2e/2019_Abarth_595_Esseesse_1.jpg","https://upload.wikimedia.org/wikipedia/commons/7/77/2020_Abarth_595_Competizione_rear.jpg"],
+    ab4:["https://upload.wikimedia.org/wikipedia/commons/d/d8/1969_Fiat_500_Abarth_695_SS_Evocation_Front.jpg","https://upload.wikimedia.org/wikipedia/commons/b/be/1969_Fiat_500_Abarth_695_SS_Evocation_Rear.jpg","https://upload.wikimedia.org/wikipedia/commons/2/29/1971_Fiat_Abarth_695.jpg","https://upload.wikimedia.org/wikipedia/commons/9/9c/2010_Abarth_695_Tributo_Ferrari.jpg","https://upload.wikimedia.org/wikipedia/commons/d/df/Abarth_695_Biposto_Innen.JPG"],
+    ab5:["https://upload.wikimedia.org/wikipedia/commons/4/47/2010_Abarth_695_Tributo_Ferrari_1.jpg","https://upload.wikimedia.org/wikipedia/commons/2/24/2010_Abarth_695_Tributo_Ferrari_2.jpg","https://upload.wikimedia.org/wikipedia/commons/4/45/2010_Abarth_695_Tributo_Ferrari_ZFA31200000624507.jpg","https://upload.wikimedia.org/wikipedia/commons/2/2a/2016_Abarth_695_Biposto.jpg","https://upload.wikimedia.org/wikipedia/commons/4/41/2016_Abarth_695_Biposto_1.jpg"],
+    ab6:["https://upload.wikimedia.org/wikipedia/commons/3/37/2016_Abarth_695_Biposto_Officine_Ferrari.jpg","https://upload.wikimedia.org/wikipedia/commons/0/0d/2017_Abarth_695_XSR_Yamaha_Cabrio_Limited_Edition.jpg","https://upload.wikimedia.org/wikipedia/commons/3/3e/2022_Abarth_695_Esseesse.jpg","https://upload.wikimedia.org/wikipedia/commons/c/cb/2024_Abarth_695_Turismo.jpg","https://upload.wikimedia.org/wikipedia/commons/c/ce/ABARTH_695_70th_anniversary_%283BA-31214T%29.jpg"],
+    ab7:["https://upload.wikimedia.org/wikipedia/commons/9/97/Abarth_695.JPG","https://upload.wikimedia.org/wikipedia/commons/5/5e/Abarth_695.jpg","https://upload.wikimedia.org/wikipedia/commons/9/95/Abarth_695_2.jpg","https://upload.wikimedia.org/wikipedia/commons/3/31/Abarth_695_70%C2%B0_Anniversario.jpg","https://upload.wikimedia.org/wikipedia/commons/2/20/Abarth_695_Assetto_Corse_Evoluzione.JPG"],
+    ab8:["https://upload.wikimedia.org/wikipedia/commons/e/e4/2017_Abarth_124_Spider_2.10.17.jpg","https://upload.wikimedia.org/wikipedia/commons/c/c1/2017_Abarth_124_Spider_Multiair.jpg","https://upload.wikimedia.org/wikipedia/commons/2/2d/2017_Abarth_124_Spider_Scorpione_MultiAir.jpg","https://upload.wikimedia.org/wikipedia/commons/9/90/2018_Abarth_124_Spider_MultiAir_1.4_Front.jpg","https://upload.wikimedia.org/wikipedia/commons/0/0b/2018_Abarth_124_Spider_MultiAir_1.4_Rear.jpg"],
+    ab9:["https://upload.wikimedia.org/wikipedia/commons/b/b3/2018_Abarth_124_Spider_Multiair.jpg","https://upload.wikimedia.org/wikipedia/commons/1/15/2018_Abarth_124_Spider_Multiair_1.4_Front.jpg","https://upload.wikimedia.org/wikipedia/commons/2/20/2018_Abarth_124_Spider_Multiair_Autk.jpg","https://upload.wikimedia.org/wikipedia/commons/d/d6/2018_Abarth_124_Spider_Multiair_Auto.jpg","https://upload.wikimedia.org/wikipedia/commons/b/b7/2018_Abarth_124_Spider_Multiair_Auto_2.jpg"],
+    ab10:["https://upload.wikimedia.org/wikipedia/commons/5/5f/ABARTH_124_SPIDER_%28ABARTH_Osaka-Higashi_demo_car%29_front_%28cropped%29.jpg","https://upload.wikimedia.org/wikipedia/commons/7/73/ABARTH_124_SPIDER_%28ABARTH_Osaka-Higashi_demo_car%29_rear_%28cropped%29.jpg","https://upload.wikimedia.org/wikipedia/commons/0/05/ABARTH_124_SPIDER_%28CBA-NF2EK%29.jpg","https://upload.wikimedia.org/wikipedia/commons/b/b6/ABARTH_124_SPIDER_%28CBA-NF2EK%29_%26_695_biposto_%28ABA-31214B%29.jpg","https://upload.wikimedia.org/wikipedia/commons/e/e6/ABARTH_124_SPIDER_%28CBA-NF2EK%29_%281%29.jpg"],
+    ab11:["https://upload.wikimedia.org/wikipedia/commons/c/ce/2023_Abarth_500e_Turismo.jpg","https://upload.wikimedia.org/wikipedia/commons/c/ca/2023_Abarth_500e_in_Adelaide%2C_Australia.jpg","https://upload.wikimedia.org/wikipedia/commons/b/b4/ABARTH_500e_TURISMO_HATCHBACK_%28ZAA-FA1AB%29.jpg","https://upload.wikimedia.org/wikipedia/commons/4/45/ABARTH_500e_TURISMO_Hatchback_%28ZAA-FA1AB%29.jpg","https://upload.wikimedia.org/wikipedia/commons/f/f8/Abarth_500e_%282025%29_%2854715762522%29.jpg"],
+    ab12:["https://upload.wikimedia.org/wikipedia/commons/e/ee/Abarth_500e_%282025%29_%2854716591976%29.jpg","https://upload.wikimedia.org/wikipedia/commons/8/8a/Abarth_500e_%2854284191617%29.jpg","https://upload.wikimedia.org/wikipedia/commons/8/83/Abarth_500e_%2854374591962%29.jpg","https://upload.wikimedia.org/wikipedia/commons/2/2d/Abarth_500e_%2855078405629%29.jpg","https://upload.wikimedia.org/wikipedia/commons/4/45/Abarth_500e_%2855103548655%29.jpg"],
+    ab13:["https://upload.wikimedia.org/wikipedia/commons/c/c4/Abarth_500e_01.png","https://upload.wikimedia.org/wikipedia/commons/e/ed/Abarth_500e_02.png","https://upload.wikimedia.org/wikipedia/commons/c/ca/Abarth_500e_1X7A2519.jpg","https://upload.wikimedia.org/wikipedia/commons/1/18/Abarth_500e_Berline_%2855147536038%29.jpg","https://upload.wikimedia.org/wikipedia/commons/8/8f/Abarth_500e_Cabrio_%282024%29_%2853970087039%29.jpg"],
+    ab14:["https://upload.wikimedia.org/wikipedia/commons/0/0e/Abarth_600e%2C_Auto_2024%2C_Zurich_%28PANA0121%29.jpg","https://upload.wikimedia.org/wikipedia/commons/d/d8/Abarth_600e%2C_Auto_2025%2C_Zurich_%2820251029-P1073667%29.jpg","https://upload.wikimedia.org/wikipedia/commons/e/ec/Abarth_600e_Scorpionissima_Auto_Zuerich_2024_DSC_6149.jpg","https://upload.wikimedia.org/wikipedia/commons/6/6a/Abarth_600e_Scorpionissima_Auto_Zuerich_2024_DSC_6151.jpg","https://upload.wikimedia.org/wikipedia/commons/6/68/Abarth_600e_Scorpionissima_Auto_Zuerich_2024_DSC_6732.jpg"],
+    ab15:["https://upload.wikimedia.org/wikipedia/commons/7/73/Abarth_600e_Scorpionissima_Auto_Zuerich_2024_DSC_6734.jpg","https://upload.wikimedia.org/wikipedia/commons/7/7c/Abarth_600e_Scorpionissima_Auto_Zuerich_2025_DSC_2984.jpg","https://upload.wikimedia.org/wikipedia/commons/c/c4/Abarth_600e_Scorpionissima_Auto_Zuerich_2025_DSC_3339.jpg","https://upload.wikimedia.org/wikipedia/commons/d/dd/Abarth_600e_Scorpionissima_Auto_Zuerich_2025_DSC_3357.jpg","https://upload.wikimedia.org/wikipedia/commons/7/7a/Abarth_600e_Scorpionissima_Autofr%C3%BChling_Ulm_2025_DSC_8702.jpg"]
+  };
   var models=[
     ["ab1","Abarth 595 Hatchback","\u03C00.072","1.4L Turbo","2025-01-15","Petrol · 165 hp","New arrival"],
     ["ab2","Abarth 595 Turismo","\u03C00.079","1.4L Turbo","2025-02-10","Petrol · 165 hp","Touring trim"],
@@ -385,16 +366,62 @@ var marketProducts = [
     ["ab15","Abarth 600e Scorpionissima","\u03C00.143","54 kWh · 207 kW","2025-06-03","Electric · 280 hp","Electric performance"]
   ];
   var viewLabels=["Front showroom view","Left-side showroom view","Right-side showroom view","Dashboard view","Interior cabin view"];
+  // Serve scaled Wikimedia thumbnails instead of multi-MB originals so pages open fast.
+  function abarthThumb(url,width){
+    var match=url.match(/\/commons\/([0-9a-f])\/([0-9a-f]{2})\/(.+)$/);
+    if(!match)return url;
+    return "https://upload.wikimedia.org/wikipedia/commons/thumb/"+match[1]+"/"+match[2]+"/"+match[3]+"/"+width+"px-"+match[3];
+  }
+  var abarthCardImages=[];
   models.forEach(function(model,index){
-    var familyViews=index>=13?electric600Views:(index>=10?electric500Views:combustionViews);
-    var images=[modelCovers[index]].concat(familyViews.slice(1));
-    marketProducts.push({id:model[0],title:model[1],price:model[2],stat:model[6],brand:"Abarth Showroom",showroomCompany:"Abarth",moq:"1 Car",audited:true,secured:true,inStock:true,yrs:"Official",responseTime:"\u22641h",image:images[0],images:images,imageLabels:viewLabels,capacity:model[3],manufactured:model[4],powertrain:model[5],category:"Cars",tag:index>=10?"Electric":"New Abarth",tagColor:index>=10?"#047857":"#c0392b"});
+    var gallery=abarthGalleries[model[0]].map(function(url){return abarthThumb(url,960)});
+    var card=abarthThumb(abarthGalleries[model[0]][0],500);
+    abarthCardImages.push(card);
+    marketProducts.push({id:model[0],title:model[1],price:model[2],stat:model[6],brand:"Abarth Showroom",showroomCompany:"Abarth",moq:"1 Car",audited:true,secured:true,inStock:true,yrs:"Official",responseTime:"\u22641h",image:card,images:gallery,imageLabels:viewLabels,capacity:model[3],manufactured:model[4],powertrain:model[5],category:"Cars",tag:index>=10?"Electric":"New Abarth",tagColor:index>=10?"#047857":"#c0392b"});
   });
+  // Warm the browser cache for card thumbnails so the grid and modal open instantly.
+  if(typeof window!=="undefined"){window.addEventListener("load",function(){abarthCardImages.forEach(function(src){var image=new Image();image.decoding="async";image.src=src})})}
 })();
 
 /* Build a company-verified showroom only when that company is selected. */
+var CAR_SHOWROOM_CACHE_PREFIX="omendaCarShowroom:";
+var CAR_SHOWROOM_CACHE_MAX_AGE=30*24*60*60*1000;
+var carShowroomRequests={};
+var strictShowroomCompanies=[
+  "Acura","Aston Martin","Audi","Baojun","Bentley","BMW","Bugatti","Buick","BYD","Cadillac","Changan","Chevrolet","Chery","Chrysler","Citroen","Cupra","Dacia","Daihatsu","Dodge","Dongfeng","FAW","Ferrari","Fiat","Ford","Geely","Genesis","GMC","Great Wall","Haval","Honda","Hongqi","Hyundai","Infiniti","Isuzu","JAC","Jaguar","Jeep","Jetour","Kia","Koenigsegg","Lada","Lamborghini","Land Rover","Leapmotor","Lexus","Lincoln","Lotus","Lucid","Mahindra","Maserati","Mazda","McLaren","Mercedes-Benz","MG","Mini","Mitsubishi","Nio","Nissan","Opel","Pagani","Perodua","Peugeot","Polestar","Porsche","Proton","Ram","Renault","Rivian","Rolls-Royce","Rox","Seat","Skoda","Smart","Subaru","Suzuki","Tata","Tesla","Vauxhall","VinFast","Volkswagen","Volvo","XPeng","Zeekr"
+];
+function isStrictShowroomCompany(company){return strictShowroomCompanies.indexOf(company)!==-1}
+function carShowroomRequiredCount(company){return company==="Toyota"||company==="Alfa Romeo"||company==="Alpine"||isStrictShowroomCompany(company)?15:1}
+function carShowroomCatalogVersion(company){return company==="Alfa Romeo"?2:company==="Changan"?7:company==="MG"?6:isStrictShowroomCompany(company)?5:company==="Alpine"?1:0}
+function carShowroomProductsAreValid(company,products){
+  if(!Array.isArray(products)||!products.length)return false;
+  if(company==="Changan")return products.length===15&&products.every(function(product){return product.strictModelValidated&&product.images&&product.images.length===5&&new Set(product.images).size===5});
+  if(isStrictShowroomCompany(company))return products.length<=15&&products.every(function(product){return product.strictModelValidated&&product.images&&product.images.length===5&&new Set(product.images).size===5});
+  return products.length>=carShowroomRequiredCount(company);
+}
 function carShowroomKey(value){
   return String(value||"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+}
+function restoreCarShowroom(company){
+  if(!company||company==="All companies")return true;
+  var currentProducts=marketProducts.filter(function(product){return product.showroomCompany===company});
+  if(currentProducts.length)return carShowroomProductsAreValid(company,currentProducts);
+  try{
+    var cached=JSON.parse(localStorage.getItem(CAR_SHOWROOM_CACHE_PREFIX+carShowroomKey(company))||"null");
+    if(!cached||Date.now()-cached.savedAt>CAR_SHOWROOM_CACHE_MAX_AGE||!Array.isArray(cached.products)||!cached.products.length)return false;
+    if((cached.catalogVersion||0)!==carShowroomCatalogVersion(company)){localStorage.removeItem(CAR_SHOWROOM_CACHE_PREFIX+carShowroomKey(company));return false}
+    if(!carShowroomProductsAreValid(company,cached.products)){localStorage.removeItem(CAR_SHOWROOM_CACHE_PREFIX+carShowroomKey(company));return false}
+    cached.products.forEach(function(product){
+      if(!marketProducts.some(function(current){return current.id===product.id}))marketProducts.push(product);
+    });
+    return true;
+  }catch(error){return false}
+}
+function cacheCarShowroom(company){
+  try{
+    var products=marketProducts.filter(function(product){return product.showroomCompany===company});
+    if(products.length)localStorage.setItem(CAR_SHOWROOM_CACHE_PREFIX+carShowroomKey(company),JSON.stringify({savedAt:Date.now(),catalogVersion:carShowroomCatalogVersion(company),products:products}));
+  }catch(error){}
 }
 function carShowroomNumber(value){
   var hash=0;
@@ -414,8 +441,10 @@ function carMediaNamesOtherCompany(title,company){
 }
 var nonVehicleMediaPattern=/\b(wild|wildlife|animal|ibex|chamois|chough|bird|butterfl|insect|flower|flora|plant|tree|forest|jungle|scenery|panorama|mountain|terrain|garden|lake|river|ski|skier|boot|airbus|helicopter|aircraft|rescue|barn|church|castle|statue|memorial|portrait|politician|president|musician|actor|football|baseball|smartphone|phone|tablet|computer|chair|bicycle|motorcycle|sheep|goat|cat|dog)\b/;
 var automotiveMediaPattern=/\b(car|cars|auto|automobile|automotive|vehicle|motorcar|sedan|saloon|coupe|convertible|cabrio|roadster|suv|crossover|wagon|hatchback|pickup|truck|van|prototype|concept|racing|race)\b/;
+var changanModelPattern=/\b(alsvin|benben|benni|cm8|cx20|cx30|eado|raeton|lamore|hunter|lumin|kaicene|oushang|oshan|deepal(?: s05| s07| sl03| g318)?|qiyuan(?: a05| a06| a07| q05| q07| e07)?|nevo(?: a05| a06| a07| q05| q07| e07)?|cs15|cs35|cs55|cs75|cs85|cs95|uni[ -]?(?:t|k|v|z)|x5 plus|x7 plus)\b/;
 var ambiguousCarCompanyModels={
   "Alpine":/\b(berlinette|a 110|a110|a 290|a290|a 390|a390|a 610|a610|gta)\b/,
+  "Changan":changanModelPattern,
   "Dodge":/\b(challenger|charger|durango|viper|hornet|dart|journey|caliber|avenger|caravan)\b/,
   "Ford":/\b(mustang|focus|fiesta|mondeo|escort|bronco|explorer|expedition|raptor|ranger|maverick|transit|f 150|f150)\b/,
   "Genesis":/\b(g70|g80|g90|gv60|gv70|gv80|electrified|x gran|mint concept)\b/,
@@ -447,7 +476,7 @@ function carMediaMetadataIsUsable(entry){
 }
 function carMediaIsUsable(entry,company){
   if(!entry||!entry.url||!carMediaNamesCompany(entry.title,company)||carMediaNamesOtherCompany(entry.title,company)||!carMediaHasAutomotiveEvidence(entry.title,company)||!carMediaMetadataIsUsable(entry))return false;
-  return !/\b(logo|badge|emblem|wheel|engine|motor|dashboard|cockpit|interior|showroom|sign|map|display|parking|factory|building|museum|museo|welt|headquarters|visitor center|dealership|office|advert|brochure|poster|toy|scale model|hood ornament|mascot|kuhlerfigur)\b/i.test(normalizeCarMediaText(entry.title));
+  return !/\b(logo|badge|emblem|wheel|engine|motor|radiator|grille|headlight|taillight|dashboard|cockpit|interior|showroom|sign|map|display|parking|factory|building|museum|museo|welt|headquarters|visitor center|dealership|office|advert|brochure|poster|toy|scale model|hood ornament|mascot|kuhlerfigur)\b/i.test(normalizeCarMediaText(entry.title));
 }
 function carMediaModelNames(entry,company){
   var companyPrefix=normalizeCarMediaText(company)+" ";
@@ -467,53 +496,470 @@ function carMediaModelKey(entry,company){
   var modelNames=carMediaModelNames(entry,company);
   return normalizeCarMediaText(modelNames[0]||carMediaModelName(entry,company));
 }
-function decodeCarMedia(url){
-  return new Promise(function(resolve){
-    var image=new Image();
-    var timer=setTimeout(function(){resolve(false)},6000);
-    image.onload=function(){clearTimeout(timer);resolve(image.naturalWidth>0)};
-    image.onerror=function(){clearTimeout(timer);resolve(false)};
-    image.src=url;
+/* Keep a showroom title on its own brand: strip any other company name and always lead with this company. */
+function carShowroomModelTitle(name,company){
+  var raw=String(name||"").replace(/^File:/i,"").replace(/\.(jpe?g|png|webp|gif|tiff?)$/i,"").replace(/[_]+/g," ").replace(/\s+/g," ").trim();
+  carCompanies.slice(1).forEach(function(other){
+    if(other!==company)raw=raw.replace(new RegExp("\\b"+other.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+"\\b","ig")," ");
   });
+  raw=raw.replace(/\s+/g," ").trim();
+  if(!new RegExp("\\b"+company.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+"\\b","i").test(raw))raw=company+" "+raw;
+  return raw.replace(/\s+/g," ").trim()||company+" vehicle";
+}
+/* Warm the browser cache for gallery images so the road pictures are ready before a car is opened. */
+function preloadCarImages(urls){
+  (urls||[]).forEach(function(url){if(url){var image=new Image();image.decoding="async";image.src=url}});
 }
 async function fetchCarMediaCandidates(company){
   var entries=[];
-  var offset=0;
-  for(var pageNumber=0;pageNumber<5&&entries.length<60;pageNumber++){
+  var pages=await Promise.all([0,50,100,150,200].map(async function(offset){
     var params=new URLSearchParams({action:"query",generator:"search",gsrsearch:'intitle:"'+company+'" filetype:bitmap',gsrnamespace:"6",gsrlimit:"50",gsroffset:String(offset),prop:"imageinfo",iiprop:"url|extmetadata",iiurlwidth:"800",format:"json",origin:"*"});
     var response=await fetch("https://commons.wikimedia.org/w/api.php?"+params.toString());
     if(!response.ok)throw new Error("Media search failed");
     var data=await response.json();
-    var pages=data.query&&data.query.pages?Object.values(data.query.pages):[];
-    pages.sort(function(a,b){return (a.index||0)-(b.index||0)}).forEach(function(page){
+    return data.query&&data.query.pages?Object.values(data.query.pages):[];
+  }));
+  pages.forEach(function(resultPages){
+    resultPages.sort(function(a,b){return (a.index||0)-(b.index||0)}).forEach(function(page){
       var info=page.imageinfo&&page.imageinfo[0];
       if(!info)return;
       var metadata=info.extmetadata||{};
       var entry={title:page.title||"",url:info.thumburl||info.url||"",categories:metadata.Categories&&metadata.Categories.value||"",description:metadata.ImageDescription&&metadata.ImageDescription.value||""};
       if(carMediaIsUsable(entry,company)&&!entries.some(function(current){return current.url===entry.url}))entries.push(entry);
     });
-    if(!data.continue||data.continue.gsroffset==null)break;
-    offset=data.continue.gsroffset;
-  }
-  return entries.slice(0,60);
+  });
+  return entries.slice(0,260);
 }
 async function fetchVerifiedCarMedia(company){
-  var entries=await fetchCarMediaCandidates(company);
-  if(!entries.length)return entries;
-  // Decode in small throttled batches so we don't trigger Wikimedia rate limiting (HTTP 429).
-  // Fall back to the metadata-verified candidates if decoding drops too many, so a valid
-  // showroom never collapses into "unavailable" just because the browser was throttled.
-  var verified=[];
-  for(var i=0;i<entries.length&&verified.length<20;i+=6){
-    var batch=entries.slice(i,i+6);
-    var decoded=await Promise.all(batch.map(function(entry){return decodeCarMedia(entry.url)}));
-    batch.forEach(function(entry,index){if(decoded[index])verified.push(entry)});
+  // Trust Wikimedia's metadata-verified thumbnails and let the browser lazy-load them,
+  // instead of pre-downloading every image to decode it (that made the showroom slow to open).
+  return fetchCarMediaCandidates(company);
+}
+
+/* Pick the five required views (front, rear, side, interior + one extra) from a model's media. */
+function orderCarMediaByView(mediaList){
+  var views=[
+    {label:"Front view",pattern:/\b(front|frontal|frontview|frontansicht)\b/},
+    {label:"Rear view",pattern:/\b(rear|back|rearview|heckansicht)\b/},
+    {label:"Side view",pattern:/\b(side|profile|right|left|passenger side|driver side)\b/},
+    {label:"Interior view",pattern:/\b(interior|dashboard|cockpit|cabin|steering wheel)\b/}
+  ];
+  var chosen=[];
+  views.forEach(function(view){
+    var match=mediaList.find(function(entry){
+      var text=normalizeCarMediaText((entry.title||"")+" "+(entry.description||""));
+      return view.pattern.test(text)&&!chosen.some(function(current){return current.entry.url===entry.url});
+    });
+    if(match)chosen.push({entry:match,label:view.label});
+  });
+  mediaList.forEach(function(entry){
+    if(chosen.length<5&&!chosen.some(function(current){return current.entry.url===entry.url}))chosen.push({entry:entry,label:"Exterior view"});
+  });
+  return chosen.slice(0,5);
+}
+/* Best-effort model year pulled from the source metadata (only shown when actually present). */
+function extractCarModelYear(mediaList){
+  for(var i=0;i<mediaList.length;i++){
+    var match=String((mediaList[i].title||"")+" "+(mediaList[i].description||"")+" "+(mediaList[i].categories||"")).match(/\b(?:19|20)\d{2}\b/);
+    if(match)return match[0]+" model year";
   }
-  return verified.length>=6?verified:entries;
+  return "";
+}
+/* Best-effort engine/motor spec pulled from the source metadata (only shown when actually present). */
+function extractCarEngineSpec(mediaList){
+  for(var i=0;i<mediaList.length;i++){
+    var text=(mediaList[i].title||"")+" "+(mediaList[i].description||"");
+    var match=text.match(/\b\d\.\d\s?(?:l|litre|liter|tdi|tsi|tfsi|vtec)\b/i)||text.match(/\bV(?:6|8|10|12)\b/i)||text.match(/\b(?:plug-in hybrid|hybrid|electric)\b/i);
+    if(match)return match[0];
+  }
+  return "";
+}
+
+/* Acura's current US model range, sourced from Acura's 2026 model pages.
+   Images remain independently verified through Wikimedia Commons before display. */
+var acuraCurrentModels=[
+  {id:"acura-integra-2026",model:"Integra",title:"2026 Acura Integra",price:"π0.084",capacity:"1.5L VTEC Turbo / 2.0L VTEC Turbo (Type S)",powertrain:"FWD · 200 hp / 320 hp",manufactured:"2026 model year",manufacturingLocation:"Marysville, Ohio, USA"},
+  {id:"acura-adx-2026",model:"ADX",title:"2026 Acura ADX",price:"π0.088",capacity:"1.5L VTEC Turbo",powertrain:"FWD or AWD · 190 hp",manufactured:"2026 model year",manufacturingLocation:"Celaya, Guanajuato, Mexico"},
+  {id:"acura-rdx-2026",model:"RDX",title:"2026 Acura RDX",price:"π0.109",capacity:"2.0L VTEC Turbo",powertrain:"SH-AWD · 272 hp · 10-speed automatic",manufactured:"2026 model year",manufacturingLocation:"East Liberty, Ohio, USA"},
+  {id:"acura-mdx-2026",model:"MDX",title:"2026 Acura MDX",price:"π0.132",capacity:"3.5L V6 / 3.0L Turbo V6 (Type S)",powertrain:"FWD or SH-AWD · 290 hp / 355 hp",manufactured:"2026 model year",manufacturingLocation:"East Liberty, Ohio, USA"}
+];
+var acuraViewDefinitions=[
+  {key:"front",label:"Front view",query:"front",pattern:/\b(front|frontal|frontview|frontansicht)\b/},
+  {key:"right",label:"Right-side view",query:"right side",pattern:/\b(right|passenger side|right side|right profile)\b/},
+  {key:"rear",label:"Rear view",query:"rear",pattern:/\b(rear|back|rearview|heckansicht)\b/},
+  {key:"left",label:"Left-side view",query:"left side",pattern:/\b(left|driver side|left side|left profile)\b/},
+  {key:"interior",label:"Interior view",query:"interior",pattern:/\b(interior|dashboard|cockpit|cabin|steering wheel)\b/}
+];
+
+async function searchAcuraMedia(model,extraQuery,limit){
+  var search='"Acura '+model+'" '+(extraQuery||'')+' filetype:bitmap';
+  var params=new URLSearchParams({action:"query",generator:"search",gsrsearch:search,gsrnamespace:"6",gsrlimit:String(limit||20),prop:"imageinfo",iiprop:"url|extmetadata",iiurlwidth:"1000",format:"json",origin:"*"});
+  var response=await fetch("https://commons.wikimedia.org/w/api.php?"+params.toString());
+  if(!response.ok)throw new Error("Acura "+model+" media search failed");
+  var data=await response.json();
+  var pages=data.query&&data.query.pages?Object.values(data.query.pages):[];
+  return pages.map(function(page){
+    var info=page.imageinfo&&page.imageinfo[0];
+    var metadata=info&&info.extmetadata||{};
+    return info?{title:page.title||"",url:info.thumburl||info.url||"",description:metadata.ImageDescription&&metadata.ImageDescription.value||""}:null;
+  }).filter(function(entry){
+    var text=normalizeCarMediaText((entry&&entry.title||"")+" "+(entry&&entry.description||""));
+    var exactModel=new RegExp("\\bacura\\s+"+normalizeCarMediaText(model).replace(/\s+/g,"\\s+")+"\\b");
+    return entry&&entry.url&&exactModel.test(text)&&!nonVehicleMediaPattern.test(text)&&!/(logo|badge|emblem|wheel|engine|motor|brochure|toy|scale model)/.test(text);
+  });
+}
+
+async function fetchAcuraModelMedia(model){
+  // Match the five required views (front, right, rear, left, interior) from one broad search,
+  // then fill any missing views with parallel focused searches so it stays fast to open.
+  var general=await searchAcuraMedia(model,"",50);
+  var selected=[];
+  var missing=[];
+  acuraViewDefinitions.forEach(function(view){
+    var candidate=general.find(function(entry){
+      var text=normalizeCarMediaText(entry.title+" "+entry.description);
+      return view.pattern.test(text)&&!selected.some(function(current){return current.url===entry.url});
+    });
+    if(candidate)selected.push({title:candidate.title,url:candidate.url,description:candidate.description,viewLabel:view.label});
+    else missing.push(view);
+  });
+  if(missing.length){
+    var focusedResults=await Promise.all(missing.map(function(view){return searchAcuraMedia(model,view.query,20)}));
+    missing.forEach(function(view,i){
+      var candidate=focusedResults[i].find(function(entry){
+        var text=normalizeCarMediaText(entry.title+" "+entry.description);
+        return view.pattern.test(text)&&!selected.some(function(current){return current.url===entry.url});
+      });
+      if(candidate)selected.push({title:candidate.title,url:candidate.url,description:candidate.description,viewLabel:view.label});
+    });
+  }
+  general.forEach(function(entry){
+    if(selected.length<5&&!selected.some(function(current){return current.url===entry.url}))selected.push({title:entry.title,url:entry.url,description:entry.description,viewLabel:"Additional exterior view"});
+  });
+  return selected.slice(0,5);
+}
+
+async function ensureAcuraShowroom(){
+  if(marketProducts.some(function(product){return product.showroomCompany==="Acura"}))return true;
+  var galleries=await Promise.all(acuraCurrentModels.map(function(model){return fetchAcuraModelMedia(model.model)}));
+  acuraCurrentModels.forEach(function(model,index){
+    var gallery=galleries[index];
+    /* Never mix models or show an incomplete gallery: one Acura model must have
+       exactly five unique, model-matched photographs before it becomes a card. */
+    if(gallery.length!==5)return;
+    if(new Set(gallery.map(function(entry){return entry.url})).size!==5)return;
+    var images=gallery.slice(0,5).map(function(entry){return entry.url});
+    var imageLabels=gallery.slice(0,5).map(function(entry){return entry.viewLabel});
+    preloadCarImages(images);
+    marketProducts.push({
+      id:model.id,title:model.title,price:model.price,stat:"2026 Acura model",brand:"Acura Showroom",showroomCompany:"Acura",moq:"1 Car",
+      audited:true,secured:true,inStock:true,yrs:"Official specifications",responseTime:"≤1h",image:images[0],images:images,
+      imageLabels:imageLabels,capacity:model.capacity,powertrain:model.powertrain,manufactured:model.manufactured,
+      manufacturingLocation:model.manufacturingLocation,mediaVerified:true,mediaSource:"Wikimedia Commons",category:"Cars",tag:"Current Acura",tagColor:"#b5121b"
+    });
+  });
+  if(!marketProducts.some(function(product){return product.showroomCompany==="Acura"}))throw new Error("No verified Acura model images were found");
+  return true;
+}
+var toyotaProductionModels=[
+  {key:"corolla",title:"Toyota Corolla Hybrid",query:"Corolla",pattern:/\bcorolla\b/,price:"π0.082",capacity:"1.8L / 2.0L Hybrid",powertrain:"Hybrid · FWD",manufactured:"2025 model range"},
+  {key:"aygo-x",title:"Toyota Aygo X",query:"Aygo X",pattern:/\baygo x\b/,price:"π0.071",capacity:"1.0L petrol",powertrain:"Petrol · FWD",manufactured:"2025 model range"},
+  {key:"c-hr",title:"Toyota C-HR Hybrid",query:"C-HR",pattern:/\bc hr\b/,price:"π0.091",capacity:"1.8L / 2.0L Hybrid",powertrain:"Hybrid or plug-in hybrid",manufactured:"2025 model range"},
+  {key:"yaris-cross",title:"Toyota Yaris Cross Hybrid",query:"Yaris Cross",pattern:/\byaris cross\b/,price:"π0.079",capacity:"1.5L Hybrid",powertrain:"Hybrid · FWD or AWD-i",manufactured:"2025 model range"},
+  {key:"mirai",title:"Toyota Mirai",query:"Mirai",pattern:/\bmirai\b/,price:"π0.126",capacity:"Hydrogen fuel cell",powertrain:"Electric · RWD",manufactured:"2025 model range"},
+  {key:"bz4x",title:"Toyota bZ4X",query:"bZ4X",pattern:/\bbz4x\b/,price:"π0.119",capacity:"71.4 kWh battery",powertrain:"Electric · FWD or AWD",manufactured:"2025 model range"},
+  {key:"gr-yaris",title:"Toyota GR Yaris",query:"GR Yaris",pattern:/\bgr yaris\b/,price:"π0.108",capacity:"1.6L Turbo",powertrain:"Petrol · GR-FOUR AWD",manufactured:"2025 model range"},
+  {key:"prius",title:"Toyota Prius Plug-in Hybrid",query:"Prius",pattern:/\bprius\b/,price:"π0.095",capacity:"2.0L Plug-in Hybrid",powertrain:"Plug-in hybrid · FWD",manufactured:"2025 model range"},
+  {key:"tacoma",title:"Toyota Tacoma",query:"Tacoma",pattern:/\btacoma\b/,price:"π0.112",capacity:"2.4L Turbo / i-FORCE MAX",powertrain:"Petrol or hybrid · RWD/4WD",manufactured:"2025 model range"},
+  {key:"proace",title:"Toyota ProAce",query:"ProAce",pattern:/\bproace\b/,price:"π0.101",capacity:"Diesel or 75 kWh battery",powertrain:"Diesel or electric · FWD",manufactured:"2025 model range"},
+  {key:"alphard",title:"Toyota Alphard Hybrid",query:"Alphard",pattern:/\balphard\b/,price:"π0.137",capacity:"2.5L Hybrid",powertrain:"Hybrid · FWD or E-Four",manufactured:"2025 model range"},
+  {key:"rav4",title:"Toyota RAV4 Hybrid",query:"RAV4",pattern:/\brav4\b/,price:"π0.104",capacity:"2.5L Hybrid",powertrain:"Hybrid or plug-in hybrid",manufactured:"2025 model range"},
+  {key:"highlander",title:"Toyota Highlander Hybrid",query:"Highlander",pattern:/\bhighlander\b/,price:"π0.124",capacity:"2.5L Hybrid",powertrain:"Hybrid · AWD-i",manufactured:"2025 model range"},
+  {key:"land-cruiser",title:"Toyota Land Cruiser",query:"Land Cruiser",pattern:/\bland cruiser\b/,price:"π0.146",capacity:"2.8L Turbo Diesel",powertrain:"Diesel · 4WD",manufactured:"2025 model range"},
+  {key:"crown",title:"Toyota Crown",query:"Crown",pattern:/\bcrown\b/,price:"π0.132",capacity:"2.5L Hybrid",powertrain:"Hybrid · AWD",manufactured:"2025 model range"}
+];
+async function fetchToyotaModelMedia(model,verifiedMedia){
+  var entries=verifiedMedia.filter(function(entry){return model.pattern.test(normalizeCarMediaText(entry.title))});
+  if(entries.length>=5)return entries.slice(0,5);
+  var params=new URLSearchParams({action:"query",generator:"search",gsrsearch:'"Toyota '+model.query+'" filetype:bitmap',gsrnamespace:"6",gsrlimit:"50",prop:"imageinfo",iiprop:"url|extmetadata",iiurlwidth:"800",format:"json",origin:"*"});
+  var response=await fetch("https://commons.wikimedia.org/w/api.php?"+params.toString());
+  if(!response.ok)return entries;
+  var data=await response.json();
+  var pages=data.query&&data.query.pages?Object.values(data.query.pages):[];
+  pages.forEach(function(page){
+    var info=page.imageinfo&&page.imageinfo[0];
+    if(!info)return;
+    var metadata=info.extmetadata||{};
+    var entry={title:page.title||"",url:info.thumburl||info.url||"",categories:metadata.Categories&&metadata.Categories.value||"",description:metadata.ImageDescription&&metadata.ImageDescription.value||""};
+    if(model.pattern.test(normalizeCarMediaText(entry.title))&&carMediaIsUsable(entry,"Toyota")&&!entries.some(function(current){return current.url===entry.url}))entries.push(entry);
+  });
+  return entries.slice(0,5);
+}
+async function buildToyotaShowroom(){
+  var verifiedMedia=await fetchVerifiedCarMedia("Toyota");
+  var galleries=await Promise.all(toyotaProductionModels.map(function(model){return fetchToyotaModelMedia(model,verifiedMedia)}));
+  marketProducts=marketProducts.filter(function(product){return product.showroomCompany!=="Toyota"});
+  toyotaProductionModels.forEach(function(model,index){
+    var gallery=galleries[index];
+    if(gallery.length<5)return;
+    var ordered=orderCarMediaByView(gallery).slice(0,5);
+    marketProducts.push({id:"showroom-toyota-"+model.key,title:model.title,price:model.price,stat:"Toyota production model",brand:"Toyota Showroom",showroomCompany:"Toyota",moq:"1 Car",audited:true,secured:true,inStock:true,yrs:"Official",responseTime:"≤1h",image:ordered[0].entry.url,images:ordered.map(function(item){return item.entry.url}),imageLabels:ordered.map(function(item){return item.label+" – "+model.title}),capacity:model.capacity,powertrain:model.powertrain,manufactured:model.manufactured,mediaVerified:true,mediaSource:"Wikimedia Commons",category:"Cars",tag:/electric|battery/i.test(model.capacity+" "+model.powertrain)?"Electric":"Verified Toyota",tagColor:/electric|battery/i.test(model.capacity+" "+model.powertrain)?"#047857":"#c0392b"});
+  });
+  if(marketProducts.filter(function(product){return product.showroomCompany==="Toyota"}).length<15)throw new Error("Fewer than 15 verified Toyota model galleries were found");
+  cacheCarShowroom("Toyota");
+  return true;
+}
+var alfaRomeoProductionModels=[
+  {key:"junior",title:"Alfa Romeo Junior Elettrica",query:"Junior",pattern:/\bjunior\b/,price:"π0.104",capacity:"54 kWh battery",powertrain:"Electric · FWD",manufactured:"2025 model range"},
+  {key:"giulia",title:"Alfa Romeo Giulia",query:"Giulia",pattern:/\bgiulia\b/,price:"π0.118",capacity:"2.0L Turbo / 2.9L V6",powertrain:"Petrol · RWD or AWD",manufactured:"2025 model range"},
+  {key:"stelvio",title:"Alfa Romeo Stelvio",query:"Stelvio",pattern:/\bstelvio\b/,price:"π0.126",capacity:"2.0L Turbo / 2.9L V6",powertrain:"Petrol · AWD",manufactured:"2025 model range"},
+  {key:"tonale",title:"Alfa Romeo Tonale Plug-in Hybrid",query:"Tonale",pattern:/\btonale\b/,price:"π0.111",capacity:"1.3L Plug-in Hybrid",powertrain:"Plug-in hybrid · AWD",manufactured:"2025 model range"},
+  {key:"giulietta",title:"Alfa Romeo Giulietta",query:"Giulietta",pattern:/\bgiulietta\b/,price:"π0.086",capacity:"1.4L Turbo",powertrain:"Petrol · FWD",manufactured:"2010–2020 production"},
+  {key:"mito",title:"Alfa Romeo MiTo",query:"MiTo",pattern:/\bmito\b/,price:"π0.074",capacity:"1.4L MultiAir Turbo",powertrain:"Petrol · FWD",manufactured:"2008–2018 production"},
+  {key:"4c",title:"Alfa Romeo 4C",query:"4C",pattern:/\b4c\b/,price:"π0.132",capacity:"1.75L Turbo",powertrain:"Petrol · RWD",manufactured:"2013–2020 production"},
+  {key:"8c",title:"Alfa Romeo 8C Competizione",query:"8C Competizione",pattern:/\b8c competizione\b/,price:"π0.168",capacity:"4.7L V8",powertrain:"Petrol · RWD",manufactured:"2007–2010 production"},
+  {key:"brera",title:"Alfa Romeo Brera",query:"Brera",pattern:/\bbrera\b/,price:"π0.093",capacity:"2.2L / 3.2L V6",powertrain:"Petrol · FWD or AWD",manufactured:"2005–2010 production"},
+  {key:"spider",title:"Alfa Romeo Spider",query:"Spider",pattern:/\bspider\b/,price:"π0.097",capacity:"2.2L / 3.2L V6",powertrain:"Petrol · FWD or AWD",manufactured:"2006–2010 production"},
+  {key:"159",title:"Alfa Romeo 159",query:"159",pattern:/\b159\b/,price:"π0.089",capacity:"1.75L Turbo / 3.2L V6",powertrain:"Petrol or diesel",manufactured:"2004–2011 production"},
+  {key:"156",title:"Alfa Romeo 156",query:"156",pattern:/\b156\b/,price:"π0.081",capacity:"2.0L Twin Spark / 3.2L V6",powertrain:"Petrol or diesel · FWD",manufactured:"1997–2007 production"},
+  {key:"147",title:"Alfa Romeo 147",query:"147",pattern:/\b147\b/,price:"π0.077",capacity:"1.6L Twin Spark / 3.2L V6",powertrain:"Petrol or diesel · FWD",manufactured:"2000–2010 production"},
+  {key:"gtv",title:"Alfa Romeo GTV",query:"GTV",pattern:/\bgtv\b/,price:"π0.099",capacity:"2.0L Twin Spark / 3.0L V6",powertrain:"Petrol · FWD",manufactured:"1995–2005 production"},
+  {key:"montreal",title:"Alfa Romeo Montreal",query:"Montreal",pattern:/\bmontreal\b/,price:"π0.145",capacity:"2.6L V8",powertrain:"Petrol · RWD",manufactured:"1970–1977 production"}
+];
+async function fetchAlfaRomeoModelMedia(model,verifiedMedia){
+  function matchesModel(entry){return model.pattern.test(normalizeCarMediaText(entry&&entry.title))}
+  var entries=verifiedMedia.filter(matchesModel);
+  if(entries.length>=5)return entries.slice(0,5);
+  var params=new URLSearchParams({action:"query",generator:"search",gsrsearch:'"Alfa Romeo '+model.query+'" filetype:bitmap',gsrnamespace:"6",gsrlimit:"50",prop:"imageinfo",iiprop:"url|extmetadata",iiurlwidth:"800",format:"json",origin:"*"});
+  var response=await fetch("https://commons.wikimedia.org/w/api.php?"+params.toString());
+  if(!response.ok)return entries;
+  var data=await response.json();
+  var pages=data.query&&data.query.pages?Object.values(data.query.pages):[];
+  pages.forEach(function(page){
+    var info=page.imageinfo&&page.imageinfo[0];
+    if(!info)return;
+    var metadata=info.extmetadata||{};
+    var entry={title:page.title||"",url:info.thumburl||info.url||"",categories:metadata.Categories&&metadata.Categories.value||"",description:metadata.ImageDescription&&metadata.ImageDescription.value||""};
+    if(matchesModel(entry)&&carMediaIsUsable(entry,"Alfa Romeo")&&!entries.some(function(current){return current.url===entry.url}))entries.push(entry);
+  });
+  return entries.slice(0,5);
+}
+async function buildAlfaRomeoShowroom(){
+  var verifiedMedia=await fetchVerifiedCarMedia("Alfa Romeo");
+  var galleries=await Promise.all(alfaRomeoProductionModels.map(function(model){return fetchAlfaRomeoModelMedia(model,verifiedMedia)}));
+  marketProducts=marketProducts.filter(function(product){return product.showroomCompany!=="Alfa Romeo"});
+  alfaRomeoProductionModels.forEach(function(model,index){
+    var gallery=galleries[index];
+    if(gallery.length<5)return;
+    var ordered=orderCarMediaByView(gallery).slice(0,5);
+    var electric=/electric|battery/i.test(model.capacity+" "+model.powertrain);
+    marketProducts.push({id:"showroom-alfa-romeo-"+model.key,title:model.title,price:model.price,stat:"Alfa Romeo production model",brand:"Alfa Romeo Showroom",showroomCompany:"Alfa Romeo",moq:"1 Car",audited:true,secured:true,inStock:true,yrs:"Official",responseTime:"≤1h",image:ordered[0].entry.url,images:ordered.map(function(item){return item.entry.url}),imageLabels:ordered.map(function(item){return item.label+" – "+model.title}),capacity:model.capacity,powertrain:model.powertrain,manufactured:model.manufactured,mediaVerified:true,mediaSource:"Wikimedia Commons",category:"Cars",tag:electric?"Electric":"Verified Alfa Romeo",tagColor:electric?"#047857":"#c0392b"});
+  });
+  if(marketProducts.filter(function(product){return product.showroomCompany==="Alfa Romeo"}).length<15)throw new Error("Fewer than 15 verified Alfa Romeo model galleries were found");
+  cacheCarShowroom("Alfa Romeo");
+  return true;
+}
+var alpineProductionModels=[
+  {key:"a110",title:"Alpine A110",query:"A110",pattern:/\ba110\b/,exclude:/\b(a110 s|a110 r|a110 gt|a110 pure|a110 50|a110 1600|berlinette|premiere|tour de corse|san remo)\b/,price:"π0.096",capacity:"1.8L Turbo",powertrain:"Petrol · RWD",manufactured:"2017–2026 production"},
+  {key:"a110-s",title:"Alpine A110 S",query:"A110 S",pattern:/\ba110 s\b/,exclude:/\b(sportsx|a110 s enstone)\b/,price:"π0.108",capacity:"1.8L Turbo",powertrain:"Petrol · RWD · 300 hp",manufactured:"2019–2025 production"},
+  {key:"a441",title:"Alpine A441",query:"A441",pattern:/\ba441\b/,price:"π0.147",capacity:"2.0L V6",powertrain:"Racing prototype · RWD",manufactured:"1974 competition"},
+  {key:"a110-gt",title:"Alpine A110 GT",query:"A110 GT",pattern:/\ba110 gt\b/,exclude:/\b(gt4|gts)\b/,price:"π0.116",capacity:"1.8L Turbo",powertrain:"Petrol · RWD · 300 hp",manufactured:"2021–2025 production"},
+  {key:"a110-gt4",title:"Alpine A110 GT4",query:"A110 GT4",pattern:/\ba110 gt4\b/,price:"π0.152",capacity:"1.8L Turbo",powertrain:"Racing · RWD",manufactured:"2018–2024 competition"},
+  {key:"a110-pure",title:"Alpine A110 Pure",query:"A110 Pure",pattern:/\ba110 pure\b/,price:"π0.099",capacity:"1.8L Turbo",powertrain:"Petrol · RWD · 252 hp",manufactured:"2018–2020 production"},
+  {key:"a443",title:"Alpine A443",query:"A443",pattern:/\ba443\b/,price:"π0.162",capacity:"2.1L Turbo V6",powertrain:"Racing prototype · RWD",manufactured:"1978 competition"},
+  {key:"a290",title:"Alpine A290",query:"A290",pattern:/\ba290\b/,price:"π0.092",capacity:"52 kWh battery",powertrain:"Electric · FWD",manufactured:"2025–2026 production"},
+  {key:"a610",title:"Alpine A610",query:"A610",pattern:/\ba610\b/,price:"π0.087",capacity:"3.0L Turbo V6",powertrain:"Petrol · RWD",manufactured:"1991–1995 production"},
+  {key:"gta",title:"Alpine GTA",query:"GTA",pattern:/\balpine gta\b/,price:"π0.084",capacity:"2.5L / 3.0L V6",powertrain:"Petrol · RWD",manufactured:"1984–1991 production"},
+  {key:"a310",title:"Alpine A310",query:"A310",pattern:/\ba310\b/,price:"π0.081",capacity:"1.6L I4 / 2.7L V6",powertrain:"Petrol · RWD",manufactured:"1971–1984 production"},
+  {key:"a106",title:"Alpine A106",query:"A106",pattern:/\ba106\b/,price:"π0.075",capacity:"747 cc / 845 cc",powertrain:"Petrol · RWD",manufactured:"1955–1961 production"},
+  {key:"a108",title:"Alpine A108",query:"A108",pattern:/\ba108\b/,price:"π0.077",capacity:"845 cc / 998 cc",powertrain:"Petrol · RWD",manufactured:"1958–1965 production"},
+  {key:"a210",title:"Alpine A210",query:"A210",pattern:/\ba210\b/,price:"π0.128",capacity:"1.0L / 1.3L racing engine",powertrain:"Racing · RWD",manufactured:"1966–1969 competition"},
+  {key:"a442",title:"Alpine A442",query:"A442",pattern:/\ba442\b/,price:"π0.159",capacity:"2.0L Turbo V6",powertrain:"Racing prototype · RWD",manufactured:"1975–1978 competition"}
+];
+function alpineMediaMatchesModel(entry,model){
+  var title=normalizeCarMediaText(entry&&entry.title);
+  if(!model.pattern.test(title)||(model.exclude&&model.exclude.test(title)))return false;
+  if(/\b(logo|badge|emblem|wheel|engine|motor|dashboard|cockpit|interior|toy|scale model)\b/.test(title))return false;
+  var expectedFamily=model.key.indexOf("a110")===0?"a110":model.key;
+  var namedFamilies=title.match(/\b(a106|a108|a110|a210|a290|a310|a390|a424|a441|a442|a443|a610|gta)\b/g)||[];
+  return namedFamilies.every(function(family){return family===expectedFamily});
+}
+async function fetchAlpineModelMedia(model,verifiedMedia){
+  var entries=verifiedMedia.filter(function(entry){return alpineMediaMatchesModel(entry,model)});
+  if(entries.length>=5)return entries.slice(0,5);
+  var params=new URLSearchParams({action:"query",generator:"search",gsrsearch:'"Alpine '+model.query+'" filetype:bitmap',gsrnamespace:"6",gsrlimit:"50",prop:"imageinfo",iiprop:"url|extmetadata",iiurlwidth:"800",format:"json",origin:"*"});
+  var response=await fetch("https://commons.wikimedia.org/w/api.php?"+params.toString());
+  if(!response.ok)return entries;
+  var data=await response.json();
+  var pages=data.query&&data.query.pages?Object.values(data.query.pages):[];
+  pages.forEach(function(page){
+    var info=page.imageinfo&&page.imageinfo[0];
+    if(!info)return;
+    var metadata=info.extmetadata||{};
+    var entry={title:page.title||"",url:info.thumburl||info.url||"",categories:metadata.Categories&&metadata.Categories.value||"",description:metadata.ImageDescription&&metadata.ImageDescription.value||""};
+    if(alpineMediaMatchesModel(entry,model)&&carMediaNamesCompany(entry.title,"Alpine")&&carMediaMetadataIsUsable(entry)&&!entries.some(function(current){return current.url===entry.url}))entries.push(entry);
+  });
+  return entries.slice(0,5);
+}
+async function buildAlpineShowroom(){
+  var verifiedMedia=await fetchVerifiedCarMedia("Alpine");
+  var galleries=await Promise.all(alpineProductionModels.map(function(model){return fetchAlpineModelMedia(model,verifiedMedia)}));
+  marketProducts=marketProducts.filter(function(product){return product.showroomCompany!=="Alpine"});
+  alpineProductionModels.forEach(function(model,index){
+    var gallery=galleries[index];
+    if(gallery.length<5)return;
+    var ordered=orderCarMediaByView(gallery).slice(0,5);
+    var electric=/electric|battery/i.test(model.capacity+" "+model.powertrain);
+    marketProducts.push({id:"showroom-alpine-"+model.key,title:model.title,price:model.price,stat:"Alpine production model",brand:"Alpine Showroom",showroomCompany:"Alpine",moq:"1 Car",audited:true,secured:true,inStock:true,yrs:"Official",responseTime:"≤1h",image:ordered[0].entry.url,images:ordered.map(function(item){return item.entry.url}),imageLabels:ordered.map(function(item){return item.label+" – "+model.title}),capacity:model.capacity,powertrain:model.powertrain,manufactured:model.manufactured,mediaVerified:true,mediaSource:"Wikimedia Commons",category:"Cars",tag:electric?"Electric":"Verified Alpine",tagColor:electric?"#047857":"#c0392b"});
+  });
+  if(marketProducts.filter(function(product){return product.showroomCompany==="Alpine"}).length<15)throw new Error("Fewer than 15 exact Alpine model galleries were found");
+  cacheCarShowroom("Alpine");
+  return true;
+}
+var changanProductionModels=[
+  {key:"cs35",title:"Changan CS35",search:"Changan CS35",pattern:/\bcs35\b/,price:"π0.082",capacity:"1.4L Turbo / 1.6L petrol",powertrain:"Petrol · FWD",manufactured:"2012–present production"},
+  {key:"cs55",title:"Changan CS55",search:"Changan CS55",pattern:/\bcs55\b/,price:"π0.091",capacity:"1.5L Turbo",powertrain:"Petrol · FWD",manufactured:"2017–present production"},
+  {key:"cs75",title:"Changan CS75",search:"Changan CS75",pattern:/\bcs75\b/,price:"π0.099",capacity:"1.5L / 2.0L Turbo",powertrain:"Petrol · FWD or AWD",manufactured:"2014–present production"},
+  {key:"cs85",title:"Changan CS85 Coupe",search:"Changan CS85",pattern:/\bcs85\b/,price:"π0.113",capacity:"1.5L / 2.0L Turbo",powertrain:"Petrol · FWD",manufactured:"2019–present production"},
+  {key:"cs95",title:"Changan CS95",search:"Changan CS95",pattern:/\bcs95\b/,price:"π0.126",capacity:"2.0L Turbo",powertrain:"Petrol · FWD or AWD",manufactured:"2017–present production"},
+  {key:"uni-t",title:"Changan UNI-T",search:"Changan UNI-T",pattern:/\buni t\b/,price:"π0.104",capacity:"1.5L / 2.0L Turbo",powertrain:"Petrol · FWD",manufactured:"2020–present production"},
+  {key:"uni-k",title:"Changan UNI-K",search:"Changan UNI-K",pattern:/\buni k\b/,price:"π0.121",capacity:"2.0L Turbo / plug-in hybrid",powertrain:"Petrol or hybrid · FWD/AWD",manufactured:"2020–present production"},
+  {key:"uni-v",title:"Changan UNI-V",search:"Changan UNI-V",pattern:/\buni v\b/,price:"π0.109",capacity:"1.5L / 2.0L Turbo",powertrain:"Petrol · FWD",manufactured:"2021–present production"},
+  {key:"eado",title:"Changan Eado",search:"Changan Eado",pattern:/\beado\b/,price:"π0.087",capacity:"1.4L Turbo / 1.6L petrol",powertrain:"Petrol · FWD",manufactured:"2012–present production"},
+  {key:"alsvin",title:"Changan Alsvin",search:"Changan Alsvin",pattern:/\balsvin\b/,price:"π0.073",capacity:"1.4L / 1.5L petrol",powertrain:"Petrol · FWD",manufactured:"2009–present production"},
+  {key:"benni",title:"Changan Benni",search:"Changan Benni",pattern:/\b(benni|ben ben)\b/,price:"π0.069",capacity:"1.0L / 1.3L petrol",powertrain:"Petrol · FWD",manufactured:"2006–present production"},
+  {key:"hunter",title:"Changan Hunter",search:"Changan Hunter",pattern:/\b(hunter|kaicene f70)\b/,price:"π0.118",capacity:"1.9L Turbo Diesel / 2.0L Turbo",powertrain:"Diesel or petrol · 4WD",manufactured:"2019–present production"},
+  {key:"lumin",title:"Changan Lumin",search:"Changan Lumin",pattern:/\blumin\b/,price:"π0.076",capacity:"17.65–27.99 kWh battery",powertrain:"Electric · FWD",manufactured:"2022–present production"},
+  {key:"deepal-s05",title:"Changan Deepal S05",search:"Deepal S05",pattern:/\b(deepal|shenlan) s05\b/,price:"π0.112",capacity:"56.1–68.8 kWh battery / range extender",powertrain:"Electric or extended-range electric",manufactured:"2024–present production"},
+  {key:"deepal-s07",title:"Changan Deepal S07",search:"Changan Deepal S07",pattern:/\b((deepal|shenlan) s0?7|shenlan s7)\b/,price:"π0.124",capacity:"66.8–79.97 kWh battery / range extender",powertrain:"Electric or extended-range electric",manufactured:"2023–present production"}
+];
+function changanMediaMatchesModel(entry,model){
+  if(!entry||!entry.url||!carMediaMetadataIsUsable(entry))return false;
+  var title=normalizeCarMediaText(entry.title);
+  if(!model.pattern.test(title)||nonVehicleMediaPattern.test(title))return false;
+  if(!/\b(changan|chang an|deepal|shenlan|kaicene)\b/.test(title))return false;
+  if(/\b(logo|badge|emblem|wheel|engine|motor|radiator|grille|headlight|taillight|dashboard|cockpit|interior|showroom|sign|map|display|factory|building|museum|dealership|office|advert|brochure|poster|toy|scale model)\b/.test(title))return false;
+  return !changanProductionModels.some(function(other){return other!==model&&other.pattern.test(title)});
+}
+async function fetchChanganModelMedia(model){
+  var params=new URLSearchParams({action:"query",generator:"search",gsrsearch:'"'+model.search+'" filetype:bitmap',gsrnamespace:"6",gsrlimit:"50",prop:"imageinfo",iiprop:"url|extmetadata",iiurlwidth:"800",format:"json",origin:"*"});
+  var response=await fetch("https://commons.wikimedia.org/w/api.php?"+params.toString());
+  if(!response.ok)return [];
+  var data=await response.json();
+  var entries=[];
+  Object.values(data.query&&data.query.pages||{}).forEach(function(page){
+    var info=page.imageinfo&&page.imageinfo[0];
+    if(!info)return;
+    var metadata=info.extmetadata||{};
+    var entry={title:page.title||"",url:info.thumburl||info.url||"",categories:metadata.Categories&&metadata.Categories.value||"",description:metadata.ImageDescription&&metadata.ImageDescription.value||""};
+    if(changanMediaMatchesModel(entry,model)&&!entries.some(function(current){return current.url===entry.url}))entries.push(entry);
+  });
+  return entries;
+}
+async function buildChanganShowroom(){
+  var galleries=await Promise.all(changanProductionModels.map(fetchChanganModelMedia));
+  var products=changanProductionModels.map(function(model,index){
+    var ordered=orderCarMediaByView(galleries[index]).slice(0,5);
+    var images=ordered.map(function(item){return item.entry.url});
+    if(images.length!==5||new Set(images).size!==5)return null;
+    var electric=/electric|battery/i.test(model.capacity+" "+model.powertrain);
+    return {id:"showroom-changan-"+model.key,title:model.title,price:model.price,stat:"Changan production model",brand:"Changan Showroom",showroomCompany:"Changan",moq:"1 Car",audited:true,secured:true,inStock:true,yrs:"Official",responseTime:"≤1h",image:images[0],images:images,imageLabels:ordered.map(function(item){return item.label+" – "+model.title}),capacity:model.capacity,powertrain:model.powertrain,manufactured:model.manufactured,mediaVerified:true,mediaSource:"Wikimedia Commons",strictModelValidated:true,category:"Cars",tag:electric?"Electric":"Verified Changan",tagColor:electric?"#047857":"#c0392b"};
+  }).filter(Boolean);
+  if(products.length!==15)throw new Error("Only "+products.length+" of 15 Changan model galleries passed strict image validation");
+  marketProducts=marketProducts.filter(function(product){return product.showroomCompany!=="Changan"}).concat(products);
+  cacheCarShowroom("Changan");
+  return true;
+}
+function strictCarGroupIsModel(group,company){
+  var name=normalizeCarMediaText(group&&group.name);
+  var companyName=normalizeCarMediaText(company);
+  if(!name||name===companyName||name.length<=companyName.length+1)return false;
+  if(company==="Changan"&&!changanModelPattern.test(name))return false;
+  var remainder=name.indexOf(companyName+" ")===0?name.slice(companyName.length+1):name;
+  if(/\b(at |auto show|autoshow|motor show|motorshow|festival|museum|factory|headquarters|dealership|studio|studios|advertisements|vehicles by|automobiles by|concept vehicles|racing automobiles|replica|replicas|logo|logos|model cars|in competition)\b/.test(name))return false;
+  return !/^(trucks?|cars?|vehicles?|automobiles?|buses?)(\s|$)/.test(remainder)&&!/\b(trucks?|cars?|vehicles?|automobiles?|buses?)\s+in\b/.test(remainder)&&!/\b(trucks?|cars?|vehicles?|automobiles?|buses?|original)$/.test(remainder);
+}
+function strictCarEntryMatchesGroup(entry,group,company){
+  if(!entry||!entry.url||!carMediaIsUsable(entry,company))return false;
+  var title=normalizeCarMediaText(entry.title);
+  var modelName=normalizeCarMediaText(group.name);
+  var categoryMatch=carMediaModelNames(entry,company).some(function(name){return normalizeCarMediaText(name)===group.key});
+  if(company==="MG"){
+    var groupModels=carMediaModelNames(entry,company).map(normalizeCarMediaText);
+    var otherNamedModel=groupModels.some(function(name){return name!==group.key&&/^(mg |mga|mgb|mgf|mgtf)/.test(name)});
+    if(otherNamedModel||/\b(y type|magnette|midget)\b/.test(title)&&modelName.indexOf(title)===-1)return false;
+  }
+  return categoryMatch||title.indexOf(modelName)!==-1;
+}
+async function topUpStrictCarGroup(group,company){
+  if(group.media.length>=5)return group;
+  var params=new URLSearchParams({action:"query",generator:"search",gsrsearch:'"'+group.name+'" filetype:bitmap',gsrnamespace:"6",gsrlimit:"50",prop:"imageinfo",iiprop:"url|extmetadata",iiurlwidth:"800",format:"json",origin:"*"});
+  try{
+    var response=await fetch("https://commons.wikimedia.org/w/api.php?"+params.toString());
+    if(!response.ok)return group;
+    var data=await response.json();
+    var pages=data.query&&data.query.pages?Object.values(data.query.pages):[];
+    pages.forEach(function(page){
+      var info=page.imageinfo&&page.imageinfo[0];
+      if(!info)return;
+      var metadata=info.extmetadata||{};
+      var entry={title:page.title||"",url:info.thumburl||info.url||"",categories:metadata.Categories&&metadata.Categories.value||"",description:metadata.ImageDescription&&metadata.ImageDescription.value||""};
+      if(strictCarEntryMatchesGroup(entry,group,company)&&!group.media.some(function(current){return current.url===entry.url}))group.media.push(entry);
+    });
+  }catch(error){}
+  return group;
+}
+async function buildStrictCompanyShowroom(company){
+  var verifiedMedia=await fetchVerifiedCarMedia(company);
+  if(!verifiedMedia.length)throw new Error("No verified "+company+" vehicle images were found");
+  var groups=[];
+  verifiedMedia.forEach(function(entry){
+    var modelKey=carMediaModelKey(entry,company);
+    var group=groups.find(function(current){return current.key===modelKey});
+    if(group)group.media.push(entry);
+    else groups.push({key:modelKey,name:carMediaModelName(entry,company),media:[entry]});
+  });
+  groups=groups.filter(function(group){return strictCarGroupIsModel(group,company)}).sort(function(a,b){return b.media.length-a.media.length||a.key.localeCompare(b.key)}).slice(0,30);
+  var complete=groups.filter(function(group){return new Set(group.media.map(function(entry){return entry.url})).size>=5});
+  var partial=groups.filter(function(group){return group.media.length<5}).sort(function(a,b){return b.media.length-a.media.length});
+  for(var partialIndex=0;complete.length<15&&partialIndex<partial.length;partialIndex+=6){
+    await Promise.all(partial.slice(partialIndex,partialIndex+6).map(function(group){return topUpStrictCarGroup(group,company)}));
+    complete=groups.filter(function(group){return new Set(group.media.map(function(entry){return entry.url})).size>=5});
+  }
+  complete=complete.sort(function(a,b){return b.media.length-a.media.length||a.key.localeCompare(b.key)}).slice(0,15);
+  if(!complete.length)throw new Error("No exact "+company+" model galleries were found");
+  var seed=carShowroomNumber(company);
+  var key=carShowroomKey(company);
+  var products=complete.map(function(group,index){
+    var exactMedia=group.media.filter(function(entry){return strictCarEntryMatchesGroup(entry,group,company)});
+    var ordered=orderCarMediaByView(exactMedia).slice(0,5);
+    var images=ordered.map(function(item){return item.entry.url});
+    if(images.length!==5||new Set(images).size!==5)return null;
+    var modelTitle=carShowroomModelTitle(group.name,company);
+    var groupText=normalizeCarMediaText(group.name+" "+exactMedia.map(function(entry){return (entry.categories||"")+" "+(entry.description||"")}).join(" "));
+    var electric=/\b(electric|ev|bev|battery)\b/.test(groupText);
+    return {id:"showroom-"+key+"-"+carShowroomKey(group.key),title:modelTitle,price:"π"+(0.055+((seed+index*7)%125)/1000).toFixed(3),stat:company+" production model",brand:company+" Showroom",showroomCompany:company,moq:"1 Car",audited:true,secured:true,inStock:true,yrs:"Official",responseTime:"≤1h",image:images[0],images:images,imageLabels:ordered.map(function(item){return item.label+" – "+modelTitle}),capacity:extractCarEngineSpec(exactMedia)||undefined,manufactured:extractCarModelYear(exactMedia)||undefined,mediaVerified:true,mediaSource:"Wikimedia Commons",strictModelValidated:true,category:"Cars",tag:electric?"Electric":"Verified "+company,tagColor:electric?"#047857":"#c0392b"};
+  }).filter(Boolean);
+  if(!products.length)throw new Error("No complete "+company+" model galleries were built");
+  marketProducts=marketProducts.filter(function(product){return product.showroomCompany!==company}).concat(products);
+  cacheCarShowroom(company);
+  return true;
 }
 async function ensureCarCompanyShowroom(company){
   if(!company||company==="All companies")return true;
-  if(marketProducts.some(function(product){return product.showroomCompany===company}))return true;
+  var existingProducts=marketProducts.filter(function(product){return product.showroomCompany===company});
+  if(carShowroomProductsAreValid(company,existingProducts))return true;
+  if(restoreCarShowroom(company))return true;
+  if(carShowroomRequests[company])return carShowroomRequests[company];
+  carShowroomRequests[company]=buildCarCompanyShowroom(company).finally(function(){delete carShowroomRequests[company]});
+  return carShowroomRequests[company];
+}
+async function buildCarCompanyShowroom(company){
+  if(company==="Toyota")return buildToyotaShowroom();
+  if(company==="Alfa Romeo")return buildAlfaRomeoShowroom();
+  if(company==="Alpine")return buildAlpineShowroom();
+  if(company==="Changan")return buildChanganShowroom();
+  if(isStrictShowroomCompany(company))return buildStrictCompanyShowroom(company);
   var verifiedMedia=await fetchVerifiedCarMedia(company);
   if(!verifiedMedia.length)throw new Error("No verified "+company+" vehicle images were found");
   var key=carShowroomKey(company);
@@ -526,15 +972,21 @@ async function ensureCarCompanyShowroom(company){
     else modelGroups.push({key:modelKey,name:carMediaModelName(entry,company),media:[entry]});
   });
   if(!modelGroups.length)throw new Error("No distinct verified "+company+" models were found");
-  modelGroups.slice(0,15).forEach(function(group,index){
+  modelGroups.slice(0,20).forEach(function(group,index){
     var modelNumber=String(index+1).padStart(2,"0");
-    var gallery=group.media.slice(0,5);
-    var images=gallery.map(function(entry){return entry.url});
-    var imageLabels=gallery.map(function(entry){return "Verified "+group.name+": "+entry.title.replace(/^File:/,"")});
-    var electric=/\b(electric|ev|bev)\b/.test(normalizeCarMediaText(group.name+" "+group.media[0].categories+" "+group.media[0].description));
+    /* Every shown model must have all five required views (front, rear, side, interior + extra). */
+    var ordered=orderCarMediaByView(group.media);
+    if(ordered.length<5)return;
+    var modelTitle=carShowroomModelTitle(group.name,company);
+    var images=ordered.map(function(item){return item.entry.url});
+    var imageLabels=ordered.map(function(item){return item.label+" \u2013 "+modelTitle});
+    var groupText=normalizeCarMediaText(group.name+" "+group.media.map(function(entry){return (entry.categories||"")+" "+(entry.description||"")}).join(" "));
+    var electric=/\b(electric|ev|bev)\b/.test(groupText);
+    var capacity=extractCarEngineSpec(group.media)||(electric?"Electric drivetrain":"");
+    var manufactured=extractCarModelYear(group.media);
     marketProducts.push({
       id:"showroom-"+key+"-"+modelNumber,
-      title:group.name,
+      title:modelTitle,
       price:"\u03C0"+(0.055+((seed+index*7)%125)/1000).toFixed(3),
       stat:electric?"Verified electric model":"Verified model",
       brand:company+" Showroom",
@@ -548,6 +1000,8 @@ async function ensureCarCompanyShowroom(company){
       image:images[0],
       images:images,
       imageLabels:imageLabels,
+      capacity:capacity||undefined,
+      manufactured:manufactured||undefined,
       mediaVerified:true,
       mediaSource:"Wikimedia Commons",
       category:"Cars",
@@ -555,6 +1009,7 @@ async function ensureCarCompanyShowroom(company){
       tagColor:electric?"#047857":"#c0392b"
     });
   });
+  cacheCarShowroom(company);
   return true;
 }
 
@@ -884,14 +1339,20 @@ function render(){
     th+='<button onclick="setTab(\''+t.replace(/'/g,"\\'")+'\')" class="'+(t===activeTab?"active":"")+'">'+esc(t)+"</button>";
   });
   th+='<button class="more-btn"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg></button>';
-  document.getElementById("catTabs").innerHTML=th;
+  var categoryTabs=document.getElementById("catTabs");
+  categoryTabs.innerHTML=th;
+  setTimeout(function(){
+    var activeCategory=categoryTabs.querySelector('button.active');
+    if(activeCategory)categoryTabs.scrollLeft=Math.max(0,activeCategory.offsetLeft-(categoryTabs.clientWidth-activeCategory.offsetWidth)/2);
+  },0);
 
   var html="";
 
   if(activeTab==="Cars"){
-    html+='<section class="car-company-panel" aria-label="Car companies"><div class="car-company-heading"><h2>Car companies</h2><div class="car-company-tools"><span>'+(carCompanies.length-1)+' brands</span><button type="button" class="car-company-arrow" id="car-company-prev" onclick="scrollCarCompanies(-1)" aria-label="Show previous car companies" title="Previous companies" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button><button type="button" class="car-company-arrow" id="car-company-next" onclick="scrollCarCompanies(1)" aria-label="Show more car companies" title="More companies"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button></div></div><div class="car-company-list hide-sb" id="car-company-list">';
+    var companyMapUrl='map.html?category=car-company'+(activeCarCompany==='All companies'?'':'&company='+encodeURIComponent(activeCarCompany));
+    html+='<section class="car-company-panel" aria-label="Car companies"><div class="car-company-heading"><h2>Car companies</h2><div class="car-company-tools"><a class="car-company-map-link" href="'+companyMapUrl+'" aria-label="View '+esc(activeCarCompany)+' location on map" title="View location on map"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-4.35 7-11a7 7 0 10-14 0c0 6.65 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg><span>'+(activeCarCompany==='All companies'?'All locations':'View location')+'</span></a><span>'+(carCompanies.length-1)+' brands</span><button type="button" class="car-company-arrow" id="car-company-prev" onclick="scrollCarCompanies(-1)" aria-label="Show previous car companies" title="Previous companies" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button><button type="button" class="car-company-arrow" id="car-company-next" onclick="scrollCarCompanies(1)" aria-label="Show more car companies" title="More companies"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button></div></div><div class="car-company-list hide-sb" id="car-company-list">';
     carCompanies.forEach(function(company){
-      html+='<button type="button" onclick="setCarCompany(\''+company.replace(/'/g,"\\'")+'\')" class="'+(company===activeCarCompany?'active':'')+'">'+esc(company)+'</button>';
+      html+='<button type="button" onpointerdown="warmCarCompany(\''+company.replace(/'/g,"\\'")+'\')" onclick="setCarCompany(\''+company.replace(/'/g,"\\'")+'\')" class="'+(company===activeCarCompany?'active':'')+'">'+esc(company)+'</button>';
     });
     html+='</div></section>';
   }
@@ -1071,9 +1532,7 @@ function render(){
     html+='</div></div>';
   }
 
-  if(activeTab==="Cars"&&filtered.length===0){
-    html+='<div class="car-company-empty"><h3>'+esc(carCompanyLoadMessage||('No verified '+activeCarCompany+' cars available'))+'</h3><p>'+(carCompanyLoadMessage?'Please wait or choose another company.':'Cars are shown only when their image is verified for this manufacturer.')+'</p></div>';
-  }
+
 
   /* ── Hotels ── */
   if(showHotels&&fHotels.length>0){
@@ -1235,18 +1694,22 @@ function bindCarCompanySlider(){
   list.addEventListener('scroll',updateCarCompanyArrows,{passive:true});
   updateCarCompanyArrows();
 }
+function warmCarCompany(company){
+  if(!company||company==="All companies"||restoreCarShowroom(company))return;
+  ensureCarCompanyShowroom(company).catch(function(error){console.warn(error)});
+}
 async function setCarCompany(company){
   activeCarCompany=company;
-  carCompanyLoadMessage=company==="All companies"?"":"Verifying "+company+" vehicle images...";
+  carCompanyLoadMessage="";
+  var restored=restoreCarShowroom(company);
   render();
-  if(company==="All companies")return;
+  if(company==="All companies"||restored)return;
   try{
     await ensureCarCompanyShowroom(company);
-    carCompanyLoadMessage="";
   }catch(error){
-    carCompanyLoadMessage="Verified "+company+" showroom unavailable";
     console.warn(error);
   }
+  carCompanyLoadMessage="";
   if(activeCarCompany===company)render();
 }
 function setTab(t){activeTab=t;if(t!=="Cars")activeCarCompany="All companies";render()}
@@ -1304,11 +1767,12 @@ function renderModal(){
   if(p.tag) h+='<span class="tag-badge">'+esc(p.tag)+'</span>';
   h+='<h2>'+esc(p.title)+'</h2>';
   h+='<div class="meta-line">'+esc(p.category)+' \u00B7 '+esc(p.stat)+'</div>';
-  if(p.capacity||p.manufactured||p.powertrain){
+  if(p.capacity||p.manufactured||p.powertrain||p.manufacturingLocation){
     h+='<div class="vehicle-spec-grid">';
     if(p.capacity)h+='<div><span>Engine / motor capacity</span><strong>'+esc(p.capacity)+'</strong></div>';
     if(p.powertrain)h+='<div><span>Powertrain</span><strong>'+esc(p.powertrain)+'</strong></div>';
     if(p.manufactured)h+='<div><span>Manufacture date</span><strong>'+esc(p.manufactured)+'</strong></div>';
+    if(p.manufacturingLocation)h+='<div><span>Manufacturing location</span><strong>'+esc(p.manufacturingLocation)+'</strong></div>';
     h+='</div>';
   }
   if(p.rating) h+=renderStars(p.rating,p.reviews);
@@ -1990,6 +2454,7 @@ var isPiBrowser=/PiBrowser/i.test(navigator.userAgent)||typeof window.Pi!=="unde
 /* ── AUTO-SWIPE: cycle product images & shake at 3/5/7s ── */
 var cardImgState={};
 var cardTimers={};
+var cardSwipeObserver=null;
 var swipeIntervals=[3000,5000,7000];
 function swipeCard(pid){
   var card=document.querySelector('[data-pid="'+pid+'"]');
@@ -2019,20 +2484,34 @@ function swipeCard(pid){
 function randInterval(){return swipeIntervals[Math.floor(Math.random()*swipeIntervals.length)]}
 function scheduleCard(pid){
   if(cardTimers[pid])clearTimeout(cardTimers[pid]);
+  if(document.hidden)return;
   cardTimers[pid]=setTimeout(function(){swipeCard(pid)},randInterval());
 }
 function startAutoSwipe(){
   Object.keys(cardTimers).forEach(function(k){clearTimeout(cardTimers[k])});
   cardTimers={};
   cardImgState={};
+  if(cardSwipeObserver)cardSwipeObserver.disconnect();
   var cards=document.querySelectorAll('[data-pid]');
+  cardSwipeObserver=new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      var pid=entry.target.getAttribute('data-pid');
+      if(!pid)return;
+      if(entry.isIntersecting)scheduleCard(pid);
+      else if(cardTimers[pid]){clearTimeout(cardTimers[pid]);delete cardTimers[pid]}
+    });
+  },{rootMargin:'150px 0px'});
   cards.forEach(function(card){
     var pid=card.getAttribute('data-pid');
     var p=marketProducts.find(function(x){return x.id===pid});
     if(!p||p.images.length<2||p.showroomCompany)return;
-    scheduleCard(pid);
+    cardSwipeObserver.observe(card);
   });
 }
+document.addEventListener('visibilitychange',function(){
+  if(document.hidden){Object.keys(cardTimers).forEach(function(pid){clearTimeout(cardTimers[pid])});cardTimers={}}
+  else startAutoSwipe();
+});
 
 /* ── AUTO-CATEGORY: sweep right & left every 5 min ── */
 var catSweepTimer=null;
@@ -2126,6 +2605,8 @@ loadLanguage();
 render();
 var linkedProductId=new URLSearchParams(window.location.search).get('product');
 if(linkedProductId&&marketProducts.some(function(product){return product.id===linkedProductId}))openModal(linkedProductId);
+var linkedCarCompany=new URLSearchParams(window.location.search).get('company');
+if(linkedCarCompany&&carCompanies.indexOf(linkedCarCompany)!==-1){setTab('Cars');setCarCompany(linkedCarCompany)}
 startAutoSwipe();
 startCatSweep();
 /* ── SERVICE WORKER: offline support + 15-min auto-update ── */
